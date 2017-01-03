@@ -35,7 +35,7 @@ class ExtensionDocument
         foreach ($lines as &$li)
         {
             $li = ltrim($li);
-            if ($li[0] != '*')
+            if (isset($li[0]) && $li[0] != '*')
             {
                 $li = self::SPACE5 . '*' . $li;
             }
