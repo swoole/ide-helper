@@ -310,6 +310,9 @@ class ExtensionDocument
             }
             $defines .= "define('$className', $ref);\n";
         }
+
+        if(!is_dir(OUTPUT_DIR)) mkdir(OUTPUT_DIR);
+
         file_put_contents(
             OUTPUT_DIR . '/constants.php', "<?php\n" . $defines
         );
@@ -319,6 +322,7 @@ class ExtensionDocument
          */
         $funcs = $this->rf_ext->getFunctions();
         $fdefs = $this->getFunctionsDef($funcs);
+
         file_put_contents(
             OUTPUT_DIR . '/functions.php', "<?php\n" . $fdefs
         );
