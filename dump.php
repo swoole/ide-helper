@@ -118,6 +118,29 @@ class ExtensionDocument
 
     /**
      * @param $classname
+     * @param array $props
+     * @return string
+     */
+    function getPropertyDef($classname, array $props)
+    {
+        $prop_str = "";
+        $sp4 = str_repeat(' ', 4);
+        foreach ($props as $k => $v)
+        {
+            /**
+             * @var $v ReflectionProperty
+             */
+            $modifiers = implode(
+                ' ', Reflection::getModifierNames($v->getModifiers())
+            );
+            $prop_str .= "$sp4{$modifiers} $" . $v->name . ";\n";
+        }
+
+        return $prop_str;
+    }
+
+    /**
+     * @param $classname
      * @param array $consts
      * @return string
      */
@@ -252,19 +275,9 @@ class ExtensionDocument
      */
     function getClassDef($classname, $ref)
     {
-        $prop_str = '';
-        $props = $ref->getProperties();
-        array_walk(
-            $props, function ($v, $k)
-        {
-            global $prop_str, $sp4;
-            $modifiers = implode(
-                ' ', Reflection::getModifierNames($v->getModifiers())
-            );
-            $prop_str .= "$sp4/**\n$sp4*@var $" . $v->name . " " . $v->class
-                . "\n$sp4*/\n$sp4 $modifiers  $" . $v->name . ";\n\n";
-        }
-        );
+        //获取属性定义
+        $props = $this->getPropertyDef($classname, $ref->getProperties());
+
         if ($ref->getParentClass())
         {
             $classname .= ' extends \\' . $ref->getParentClass()->name;
@@ -280,7 +293,7 @@ class ExtensionDocument
         $mdefs = $this->getMethodsDef($classname, $ref->getMethods());
         $class_def = sprintf(
             "/**\n * @since %s\n */\n%s %s\n{\n%s\n%s\n%s\n}\n", $this->version, $modifier, $classname,
-            $consts, $prop_str, $mdefs
+            $consts, $props, $mdefs
         );
         return $class_def;
     }
