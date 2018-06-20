@@ -274,9 +274,7 @@ class ExtensionDocument
     function exportNamespaceClass($classname, $ref)
     {
         $ns = explode('\\', $classname);
-
-        //别名
-        if (strtolower($ns[0]) != 'swoole')
+        if (strtolower($ns[0]) != self::EXTENSION_NAME)
         {
             return;
         }
