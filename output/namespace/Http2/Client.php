@@ -2,14 +2,17 @@
 namespace Swoole\Http2;
 
 /**
- * @since 1.9.19
+ * @since 4.0.1
  */
-class Client extends \swoole_client
+class Client extends \Swoole\Client
 {
     const MSG_OOB = 1;
     const MSG_PEEK = 2;
     const MSG_DONTWAIT = 64;
     const MSG_WAITALL = 256;
+    const SHUT_RDWR = 2;
+    const SHUT_RD = 0;
+    const SHUT_WR = 1;
 
     public $errCode;
     public $sock;
@@ -18,14 +21,13 @@ class Client extends \swoole_client
     public $type;
     public $id;
     public $setting;
+    public $onConnect;
+    public $onError;
     public $onReceive;
+    public $onClose;
     public $onBufferFull;
     public $onBufferEmpty;
     public $onSSLReady;
-    public $onError;
-    public $onMessage;
-    public $onConnect;
-    public $onClose;
     public $requestHeaders;
     public $cookies;
 
@@ -164,6 +166,12 @@ class Client extends \swoole_client
      * @return mixed
      */
     public function resume(){}
+
+    /**
+     * @param $how[required]
+     * @return mixed
+     */
+    public function shutdown($how){}
 
     /**
      * @param $callback[optional]

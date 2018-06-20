@@ -2,14 +2,15 @@
 namespace Swoole\Http2;
 
 /**
- * @since 1.9.19
+ * @since 4.0.1
  */
 class Response
 {
 
+    public $errCode;
     public $statusCode;
-    public $streamId;
     public $body;
+    public $streamId;
 
 
 }

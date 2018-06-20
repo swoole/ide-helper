@@ -2,7 +2,7 @@
 namespace Swoole\Coroutine;
 
 /**
- * @since 2.0.8
+ * @since 4.0.1
  */
 class Client
 {
@@ -11,11 +11,20 @@ class Client
     const MSG_DONTWAIT = 64;
     const MSG_WAITALL = 256;
 
+    public $errCode;
+    public $sock;
+    public $reuse;
+    public $reuseCount;
+    public $type;
+    public $id;
+    public $setting;
+    public $connected;
 
     /**
+     * @param $type[required]
      * @return mixed
      */
-    public function __construct(){}
+    public function __construct($type){}
 
     /**
      * @return mixed
@@ -23,34 +32,53 @@ class Client
     public function __destruct(){}
 
     /**
+     * @param $settings[required]
      * @return mixed
      */
-    public function set(){}
+    public function set($settings){}
 
     /**
+     * @param $host[required]
+     * @param $port[optional]
+     * @param $timeout[optional]
      * @return mixed
      */
-    public function connect(){}
+    public function connect($host, $port=null, $timeout=null){}
 
     /**
+     * @param $timeout[optional]
      * @return mixed
      */
-    public function recv(){}
+    public function recv($timeout=null){}
 
     /**
+     * @param $length[optional]
      * @return mixed
      */
-    public function send(){}
+    public function peek($length=null){}
 
     /**
+     * @param $data[required]
+     * @param $flag[optional]
      * @return mixed
      */
-    public function sendfile(){}
+    public function send($data, $flag=null){}
 
     /**
+     * @param $filename[required]
+     * @param $offset[optional]
+     * @param $length[optional]
      * @return mixed
      */
-    public function sendto(){}
+    public function sendfile($filename, $offset=null, $length=null){}
+
+    /**
+     * @param $ip[required]
+     * @param $port[required]
+     * @param $data[required]
+     * @return mixed
+     */
+    public function sendto($ip, $port, $data){}
 
     /**
      * @return mixed
@@ -86,6 +114,21 @@ class Client
      * @return mixed
      */
     public function close(){}
+
+    /**
+     * @return mixed
+     */
+    public function __sleep(){}
+
+    /**
+     * @return mixed
+     */
+    public function __wakeup(){}
+
+    /**
+     * @return mixed
+     */
+    public function getSocket(){}
 
 
 }

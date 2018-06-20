@@ -2,7 +2,7 @@
 namespace Swoole\Http;
 
 /**
- * @since 1.9.19
+ * @since 4.0.1
  */
 class Client
 {
@@ -22,6 +22,10 @@ class Client
     public $headers;
     public $cookies;
     public $body;
+    public $onConnect;
+    public $onError;
+    public $onMessage;
+    public $onClose;
 
     /**
      * @param $host[required]

@@ -1,27 +1,21 @@
 <?php
-namespace Swoole;
+namespace Co;
 
 /**
- * @since 1.9.19
+ * @since 4.0.1
  */
 class Mysql
 {
-    const STATE_QUERY = 0;
-    const STATE_READ_START = 1;
-    const STATE_READ_FIELD  = 2;
-    const STATE_READ_ROW = 3;
-    const STATE_READ_END = 4;
-    const STATE_CLOSED = 5;
 
-    public $serverInfo;
+    private $serverInfo;
     public $sock;
     public $connected;
-    public $errno;
-    public $connect_errno;
-    public $error;
     public $connect_error;
-    public $insert_id;
+    public $connect_errno;
     public $affected_rows;
+    public $insert_id;
+    public $error;
+    public $errno;
 
     /**
      * @return mixed
@@ -35,28 +29,21 @@ class Mysql
 
     /**
      * @param $server_config[required]
-     * @param $callback[required]
      * @return mixed
      */
-    public function connect($server_config, $callback){}
+    public function connect($server_config){}
 
     /**
-     * @param $callback[required]
+     * @param $sql[required]
+     * @param $timeout[optional]
      * @return mixed
      */
-    public function begin($callback){}
+    public function query($sql, $timeout=null){}
 
     /**
-     * @param $callback[required]
      * @return mixed
      */
-    public function commit($callback){}
-
-    /**
-     * @param $callback[required]
-     * @return mixed
-     */
-    public function rollback($callback){}
+    public function recv(){}
 
     /**
      * @param $string[required]
@@ -66,11 +53,36 @@ class Mysql
     public function escape($string, $flags=null){}
 
     /**
-     * @param $sql[required]
-     * @param $callback[required]
      * @return mixed
      */
-    public function query($sql, $callback){}
+    public function begin(){}
+
+    /**
+     * @return mixed
+     */
+    public function commit(){}
+
+    /**
+     * @return mixed
+     */
+    public function rollback(){}
+
+    /**
+     * @param $query[required]
+     * @return mixed
+     */
+    public function prepare($query){}
+
+    /**
+     * @param $defer[optional]
+     * @return mixed
+     */
+    public function setDefer($defer=null){}
+
+    /**
+     * @return mixed
+     */
+    public function getDefer(){}
 
     /**
      * @return mixed
@@ -80,14 +92,12 @@ class Mysql
     /**
      * @return mixed
      */
-    public function getState(){}
+    public function __sleep(){}
 
     /**
-     * @param $event_name[required]
-     * @param $callback[required]
      * @return mixed
      */
-    public function on($event_name, $callback){}
+    public function __wakeup(){}
 
 
 }

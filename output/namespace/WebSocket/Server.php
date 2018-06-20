@@ -2,11 +2,42 @@
 namespace Swoole\WebSocket;
 
 /**
- * @since 2.0.8
+ * @since 4.0.1
  */
 class Server extends \Swoole\Http\Server
 {
 
+    public $onConnect;
+    public $onReceive;
+    public $onClose;
+    public $onPacket;
+    public $onBufferFull;
+    public $onBufferEmpty;
+    public $onStart;
+    public $onShutdown;
+    public $onWorkerStart;
+    public $onWorkerStop;
+    public $onWorkerExit;
+    public $onWorkerError;
+    public $onTask;
+    public $onFinish;
+    public $onManagerStart;
+    public $onManagerStop;
+    public $onPipeMessage;
+    public $connections;
+    public $host;
+    public $port;
+    public $type;
+    public $mode;
+    public $ports;
+    public $master_pid;
+    public $manager_pid;
+    public $worker_id;
+    public $taskworker;
+    public $worker_pid;
+    public $onRequest;
+    public $onHandshake;
+    public $setting;
 
     /**
      * @param $event_name[required]
@@ -31,6 +62,12 @@ class Server extends \Swoole\Http\Server
     public function exist($fd){}
 
     /**
+     * @param $fd[required]
+     * @return mixed
+     */
+    public function isEstablished($fd){}
+
+    /**
      * @param $data[required]
      * @param $opcode[optional]
      * @param $finish[optional]
@@ -51,6 +88,16 @@ class Server extends \Swoole\Http\Server
     public function start(){}
 
     /**
+     * @return mixed
+     */
+    public function __sleep(){}
+
+    /**
+     * @return mixed
+     */
+    public function __wakeup(){}
+
+    /**
      * @param $host[required]
      * @param $port[optional]
      * @param $mode[optional]
@@ -58,6 +105,11 @@ class Server extends \Swoole\Http\Server
      * @return mixed
      */
     public function __construct($host, $port=null, $mode=null, $sock_type=null){}
+
+    /**
+     * @return mixed
+     */
+    public function __destruct(){}
 
     /**
      * @param $host[required]
@@ -170,6 +222,13 @@ class Server extends \Swoole\Http\Server
     public function taskWaitMulti($tasks, $timeout=null){}
 
     /**
+     * @param $tasks[required]
+     * @param $timeout[optional]
+     * @return mixed
+     */
+    public function taskCo($tasks, $timeout=null){}
+
+    /**
      * @param $data[required]
      * @return mixed
      */
@@ -258,11 +317,11 @@ class Server extends \Swoole\Http\Server
     public function defer($callback){}
 
     /**
+     * @param $message[required]
      * @param $dst_worker_id[required]
-     * @param $data[required]
      * @return mixed
      */
-    public function sendMessage($dst_worker_id, $data){}
+    public function sendMessage($message, $dst_worker_id){}
 
     /**
      * @param $process[required]
@@ -280,6 +339,11 @@ class Server extends \Swoole\Http\Server
      * @return mixed
      */
     public function getSocket($port=null){}
+
+    /**
+     * @return mixed
+     */
+    public function getReceivedTime(){}
 
     /**
      * @param $fd[required]

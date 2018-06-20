@@ -2,11 +2,15 @@
 namespace Swoole;
 
 /**
- * @since 1.9.19
+ * @since 4.0.1
  */
 class Process
 {
     const IPC_NOWAIT = 256;
+    const PIPE_MASTER = 1;
+    const PIPE_WORKER = 2;
+    const PIPE_READ = 3;
+    const PIPE_WRITE = 4;
 
     public $pipe;
     public $callback;
@@ -66,6 +70,18 @@ class Process
      * @return mixed
      */
     public static function setaffinity($cpu_settings){}
+
+    /**
+     * @param $seconds[required]
+     * @return mixed
+     */
+    public function setTimeout($seconds){}
+
+    /**
+     * @param $blocking[required]
+     * @return mixed
+     */
+    public function setBlocking($blocking){}
 
     /**
      * @param $key[optional]

@@ -47,9 +47,41 @@ class ExtensionDocument
         return implode("\n", $lines)."\n";
     }
 
+    function exportShortAlias($className)
+    {
+        if (strtolower(substr($className, 0, 2)) != 'co')
+        {
+            return;
+        }
+        $ns = explode('\\', $className);
+        foreach ($ns as &$n)
+        {
+            $n = ucfirst($n);
+        }
+        $path = OUTPUT_DIR . '/alias/' . implode('/', array_slice($ns, 1)) . '.php';
+        if (!is_dir(dirname($path)))
+        {
+            mkdir(dirname($path), 0777, true);
+        }
+        file_put_contents($path, sprintf("<?php\nnamespace %s \n{\n" . self::SPACE5 .
+            "class %s extends \%s {}\n}\n", implode('\\', array_slice($ns, 0, count($ns) - 1)), end($ns),
+            str_replace('co\\', 'swoole\\', $className)));
+    }
+
     static function getNamespaceAlias($className)
     {
-        return str_replace(' ', '\\', ucwords(str_replace('_', ' ', $className)));
+        if (strtolower($className) == 'co')
+        {
+            return "swoole\\coroutine";
+        }
+        elseif (strtolower($className) == 'chan')
+        {
+            return "swoole\\coroutine\\channel";
+        }
+        else
+        {
+            return str_replace(' ', '\\', ucwords(str_replace('_', ' ', $className)));
+        }
     }
 
     function getConfig($class, $name, $type)
@@ -242,6 +274,8 @@ class ExtensionDocument
     function exportNamespaceClass($classname, $ref)
     {
         $ns = explode('\\', $classname);
+
+        //别名
         if (strtolower($ns[0]) != 'swoole')
         {
             return;
@@ -347,13 +381,17 @@ class ExtensionDocument
         $class_alias = "<?php\n";
         foreach ($classes as $className => $ref)
         {
-            //命名空间
-            if (strchr($className, '\\'))
+            //短命名别名
+            if (strtolower(substr($className, 0, 3)) == 'co\\')
+            {
+                $this->exportShortAlias($className);
+            }
+            //标准命名空间的类名，如 Swoole\Server
+            elseif (strchr($className, '\\'))
             {
                 $this->exportNamespaceClass($className, $ref);
-                continue;
             }
-            //非命名空间
+            //下划线分割类别名
             else
             {
                 $class_alias .= sprintf("\nclass %s extends %s\n{\n\n}\n", $className, self::getNamespaceAlias($className));

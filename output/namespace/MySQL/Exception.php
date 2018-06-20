@@ -2,11 +2,15 @@
 namespace Swoole\MySQL;
 
 /**
- * @since 2.0.8
+ * @since 4.0.1
  */
 class Exception extends \Exception
 {
 
+    protected $message;
+    protected $code;
+    protected $file;
+    protected $line;
 
     /**
      * @param $message[optional]

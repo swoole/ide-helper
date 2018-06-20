@@ -1,8 +1,8 @@
 <?php
-namespace Swoole\Mysql;
+namespace Co\Mysql;
 
 /**
- * @since 1.9.19
+ * @since 4.0.1
  */
 class Exception extends \Exception
 {

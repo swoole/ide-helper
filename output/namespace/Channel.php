@@ -2,7 +2,7 @@
 namespace Swoole;
 
 /**
- * @since 1.9.19
+ * @since 4.0.1
  */
 class Channel
 {
@@ -29,6 +29,11 @@ class Channel
      * @return mixed
      */
     public function pop(){}
+
+    /**
+     * @return mixed
+     */
+    public function peek(){}
 
     /**
      * @return mixed

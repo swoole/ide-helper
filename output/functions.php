@@ -47,6 +47,22 @@ function swoole_event_write($fd, $data){}
 function swoole_event_defer($callback){}
 
 /**
+ * @param $callback[required]
+ * @param $before[optional]
+ * @return mixed
+ */
+function swoole_event_cycle($callback, $before=null){}
+
+function swoole_event_dispatch(){}
+
+/**
+ * @param $fd[required]
+ * @param $events[optional]
+ * @return mixed
+ */
+function swoole_event_isset($fd, $events=null){}
+
+/**
  * @param $ms[required]
  * @param $callback[required]
  * @param $param[optional]
@@ -114,11 +130,35 @@ function swoole_async_readfile($filename, $callback){}
 function swoole_async_writefile($filename, $content, $callback=null, $flags=null){}
 
 /**
- * @param $domain_name[required]
- * @param $content[required]
+ * @param $hostname[required]
+ * @param $callback[required]
  * @return mixed
  */
-function swoole_async_dns_lookup($domain_name, $content){}
+function swoole_async_dns_lookup($hostname, $callback){}
+
+/**
+ * @param $domain_name[required]
+ * @return mixed
+ */
+function swoole_async_dns_lookup_coro($domain_name){}
+
+/**
+ * @param $func[required]
+ * @return mixed
+ */
+function swoole_coroutine_create($func){}
+
+/**
+ * @param $command[required]
+ * @return mixed
+ */
+function swoole_coroutine_exec($command){}
+
+/**
+ * @param $func[required]
+ * @return mixed
+ */
+function go($func){}
 
 /**
  * @param $read_array[required]
@@ -150,9 +190,19 @@ function swoole_get_local_mac(){}
 
 /**
  * @param $errno[required]
+ * @param $error_type[optional]
  * @return mixed
  */
-function swoole_strerror($errno){}
+function swoole_strerror($errno, $error_type=null){}
 
 function swoole_errno(){}
+
+/**
+ * @param $data[required]
+ * @param $type[optional]
+ * @return mixed
+ */
+function swoole_hashcode($data, $type=null){}
+
+function swoole_call_user_shutdown_begin(){}
 

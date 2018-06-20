@@ -2,7 +2,7 @@
 namespace Swoole;
 
 /**
- * @since 1.9.19
+ * @since 4.0.1
  */
 class Timer
 {
@@ -11,17 +11,17 @@ class Timer
     /**
      * @param $ms[required]
      * @param $callback[required]
-     * @param $param[optional]
      * @return mixed
      */
-    public static function tick($ms, $callback, $param=null){}
+    public static function tick($ms, $callback){}
 
     /**
      * @param $ms[required]
      * @param $callback[required]
+     * @param $param[optional]
      * @return mixed
      */
-    public static function after($ms, $callback){}
+    public static function after($ms, $callback, $param=null){}
 
     /**
      * @param $timer_id[required]

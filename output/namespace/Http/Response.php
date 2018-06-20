@@ -2,7 +2,7 @@
 namespace Swoole\Http;
 
 /**
- * @since 1.9.19
+ * @since 4.0.1
  */
 class Response
 {
@@ -88,6 +88,34 @@ class Response
      * @return mixed
      */
     public function sendfile($filename, $offset=null, $length=null){}
+
+    /**
+     * @param $location[required]
+     * @param $http_code[optional]
+     * @return mixed
+     */
+    public function redirect($location, $http_code=null){}
+
+    /**
+     * @return mixed
+     */
+    public function detach(){}
+
+    /**
+     * @param $fd[required]
+     * @return mixed
+     */
+    public static function create($fd){}
+
+    /**
+     * @return mixed
+     */
+    public function __sleep(){}
+
+    /**
+     * @return mixed
+     */
+    public function __wakeup(){}
 
     /**
      * @return mixed

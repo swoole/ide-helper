@@ -2,7 +2,7 @@
 namespace Swoole;
 
 /**
- * @since 1.9.19
+ * @since 4.0.1
  */
 class Lock
 {
@@ -12,6 +12,7 @@ class Lock
     const RWLOCK = 1;
     const SPINLOCK = 5;
 
+    public $errCode;
 
     /**
      * @param $type[optional]
@@ -55,6 +56,11 @@ class Lock
      * @return mixed
      */
     public function unlock(){}
+
+    /**
+     * @return mixed
+     */
+    public function destroy(){}
 
 
 }

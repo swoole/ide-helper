@@ -2,7 +2,7 @@
 namespace Swoole\WebSocket;
 
 /**
- * @since 2.0.8
+ * @since 4.0.1
  */
 class Frame
 {

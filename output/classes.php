@@ -40,12 +40,27 @@ class swoole_client extends Swoole\Client
 
 }
 
+class swoole_coroutine extends Swoole\Coroutine
+{
+
+}
+
+class co extends swoole\coroutine
+{
+
+}
+
 class swoole_http_client extends Swoole\Http\Client
 {
 
 }
 
 class swoole_process extends Swoole\Process
+{
+
+}
+
+class swoole_process_pool extends Swoole\Process\Pool
 {
 
 }
@@ -66,6 +81,11 @@ class swoole_lock extends Swoole\Lock
 }
 
 class swoole_atomic extends Swoole\Atomic
+{
+
+}
+
+class swoole_atomic_long extends Swoole\Atomic\Long
 {
 
 }
@@ -116,6 +136,21 @@ class swoole_mmap extends Swoole\Mmap
 }
 
 class swoole_channel extends Swoole\Channel
+{
+
+}
+
+class chan extends swoole\coroutine\channel
+{
+
+}
+
+class swoole_ringqueue extends Swoole\Ringqueue
+{
+
+}
+
+class swoole_msgqueue extends Swoole\Msgqueue
 {
 
 }
