@@ -2,7 +2,7 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class MySQL
 {
@@ -36,43 +36,43 @@ class MySQL
     public function __destruct(){}
 
     /**
-     * @param $server_config[required]
-     * @param $callback[required]
+     * @param $server_config [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
     public function connect($server_config, $callback){}
 
     /**
-     * @param $callback[required]
+     * @param mixed $callback [required]
      * @return mixed
      */
     public function begin($callback){}
 
     /**
-     * @param $callback[required]
+     * @param mixed $callback [required]
      * @return mixed
      */
     public function commit($callback){}
 
     /**
-     * @param $callback[required]
+     * @param mixed $callback [required]
      * @return mixed
      */
     public function rollback($callback){}
 
     /**
-     * @param $string[required]
-     * @param $flags[optional]
+     * @param $string [required]
+     * @param $flags [optional]
      * @return mixed
      */
     public function escape($string, $flags=null){}
 
     /**
-     * @param $sql[required]
-     * @param $callback[required]
+     * @param $sql [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
-    public function query($sql, $callback){}
+    public function query(string $sql, $callback){}
 
     /**
      * @return mixed
@@ -85,11 +85,11 @@ class MySQL
     public function getState(){}
 
     /**
-     * @param $event_name[required]
-     * @param $callback[required]
+     * @param $event_name [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
-    public function on($event_name, $callback){}
+    public function on(string $event_name, $callback){}
 
 
 }
