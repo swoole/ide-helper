@@ -2,17 +2,17 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class MsgQueue
 {
 
 
     /**
-     * @param $len[required]
+     * @param $len [required]
      * @return mixed
      */
-    public function __construct($len){}
+    public function __construct(int $len){}
 
     /**
      * @return mixed
@@ -20,20 +20,20 @@ class MsgQueue
     public function __destruct(){}
 
     /**
-     * @param $data[required]
-     * @param $type[optional]
+     * @param $data [required]
+     * @param $type [optional]
      * @return mixed
      */
     public function push($data, $type=null){}
 
     /**
-     * @param $type[optional]
+     * @param $type [optional]
      * @return mixed
      */
     public function pop($type=null){}
 
     /**
-     * @param $blocking[required]
+     * @param $blocking [required]
      * @return mixed
      */
     public function setBlocking($blocking){}

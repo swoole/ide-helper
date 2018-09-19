@@ -2,7 +2,7 @@
 namespace Swoole\Http;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Response
 {
@@ -18,80 +18,73 @@ class Response
     public function initHeader(){}
 
     /**
-     * @param $name[required]
-     * @param $value[optional]
-     * @param $expires[optional]
-     * @param $path[optional]
-     * @param $domain[optional]
-     * @param $secure[optional]
-     * @param $httponly[optional]
+     * @param $name [required]
+     * @param $value [optional]
+     * @param $expires [optional]
+     * @param $path [optional]
+     * @param $domain [optional]
+     * @param $secure [optional]
+     * @param $httponly [optional]
      * @return mixed
      */
     public function cookie($name, $value=null, $expires=null, $path=null, $domain=null, $secure=null, $httponly=null){}
 
     /**
-     * @param $name[required]
-     * @param $value[optional]
-     * @param $expires[optional]
-     * @param $path[optional]
-     * @param $domain[optional]
-     * @param $secure[optional]
-     * @param $httponly[optional]
+     * @param $name [required]
+     * @param $value [optional]
+     * @param $expires [optional]
+     * @param $path [optional]
+     * @param $domain [optional]
+     * @param $secure [optional]
+     * @param $httponly [optional]
      * @return mixed
      */
     public function rawcookie($name, $value=null, $expires=null, $path=null, $domain=null, $secure=null, $httponly=null){}
 
     /**
-     * @param $http_code[required]
+     * @param $http_code [required]
+     * @param $reason [optional]
      * @return mixed
      */
-    public function status($http_code){}
+    public function status($http_code, string $reason=null){}
 
     /**
-     * @param $compress_level[optional]
+     * @param $compress_level [optional]
      * @return mixed
      */
     public function gzip($compress_level=null){}
 
     /**
-     * @param $key[required]
-     * @param $value[required]
-     * @param $ucwords[optional]
+     * @param $key [required]
+     * @param $value [required]
+     * @param $ucwords [optional]
      * @return mixed
      */
     public function header($key, $value, $ucwords=null){}
 
     /**
-     * @param $key[required]
-     * @param $value[required]
-     * @param $ucwords[optional]
+     * @param $content [required]
      * @return mixed
      */
-    public function trailer($key, $value, $ucwords=null){}
+    public function write(string $content){}
 
     /**
-     * @param $content[required]
+     * @param $content [optional]
      * @return mixed
      */
-    public function write($content){}
+    public function end(string $content=null){}
 
     /**
-     * @param $content[optional]
+     * @param $filename [required]
+     * @param $offset [optional]
+     * @param $length [optional]
      * @return mixed
      */
-    public function end($content=null){}
+    public function sendfile(string $filename, int $offset=null, int $length=null){}
 
     /**
-     * @param $filename[required]
-     * @param $offset[optional]
-     * @param $length[optional]
-     * @return mixed
-     */
-    public function sendfile($filename, $offset=null, $length=null){}
-
-    /**
-     * @param $location[required]
-     * @param $http_code[optional]
+     * @param $location [required]
+     * @param $http_code [optional]
      * @return mixed
      */
     public function redirect($location, $http_code=null){}
@@ -102,20 +95,10 @@ class Response
     public function detach(){}
 
     /**
-     * @param $fd[required]
+     * @param $fd [required]
      * @return mixed
      */
-    public static function create($fd){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
+    public static function create(int $fd){}
 
     /**
      * @return mixed

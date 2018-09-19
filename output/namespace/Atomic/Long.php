@@ -2,26 +2,26 @@
 namespace Swoole\Atomic;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Long
 {
 
 
     /**
-     * @param $value[optional]
+     * @param $value [optional]
      * @return mixed
      */
     public function __construct($value=null){}
 
     /**
-     * @param $add_value[optional]
+     * @param $add_value [optional]
      * @return mixed
      */
     public function add($add_value=null){}
 
     /**
-     * @param $sub_value[optional]
+     * @param $sub_value [optional]
      * @return mixed
      */
     public function sub($sub_value=null){}
@@ -32,27 +32,17 @@ class Long
     public function get(){}
 
     /**
-     * @param $value[required]
+     * @param $value [required]
      * @return mixed
      */
     public function set($value){}
 
     /**
-     * @param $cmp_value[required]
-     * @param $new_value[required]
+     * @param $cmp_value [required]
+     * @param $new_value [required]
      * @return mixed
      */
     public function cmpset($cmp_value, $new_value){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
 
 }

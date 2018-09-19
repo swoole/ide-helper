@@ -2,7 +2,7 @@
 namespace Swoole\Http;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Request
 {
@@ -26,16 +26,6 @@ class Request
      * @return mixed
      */
     public function getData(){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
     /**
      * @return mixed

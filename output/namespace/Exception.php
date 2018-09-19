@@ -2,7 +2,7 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Exception extends \Exception
 {
@@ -13,12 +13,12 @@ class Exception extends \Exception
     protected $line;
 
     /**
-     * @param $message[optional]
-     * @param $code[optional]
-     * @param $previous[optional]
+     * @param $message [optional]
+     * @param $code [optional]
+     * @param $previous [optional]
      * @return mixed
      */
-    public function __construct($message=null, $code=null, $previous=null){}
+    public function __construct(string $message=null, $code=null, $previous=null){}
 
     /**
      * @return mixed

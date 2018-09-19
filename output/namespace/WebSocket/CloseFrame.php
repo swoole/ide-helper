@@ -4,13 +4,15 @@ namespace Swoole\WebSocket;
 /**
  * @since 4.2.1
  */
-class Frame
+class CloseFrame extends \Swoole\WebSocket\Frame
 {
 
     public $fd;
     public $data;
-    public $opcode;
     public $finish;
+    public $opcode;
+    public $code;
+    public $reason;
 
     /**
      * @return mixed

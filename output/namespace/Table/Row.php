@@ -2,7 +2,7 @@
 namespace Swoole\Table;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Row
 {
@@ -11,29 +11,29 @@ class Row
     public $value;
 
     /**
-     * @param $offset[required]
+     * @param $offset [required]
      * @return mixed
      */
-    public function offsetExists($offset){}
+    public function offsetExists(int $offset){}
 
     /**
-     * @param $offset[required]
+     * @param $offset [required]
      * @return mixed
      */
-    public function offsetGet($offset){}
+    public function offsetGet(int $offset){}
 
     /**
-     * @param $offset[required]
-     * @param $value[required]
+     * @param $offset [required]
+     * @param $value [required]
      * @return mixed
      */
-    public function offsetSet($offset, $value){}
+    public function offsetSet(int $offset, $value){}
 
     /**
-     * @param $offset[required]
+     * @param $offset [required]
      * @return mixed
      */
-    public function offsetUnset($offset){}
+    public function offsetUnset(int $offset){}
 
     /**
      * @return mixed

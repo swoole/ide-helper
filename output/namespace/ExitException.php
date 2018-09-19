@@ -1,16 +1,26 @@
 <?php
-namespace Swoole\Coroutine\Socket;
+namespace Swoole;
 
 /**
  * @since 4.2.1
  */
-class Exception extends \Exception
+class ExitException extends \Exception
 {
 
     protected $message;
     protected $code;
     protected $file;
     protected $line;
+
+    /**
+     * @return mixed
+     */
+    public function getFlags(){}
+
+    /**
+     * @return mixed
+     */
+    public function getStatus(){}
 
     /**
      * @param $message [optional]
