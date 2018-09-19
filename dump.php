@@ -37,7 +37,7 @@ class ExtensionDocument
     public static $intVars = [
         'port', 'fd', 'pid', 'uid', 'conn_fd', 'offset', 'worker_id', 'dst_worker_id', 'reactor_id',
         'timer_id', 'length', 'opcode', 'len', 'chunk_size', 'size', 'worker_num', 'signal_no',
-        'start_fd', 'find_count', 'ms',
+        'start_fd', 'find_count', 'ms', 'cid', 'limit',
     ];
 
     public static $floatVars = [
@@ -49,7 +49,7 @@ class ExtensionDocument
     ];
 
     public static $arrVars = [
-        'settings'
+        'settings', 'read_array', 'write_array', 'error_array'
     ];
 
     public static $strVars = [

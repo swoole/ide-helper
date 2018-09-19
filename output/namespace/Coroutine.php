@@ -116,7 +116,7 @@ class Coroutine
      * @param $limit [optional]
      * @return mixed
      */
-    public static function getBackTrace($cid, $options=null, $limit=null){}
+    public static function getBackTrace(int $cid, $options=null, int $limit=null){}
 
     /**
      * @return mixed

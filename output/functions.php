@@ -167,7 +167,7 @@ function go($func){}
  * @param $timeout [optional]
  * @return mixed
  */
-function swoole_client_select($read_array, $write_array, $error_array, float $timeout=null){}
+function swoole_client_select(array $read_array, array $write_array, array $error_array, float $timeout=null){}
 
 /**
  * @param $read_array [required]
@@ -176,7 +176,7 @@ function swoole_client_select($read_array, $write_array, $error_array, float $ti
  * @param $timeout [optional]
  * @return mixed
  */
-function swoole_select($read_array, $write_array, $error_array, float $timeout=null){}
+function swoole_select(array $read_array, array $write_array, array $error_array, float $timeout=null){}
 
 /**
  * @param $process_name [required]
