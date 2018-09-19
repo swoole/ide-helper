@@ -2,14 +2,14 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Client
 {
     const MSG_OOB = 1;
     const MSG_PEEK = 2;
-    const MSG_DONTWAIT = 64;
-    const MSG_WAITALL = 256;
+    const MSG_DONTWAIT = 128;
+    const MSG_WAITALL = 64;
     const SHUT_RDWR = 2;
     const SHUT_RD = 0;
     const SHUT_WR = 1;
@@ -27,11 +27,10 @@ class Client
     public $onClose;
     public $onBufferFull;
     public $onBufferEmpty;
-    public $onSSLReady;
 
     /**
-     * @param $type[required]
-     * @param $async[optional]
+     * @param $type [required]
+     * @param $async [optional]
      * @return mixed
      */
     public function __construct($type, $async=null){}
@@ -42,55 +41,55 @@ class Client
     public function __destruct(){}
 
     /**
-     * @param $settings[required]
+     * @param $settings [required]
      * @return mixed
      */
-    public function set($settings){}
+    public function set(array $settings){}
 
     /**
-     * @param $host[required]
-     * @param $port[optional]
-     * @param $timeout[optional]
-     * @param $sock_flag[optional]
+     * @param $host [required]
+     * @param $port [optional]
+     * @param $timeout [optional]
+     * @param $sock_flag [optional]
      * @return mixed
      */
-    public function connect($host, $port=null, $timeout=null, $sock_flag=null){}
+    public function connect(string $host, int $port=null, float $timeout=null, $sock_flag=null){}
 
     /**
-     * @param $size[optional]
-     * @param $flag[optional]
+     * @param $size [optional]
+     * @param $flag [optional]
      * @return mixed
      */
-    public function recv($size=null, $flag=null){}
+    public function recv(int $size=null, $flag=null){}
 
     /**
-     * @param $data[required]
-     * @param $flag[optional]
+     * @param $data [required]
+     * @param $flag [optional]
      * @return mixed
      */
     public function send($data, $flag=null){}
 
     /**
-     * @param $dst_socket[required]
+     * @param $dst_socket [required]
      * @return mixed
      */
     public function pipe($dst_socket){}
 
     /**
-     * @param $filename[required]
-     * @param $offset[optional]
-     * @param $length[optional]
+     * @param $filename [required]
+     * @param $offset [optional]
+     * @param $length [optional]
      * @return mixed
      */
-    public function sendfile($filename, $offset=null, $length=null){}
+    public function sendfile(string $filename, int $offset=null, int $length=null){}
 
     /**
-     * @param $ip[required]
-     * @param $port[required]
-     * @param $data[required]
+     * @param $ip [required]
+     * @param $port [required]
+     * @param $data [required]
      * @return mixed
      */
-    public function sendto($ip, $port, $data){}
+    public function sendto($ip, int $port, $data){}
 
     /**
      * @return mixed
@@ -113,26 +112,10 @@ class Client
     public function resume(){}
 
     /**
-     * @param $how[required]
+     * @param $how [required]
      * @return mixed
      */
     public function shutdown($how){}
-
-    /**
-     * @param $callback[optional]
-     * @return mixed
-     */
-    public function enableSSL($callback=null){}
-
-    /**
-     * @return mixed
-     */
-    public function getPeerCert(){}
-
-    /**
-     * @return mixed
-     */
-    public function verifyPeerCert(){}
 
     /**
      * @return mixed
@@ -150,17 +133,17 @@ class Client
     public function getpeername(){}
 
     /**
-     * @param $force[optional]
+     * @param $force [optional]
      * @return mixed
      */
     public function close($force=null){}
 
     /**
-     * @param $event_name[required]
-     * @param $callback[required]
+     * @param $event_name [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
-    public function on($event_name, $callback){}
+    public function on(string $event_name, $callback){}
 
     /**
      * @return mixed

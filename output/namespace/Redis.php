@@ -2,7 +2,7 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Redis
 {
@@ -23,7 +23,7 @@ class Redis
     public $errMsg;
 
     /**
-     * @param $setting[optional]
+     * @param $setting [optional]
      * @return mixed
      */
     public function __construct($setting=null){}
@@ -34,19 +34,19 @@ class Redis
     public function __destruct(){}
 
     /**
-     * @param $event_name[required]
-     * @param $callback[required]
+     * @param $event_name [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
-    public function on($event_name, $callback){}
+    public function on(string $event_name, $callback){}
 
     /**
-     * @param $host[required]
-     * @param $port[required]
-     * @param $callback[required]
+     * @param $host [required]
+     * @param $port [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
-    public function connect($host, $port, $callback){}
+    public function connect(string $host, int $port, $callback){}
 
     /**
      * @return mixed
@@ -59,11 +59,11 @@ class Redis
     public function getState(){}
 
     /**
-     * @param $command[required]
-     * @param $params[required]
+     * @param $command [required]
+     * @param $params [required]
      * @return mixed
      */
-    public function __call($command, $params){}
+    public function __call(string $command, $params){}
 
 
 }

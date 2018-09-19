@@ -2,19 +2,19 @@
 namespace Swoole\Process;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Pool
 {
 
 
     /**
-     * @param $worker_num[required]
-     * @param $ipc_type[optional]
-     * @param $msgqueue_key[optional]
+     * @param $worker_num [required]
+     * @param $ipc_type [optional]
+     * @param $msgqueue_key [optional]
      * @return mixed
      */
-    public function __construct($worker_num, $ipc_type=null, $msgqueue_key=null){}
+    public function __construct(int $worker_num, $ipc_type=null, $msgqueue_key=null){}
 
     /**
      * @return mixed
@@ -22,22 +22,27 @@ class Pool
     public function __destruct(){}
 
     /**
-     * @param $event_name[required]
-     * @param $callback[required]
+     * @param $event_name [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
-    public function on($event_name, $callback){}
+    public function on(string $event_name, $callback){}
 
     /**
-     * @param $host[required]
-     * @param $port[optional]
-     * @param $backlog[optional]
      * @return mixed
      */
-    public function listen($host, $port=null, $backlog=null){}
+    public function getProcess(){}
 
     /**
-     * @param $data[required]
+     * @param $host [required]
+     * @param $port [optional]
+     * @param $backlog [optional]
+     * @return mixed
+     */
+    public function listen(string $host, int $port=null, $backlog=null){}
+
+    /**
+     * @param $data [required]
      * @return mixed
      */
     public function write($data){}

@@ -2,7 +2,7 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Table
 {
@@ -12,19 +12,19 @@ class Table
 
 
     /**
-     * @param $table_size[required]
-     * @param $conflict_proportion[optional]
+     * @param $table_size [required]
+     * @param $conflict_proportion [optional]
      * @return mixed
      */
     public function __construct($table_size, $conflict_proportion=null){}
 
     /**
-     * @param $name[required]
-     * @param $type[required]
-     * @param $size[optional]
+     * @param $name [required]
+     * @param $type [required]
+     * @param $size [optional]
      * @return mixed
      */
-    public function column($name, $type, $size=null){}
+    public function column($name, $type, int $size=null){}
 
     /**
      * @return mixed
@@ -37,15 +37,15 @@ class Table
     public function destroy(){}
 
     /**
-     * @param $key[required]
-     * @param $value[required]
+     * @param $key [required]
+     * @param $value [required]
      * @return mixed
      */
     public function set($key, $value){}
 
     /**
-     * @param $key[required]
-     * @param $field[optional]
+     * @param $key [required]
+     * @param $field [optional]
      * @return mixed
      */
     public function get($key, $field=null){}
@@ -56,29 +56,29 @@ class Table
     public function count(){}
 
     /**
-     * @param $key[required]
+     * @param $key [required]
      * @return mixed
      */
     public function del($key){}
 
     /**
-     * @param $key[required]
+     * @param $key [required]
      * @return mixed
      */
     public function exist($key){}
 
     /**
-     * @param $key[required]
-     * @param $column[required]
-     * @param $incrby[optional]
+     * @param $key [required]
+     * @param $column [required]
+     * @param $incrby [optional]
      * @return mixed
      */
     public function incr($key, $column, $incrby=null){}
 
     /**
-     * @param $key[required]
-     * @param $column[required]
-     * @param $decrby[optional]
+     * @param $key [required]
+     * @param $column [required]
+     * @param $decrby [optional]
      * @return mixed
      */
     public function decr($key, $column, $decrby=null){}
@@ -89,39 +89,29 @@ class Table
     public function getMemorySize(){}
 
     /**
-     * @param $offset[required]
+     * @param $offset [required]
      * @return mixed
      */
-    public function offsetExists($offset){}
+    public function offsetExists(int $offset){}
 
     /**
-     * @param $offset[required]
+     * @param $offset [required]
      * @return mixed
      */
-    public function offsetGet($offset){}
+    public function offsetGet(int $offset){}
 
     /**
-     * @param $offset[required]
-     * @param $value[required]
+     * @param $offset [required]
+     * @param $value [required]
      * @return mixed
      */
-    public function offsetSet($offset, $value){}
+    public function offsetSet(int $offset, $value){}
 
     /**
-     * @param $offset[required]
+     * @param $offset [required]
      * @return mixed
      */
-    public function offsetUnset($offset){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
+    public function offsetUnset(int $offset){}
 
     /**
      * @return mixed

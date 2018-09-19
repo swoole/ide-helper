@@ -1,5 +1,5 @@
 <?php
-namespace Swoole\Connection;
+namespace Swoole\Coroutine;
 
 /**
  * @since 4.2.1
@@ -42,31 +42,6 @@ class Iterator
      * @return mixed
      */
     public function __destruct(){}
-
-    /**
-     * @param $fd [required]
-     * @return mixed
-     */
-    public function offsetExists(int $fd){}
-
-    /**
-     * @param $fd [required]
-     * @return mixed
-     */
-    public function offsetGet(int $fd){}
-
-    /**
-     * @param $fd [required]
-     * @param $value [required]
-     * @return mixed
-     */
-    public function offsetSet(int $fd, $value){}
-
-    /**
-     * @param $fd [required]
-     * @return mixed
-     */
-    public function offsetUnset(int $fd){}
 
 
 }

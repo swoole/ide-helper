@@ -2,7 +2,7 @@
 namespace Swoole\Http;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Client
 {
@@ -28,12 +28,12 @@ class Client
     public $onClose;
 
     /**
-     * @param $host[required]
-     * @param $port[optional]
-     * @param $ssl[optional]
+     * @param $host [required]
+     * @param $port [optional]
+     * @param $ssl [optional]
      * @return mixed
      */
-    public function __construct($host, $port=null, $ssl=null){}
+    public function __construct(string $host, int $port=null, $ssl=null){}
 
     /**
      * @return mixed
@@ -41,91 +41,91 @@ class Client
     public function __destruct(){}
 
     /**
-     * @param $settings[required]
+     * @param $settings [required]
      * @return mixed
      */
-    public function set($settings){}
+    public function set(array $settings){}
 
     /**
-     * @param $method[required]
+     * @param $method [required]
      * @return mixed
      */
     public function setMethod($method){}
 
     /**
-     * @param $headers[required]
+     * @param $headers [required]
      * @return mixed
      */
     public function setHeaders($headers){}
 
     /**
-     * @param $cookies[required]
+     * @param $cookies [required]
      * @return mixed
      */
     public function setCookies($cookies){}
 
     /**
-     * @param $data[required]
+     * @param $data [required]
      * @return mixed
      */
     public function setData($data){}
 
     /**
-     * @param $path[required]
-     * @param $name[required]
-     * @param $type[optional]
-     * @param $filename[optional]
-     * @param $offset[optional]
-     * @param $length[optional]
+     * @param $path [required]
+     * @param $name [required]
+     * @param $type [optional]
+     * @param $filename [optional]
+     * @param $offset [optional]
+     * @param $length [optional]
      * @return mixed
      */
-    public function addFile($path, $name, $type=null, $filename=null, $offset=null, $length=null){}
+    public function addFile($path, $name, $type=null, string $filename=null, int $offset=null, int $length=null){}
 
     /**
-     * @param $path[required]
-     * @param $callback[required]
+     * @param $path [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
     public function execute($path, $callback){}
 
     /**
-     * @param $data[required]
-     * @param $opcode[optional]
-     * @param $finish[optional]
+     * @param $data [required]
+     * @param $opcode [optional]
+     * @param $finish [optional]
      * @return mixed
      */
-    public function push($data, $opcode=null, $finish=null){}
+    public function push($data, int $opcode=null, $finish=null){}
 
     /**
-     * @param $path[required]
-     * @param $callback[required]
+     * @param $path [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
     public function get($path, $callback){}
 
     /**
-     * @param $path[required]
-     * @param $data[required]
-     * @param $callback[required]
+     * @param $path [required]
+     * @param $data [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
     public function post($path, $data, $callback){}
 
     /**
-     * @param $path[required]
-     * @param $callback[required]
+     * @param $path [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
     public function upgrade($path, $callback){}
 
     /**
-     * @param $path[required]
-     * @param $file[required]
-     * @param $callback[required]
-     * @param $offset[optional]
+     * @param $path [required]
+     * @param $file [required]
+     * @param mixed $callback [required]
+     * @param $offset [optional]
      * @return mixed
      */
-    public function download($path, $file, $callback, $offset=null){}
+    public function download($path, $file, $callback, int $offset=null){}
 
     /**
      * @return mixed
@@ -138,11 +138,11 @@ class Client
     public function close(){}
 
     /**
-     * @param $event_name[required]
-     * @param $callback[required]
+     * @param $event_name [required]
+     * @param mixed $callback [required]
      * @return mixed
      */
-    public function on($event_name, $callback){}
+    public function on(string $event_name, $callback){}
 
 
 }

@@ -2,7 +2,7 @@
 namespace Swoole\Coroutine;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class MySQL
 {
@@ -28,17 +28,17 @@ class MySQL
     public function __destruct(){}
 
     /**
-     * @param $server_config[required]
+     * @param $server_config [required]
      * @return mixed
      */
     public function connect($server_config){}
 
     /**
-     * @param $sql[required]
-     * @param $timeout[optional]
+     * @param $sql [required]
+     * @param $timeout [optional]
      * @return mixed
      */
-    public function query($sql, $timeout=null){}
+    public function query(string $sql, float $timeout=null){}
 
     /**
      * @return mixed
@@ -46,35 +46,39 @@ class MySQL
     public function recv(){}
 
     /**
-     * @param $string[required]
-     * @param $flags[optional]
+     * @param $string [required]
+     * @param $flags [optional]
      * @return mixed
      */
     public function escape($string, $flags=null){}
 
     /**
+     * @param $timeout [optional]
      * @return mixed
      */
-    public function begin(){}
+    public function begin(float $timeout=null){}
 
     /**
+     * @param $timeout [optional]
      * @return mixed
      */
-    public function commit(){}
+    public function commit(float $timeout=null){}
 
     /**
+     * @param $timeout [optional]
      * @return mixed
      */
-    public function rollback(){}
+    public function rollback(float $timeout=null){}
 
     /**
-     * @param $query[required]
+     * @param $query [required]
+     * @param $timeout [optional]
      * @return mixed
      */
-    public function prepare($query){}
+    public function prepare($query, float $timeout=null){}
 
     /**
-     * @param $defer[optional]
+     * @param $defer [optional]
      * @return mixed
      */
     public function setDefer($defer=null){}
@@ -88,16 +92,6 @@ class MySQL
      * @return mixed
      */
     public function close(){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
 
 }

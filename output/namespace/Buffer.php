@@ -2,17 +2,17 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Buffer
 {
 
 
     /**
-     * @param $size[optional]
+     * @param $size [optional]
      * @return mixed
      */
-    public function __construct($size=null){}
+    public function __construct(int $size=null){}
 
     /**
      * @return mixed
@@ -25,38 +25,38 @@ class Buffer
     public function __toString(){}
 
     /**
-     * @param $offset[required]
-     * @param $length[optional]
-     * @param $seek[optional]
+     * @param $offset [required]
+     * @param $length [optional]
+     * @param $seek [optional]
      * @return mixed
      */
-    public function substr($offset, $length=null, $seek=null){}
+    public function substr(int $offset, int $length=null, $seek=null){}
 
     /**
-     * @param $offset[required]
-     * @param $data[required]
+     * @param $offset [required]
+     * @param $data [required]
      * @return mixed
      */
-    public function write($offset, $data){}
+    public function write(int $offset, $data){}
 
     /**
-     * @param $offset[required]
-     * @param $length[required]
+     * @param $offset [required]
+     * @param $length [required]
      * @return mixed
      */
-    public function read($offset, $length){}
+    public function read(int $offset, int $length){}
 
     /**
-     * @param $data[required]
+     * @param $data [required]
      * @return mixed
      */
     public function append($data){}
 
     /**
-     * @param $size[required]
+     * @param $size [required]
      * @return mixed
      */
-    public function expand($size){}
+    public function expand(int $size){}
 
     /**
      * @return mixed
@@ -67,16 +67,6 @@ class Buffer
      * @return mixed
      */
     public function clear(){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
 
 }

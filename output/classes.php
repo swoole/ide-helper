@@ -120,6 +120,11 @@ class swoole_websocket_frame extends Swoole\Websocket\Frame
 
 }
 
+class swoole_websocket_close_frame extends Swoole\Websocket\Close\Frame
+{
+
+}
+
 class swoole_mysql extends Swoole\Mysql
 {
 
@@ -151,16 +156,6 @@ class swoole_ringqueue extends Swoole\Ringqueue
 }
 
 class swoole_msgqueue extends Swoole\Msgqueue
-{
-
-}
-
-class swoole_http2_client extends Swoole\Http2\Client
-{
-
-}
-
-class swoole_http2_response extends Swoole\Http2\Response
 {
 
 }

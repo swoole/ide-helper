@@ -2,17 +2,17 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Channel
 {
 
 
     /**
-     * @param $size[required]
+     * @param $size [required]
      * @return mixed
      */
-    public function __construct($size){}
+    public function __construct(int $size){}
 
     /**
      * @return mixed
@@ -20,7 +20,7 @@ class Channel
     public function __destruct(){}
 
     /**
-     * @param $data[required]
+     * @param $data [required]
      * @return mixed
      */
     public function push($data){}

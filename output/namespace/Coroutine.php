@@ -2,26 +2,26 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Coroutine
 {
 
 
     /**
-     * @param $func[required]
+     * @param $func [required]
      * @return mixed
      */
     public static function create($func){}
 
     /**
-     * @param $command[required]
+     * @param $command [required]
      * @return mixed
      */
-    public static function exec($command){}
+    public static function exec(string $command){}
 
     /**
-     * @param $options[required]
+     * @param $options [required]
      * @return mixed
      */
     public static function set($options){}
@@ -29,13 +29,18 @@ class Coroutine
     /**
      * @return mixed
      */
+    public static function yield(){}
+
+    /**
+     * @return mixed
+     */
     public static function suspend(){}
 
     /**
-     * @param $uid[required]
+     * @param $uid [required]
      * @return mixed
      */
-    public static function resume($uid){}
+    public static function resume(int $uid){}
 
     /**
      * @return mixed
@@ -48,62 +53,75 @@ class Coroutine
     public static function getuid(){}
 
     /**
-     * @param $seconds[required]
+     * @param $seconds [required]
      * @return mixed
      */
     public static function sleep($seconds){}
 
     /**
-     * @param $handle[required]
-     * @param $length[optional]
+     * @param $handle [required]
+     * @param $length [optional]
      * @return mixed
      */
-    public static function fread($handle, $length=null){}
+    public static function fread($handle, int $length=null){}
 
     /**
-     * @param $handle[required]
+     * @param $handle [required]
      * @return mixed
      */
     public static function fgets($handle){}
 
     /**
-     * @param $handle[required]
-     * @param $string[required]
-     * @param $length[optional]
+     * @param $handle [required]
+     * @param $string [required]
+     * @param $length [optional]
      * @return mixed
      */
-    public static function fwrite($handle, $string, $length=null){}
+    public static function fwrite($handle, $string, int $length=null){}
 
     /**
-     * @param $filename[required]
+     * @param $filename [required]
      * @return mixed
      */
-    public static function readFile($filename){}
+    public static function readFile(string $filename){}
 
     /**
-     * @param $filename[required]
-     * @param $data[required]
-     * @param $flags[optional]
+     * @param $filename [required]
+     * @param $data [required]
+     * @param $flags [optional]
      * @return mixed
      */
-    public static function writeFile($filename, $data, $flags=null){}
+    public static function writeFile(string $filename, $data, $flags=null){}
 
     /**
-     * @param $domain_name[required]
-     * @param $family[optional]
+     * @param $domain_name [required]
+     * @param $family [optional]
      * @return mixed
      */
-    public static function gethostbyname($domain_name, $family=null){}
+    public static function gethostbyname(string $domain_name, $family=null){}
 
     /**
-     * @param $hostname[required]
-     * @param $family[optional]
-     * @param $socktype[optional]
-     * @param $protocol[optional]
-     * @param $service[optional]
+     * @param $hostname [required]
+     * @param $family [optional]
+     * @param $socktype [optional]
+     * @param $protocol [optional]
+     * @param $service [optional]
      * @return mixed
      */
-    public static function getaddrinfo($hostname, $family=null, $socktype=null, $protocol=null, $service=null){}
+    public static function getaddrinfo(string $hostname, $family=null, $socktype=null, $protocol=null, $service=null){}
+
+    /**
+     * @param $cid [required]
+     * @param $options [optional]
+     * @param $limit [optional]
+     * @return mixed
+     */
+    public static function getBackTrace($cid, $options=null, $limit=null){}
+
+    /**
+     * @return mixed
+     */
+    public static function listCoroutines(){}
 
 
 }

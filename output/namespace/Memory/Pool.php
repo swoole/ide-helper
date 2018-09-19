@@ -2,7 +2,7 @@
 namespace Swoole\Memory;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class Pool
 {
@@ -14,13 +14,13 @@ class Pool
 
 
     /**
-     * @param $size[required]
-     * @param $type[required]
-     * @param $slice_size[optional]
-     * @param $shared[optional]
+     * @param $size [required]
+     * @param $type [required]
+     * @param $slice_size [optional]
+     * @param $shared [optional]
      * @return mixed
      */
-    public function __construct($size, $type, $slice_size=null, $shared=null){}
+    public function __construct(int $size, $type, $slice_size=null, $shared=null){}
 
     /**
      * @return mixed
@@ -28,10 +28,10 @@ class Pool
     public function __destruct(){}
 
     /**
-     * @param $size[optional]
+     * @param $size [optional]
      * @return mixed
      */
-    public function alloc($size=null){}
+    public function alloc(int $size=null){}
 
 
 }

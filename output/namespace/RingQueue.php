@@ -2,17 +2,17 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.1
  */
 class RingQueue
 {
 
 
     /**
-     * @param $len[required]
+     * @param $len [required]
      * @return mixed
      */
-    public function __construct($len){}
+    public function __construct(int $len){}
 
     /**
      * @return mixed
@@ -20,7 +20,7 @@ class RingQueue
     public function __destruct(){}
 
     /**
-     * @param $data[required]
+     * @param $data [required]
      * @return mixed
      */
     public function push($data){}
