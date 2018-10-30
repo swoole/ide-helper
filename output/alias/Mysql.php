@@ -1,5 +1,5 @@
 <?php
 namespace Co 
 {
-     class Mysql extends \swoole\mysql {}
+     class Mysql extends \Swoole\Coroutine\Mysql {}
 }

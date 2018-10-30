@@ -2,7 +2,7 @@
 namespace Swoole\Coroutine;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class MySQL
 {
@@ -53,25 +53,29 @@ class MySQL
     public function escape($string, $flags=null){}
 
     /**
+     * @param $timeout[optional]
      * @return mixed
      */
-    public function begin(){}
+    public function begin($timeout=null){}
 
     /**
+     * @param $timeout[optional]
      * @return mixed
      */
-    public function commit(){}
+    public function commit($timeout=null){}
 
     /**
+     * @param $timeout[optional]
      * @return mixed
      */
-    public function rollback(){}
+    public function rollback($timeout=null){}
 
     /**
      * @param $query[required]
+     * @param $timeout[optional]
      * @return mixed
      */
-    public function prepare($query){}
+    public function prepare($query, $timeout=null){}
 
     /**
      * @param $defer[optional]
@@ -88,16 +92,6 @@ class MySQL
      * @return mixed
      */
     public function close(){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
 
 }

@@ -2,26 +2,26 @@
 namespace Swoole\Coroutine\Http;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Client
 {
 
     public $errCode;
-    public $sock;
-    public $reuse;
-    public $reuseCount;
     public $type;
     public $setting;
     public $connected;
-    public $statusCode;
     public $host;
     public $port;
     public $requestMethod;
     public $requestHeaders;
     public $requestBody;
     public $uploadFiles;
+    public $downloadFile;
+    public $downloadOffset;
+    public $statusCode;
     public $headers;
+    public $set_cookie_headers;
     public $cookies;
     public $body;
 
@@ -113,6 +113,15 @@ class Client
     public function addFile($path, $name, $type=null, $filename=null, $offset=null, $length=null){}
 
     /**
+     * @param $path[required]
+     * @param $name[required]
+     * @param $type[optional]
+     * @param $filename[optional]
+     * @return mixed
+     */
+    public function addData($path, $name, $type=null, $filename=null){}
+
+    /**
      * @return mixed
      */
     public function isConnected(){}
@@ -146,16 +155,6 @@ class Client
      * @return mixed
      */
     public function push($data, $opcode=null, $finish=null){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
 
 }

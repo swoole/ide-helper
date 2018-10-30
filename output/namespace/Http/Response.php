@@ -2,7 +2,7 @@
 namespace Swoole\Http;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Response
 {
@@ -43,9 +43,10 @@ class Response
 
     /**
      * @param $http_code[required]
+     * @param $reason[optional]
      * @return mixed
      */
-    public function status($http_code){}
+    public function status($http_code, $reason=null){}
 
     /**
      * @param $compress_level[optional]
@@ -106,16 +107,6 @@ class Response
      * @return mixed
      */
     public static function create($fd){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
     /**
      * @return mixed

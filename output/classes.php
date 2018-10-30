@@ -45,7 +45,7 @@ class swoole_coroutine extends Swoole\Coroutine
 
 }
 
-class co extends swoole\coroutine
+class co extends Swoole\Coroutine
 {
 
 }
@@ -120,6 +120,11 @@ class swoole_websocket_frame extends Swoole\Websocket\Frame
 
 }
 
+class swoole_websocket_close_frame extends Swoole\Websocket\CloseFrame
+{
+
+}
+
 class swoole_mysql extends Swoole\Mysql
 {
 
@@ -140,7 +145,7 @@ class swoole_channel extends Swoole\Channel
 
 }
 
-class chan extends swoole\coroutine\channel
+class chan extends Swoole\Coroutine\Channel
 {
 
 }
@@ -155,7 +160,7 @@ class swoole_msgqueue extends Swoole\Msgqueue
 
 }
 
-class swoole_http2_client extends Swoole\Http2\Client
+class swoole_http2_request extends Swoole\Http2\Request
 {
 
 }

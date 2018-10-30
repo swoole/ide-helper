@@ -1,5 +1,5 @@
 <?php
 namespace Co 
 {
-     class Socket extends \swoole\socket {}
+     class Socket extends \Swoole\Coroutine\Socket {}
 }

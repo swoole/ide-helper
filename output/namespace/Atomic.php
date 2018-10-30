@@ -2,7 +2,7 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Atomic
 {
@@ -55,16 +55,6 @@ class Atomic
      * @return mixed
      */
     public function cmpset($cmp_value, $new_value){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
 
 }

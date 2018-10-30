@@ -1,5 +1,5 @@
 <?php
 namespace Co\Http 
 {
-     class Client extends \swoole\http\client {}
+     class Client extends \Swoole\Coroutine\Http\Client {}
 }

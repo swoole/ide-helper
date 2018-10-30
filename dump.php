@@ -63,24 +63,35 @@ class ExtensionDocument
         {
             mkdir(dirname($path), 0777, true);
         }
-        file_put_contents($path, sprintf("<?php\nnamespace %s \n{\n" . self::SPACE5 .
-            "class %s extends \%s {}\n}\n", implode('\\', array_slice($ns, 0, count($ns) - 1)), end($ns),
-            str_replace('co\\', 'swoole\\', $className)));
+        $extends = ucwords(str_replace('co\\', 'Swoole\\Coroutine\\', $className), '\\');
+        if (!class_exists($extends)) {
+            $extends = ucwords(str_replace('co\\', 'Swoole\\', $className), '\\');
+        }
+        $content = sprintf("<?php\nnamespace %s \n{\n" . self::SPACE5 . "class %s extends \%s {}\n}\n",
+            implode('\\', array_slice($ns, 0, count($ns) - 1)),
+            end($ns),
+            $extends
+        );
+        file_put_contents($path, $content);
     }
 
     static function getNamespaceAlias($className)
     {
         if (strtolower($className) == 'co')
         {
-            return "swoole\\coroutine";
+            return "Swoole\\Coroutine";
         }
         elseif (strtolower($className) == 'chan')
         {
-            return "swoole\\coroutine\\channel";
+            return "Swoole\\Coroutine\\Channel";
+        }
+        elseif (strtolower($className) == 'swoole_websocket_close_frame')
+        {
+            return 'Swoole\\Websocket\\CloseFrame';
         }
         else
         {
-            return str_replace(' ', '\\', ucwords(str_replace('_', ' ', $className)));
+            return str_replace('_', '\\', ucwords($className, '_'));
         }
     }
 

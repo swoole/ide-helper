@@ -2,15 +2,14 @@
 namespace Swoole\Coroutine\Http2;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Client
 {
 
     public $errCode;
+    public $errMsg;
     public $sock;
-    public $reuse;
-    public $reuseCount;
     public $type;
     public $setting;
     public $connected;
@@ -42,15 +41,22 @@ class Client
     public function connect(){}
 
     /**
+     * @param $key[optional]
+     * @return mixed
+     */
+    public function stats($key=null){}
+
+    /**
+     * @param $stream_id[required]
+     * @return mixed
+     */
+    public function isStreamExist($stream_id){}
+
+    /**
      * @param $request[required]
      * @return mixed
      */
     public function send($request){}
-
-    /**
-     * @return mixed
-     */
-    public function recv(){}
 
     /**
      * @param $stream_id[required]
@@ -59,6 +65,19 @@ class Client
      * @return mixed
      */
     public function write($stream_id, $data, $end_stream=null){}
+
+    /**
+     * @param $timeout[optional]
+     * @return mixed
+     */
+    public function recv($timeout=null){}
+
+    /**
+     * @param $error_code[optional]
+     * @param $debug_data[optional]
+     * @return mixed
+     */
+    public function goaway($error_code=null, $debug_data=null){}
 
     /**
      * @return mixed

@@ -2,7 +2,7 @@
 namespace Swoole\Http;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Server extends \Swoole\Server
 {
@@ -40,28 +40,6 @@ class Server extends \Swoole\Server
     public $setting;
 
     /**
-     * @param $event_name[required]
-     * @param $callback[required]
-     * @return mixed
-     */
-    public function on($event_name, $callback){}
-
-    /**
-     * @return mixed
-     */
-    public function start(){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
-
-    /**
      * @param $host[required]
      * @param $port[optional]
      * @param $mode[optional]
@@ -92,10 +70,22 @@ class Server extends \Swoole\Server
     public function addlistener($host, $port, $sock_type){}
 
     /**
+     * @param $event_name[required]
+     * @param $callback[required]
+     * @return mixed
+     */
+    public function on($event_name, $callback){}
+
+    /**
      * @param $settings[required]
      * @return mixed
      */
     public function set($settings){}
+
+    /**
+     * @return mixed
+     */
+    public function start(){}
 
     /**
      * @param $fd[required]
@@ -309,11 +299,6 @@ class Server extends \Swoole\Server
      * @return mixed
      */
     public function getSocket($port=null){}
-
-    /**
-     * @return mixed
-     */
-    public function getReceivedTime(){}
 
     /**
      * @param $fd[required]

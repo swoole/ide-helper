@@ -2,12 +2,13 @@
 namespace Swoole\Http;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Request
 {
 
     public $fd;
+    public $streamId;
     public $header;
     public $server;
     public $request;
@@ -26,16 +27,6 @@ class Request
      * @return mixed
      */
     public function getData(){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
     /**
      * @return mixed

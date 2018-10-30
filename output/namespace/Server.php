@@ -2,7 +2,7 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Server
 {
@@ -320,26 +320,11 @@ class Server
     public function getSocket($port=null){}
 
     /**
-     * @return mixed
-     */
-    public function getReceivedTime(){}
-
-    /**
      * @param $fd[required]
      * @param $uid[required]
      * @return mixed
      */
     public function bind($fd, $uid){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
 
 }

@@ -1,5 +1,5 @@
 <?php
 namespace Co\Websocket 
 {
-     class Server extends \swoole\websocket\server {}
+     class Server extends \Swoole\Websocket\Server {}
 }

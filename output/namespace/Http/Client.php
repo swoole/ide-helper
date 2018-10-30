@@ -2,14 +2,13 @@
 namespace Swoole\Http;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Client
 {
 
     public $type;
     public $errCode;
-    public $sock;
     public $statusCode;
     public $host;
     public $port;

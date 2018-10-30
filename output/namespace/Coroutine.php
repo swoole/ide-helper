@@ -2,7 +2,7 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Coroutine
 {
@@ -25,6 +25,11 @@ class Coroutine
      * @return mixed
      */
     public static function set($options){}
+
+    /**
+     * @return mixed
+     */
+    public static function yield(){}
 
     /**
      * @return mixed
@@ -104,6 +109,25 @@ class Coroutine
      * @return mixed
      */
     public static function getaddrinfo($hostname, $family=null, $socktype=null, $protocol=null, $service=null){}
+
+    /**
+     * @param $path[required]
+     * @return mixed
+     */
+    public static function statvfs($path){}
+
+    /**
+     * @param $cid[required]
+     * @param $options[optional]
+     * @param $limit[optional]
+     * @return mixed
+     */
+    public static function getBackTrace($cid, $options=null, $limit=null){}
+
+    /**
+     * @return mixed
+     */
+    public static function listCoroutines(){}
 
 
 }

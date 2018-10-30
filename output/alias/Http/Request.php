@@ -1,5 +1,5 @@
 <?php
 namespace Co\Http 
 {
-     class Request extends \swoole\http\request {}
+     class Request extends \Swoole\Http\Request {}
 }

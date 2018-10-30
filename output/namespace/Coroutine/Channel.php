@@ -2,12 +2,13 @@
 namespace Swoole\Coroutine;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Channel
 {
 
     public $capacity;
+    public $errCode;
 
     /**
      * @param $size[optional]
@@ -27,9 +28,10 @@ class Channel
     public function push($data){}
 
     /**
+     * @param $timeout[optional]
      * @return mixed
      */
-    public function pop(){}
+    public function pop($timeout=null){}
 
     /**
      * @return mixed
@@ -55,14 +57,6 @@ class Channel
      * @return mixed
      */
     public function length(){}
-
-    /**
-     * @param $read_list[required]
-     * @param $write_list[required]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public static function select($read_list, $write_list, $timeout=null){}
 
 
 }

@@ -1,5 +1,5 @@
 <?php
 namespace Co\Websocket 
 {
-     class Frame extends \swoole\websocket\frame {}
+     class Frame extends \Swoole\Websocket\Frame {}
 }

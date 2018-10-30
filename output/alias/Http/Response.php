@@ -1,5 +1,5 @@
 <?php
 namespace Co\Http 
 {
-     class Response extends \swoole\http\response {}
+     class Response extends \Swoole\Http\Response {}
 }

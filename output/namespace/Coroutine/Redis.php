@@ -2,7 +2,7 @@
 namespace Swoole\Coroutine;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Redis
 {
@@ -61,29 +61,45 @@ class Redis
     public function close(){}
 
     /**
+     * @param $key[required]
+     * @param $value[required]
+     * @param $timeout[optional]
+     * @param $opt[optional]
      * @return mixed
      */
-    public function set(){}
+    public function set($key, $value, $timeout=null, $opt=null){}
 
     /**
+     * @param $key[required]
+     * @param $offset[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function setBit(){}
+    public function setBit($key, $offset, $value){}
 
     /**
+     * @param $key[required]
+     * @param $expire[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function setEx(){}
+    public function setEx($key, $expire, $value){}
 
     /**
+     * @param $key[required]
+     * @param $expire[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function psetEx(){}
+    public function psetEx($key, $expire, $value){}
 
     /**
+     * @param $key[required]
+     * @param $index[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function lSet(){}
+    public function lSet($key, $index, $value){}
 
     /**
      * @param $key[required]
@@ -92,65 +108,86 @@ class Redis
     public function get($key){}
 
     /**
+     * @param $keys[required]
      * @return mixed
      */
-    public function mGet(){}
-
-    /**
-     * @return mixed
-     */
-    public function del(){}
-
-    /**
-     * @return mixed
-     */
-    public function hDel(){}
-
-    /**
-     * @return mixed
-     */
-    public function hSet(){}
-
-    /**
-     * @return mixed
-     */
-    public function hMSet(){}
-
-    /**
-     * @return mixed
-     */
-    public function hSetNx(){}
-
-    /**
-     * @return mixed
-     */
-    public function delete(){}
-
-    /**
-     * @return mixed
-     */
-    public function mSet(){}
-
-    /**
-     * @return mixed
-     */
-    public function mSetNx(){}
-
-    /**
-     * @return mixed
-     */
-    public function getKeys(){}
-
-    /**
-     * @return mixed
-     */
-    public function keys(){}
+    public function mGet($keys){}
 
     /**
      * @param $key[required]
+     * @param $other_keys[optional]
      * @return mixed
      */
-    public function exists($key){}
+    public function del($key, $other_keys=null){}
+
+    /**
+     * @param $key[required]
+     * @param $member[required]
+     * @param $other_members[optional]
+     * @return mixed
+     */
+    public function hDel($key, $member, $other_members=null){}
+
+    /**
+     * @param $key[required]
+     * @param $member[required]
+     * @param $value[required]
+     * @return mixed
+     */
+    public function hSet($key, $member, $value){}
+
+    /**
+     * @param $key[required]
+     * @param $pairs[required]
+     * @return mixed
+     */
+    public function hMSet($key, $pairs){}
+
+    /**
+     * @param $key[required]
+     * @param $member[required]
+     * @param $value[required]
+     * @return mixed
+     */
+    public function hSetNx($key, $member, $value){}
+
+    /**
+     * @param $key[required]
+     * @param $other_keys[optional]
+     * @return mixed
+     */
+    public function delete($key, $other_keys=null){}
+
+    /**
+     * @param $pairs[required]
+     * @return mixed
+     */
+    public function mSet($pairs){}
+
+    /**
+     * @param $pairs[required]
+     * @return mixed
+     */
+    public function mSetNx($pairs){}
+
+    /**
+     * @param $pattern[required]
+     * @return mixed
+     */
+    public function getKeys($pattern){}
+
+    /**
+     * @param $pattern[required]
+     * @return mixed
+     */
+    public function keys($pattern){}
+
+    /**
+     * @param $key[required]
+     * @param $other_keys[optional]
+     * @return mixed
+     */
+    public function exists($key, $other_keys=null){}
 
     /**
      * @param $key[required]
@@ -171,9 +208,12 @@ class Redis
     public function lPop($key){}
 
     /**
+     * @param $key[required]
+     * @param $timeout_or_key[required]
+     * @param $extra_args[optional]
      * @return mixed
      */
-    public function blPop(){}
+    public function blPop($key, $timeout_or_key, $extra_args=null){}
 
     /**
      * @param $key[required]
@@ -182,39 +222,50 @@ class Redis
     public function rPop($key){}
 
     /**
+     * @param $key[required]
+     * @param $timeout_or_key[required]
+     * @param $extra_args[optional]
      * @return mixed
      */
-    public function brPop(){}
+    public function brPop($key, $timeout_or_key, $extra_args=null){}
 
     /**
+     * @param $src[required]
+     * @param $dst[required]
+     * @param $timeout[required]
      * @return mixed
      */
-    public function bRPopLPush(){}
+    public function bRPopLPush($src, $dst, $timeout){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function lSize(){}
+    public function lSize($key){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function lLen(){}
+    public function lLen($key){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function sSize(){}
+    public function sSize($key){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function scard(){}
+    public function scard($key){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function sPop(){}
+    public function sPop($key){}
 
     /**
      * @param $key[required]
@@ -230,15 +281,16 @@ class Redis
 
     /**
      * @param $key[required]
-     * @param $integer[optional]
+     * @param $count[optional]
      * @return mixed
      */
-    public function sRandMember($key, $integer=null){}
+    public function sRandMember($key, $count=null){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function persist(){}
+    public function persist($key){}
 
     /**
      * @param $key[required]
@@ -253,34 +305,40 @@ class Redis
     public function pttl($key){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function zCard(){}
+    public function zCard($key){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function zSize(){}
+    public function zSize($key){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function hLen(){}
+    public function hLen($key){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function hKeys(){}
+    public function hKeys($key){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function hVals(){}
+    public function hVals($key){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function hGetAll(){}
+    public function hGetAll($key){}
 
     /**
      * @param $key[required]
@@ -289,9 +347,12 @@ class Redis
     public function debug($key){}
 
     /**
+     * @param $ttl[required]
+     * @param $key[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function restore(){}
+    public function restore($ttl, $key, $value){}
 
     /**
      * @param $key[required]
@@ -300,24 +361,32 @@ class Redis
     public function dump($key){}
 
     /**
+     * @param $key[required]
+     * @param $newkey[required]
      * @return mixed
      */
-    public function renameKey(){}
+    public function renameKey($key, $newkey){}
 
     /**
+     * @param $key[required]
+     * @param $newkey[required]
      * @return mixed
      */
-    public function rename(){}
+    public function rename($key, $newkey){}
 
     /**
+     * @param $key[required]
+     * @param $newkey[required]
      * @return mixed
      */
-    public function renameNx(){}
+    public function renameNx($key, $newkey){}
 
     /**
+     * @param $src[required]
+     * @param $dst[required]
      * @return mixed
      */
-    public function rpoplpush(){}
+    public function rpoplpush($src, $dst){}
 
     /**
      * @return mixed
@@ -330,9 +399,10 @@ class Redis
     public function ping(){}
 
     /**
+     * @param $password[required]
      * @return mixed
      */
-    public function auth(){}
+    public function auth($password){}
 
     /**
      * @return mixed
@@ -340,9 +410,11 @@ class Redis
     public function unwatch(){}
 
     /**
+     * @param $key[required]
+     * @param $other_keys[optional]
      * @return mixed
      */
-    public function watch(){}
+    public function watch($key, $other_keys=null){}
 
     /**
      * @return mixed
@@ -390,9 +462,12 @@ class Redis
     public function role(){}
 
     /**
+     * @param $key[required]
+     * @param $offset[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function setRange(){}
+    public function setRange($key, $offset, $value){}
 
     /**
      * @param $key[required]
@@ -423,14 +498,18 @@ class Redis
     public function lPushx($key, $value){}
 
     /**
+     * @param $key[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function lPush(){}
+    public function lPush($key, $value){}
 
     /**
+     * @param $key[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function rPush(){}
+    public function rPush($key, $value){}
 
     /**
      * @param $key[required]
@@ -455,44 +534,52 @@ class Redis
 
     /**
      * @param $key[required]
-     * @param $value[required]
+     * @param $member[required]
      * @return mixed
      */
-    public function zScore($key, $value){}
+    public function zScore($key, $member){}
 
     /**
      * @param $key[required]
-     * @param $value[required]
+     * @param $member[required]
      * @return mixed
      */
-    public function zRank($key, $value){}
+    public function zRank($key, $member){}
 
     /**
      * @param $key[required]
-     * @param $value[required]
+     * @param $member[required]
      * @return mixed
      */
-    public function zRevRank($key, $value){}
+    public function zRevRank($key, $member){}
 
     /**
+     * @param $key[required]
+     * @param $member[required]
      * @return mixed
      */
-    public function hGet(){}
+    public function hGet($key, $member){}
 
     /**
+     * @param $key[required]
+     * @param $keys[required]
      * @return mixed
      */
-    public function hMGet(){}
+    public function hMGet($key, $keys){}
 
     /**
+     * @param $key[required]
+     * @param $member[required]
      * @return mixed
      */
-    public function hExists(){}
+    public function hExists($key, $member){}
 
     /**
+     * @param $channel[required]
+     * @param $message[required]
      * @return mixed
      */
-    public function publish(){}
+    public function publish($channel, $message){}
 
     /**
      * @param $key[required]
@@ -503,90 +590,143 @@ class Redis
     public function zIncrBy($key, $value, $member){}
 
     /**
+     * @param $key[required]
+     * @param $score[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function zAdd(){}
+    public function zAdd($key, $score, $value){}
 
     /**
+     * @param $key[required]
+     * @param $min[required]
+     * @param $max[required]
      * @return mixed
      */
-    public function zDeleteRangeByScore(){}
+    public function zDeleteRangeByScore($key, $min, $max){}
 
     /**
+     * @param $key[required]
+     * @param $min[required]
+     * @param $max[required]
      * @return mixed
      */
-    public function zRemRangeByScore(){}
+    public function zRemRangeByScore($key, $min, $max){}
 
     /**
+     * @param $key[required]
+     * @param $min[required]
+     * @param $max[required]
      * @return mixed
      */
-    public function zCount(){}
+    public function zCount($key, $min, $max){}
 
     /**
      * @param $key[required]
      * @param $start[required]
      * @param $end[required]
-     * @param $withscores[optional]
+     * @param $scores[optional]
      * @return mixed
      */
-    public function zRange($key, $start, $end, $withscores=null){}
-
-    /**
-     * @return mixed
-     */
-    public function zRevRange(){}
-
-    /**
-     * @return mixed
-     */
-    public function zRangeByScore(){}
-
-    /**
-     * @return mixed
-     */
-    public function zRevRangeByScore(){}
-
-    /**
-     * @return mixed
-     */
-    public function zRangeByLex(){}
-
-    /**
-     * @return mixed
-     */
-    public function zRevRangeByLex(){}
-
-    /**
-     * @return mixed
-     */
-    public function zInter(){}
-
-    /**
-     * @return mixed
-     */
-    public function zinterstore(){}
-
-    /**
-     * @return mixed
-     */
-    public function zUnion(){}
-
-    /**
-     * @return mixed
-     */
-    public function zunionstore(){}
+    public function zRange($key, $start, $end, $scores=null){}
 
     /**
      * @param $key[required]
-     * @param $integer[required]
+     * @param $start[required]
+     * @param $end[required]
+     * @param $scores[optional]
      * @return mixed
      */
-    public function incrBy($key, $integer){}
+    public function zRevRange($key, $start, $end, $scores=null){}
 
     /**
+     * @param $key[required]
+     * @param $start[required]
+     * @param $end[required]
+     * @param $options[optional]
      * @return mixed
      */
-    public function hIncrBy(){}
+    public function zRangeByScore($key, $start, $end, $options=null){}
+
+    /**
+     * @param $key[required]
+     * @param $start[required]
+     * @param $end[required]
+     * @param $options[optional]
+     * @return mixed
+     */
+    public function zRevRangeByScore($key, $start, $end, $options=null){}
+
+    /**
+     * @param $key[required]
+     * @param $min[required]
+     * @param $max[required]
+     * @param $offset[optional]
+     * @param $limit[optional]
+     * @return mixed
+     */
+    public function zRangeByLex($key, $min, $max, $offset=null, $limit=null){}
+
+    /**
+     * @param $key[required]
+     * @param $min[required]
+     * @param $max[required]
+     * @param $offset[optional]
+     * @param $limit[optional]
+     * @return mixed
+     */
+    public function zRevRangeByLex($key, $min, $max, $offset=null, $limit=null){}
+
+    /**
+     * @param $key[required]
+     * @param $keys[required]
+     * @param $weights[optional]
+     * @param $aggregate[optional]
+     * @return mixed
+     */
+    public function zInter($key, $keys, $weights=null, $aggregate=null){}
+
+    /**
+     * @param $key[required]
+     * @param $keys[required]
+     * @param $weights[optional]
+     * @param $aggregate[optional]
+     * @return mixed
+     */
+    public function zinterstore($key, $keys, $weights=null, $aggregate=null){}
+
+    /**
+     * @param $key[required]
+     * @param $keys[required]
+     * @param $weights[optional]
+     * @param $aggregate[optional]
+     * @return mixed
+     */
+    public function zUnion($key, $keys, $weights=null, $aggregate=null){}
+
+    /**
+     * @param $key[required]
+     * @param $keys[required]
+     * @param $weights[optional]
+     * @param $aggregate[optional]
+     * @return mixed
+     */
+    public function zunionstore($key, $keys, $weights=null, $aggregate=null){}
+
+    /**
+     * @param $key[required]
+     * @param $value[required]
+     * @return mixed
+     */
+    public function incrBy($key, $value){}
+
+    /**
+     * @param $key[required]
+     * @param $member[required]
+     * @param $value[required]
+     * @return mixed
+     */
+    public function hIncrBy($key, $member, $value){}
 
     /**
      * @param $key[required]
@@ -596,10 +736,10 @@ class Redis
 
     /**
      * @param $key[required]
-     * @param $integer[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function decrBy($key, $integer){}
+    public function decrBy($key, $value){}
 
     /**
      * @param $key[required]
@@ -609,22 +749,26 @@ class Redis
 
     /**
      * @param $key[required]
-     * @param $integer[required]
+     * @param $offset[required]
      * @return mixed
      */
-    public function getBit($key, $integer){}
-
-    /**
-     * @return mixed
-     */
-    public function lInsert(){}
+    public function getBit($key, $offset){}
 
     /**
      * @param $key[required]
-     * @param $integer[required]
+     * @param $position[required]
+     * @param $pivot[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function lGet($key, $integer){}
+    public function lInsert($key, $position, $pivot, $value){}
+
+    /**
+     * @param $key[required]
+     * @param $index[required]
+     * @return mixed
+     */
+    public function lGet($key, $index){}
 
     /**
      * @param $key[required]
@@ -635,10 +779,10 @@ class Redis
 
     /**
      * @param $key[required]
-     * @param $integer[required]
+     * @param $timeout[required]
      * @return mixed
      */
-    public function setTimeout($key, $integer){}
+    public function setTimeout($key, $timeout){}
 
     /**
      * @param $key[required]
@@ -648,142 +792,200 @@ class Redis
     public function expire($key, $integer){}
 
     /**
+     * @param $key[required]
+     * @param $timestamp[required]
      * @return mixed
      */
-    public function pexpire(){}
+    public function pexpire($key, $timestamp){}
 
     /**
      * @param $key[required]
-     * @param $integer[required]
+     * @param $timestamp[required]
      * @return mixed
      */
-    public function expireAt($key, $integer){}
+    public function expireAt($key, $timestamp){}
 
     /**
      * @param $key[required]
-     * @param $integer[required]
+     * @param $timestamp[required]
      * @return mixed
      */
-    public function pexpireAt($key, $integer){}
+    public function pexpireAt($key, $timestamp){}
 
     /**
      * @param $key[required]
-     * @param $integer[required]
+     * @param $dbindex[required]
      * @return mixed
      */
-    public function move($key, $integer){}
+    public function move($key, $dbindex){}
 
     /**
+     * @param $dbindex[required]
      * @return mixed
      */
-    public function select(){}
-
-    /**
-     * @return mixed
-     */
-    public function getRange(){}
-
-    /**
-     * @return mixed
-     */
-    public function listTrim(){}
-
-    /**
-     * @return mixed
-     */
-    public function ltrim(){}
-
-    /**
-     * @return mixed
-     */
-    public function lGetRange(){}
-
-    /**
-     * @return mixed
-     */
-    public function lRange(){}
-
-    /**
-     * @return mixed
-     */
-    public function lRem(){}
-
-    /**
-     * @return mixed
-     */
-    public function lRemove(){}
-
-    /**
-     * @return mixed
-     */
-    public function zDeleteRangeByRank(){}
-
-    /**
-     * @return mixed
-     */
-    public function zRemRangeByRank(){}
+    public function select($dbindex){}
 
     /**
      * @param $key[required]
-     * @param $float_number[required]
+     * @param $start[required]
+     * @param $end[required]
      * @return mixed
      */
-    public function incrByFloat($key, $float_number){}
+    public function getRange($key, $start, $end){}
 
     /**
+     * @param $key[required]
+     * @param $start[required]
+     * @param $stop[required]
      * @return mixed
      */
-    public function hIncrByFloat(){}
+    public function listTrim($key, $start, $stop){}
 
     /**
+     * @param $key[required]
+     * @param $start[required]
+     * @param $stop[required]
      * @return mixed
      */
-    public function bitCount(){}
+    public function ltrim($key, $start, $stop){}
 
     /**
+     * @param $key[required]
+     * @param $start[required]
+     * @param $end[required]
      * @return mixed
      */
-    public function bitOp(){}
+    public function lGetRange($key, $start, $end){}
 
     /**
+     * @param $key[required]
+     * @param $start[required]
+     * @param $end[required]
      * @return mixed
      */
-    public function sAdd(){}
+    public function lRange($key, $start, $end){}
 
     /**
+     * @param $key[required]
+     * @param $value[required]
+     * @param $count[required]
      * @return mixed
      */
-    public function sMove(){}
+    public function lRem($key, $value, $count){}
 
     /**
+     * @param $key[required]
+     * @param $value[required]
+     * @param $count[required]
      * @return mixed
      */
-    public function sDiff(){}
+    public function lRemove($key, $value, $count){}
 
     /**
+     * @param $key[required]
+     * @param $start[required]
+     * @param $end[required]
      * @return mixed
      */
-    public function sDiffStore(){}
+    public function zDeleteRangeByRank($key, $start, $end){}
 
     /**
+     * @param $key[required]
+     * @param $min[required]
+     * @param $max[required]
      * @return mixed
      */
-    public function sUnion(){}
+    public function zRemRangeByRank($key, $min, $max){}
 
     /**
+     * @param $key[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function sUnionStore(){}
+    public function incrByFloat($key, $value){}
 
     /**
+     * @param $key[required]
+     * @param $member[required]
+     * @param $value[required]
      * @return mixed
      */
-    public function sInter(){}
+    public function hIncrByFloat($key, $member, $value){}
 
     /**
+     * @param $key[required]
      * @return mixed
      */
-    public function sInterStore(){}
+    public function bitCount($key){}
+
+    /**
+     * @param $operation[required]
+     * @param $ret_key[required]
+     * @param $key[required]
+     * @param $other_keys[optional]
+     * @return mixed
+     */
+    public function bitOp($operation, $ret_key, $key, $other_keys=null){}
+
+    /**
+     * @param $key[required]
+     * @param $value[required]
+     * @return mixed
+     */
+    public function sAdd($key, $value){}
+
+    /**
+     * @param $src[required]
+     * @param $dst[required]
+     * @param $value[required]
+     * @return mixed
+     */
+    public function sMove($src, $dst, $value){}
+
+    /**
+     * @param $key[required]
+     * @param $other_keys[optional]
+     * @return mixed
+     */
+    public function sDiff($key, $other_keys=null){}
+
+    /**
+     * @param $dst[required]
+     * @param $key[required]
+     * @param $other_keys[optional]
+     * @return mixed
+     */
+    public function sDiffStore($dst, $key, $other_keys=null){}
+
+    /**
+     * @param $key[required]
+     * @param $other_keys[optional]
+     * @return mixed
+     */
+    public function sUnion($key, $other_keys=null){}
+
+    /**
+     * @param $dst[required]
+     * @param $key[required]
+     * @param $other_keys[optional]
+     * @return mixed
+     */
+    public function sUnionStore($dst, $key, $other_keys=null){}
+
+    /**
+     * @param $key[required]
+     * @param $other_keys[optional]
+     * @return mixed
+     */
+    public function sInter($key, $other_keys=null){}
+
+    /**
+     * @param $dst[required]
+     * @param $key[required]
+     * @param $other_keys[optional]
+     * @return mixed
+     */
+    public function sInterStore($dst, $key, $other_keys=null){}
 
     /**
      * @param $key[required]
@@ -800,29 +1002,40 @@ class Redis
     public function srem($key, $value){}
 
     /**
+     * @param $key[required]
+     * @param $member[required]
+     * @param $other_members[optional]
      * @return mixed
      */
-    public function zDelete(){}
+    public function zDelete($key, $member, $other_members=null){}
 
     /**
+     * @param $key[required]
+     * @param $member[required]
+     * @param $other_members[optional]
      * @return mixed
      */
-    public function zRemove(){}
+    public function zRemove($key, $member, $other_members=null){}
 
     /**
+     * @param $key[required]
+     * @param $member[required]
+     * @param $other_members[optional]
      * @return mixed
      */
-    public function zRem(){}
+    public function zRem($key, $member, $other_members=null){}
 
     /**
+     * @param $patterns[required]
      * @return mixed
      */
-    public function pSubscribe(){}
+    public function pSubscribe($patterns){}
 
     /**
+     * @param $channels[required]
      * @return mixed
      */
-    public function subscribe(){}
+    public function subscribe($channels){}
 
     /**
      * @return mixed
@@ -835,29 +1048,27 @@ class Redis
     public function exec(){}
 
     /**
+     * @param $script[required]
+     * @param $args[optional]
+     * @param $num_keys[optional]
      * @return mixed
      */
-    public function eval(){}
+    public function eval($script, $args=null, $num_keys=null){}
 
     /**
+     * @param $script_sha[required]
+     * @param $args[optional]
+     * @param $num_keys[optional]
      * @return mixed
      */
-    public function evalSha(){}
+    public function evalSha($script_sha, $args=null, $num_keys=null){}
 
     /**
+     * @param $cmd[required]
+     * @param $args[optional]
      * @return mixed
      */
-    public function script(){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
+    public function script($cmd, $args=null){}
 
 
 }

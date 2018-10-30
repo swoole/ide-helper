@@ -2,7 +2,7 @@
 namespace Swoole;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Process
 {
@@ -64,12 +64,6 @@ class Process
      * @return mixed
      */
     public static function daemon($nochdir=null, $noclose=null){}
-
-    /**
-     * @param $cpu_settings[required]
-     * @return mixed
-     */
-    public static function setaffinity($cpu_settings){}
 
     /**
      * @param $seconds[required]

@@ -1,8 +1,8 @@
 <?php
-namespace Co\Websocket;
+namespace Swoole\WebSocket;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Server extends \Swoole\Http\Server
 {
@@ -40,13 +40,6 @@ class Server extends \Swoole\Http\Server
     public $setting;
 
     /**
-     * @param $event_name[required]
-     * @param $callback[required]
-     * @return mixed
-     */
-    public function on($event_name, $callback){}
-
-    /**
      * @param $fd[required]
      * @param $data[required]
      * @param $opcode[optional]
@@ -54,6 +47,14 @@ class Server extends \Swoole\Http\Server
      * @return mixed
      */
     public function push($fd, $data, $opcode=null, $finish=null){}
+
+    /**
+     * @param $fd[required]
+     * @param $code[optional]
+     * @param $reason[optional]
+     * @return mixed
+     */
+    public function disconnect($fd, $code=null, $reason=null){}
 
     /**
      * @param $fd[required]
@@ -81,21 +82,6 @@ class Server extends \Swoole\Http\Server
      * @return mixed
      */
     public static function unpack($data){}
-
-    /**
-     * @return mixed
-     */
-    public function start(){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
     /**
      * @param $host[required]
@@ -128,10 +114,22 @@ class Server extends \Swoole\Http\Server
     public function addlistener($host, $port, $sock_type){}
 
     /**
+     * @param $event_name[required]
+     * @param $callback[required]
+     * @return mixed
+     */
+    public function on($event_name, $callback){}
+
+    /**
      * @param $settings[required]
      * @return mixed
      */
     public function set($settings){}
+
+    /**
+     * @return mixed
+     */
+    public function start(){}
 
     /**
      * @param $fd[required]
@@ -339,11 +337,6 @@ class Server extends \Swoole\Http\Server
      * @return mixed
      */
     public function getSocket($port=null){}
-
-    /**
-     * @return mixed
-     */
-    public function getReceivedTime(){}
 
     /**
      * @param $fd[required]

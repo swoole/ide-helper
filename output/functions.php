@@ -204,5 +204,11 @@ function swoole_errno(){}
  */
 function swoole_hashcode($data, $type=null){}
 
+/**
+ * @param $filename[required]
+ * @return mixed
+ */
+function swoole_get_mime_type($filename){}
+
 function swoole_call_user_shutdown_begin(){}
 

@@ -2,7 +2,7 @@
 namespace Swoole\Process;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Pool
 {
@@ -27,6 +27,11 @@ class Pool
      * @return mixed
      */
     public function on($event_name, $callback){}
+
+    /**
+     * @return mixed
+     */
+    public function getProcess(){}
 
     /**
      * @param $host[required]

@@ -1,5 +1,5 @@
 <?php
 namespace Co\Mysql 
 {
-     class Statement extends \swoole\mysql\statement {}
+     class Statement extends \Swoole\Coroutine\Mysql\Statement {}
 }

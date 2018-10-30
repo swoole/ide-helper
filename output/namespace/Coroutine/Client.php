@@ -2,21 +2,18 @@
 namespace Swoole\Coroutine;
 
 /**
- * @since 4.0.1
+ * @since 4.2.5
  */
 class Client
 {
     const MSG_OOB = 1;
     const MSG_PEEK = 2;
-    const MSG_DONTWAIT = 64;
-    const MSG_WAITALL = 256;
+    const MSG_DONTWAIT = 128;
+    const MSG_WAITALL = 64;
 
     public $errCode;
     public $sock;
-    public $reuse;
-    public $reuseCount;
     public $type;
-    public $id;
     public $setting;
     public $connected;
 
@@ -59,10 +56,9 @@ class Client
 
     /**
      * @param $data[required]
-     * @param $flag[optional]
      * @return mixed
      */
-    public function send($data, $flag=null){}
+    public function send($data){}
 
     /**
      * @param $filename[required]
@@ -73,12 +69,20 @@ class Client
     public function sendfile($filename, $offset=null, $length=null){}
 
     /**
-     * @param $ip[required]
+     * @param $address[required]
      * @param $port[required]
      * @param $data[required]
      * @return mixed
      */
-    public function sendto($ip, $port, $data){}
+    public function sendto($address, $port, $data){}
+
+    /**
+     * @param $length[required]
+     * @param $address[required]
+     * @param $port[optional]
+     * @return mixed
+     */
+    public function recvfrom($length, $address, $port=null){}
 
     /**
      * @return mixed
@@ -114,16 +118,6 @@ class Client
      * @return mixed
      */
     public function close(){}
-
-    /**
-     * @return mixed
-     */
-    public function __sleep(){}
-
-    /**
-     * @return mixed
-     */
-    public function __wakeup(){}
 
     /**
      * @return mixed

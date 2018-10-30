@@ -1,5 +1,5 @@
 <?php
 namespace Co\Redis 
 {
-     class Server extends \swoole\redis\server {}
+     class Server extends \Swoole\Redis\Server {}
 }
