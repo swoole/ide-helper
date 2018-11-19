@@ -1,12 +1,10 @@
 <?php
 namespace Swoole\Coroutine;
 
-/**
- * @since 4.2.5
- */
 class PostgreSQL
 {
 
+    public $error;
 
     /**
      * @return mixed

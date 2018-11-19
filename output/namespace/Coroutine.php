@@ -1,9 +1,6 @@
 <?php
 namespace Swoole;
 
-/**
- * @since 4.2.5
- */
 class Coroutine
 {
 
@@ -19,6 +16,13 @@ class Coroutine
      * @return mixed
      */
     public static function exec($command){}
+
+    /**
+     * @param $domain_name[required]
+     * @param $family[optional]
+     * @return mixed
+     */
+    public static function gethostbyname($domain_name, $family=null){}
 
     /**
      * @param $options[required]
@@ -92,13 +96,6 @@ class Coroutine
      * @return mixed
      */
     public static function writeFile($filename, $data, $flags=null){}
-
-    /**
-     * @param $domain_name[required]
-     * @param $family[optional]
-     * @return mixed
-     */
-    public static function gethostbyname($domain_name, $family=null){}
 
     /**
      * @param $hostname[required]

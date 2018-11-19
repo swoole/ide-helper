@@ -335,8 +335,8 @@ class ExtensionDocument
         //获取方法定义
         $mdefs = $this->getMethodsDef($classname, $ref->getMethods());
         $class_def = sprintf(
-            "/**\n * @since %s\n */\n%s %s\n{\n%s\n%s\n%s\n}\n", $this->version, $modifier, $classname,
-            $consts, $props, $mdefs
+            "%s %s\n{\n%s\n%s\n%s\n}\n",
+            $modifier, $classname, $consts, $props, $mdefs
         );
         return $class_def;
     }
@@ -380,7 +380,8 @@ class ExtensionDocument
         $fdefs = $this->getFunctionsDef($funcs);
 
         file_put_contents(
-            OUTPUT_DIR . '/functions.php', "<?php\n" . $fdefs
+            OUTPUT_DIR . '/functions.php',
+            "<?php\n/**\n * @since {$this->version}\n */\n\n{$fdefs}"
         );
 
         /**

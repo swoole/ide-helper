@@ -1,4 +1,8 @@
 <?php
+/**
+ * @since 4.2.8
+ */
+
 function swoole_version(){}
 
 function swoole_cpu_num(){}
@@ -159,6 +163,12 @@ function swoole_coroutine_exec($command){}
  * @return mixed
  */
 function go($func){}
+
+/**
+ * @param $callback[required]
+ * @return mixed
+ */
+function defer($callback){}
 
 /**
  * @param $read_array[required]

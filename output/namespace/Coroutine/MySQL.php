@@ -1,9 +1,6 @@
 <?php
 namespace Swoole\Coroutine;
 
-/**
- * @since 4.2.5
- */
 class MySQL
 {
 
@@ -44,6 +41,11 @@ class MySQL
      * @return mixed
      */
     public function recv(){}
+
+    /**
+     * @return mixed
+     */
+    public function nextResult(){}
 
     /**
      * @param $string[required]

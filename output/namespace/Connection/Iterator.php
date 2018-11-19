@@ -1,9 +1,6 @@
 <?php
 namespace Swoole\Connection;
 
-/**
- * @since 4.2.5
- */
 class Iterator
 {
 

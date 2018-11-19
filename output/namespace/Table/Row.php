@@ -1,9 +1,6 @@
 <?php
 namespace Swoole\Table;
 
-/**
- * @since 4.2.5
- */
 class Row
 {
 

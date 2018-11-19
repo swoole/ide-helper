@@ -1,9 +1,6 @@
 <?php
 namespace Swoole\Coroutine;
 
-/**
- * @since 4.2.5
- */
 class Client
 {
     const MSG_OOB = 1;
@@ -38,9 +35,10 @@ class Client
      * @param $host[required]
      * @param $port[optional]
      * @param $timeout[optional]
+     * @param $sock_flag[optional]
      * @return mixed
      */
-    public function connect($host, $port=null, $timeout=null){}
+    public function connect($host, $port=null, $timeout=null, $sock_flag=null){}
 
     /**
      * @param $timeout[optional]

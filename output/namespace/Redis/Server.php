@@ -1,9 +1,6 @@
 <?php
 namespace Swoole\Redis;
 
-/**
- * @since 4.2.5
- */
 class Server extends \Swoole\Server
 {
     const NIL = 1;
@@ -111,10 +108,10 @@ class Server extends \Swoole\Server
     /**
      * @param $fd[required]
      * @param $send_data[required]
-     * @param $reactor_id[optional]
+     * @param $server_socket[optional]
      * @return mixed
      */
-    public function send($fd, $send_data, $reactor_id=null){}
+    public function send($fd, $send_data, $server_socket=null){}
 
     /**
      * @param $ip[required]

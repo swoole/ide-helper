@@ -1,9 +1,6 @@
 <?php
 namespace Swoole\Coroutine\Http;
 
-/**
- * @since 4.2.5
- */
 class Client
 {
 

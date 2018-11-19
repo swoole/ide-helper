@@ -1,9 +1,6 @@
 <?php
 namespace Swoole\Coroutine;
 
-/**
- * @since 4.2.5
- */
 class Redis
 {
 
@@ -392,6 +389,26 @@ class Redis
      * @return mixed
      */
     public function randomKey(){}
+
+    /**
+     * @param $key[required]
+     * @param $elements[required]
+     * @return mixed
+     */
+    public function pfadd($key, $elements){}
+
+    /**
+     * @param $key[required]
+     * @return mixed
+     */
+    public function pfcount($key){}
+
+    /**
+     * @param $dstkey[required]
+     * @param $keys[required]
+     * @return mixed
+     */
+    public function pfmerge($dstkey, $keys){}
 
     /**
      * @return mixed

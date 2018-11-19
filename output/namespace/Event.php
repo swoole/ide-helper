@@ -1,9 +1,6 @@
 <?php
 namespace Swoole;
 
-/**
- * @since 4.2.5
- */
 class Event
 {
 

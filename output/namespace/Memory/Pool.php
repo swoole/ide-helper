@@ -1,9 +1,6 @@
 <?php
 namespace Swoole\Memory;
 
-/**
- * @since 4.2.5
- */
 class Pool
 {
     const TYPE_RING = 1;

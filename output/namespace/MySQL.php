@@ -1,9 +1,6 @@
 <?php
 namespace Swoole;
 
-/**
- * @since 4.0.1
- */
 class MySQL
 {
     const STATE_QUERY = 0;
