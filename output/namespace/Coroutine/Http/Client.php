@@ -10,6 +10,7 @@ class Client
     public $connected;
     public $host;
     public $port;
+    public $ssl;
     public $requestMethod;
     public $requestHeaders;
     public $requestBody;

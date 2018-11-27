@@ -9,6 +9,7 @@ class Client
     public $statusCode;
     public $host;
     public $port;
+    public $ssl;
     public $requestMethod;
     public $requestHeaders;
     public $requestBody;

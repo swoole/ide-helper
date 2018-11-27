@@ -7,9 +7,10 @@ class Coroutine
 
     /**
      * @param $func[required]
+     * @param $params[optional]
      * @return mixed
      */
-    public static function create($func){}
+    public static function create($func, $params=null){}
 
     /**
      * @param $command[required]
@@ -23,6 +24,12 @@ class Coroutine
      * @return mixed
      */
     public static function gethostbyname($domain_name, $family=null){}
+
+    /**
+     * @param $callback[required]
+     * @return mixed
+     */
+    public static function defer($callback){}
 
     /**
      * @param $options[required]

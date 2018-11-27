@@ -1,6 +1,6 @@
 <?php
 /**
- * @since 4.2.8
+ * @since 4.2.9
  */
 
 function swoole_version(){}
@@ -157,6 +157,12 @@ function swoole_coroutine_create($func){}
  * @return mixed
  */
 function swoole_coroutine_exec($command){}
+
+/**
+ * @param $callback[required]
+ * @return mixed
+ */
+function swoole_coroutine_defer($callback){}
 
 /**
  * @param $func[required]

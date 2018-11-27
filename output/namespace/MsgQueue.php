@@ -43,7 +43,7 @@ class MsgQueue
     /**
      * @return mixed
      */
-    public function destory(){}
+    public function destroy(){}
 
 
 }

@@ -18,13 +18,13 @@ class Client
     public $type;
     public $id;
     public $setting;
-    public $onConnect;
-    public $onError;
-    public $onReceive;
-    public $onClose;
-    public $onBufferFull;
-    public $onBufferEmpty;
-    public $onSSLReady;
+    private $onConnect;
+    private $onError;
+    private $onReceive;
+    private $onClose;
+    private $onBufferFull;
+    private $onBufferEmpty;
+    private $onSSLReady;
 
     /**
      * @param $type[required]
