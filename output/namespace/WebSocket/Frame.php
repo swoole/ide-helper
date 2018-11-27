@@ -1,12 +1,13 @@
 <?php
 namespace Swoole\WebSocket;
 
-class CloseFrame extends \Swoole\WebSocket\Frame
+class Frame
 {
 
+    public $fd;
+    public $data;
     public $opcode;
-    public $code;
-    public $reason;
+    public $finish;
 
     /**
      * @return mixed

@@ -85,10 +85,6 @@ class ExtensionDocument
         {
             return "Swoole\\Coroutine\\Channel";
         }
-        elseif (strtolower($className) == 'swoole_websocket_close_frame')
-        {
-            return 'Swoole\\Websocket\\CloseFrame';
-        }
         else
         {
             return str_replace('_', '\\', ucwords($className, '_'));
@@ -404,7 +400,7 @@ class ExtensionDocument
             //下划线分割类别名
             else
             {
-                $class_alias .= sprintf("\nclass %s extends %s\n{\n\n}\n", $className, self::getNamespaceAlias($className));
+                $class_alias .= sprintf("class_alias(%s::class, '%s');\n", self::getNamespaceAlias($className), $className);
             }
         }
         file_put_contents(

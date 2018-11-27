@@ -1,9 +1,6 @@
 <?php
-namespace Co\Socket;
+namespace Swoole\MySQL;
 
-/**
- * @since 4.0.1
- */
 class Exception extends \Exception
 {
 

@@ -1,186 +1,41 @@
 <?php
-
-class swoole_server extends Swoole\Server
-{
-
-}
-
-class swoole_timer extends Swoole\Timer
-{
-
-}
-
-class swoole_event extends Swoole\Event
-{
-
-}
-
-class swoole_async extends Swoole\Async
-{
-
-}
-
-class swoole_connection_iterator extends Swoole\Connection\Iterator
-{
-
-}
-
-class swoole_exception extends Swoole\Exception
-{
-
-}
-
-class swoole_server_port extends Swoole\Server\Port
-{
-
-}
-
-class swoole_client extends Swoole\Client
-{
-
-}
-
-class swoole_coroutine extends Swoole\Coroutine
-{
-
-}
-
-class co extends Swoole\Coroutine
-{
-
-}
-
-class swoole_http_client extends Swoole\Http\Client
-{
-
-}
-
-class swoole_process extends Swoole\Process
-{
-
-}
-
-class swoole_process_pool extends Swoole\Process\Pool
-{
-
-}
-
-class swoole_table extends Swoole\Table
-{
-
-}
-
-class swoole_table_row extends Swoole\Table\Row
-{
-
-}
-
-class swoole_lock extends Swoole\Lock
-{
-
-}
-
-class swoole_atomic extends Swoole\Atomic
-{
-
-}
-
-class swoole_atomic_long extends Swoole\Atomic\Long
-{
-
-}
-
-class swoole_http_server extends Swoole\Http\Server
-{
-
-}
-
-class swoole_http_response extends Swoole\Http\Response
-{
-
-}
-
-class swoole_http_request extends Swoole\Http\Request
-{
-
-}
-
-class swoole_buffer extends Swoole\Buffer
-{
-
-}
-
-class swoole_websocket_server extends Swoole\Websocket\Server
-{
-
-}
-
-class swoole_websocket_frame extends Swoole\Websocket\Frame
-{
-
-}
-
-class swoole_websocket_close_frame extends Swoole\Websocket\CloseFrame
-{
-
-}
-
-class swoole_mysql extends Swoole\Mysql
-{
-
-}
-
-class swoole_mysql_exception extends Swoole\Mysql\Exception
-{
-
-}
-
-class swoole_mmap extends Swoole\Mmap
-{
-
-}
-
-class swoole_channel extends Swoole\Channel
-{
-
-}
-
-class chan extends Swoole\Coroutine\Channel
-{
-
-}
-
-class swoole_ringqueue extends Swoole\Ringqueue
-{
-
-}
-
-class swoole_msgqueue extends Swoole\Msgqueue
-{
-
-}
-
-class swoole_http2_request extends Swoole\Http2\Request
-{
-
-}
-
-class swoole_http2_response extends Swoole\Http2\Response
-{
-
-}
-
-class swoole_serialize extends Swoole\Serialize
-{
-
-}
-
-class swoole_redis extends Swoole\Redis
-{
-
-}
-
-class swoole_redis_server extends Swoole\Redis\Server
-{
-
-}
+class_alias(Swoole\Server::class, 'swoole_server');
+class_alias(Swoole\Timer::class, 'swoole_timer');
+class_alias(Swoole\Event::class, 'swoole_event');
+class_alias(Swoole\Async::class, 'swoole_async');
+class_alias(Swoole\Connection\Iterator::class, 'swoole_connection_iterator');
+class_alias(Swoole\Exception::class, 'swoole_exception');
+class_alias(Swoole\Server\Port::class, 'swoole_server_port');
+class_alias(Swoole\Client::class, 'swoole_client');
+class_alias(Swoole\Coroutine::class, 'swoole_coroutine');
+class_alias(Swoole\Coroutine::class, 'co');
+class_alias(Swoole\Http\Client::class, 'swoole_http_client');
+class_alias(Swoole\Process::class, 'swoole_process');
+class_alias(Swoole\Process\Pool::class, 'swoole_process_pool');
+class_alias(Swoole\Table::class, 'swoole_table');
+class_alias(Swoole\Table\Row::class, 'swoole_table_row');
+class_alias(Swoole\Runtime::class, 'swoole_runtime');
+class_alias(Swoole\Lock::class, 'swoole_lock');
+class_alias(Swoole\Atomic::class, 'swoole_atomic');
+class_alias(Swoole\Atomic\Long::class, 'swoole_atomic_long');
+class_alias(Swoole\Http\Server::class, 'swoole_http_server');
+class_alias(Swoole\Http\Request::class, 'swoole_http_request');
+class_alias(Swoole\Http\Response::class, 'swoole_http_response');
+class_alias(Swoole\Buffer::class, 'swoole_buffer');
+class_alias(Swoole\Websocket\Server::class, 'swoole_websocket_server');
+class_alias(Swoole\Websocket\Frame::class, 'swoole_websocket_frame');
+class_alias(Swoole\Websocket\Closeframe::class, 'swoole_websocket_closeframe');
+class_alias(Swoole\Mysql::class, 'swoole_mysql');
+class_alias(Swoole\Mysql\Exception::class, 'swoole_mysql_exception');
+class_alias(Swoole\Mmap::class, 'swoole_mmap');
+class_alias(Swoole\Channel::class, 'swoole_channel');
+class_alias(Swoole\Coroutine\Channel::class, 'chan');
+class_alias(Swoole\Ringqueue::class, 'swoole_ringqueue');
+class_alias(Swoole\Msgqueue::class, 'swoole_msgqueue');
+class_alias(Swoole\Http2\Request::class, 'swoole_http2_request');
+class_alias(Swoole\Http2\Response::class, 'swoole_http2_response');
+class_alias(Swoole\Serialize::class, 'swoole_serialize');
+class_alias(Swoole\Memory\Pool::class, 'swoole_memory_pool');
+class_alias(Swoole\Memory\Pool\Slice::class, 'swoole_memory_pool_slice');
+class_alias(Swoole\Redis::class, 'swoole_redis');
+class_alias(Swoole\Redis\Server::class, 'swoole_redis_server');
