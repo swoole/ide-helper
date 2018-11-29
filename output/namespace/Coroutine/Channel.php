@@ -14,11 +14,6 @@ class Channel
     public function __construct($size=null){}
 
     /**
-     * @return mixed
-     */
-    public function __destruct(){}
-
-    /**
      * @param $data[required]
      * @return mixed
      */
