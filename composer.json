@@ -1,0 +1,12 @@
+{
+    "name": "swoole/ide-helper",
+    "description": "Swoole IDE helper",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Team Swoole",
+            "email": "team@swoole.com"
+        }
+    ]
+}
