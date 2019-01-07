@@ -1,6 +1,6 @@
 <?php
 /**
- * @since 4.2.10-alpha
+ * @since 4.2.13-alpha
  */
 
 function swoole_version(){}
@@ -16,7 +16,7 @@ function swoole_last_error(){}
  * @param $events[optional]
  * @return mixed
  */
-function swoole_event_add($fd, $read_callback, $write_callback=null, $events=null){}
+function swoole_event_add($fd, $read_callback, $write_callback = null, $events = null){}
 
 /**
  * @param $fd[required]
@@ -25,7 +25,7 @@ function swoole_event_add($fd, $read_callback, $write_callback=null, $events=nul
  * @param $events[optional]
  * @return mixed
  */
-function swoole_event_set($fd, $read_callback=null, $write_callback=null, $events=null){}
+function swoole_event_set($fd, $read_callback = null, $write_callback = null, $events = null){}
 
 /**
  * @param $fd[required]
@@ -55,7 +55,7 @@ function swoole_event_defer($callback){}
  * @param $before[optional]
  * @return mixed
  */
-function swoole_event_cycle($callback, $before=null){}
+function swoole_event_cycle($callback, $before = null){}
 
 function swoole_event_dispatch(){}
 
@@ -64,7 +64,7 @@ function swoole_event_dispatch(){}
  * @param $events[optional]
  * @return mixed
  */
-function swoole_event_isset($fd, $events=null){}
+function swoole_event_isset($fd, $events = null){}
 
 /**
  * @param $ms[required]
@@ -72,7 +72,7 @@ function swoole_event_isset($fd, $events=null){}
  * @param $param[optional]
  * @return mixed
  */
-function swoole_timer_after($ms, $callback, $param=null){}
+function swoole_timer_after($ms, $callback, $param = null){}
 
 /**
  * @param $ms[required]
@@ -106,7 +106,7 @@ function swoole_async_set($settings){}
  * @param $offset[optional]
  * @return mixed
  */
-function swoole_async_read($filename, $callback, $chunk_size=null, $offset=null){}
+function swoole_async_read($filename, $callback, $chunk_size = null, $offset = null){}
 
 /**
  * @param $filename[required]
@@ -115,7 +115,7 @@ function swoole_async_read($filename, $callback, $chunk_size=null, $offset=null)
  * @param $callback[optional]
  * @return mixed
  */
-function swoole_async_write($filename, $content, $offset=null, $callback=null){}
+function swoole_async_write($filename, $content, $offset = null, $callback = null){}
 
 /**
  * @param $filename[required]
@@ -131,7 +131,7 @@ function swoole_async_readfile($filename, $callback){}
  * @param $flags[optional]
  * @return mixed
  */
-function swoole_async_writefile($filename, $content, $callback=null, $flags=null){}
+function swoole_async_writefile($filename, $content, $callback = null, $flags = null){}
 
 /**
  * @param $hostname[required]
@@ -142,9 +142,10 @@ function swoole_async_dns_lookup($hostname, $callback){}
 
 /**
  * @param $domain_name[required]
+ * @param $timeout[optional]
  * @return mixed
  */
-function swoole_async_dns_lookup_coro($domain_name){}
+function swoole_async_dns_lookup_coro($domain_name, $timeout = null){}
 
 /**
  * @param $func[required]
@@ -183,7 +184,7 @@ function defer($callback){}
  * @param $timeout[optional]
  * @return mixed
  */
-function swoole_client_select($read_array, $write_array, $error_array, $timeout=null){}
+function swoole_client_select($read_array, $write_array, $error_array, $timeout = null){}
 
 /**
  * @param $read_array[required]
@@ -192,7 +193,7 @@ function swoole_client_select($read_array, $write_array, $error_array, $timeout=
  * @param $timeout[optional]
  * @return mixed
  */
-function swoole_select($read_array, $write_array, $error_array, $timeout=null){}
+function swoole_select($read_array, $write_array, $error_array, $timeout = null){}
 
 /**
  * @param $process_name[required]
@@ -209,7 +210,7 @@ function swoole_get_local_mac(){}
  * @param $error_type[optional]
  * @return mixed
  */
-function swoole_strerror($errno, $error_type=null){}
+function swoole_strerror($errno, $error_type = null){}
 
 function swoole_errno(){}
 
@@ -218,7 +219,7 @@ function swoole_errno(){}
  * @param $type[optional]
  * @return mixed
  */
-function swoole_hashcode($data, $type=null){}
+function swoole_hashcode($data, $type = null){}
 
 /**
  * @param $filename[required]
@@ -227,4 +228,6 @@ function swoole_hashcode($data, $type=null){}
 function swoole_get_mime_type($filename){}
 
 function swoole_call_user_shutdown_begin(){}
+
+function swoole_clear_dns_cache(){}
 

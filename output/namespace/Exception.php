@@ -15,7 +15,7 @@ class Exception extends \Exception
      * @param $previous[optional]
      * @return mixed
      */
-    public function __construct($message=null, $code=null, $previous=null){}
+    public function __construct($message = null, $code = null, $previous = null){}
 
     /**
      * @return mixed

@@ -11,7 +11,7 @@ class Pool
      * @param $msgqueue_key[optional]
      * @return mixed
      */
-    public function __construct($worker_num, $ipc_type=null, $msgqueue_key=null){}
+    public function __construct($worker_num, $ipc_type = null, $msgqueue_key = null){}
 
     /**
      * @return mixed
@@ -36,7 +36,7 @@ class Pool
      * @param $backlog[optional]
      * @return mixed
      */
-    public function listen($host, $port=null, $backlog=null){}
+    public function listen($host, $port = null, $backlog = null){}
 
     /**
      * @param $data[required]

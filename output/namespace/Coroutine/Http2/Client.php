@@ -19,7 +19,7 @@ class Client
      * @param $ssl[optional]
      * @return mixed
      */
-    public function __construct($host, $port=null, $ssl=null){}
+    public function __construct($host, $port = null, $ssl = null){}
 
     /**
      * @return mixed
@@ -41,7 +41,7 @@ class Client
      * @param $key[optional]
      * @return mixed
      */
-    public function stats($key=null){}
+    public function stats($key = null){}
 
     /**
      * @param $stream_id[required]
@@ -61,20 +61,20 @@ class Client
      * @param $end_stream[optional]
      * @return mixed
      */
-    public function write($stream_id, $data, $end_stream=null){}
+    public function write($stream_id, $data, $end_stream = null){}
 
     /**
      * @param $timeout[optional]
      * @return mixed
      */
-    public function recv($timeout=null){}
+    public function recv($timeout = null){}
 
     /**
      * @param $error_code[optional]
      * @param $debug_data[optional]
      * @return mixed
      */
-    public function goaway($error_code=null, $debug_data=null){}
+    public function goaway($error_code = null, $debug_data = null){}
 
     /**
      * @return mixed

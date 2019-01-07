@@ -15,7 +15,7 @@ class Lock
      * @param $filename[optional]
      * @return mixed
      */
-    public function __construct($type=null, $filename=null){}
+    public function __construct($type = null, $filename = null){}
 
     /**
      * @return mixed
@@ -31,7 +31,7 @@ class Lock
      * @param $timeout[optional]
      * @return mixed
      */
-    public function lockwait($timeout=null){}
+    public function lockwait($timeout = null){}
 
     /**
      * @return mixed

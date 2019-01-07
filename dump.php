@@ -10,7 +10,8 @@ class ExtensionDocument
     const C_METHOD = 1;
     const C_PROPERTY = 2;
     const C_CONSTANT = 3;
-    const SPACE5 = '     ';
+    const SPACE_4 = '    ';
+    const SPACE_5 = self::SPACE_4 . ' ';
 
     /**
      * @var string
@@ -22,12 +23,12 @@ class ExtensionDocument
      */
     protected $rf_ext;
 
-    static function isPHPKeyword($word)
-    {
-        $keywords = array('exit', 'die', 'echo', 'class', 'interface', 'function', 'public', 'protected', 'private');
-
-        return in_array($word, $keywords);
-    }
+    // static function isPHPKeyword($word)
+    // {
+    //     $keywords = array('exit', 'die', 'echo', 'class', 'interface', 'function', 'public', 'protected', 'private');
+    //
+    //     return in_array($word, $keywords);
+    // }
 
     static function formatComment($comment)
     {
@@ -37,11 +38,11 @@ class ExtensionDocument
             $li = ltrim($li);
             if (isset($li[0]) && $li[0] != '*')
             {
-                $li = self::SPACE5 . '*' . $li;
+                $li = self::SPACE_5 . '*' . $li;
             }
             else
             {
-                $li = self::SPACE5 . $li;
+                $li = self::SPACE_5 . $li;
             }
         }
         return implode("\n", $lines)."\n";
@@ -67,7 +68,7 @@ class ExtensionDocument
         if (!class_exists($extends)) {
             $extends = ucwords(str_replace('co\\', 'Swoole\\', $className), '\\');
         }
-        $content = sprintf("<?php\nnamespace %s \n{\n" . self::SPACE5 . "class %s extends \%s {}\n}\n",
+        $content = sprintf("<?php\nnamespace %s \n{\n" . self::SPACE_5 . "class %s extends \%s {}\n}\n",
             implode('\\', array_slice($ns, 0, count($ns) - 1)),
             end($ns),
             $extends
@@ -118,37 +119,53 @@ class ExtensionDocument
         }
     }
 
-    function getFunctionsDef(array $funcs)
+    static function getDefaultValue(\ReflectionParameter $parameter)
+    {
+        try {
+            $default_value = $parameter->getDefaultValue();
+            if ($default_value === []) {
+                $default_value = '[]';
+            } elseif ($default_value === null) {
+                $default_value = 'null';
+            } elseif (is_bool($default_value)) {
+                $default_value = $default_value ? 'true' : 'false';
+            } else {
+                $default_value = var_export($default_value, true);
+            }
+        } catch (\Throwable $e) {
+            if ($parameter->isOptional()) {
+                $default_value = 'null';
+            } else {
+                $default_value = null;
+            }
+        }
+        return $default_value;
+    }
+
+    function getFunctionsDef(array $functions)
     {
         $all = '';
-        foreach ($funcs as $k => $v)
+        foreach ($functions as $function_name => $function)
         {
             /**
-             * @var $v ReflectionMethod
+             * @var $function ReflectionMethod
              */
             $comment = '';
             $vp = array();
-            $params = $v->getParameters();
+            $params = $function->getParameters();
             if ($params)
             {
                 $comment = "/**\n";
-                foreach ($params as $k1 => $v1)
+                foreach ($params as $param)
                 {
-                    if ($v1->isOptional())
-                    {
-                        $comment .= " * @param $" . $v1->name . "[optional]\n";
-                        $vp[] = '$' . $v1->name . '=null';
-                    }
-                    else
-                    {
-                        $comment .= " * @param $" . $v1->name . "[required]\n";
-                        $vp[] = '$' . $v1->name;
-                    }
+                    $default_value = self::getDefaultValue($param);
+                    $comment .= " * @param \${$param->name}[" . ($param->isOptional() ? 'optional' : 'required') . "]\n";
+                    $vp[] = "\${$param->name}" . ($default_value ? " = {$default_value}" : '');
                 }
                 $comment .= " * @return mixed\n";
                 $comment .= " */\n";
             }
-            $comment .= sprintf("function %s(%s){}\n\n", $k, join(', ', $vp));
+            $comment .= sprintf("function %s(%s){}\n\n", $function_name, join(', ', $vp));
             $all .= $comment;
         }
 
@@ -163,7 +180,6 @@ class ExtensionDocument
     function getPropertyDef($classname, array $props)
     {
         $prop_str = "";
-        $sp4 = str_repeat(' ', 4);
         foreach ($props as $k => $v)
         {
             /**
@@ -172,7 +188,7 @@ class ExtensionDocument
             $modifiers = implode(
                 ' ', Reflection::getModifierNames($v->getModifiers())
             );
-            $prop_str .= "$sp4{$modifiers} $" . $v->name . ";\n";
+            $prop_str .= self::SPACE_4 . "{$modifiers} $" . $v->name . ";\n";
         }
 
         return $prop_str;
@@ -186,10 +202,9 @@ class ExtensionDocument
     function getConstantsDef($classname, array $consts)
     {
         $all = "";
-        $sp4 = str_repeat(' ', 4);
         foreach ($consts as $k => $v)
         {
-            $all .= "{$sp4}const {$k} = ";
+            $all .= self::SPACE_4 . "const {$k} = ";
             if (is_int($v))
             {
                 $all .= "{$v};\n";
@@ -210,7 +225,6 @@ class ExtensionDocument
     function getMethodsDef($classname, array $methods)
     {
         $all = '';
-        $sp4 = str_repeat(' ', 4);
         foreach ($methods as $k => $v)
         {
             /**
@@ -222,13 +236,9 @@ class ExtensionDocument
             }
 
             $method_name = $v->name;
-            if (self::isPHPKeyword($method_name))
-            {
-                $method_name = '_' . $method_name;
-            }
 
             $vp = array();
-            $comment = "$sp4/**\n";
+            $comment = self::SPACE_4 . "/**\n";
 
             $config = $this->getConfig($classname, $method_name, self::C_METHOD);
             if (!empty($config['comment']))
@@ -239,35 +249,26 @@ class ExtensionDocument
             $params = $v->getParameters();
             if ($params)
             {
-                foreach ($params as $k1 => $v1)
+                foreach ($params as $param)
                 {
-                    if ($v1->isOptional())
-                    {
-                        $comment .= "$sp4 * @param $" . $v1->name . "[optional]\n";
-                        $vp[] = '$' . $v1->name . '=null';
-                    }
-                    else
-                    {
-                        $comment .= "$sp4 * @param $" . $v1->name . "[required]\n";
-                        $vp[] = '$' . $v1->name;
-                    }
+                    $default_value = self::getDefaultValue($param);
+                    $comment .= self::SPACE_5 . "* @param \${$param->name}[" . ($param->isOptional() ? 'optional' : 'required') . "]\n";
+                    $vp[] = "\${$param->name}" . ($default_value ? " = {$default_value}" : '');
                 }
             }
             if (!isset($config['return']))
             {
-                $comment .= self::SPACE5 . "* @return mixed\n";
+                $comment .= self::SPACE_5 . "* @return mixed\n";
             }
             elseif (!empty($config['return']))
             {
-                $comment .= self::SPACE5 . "* @return {$config['return']}\n";
+                $comment .= self::SPACE_5 . "* @return {$config['return']}\n";
             }
-            $comment .= "$sp4 */\n";
+            $comment .= self::SPACE_5 . "*/\n";
             $modifiers = implode(
                 ' ', Reflection::getModifierNames($v->getModifiers())
             );
-            $comment .= sprintf(
-                "$sp4%s function %s(%s){}\n\n", $modifiers, $method_name, join(', ', $vp)
-            );
+            $comment .= sprintf(self::SPACE_4 . "%s function %s(%s){}\n\n", $modifiers, $method_name, join(', ', $vp));
             $all .= $comment;
         }
 

@@ -11,7 +11,7 @@ class Mmap
      * @param $offset[optional]
      * @return mixed
      */
-    public static function open($filename, $size=null, $offset=null){}
+    public static function open($filename, $size = null, $offset = null){}
 
 
 }

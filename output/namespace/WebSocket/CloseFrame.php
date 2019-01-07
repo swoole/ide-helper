@@ -20,7 +20,7 @@ class CloseFrame extends \Swoole\WebSocket\Frame
      * @param $mask[optional]
      * @return mixed
      */
-    public static function pack($data, $opcode=null, $finish=null, $mask=null){}
+    public static function pack($data, $opcode = null, $finish = null, $mask = null){}
 
     /**
      * @param $data[required]

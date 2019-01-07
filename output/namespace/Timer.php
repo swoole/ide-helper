@@ -18,7 +18,7 @@ class Timer
      * @param $param[optional]
      * @return mixed
      */
-    public static function after($ms, $callback, $param=null){}
+    public static function after($ms, $callback, $param = null){}
 
     /**
      * @param $timer_id[required]

@@ -22,7 +22,7 @@ class Process
      * @param $pipe_type[optional]
      * @return mixed
      */
-    public function __construct($callback, $redirect_stdin_and_stdout=null, $pipe_type=null){}
+    public function __construct($callback, $redirect_stdin_and_stdout = null, $pipe_type = null){}
 
     /**
      * @return mixed
@@ -33,7 +33,7 @@ class Process
      * @param $blocking[optional]
      * @return mixed
      */
-    public static function wait($blocking=null){}
+    public static function wait($blocking = null){}
 
     /**
      * @param $signal_no[required]
@@ -53,14 +53,14 @@ class Process
      * @param $signal_no[optional]
      * @return mixed
      */
-    public static function kill($pid, $signal_no=null){}
+    public static function kill($pid, $signal_no = null){}
 
     /**
      * @param $nochdir[optional]
      * @param $noclose[optional]
      * @return mixed
      */
-    public static function daemon($nochdir=null, $noclose=null){}
+    public static function daemon($nochdir = null, $noclose = null){}
 
     /**
      * @param $seconds[required]
@@ -77,9 +77,10 @@ class Process
     /**
      * @param $key[optional]
      * @param $mode[optional]
+     * @param $capacity[optional]
      * @return mixed
      */
-    public function useQueue($key=null, $mode=null){}
+    public function useQueue($key = null, $mode = null, $capacity = null){}
 
     /**
      * @return mixed
@@ -111,7 +112,7 @@ class Process
      * @param $size[optional]
      * @return mixed
      */
-    public function read($size=null){}
+    public function read($size = null){}
 
     /**
      * @param $data[required]
@@ -123,13 +124,13 @@ class Process
      * @param $size[optional]
      * @return mixed
      */
-    public function pop($size=null){}
+    public function pop($size = null){}
 
     /**
      * @param $exit_code[optional]
      * @return mixed
      */
-    public function _exit($exit_code=null){}
+    public function exit($exit_code = null){}
 
     /**
      * @param $exec_file[required]

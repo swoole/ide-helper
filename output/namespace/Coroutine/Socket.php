@@ -9,29 +9,29 @@ class Socket
     /**
      * @param $domain[required]
      * @param $type[required]
-     * @param $protocol[required]
+     * @param $protocol[optional]
      * @return mixed
      */
-    public function __construct($domain, $type, $protocol){}
+    public function __construct($domain, $type, $protocol = null){}
 
     /**
      * @param $address[required]
      * @param $port[optional]
      * @return mixed
      */
-    public function bind($address, $port=null){}
+    public function bind($address, $port = null){}
 
     /**
      * @param $backlog[optional]
      * @return mixed
      */
-    public function listen($backlog=null){}
+    public function listen($backlog = null){}
 
     /**
      * @param $timeout[optional]
      * @return mixed
      */
-    public function accept($timeout=null){}
+    public function accept($timeout = null){}
 
     /**
      * @param $host[required]
@@ -39,28 +39,28 @@ class Socket
      * @param $timeout[optional]
      * @return mixed
      */
-    public function connect($host, $port=null, $timeout=null){}
+    public function connect($host, $port = null, $timeout = null){}
 
     /**
      * @param $length[optional]
      * @param $timeout[optional]
      * @return mixed
      */
-    public function recv($length=null, $timeout=null){}
+    public function recv($length = null, $timeout = null){}
 
     /**
      * @param $data[required]
      * @param $timeout[optional]
      * @return mixed
      */
-    public function send($data, $timeout=null){}
+    public function send($data, $timeout = null){}
 
     /**
      * @param $peername[required]
      * @param $timeout[optional]
      * @return mixed
      */
-    public function recvfrom($peername, $timeout=null){}
+    public function recvfrom($peername, $timeout = null){}
 
     /**
      * @param $addr[required]

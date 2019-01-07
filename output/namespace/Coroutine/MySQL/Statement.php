@@ -14,7 +14,7 @@ class Statement
      * @param $timeout[optional]
      * @return mixed
      */
-    public function execute($params=null, $timeout=null){}
+    public function execute($params = null, $timeout = null){}
 
     /**
      * @return mixed

@@ -23,7 +23,7 @@ class Redis
      * @param $setting[optional]
      * @return mixed
      */
-    public function __construct($setting=null){}
+    public function __construct($setting = null){}
 
     /**
      * @return mixed

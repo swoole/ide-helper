@@ -9,7 +9,7 @@ class Buffer
      * @param $size[optional]
      * @return mixed
      */
-    public function __construct($size=null){}
+    public function __construct($size = null){}
 
     /**
      * @return mixed
@@ -27,7 +27,7 @@ class Buffer
      * @param $seek[optional]
      * @return mixed
      */
-    public function substr($offset, $length=null, $seek=null){}
+    public function substr($offset, $length = null, $seek = null){}
 
     /**
      * @param $offset[required]

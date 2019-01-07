@@ -4,7 +4,7 @@ namespace Swoole\Coroutine;
 class MySQL
 {
 
-    private $serverInfo;
+    public $serverInfo;
     public $sock;
     public $connected;
     public $connect_error;
@@ -35,7 +35,7 @@ class MySQL
      * @param $timeout[optional]
      * @return mixed
      */
-    public function query($sql, $timeout=null){}
+    public function query($sql, $timeout = null){}
 
     /**
      * @return mixed
@@ -52,38 +52,38 @@ class MySQL
      * @param $flags[optional]
      * @return mixed
      */
-    public function escape($string, $flags=null){}
+    public function escape($string, $flags = null){}
 
     /**
      * @param $timeout[optional]
      * @return mixed
      */
-    public function begin($timeout=null){}
+    public function begin($timeout = null){}
 
     /**
      * @param $timeout[optional]
      * @return mixed
      */
-    public function commit($timeout=null){}
+    public function commit($timeout = null){}
 
     /**
      * @param $timeout[optional]
      * @return mixed
      */
-    public function rollback($timeout=null){}
+    public function rollback($timeout = null){}
 
     /**
      * @param $query[required]
      * @param $timeout[optional]
      * @return mixed
      */
-    public function prepare($query, $timeout=null){}
+    public function prepare($query, $timeout = null){}
 
     /**
      * @param $defer[optional]
      * @return mixed
      */
-    public function setDefer($defer=null){}
+    public function setDefer($defer = null){}
 
     /**
      * @return mixed

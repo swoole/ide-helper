@@ -12,7 +12,7 @@ class Async
      * @param $offset[optional]
      * @return mixed
      */
-    public static function read($filename, $callback, $chunk_size=null, $offset=null){}
+    public static function read($filename, $callback, $chunk_size = null, $offset = null){}
 
     /**
      * @param $filename[required]
@@ -21,7 +21,7 @@ class Async
      * @param $callback[optional]
      * @return mixed
      */
-    public static function write($filename, $content, $offset=null, $callback=null){}
+    public static function write($filename, $content, $offset = null, $callback = null){}
 
     /**
      * @param $filename[required]
@@ -37,7 +37,7 @@ class Async
      * @param $flags[optional]
      * @return mixed
      */
-    public static function writeFile($filename, $content, $callback=null, $flags=null){}
+    public static function writeFile($filename, $content, $callback = null, $flags = null){}
 
     /**
      * @param $hostname[required]
@@ -48,9 +48,10 @@ class Async
 
     /**
      * @param $domain_name[required]
+     * @param $timeout[optional]
      * @return mixed
      */
-    public static function dnsLookupCoro($domain_name){}
+    public static function dnsLookupCoro($domain_name, $timeout = null){}
 
     /**
      * @param $settings[required]

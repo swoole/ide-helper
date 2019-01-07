@@ -38,19 +38,19 @@ class Client
      * @param $sock_flag[optional]
      * @return mixed
      */
-    public function connect($host, $port=null, $timeout=null, $sock_flag=null){}
+    public function connect($host, $port = null, $timeout = null, $sock_flag = null){}
 
     /**
      * @param $timeout[optional]
      * @return mixed
      */
-    public function recv($timeout=null){}
+    public function recv($timeout = null){}
 
     /**
      * @param $length[optional]
      * @return mixed
      */
-    public function peek($length=null){}
+    public function peek($length = null){}
 
     /**
      * @param $data[required]
@@ -64,7 +64,7 @@ class Client
      * @param $length[optional]
      * @return mixed
      */
-    public function sendfile($filename, $offset=null, $length=null){}
+    public function sendfile($filename, $offset = null, $length = null){}
 
     /**
      * @param $address[required]
@@ -80,7 +80,7 @@ class Client
      * @param $port[optional]
      * @return mixed
      */
-    public function recvfrom($length, $address, $port=null){}
+    public function recvfrom($length, $address, $port = null){}
 
     /**
      * @return mixed

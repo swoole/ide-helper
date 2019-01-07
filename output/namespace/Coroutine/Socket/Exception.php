@@ -1,7 +1,7 @@
 <?php
 namespace Swoole\Coroutine\Socket;
 
-class Exception extends \Exception
+class Exception extends \Swoole\Exception
 {
 
     protected $message;
@@ -15,7 +15,7 @@ class Exception extends \Exception
      * @param $previous[optional]
      * @return mixed
      */
-    public function __construct($message=null, $code=null, $previous=null){}
+    public function __construct($message = null, $code = null, $previous = null){}
 
     /**
      * @return mixed

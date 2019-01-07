@@ -12,7 +12,7 @@ class Event
      * @param $events[optional]
      * @return mixed
      */
-    public static function add($fd, $read_callback, $write_callback=null, $events=null){}
+    public static function add($fd, $read_callback, $write_callback = null, $events = null){}
 
     /**
      * @param $fd[required]
@@ -27,7 +27,7 @@ class Event
      * @param $events[optional]
      * @return mixed
      */
-    public static function set($fd, $read_callback=null, $write_callback=null, $events=null){}
+    public static function set($fd, $read_callback = null, $write_callback = null, $events = null){}
 
     /**
      * @return mixed
@@ -57,7 +57,7 @@ class Event
      * @param $before[optional]
      * @return mixed
      */
-    public static function cycle($callback, $before=null){}
+    public static function cycle($callback, $before = null){}
 
 
 }

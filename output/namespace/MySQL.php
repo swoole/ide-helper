@@ -62,7 +62,7 @@ class MySQL
      * @param $flags[optional]
      * @return mixed
      */
-    public function escape($string, $flags=null){}
+    public function escape($string, $flags = null){}
 
     /**
      * @param $sql[required]

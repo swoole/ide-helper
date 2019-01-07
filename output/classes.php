@@ -1,10 +1,11 @@
 <?php
-class_alias(Swoole\Server::class, 'swoole_server');
 class_alias(Swoole\Timer::class, 'swoole_timer');
 class_alias(Swoole\Event::class, 'swoole_event');
 class_alias(Swoole\Async::class, 'swoole_async');
-class_alias(Swoole\Connection\Iterator::class, 'swoole_connection_iterator');
 class_alias(Swoole\Exception::class, 'swoole_exception');
+class_alias(Swoole\Server::class, 'swoole_server');
+class_alias(Swoole\Server\Task::class, 'swoole_server_task');
+class_alias(Swoole\Connection\Iterator::class, 'swoole_connection_iterator');
 class_alias(Swoole\Server\Port::class, 'swoole_server_port');
 class_alias(Swoole\Client::class, 'swoole_client');
 class_alias(Swoole\Coroutine::class, 'swoole_coroutine');

@@ -17,7 +17,7 @@ class Pool
      * @param $shared[optional]
      * @return mixed
      */
-    public function __construct($size, $type, $slice_size=null, $shared=null){}
+    public function __construct($size, $type, $slice_size = null, $shared = null){}
 
     /**
      * @return mixed
@@ -28,7 +28,7 @@ class Pool
      * @param $size[optional]
      * @return mixed
      */
-    public function alloc($size=null){}
+    public function alloc($size = null){}
 
 
 }

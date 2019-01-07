@@ -21,26 +21,40 @@ class PostgreSQL
      * @param $query[optional]
      * @return mixed
      */
-    public function query($query=null){}
+    public function query($query = null){}
+
+    /**
+     * @param $stmtname[required]
+     * @param $query[required]
+     * @return mixed
+     */
+    public function prepare($stmtname, $query){}
+
+    /**
+     * @param $stmtname[required]
+     * @param $pv_param_arr[required]
+     * @return mixed
+     */
+    public function execute($stmtname, $pv_param_arr){}
 
     /**
      * @param $result[optional]
      * @param $result_type[optional]
      * @return mixed
      */
-    public function fetchAll($result=null, $result_type=null){}
+    public function fetchAll($result = null, $result_type = null){}
 
     /**
      * @param $result[optional]
      * @return mixed
      */
-    public function affectedRows($result=null){}
+    public function affectedRows($result = null){}
 
     /**
      * @param $result[optional]
      * @return mixed
      */
-    public function numRows($result=null){}
+    public function numRows($result = null){}
 
     /**
      * @param $table_name[required]
@@ -56,22 +70,14 @@ class PostgreSQL
      * @param $ctor_params[optional]
      * @return mixed
      */
-    public function fetchObject($result, $row=null, $class_name=null, $l=null, $ctor_params=null){}
+    public function fetchObject($result, $row = null, $class_name = null, $l = null, $ctor_params = null){}
 
     /**
      * @param $result[required]
      * @param $row[optional]
      * @return mixed
      */
-    public function fetchAssoc($result, $row=null){}
-
-    /**
-     * @param $result[required]
-     * @param $row[optional]
-     * @param $result_type[optional]
-     * @return mixed
-     */
-    public function fetchArray($result, $row=null, $result_type=null){}
+    public function fetchAssoc($result, $row = null){}
 
     /**
      * @param $result[required]
@@ -79,7 +85,15 @@ class PostgreSQL
      * @param $result_type[optional]
      * @return mixed
      */
-    public function fetchRow($result, $row=null, $result_type=null){}
+    public function fetchArray($result, $row = null, $result_type = null){}
+
+    /**
+     * @param $result[required]
+     * @param $row[optional]
+     * @param $result_type[optional]
+     * @return mixed
+     */
+    public function fetchRow($result, $row = null, $result_type = null){}
 
     /**
      * @return mixed

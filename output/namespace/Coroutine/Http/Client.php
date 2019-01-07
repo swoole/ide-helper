@@ -5,12 +5,12 @@ class Client
 {
 
     public $errCode;
-    public $type;
-    public $setting;
+    public $errMsg;
     public $connected;
     public $host;
     public $port;
     public $ssl;
+    public $setting;
     public $requestMethod;
     public $requestHeaders;
     public $requestBody;
@@ -29,7 +29,7 @@ class Client
      * @param $ssl[optional]
      * @return mixed
      */
-    public function __construct($host, $port=null, $ssl=null){}
+    public function __construct($host, $port = null, $ssl = null){}
 
     /**
      * @return mixed
@@ -41,6 +41,17 @@ class Client
      * @return mixed
      */
     public function set($settings){}
+
+    /**
+     * @return mixed
+     */
+    public function getDefer(){}
+
+    /**
+     * @param $defer[optional]
+     * @return mixed
+     */
+    public function setDefer($defer = null){}
 
     /**
      * @param $method[required]
@@ -91,7 +102,7 @@ class Client
      * @param $offset[optional]
      * @return mixed
      */
-    public function download($path, $file, $offset=null){}
+    public function download($path, $file, $offset = null){}
 
     /**
      * @param $path[required]
@@ -108,7 +119,7 @@ class Client
      * @param $length[optional]
      * @return mixed
      */
-    public function addFile($path, $name, $type=null, $filename=null, $offset=null, $length=null){}
+    public function addFile($path, $name, $type = null, $filename = null, $offset = null, $length = null){}
 
     /**
      * @param $path[required]
@@ -117,34 +128,13 @@ class Client
      * @param $filename[optional]
      * @return mixed
      */
-    public function addData($path, $name, $type=null, $filename=null){}
-
-    /**
-     * @return mixed
-     */
-    public function isConnected(){}
-
-    /**
-     * @return mixed
-     */
-    public function close(){}
-
-    /**
-     * @param $defer[optional]
-     * @return mixed
-     */
-    public function setDefer($defer=null){}
-
-    /**
-     * @return mixed
-     */
-    public function getDefer(){}
+    public function addData($path, $name, $type = null, $filename = null){}
 
     /**
      * @param $timeout[optional]
      * @return mixed
      */
-    public function recv($timeout=null){}
+    public function recv($timeout = null){}
 
     /**
      * @param $data[required]
@@ -152,7 +142,12 @@ class Client
      * @param $finish[optional]
      * @return mixed
      */
-    public function push($data, $opcode=null, $finish=null){}
+    public function push($data, $opcode = null, $finish = null){}
+
+    /**
+     * @return mixed
+     */
+    public function close(){}
 
 
 }

@@ -21,13 +21,13 @@ class MsgQueue
      * @param $type[optional]
      * @return mixed
      */
-    public function push($data, $type=null){}
+    public function push($data, $type = null){}
 
     /**
      * @param $type[optional]
      * @return mixed
      */
-    public function pop($type=null){}
+    public function pop($type = null){}
 
     /**
      * @param $blocking[required]

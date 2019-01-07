@@ -9,19 +9,19 @@ class Long
      * @param $value[optional]
      * @return mixed
      */
-    public function __construct($value=null){}
+    public function __construct($value = null){}
 
     /**
      * @param $add_value[optional]
      * @return mixed
      */
-    public function add($add_value=null){}
+    public function add($add_value = null){}
 
     /**
      * @param $sub_value[optional]
      * @return mixed
      */
-    public function sub($sub_value=null){}
+    public function sub($sub_value = null){}
 
     /**
      * @return mixed

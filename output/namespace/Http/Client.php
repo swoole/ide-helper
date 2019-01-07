@@ -6,6 +6,7 @@ class Client
 
     public $type;
     public $errCode;
+    public $errMsg;
     public $statusCode;
     public $host;
     public $port;
@@ -30,7 +31,7 @@ class Client
      * @param $ssl[optional]
      * @return mixed
      */
-    public function __construct($host, $port=null, $ssl=null){}
+    public function __construct($host, $port = null, $ssl = null){}
 
     /**
      * @return mixed
@@ -76,7 +77,7 @@ class Client
      * @param $length[optional]
      * @return mixed
      */
-    public function addFile($path, $name, $type=null, $filename=null, $offset=null, $length=null){}
+    public function addFile($path, $name, $type = null, $filename = null, $offset = null, $length = null){}
 
     /**
      * @param $path[required]
@@ -91,7 +92,7 @@ class Client
      * @param $finish[optional]
      * @return mixed
      */
-    public function push($data, $opcode=null, $finish=null){}
+    public function push($data, $opcode = null, $finish = null){}
 
     /**
      * @param $path[required]
@@ -122,7 +123,7 @@ class Client
      * @param $offset[optional]
      * @return mixed
      */
-    public function download($path, $file, $callback, $offset=null){}
+    public function download($path, $file, $callback, $offset = null){}
 
     /**
      * @return mixed

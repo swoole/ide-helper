@@ -10,14 +10,14 @@ class Slice
      * @param $offset[optional]
      * @return mixed
      */
-    public function read($size=null, $offset=null){}
+    public function read($size = null, $offset = null){}
 
     /**
      * @param $data[required]
      * @param $offset[optional]
      * @return mixed
      */
-    public function write($data, $offset=null){}
+    public function write($data, $offset = null){}
 
     /**
      * @return mixed

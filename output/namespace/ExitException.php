@@ -1,7 +1,7 @@
 <?php
 namespace Swoole;
 
-class ExitException extends \Exception
+class ExitException extends \Swoole\Exception
 {
 
     protected $message;
@@ -25,7 +25,7 @@ class ExitException extends \Exception
      * @param $previous[optional]
      * @return mixed
      */
-    public function __construct($message=null, $code=null, $previous=null){}
+    public function __construct($message = null, $code = null, $previous = null){}
 
     /**
      * @return mixed

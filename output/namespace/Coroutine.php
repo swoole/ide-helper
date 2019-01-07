@@ -10,7 +10,7 @@ class Coroutine
      * @param $params[optional]
      * @return mixed
      */
-    public static function create($func, $params=null){}
+    public static function create($func, $params = null){}
 
     /**
      * @param $command[required]
@@ -21,9 +21,10 @@ class Coroutine
     /**
      * @param $domain_name[required]
      * @param $family[optional]
+     * @param $timeout[optional]
      * @return mixed
      */
-    public static function gethostbyname($domain_name, $family=null){}
+    public static function gethostbyname($domain_name, $family = null, $timeout = null){}
 
     /**
      * @param $callback[required]
@@ -61,6 +62,11 @@ class Coroutine
     /**
      * @return mixed
      */
+    public static function getCid(){}
+
+    /**
+     * @return mixed
+     */
     public static function getuid(){}
 
     /**
@@ -74,7 +80,7 @@ class Coroutine
      * @param $length[optional]
      * @return mixed
      */
-    public static function fread($handle, $length=null){}
+    public static function fread($handle, $length = null){}
 
     /**
      * @param $handle[required]
@@ -88,7 +94,7 @@ class Coroutine
      * @param $length[optional]
      * @return mixed
      */
-    public static function fwrite($handle, $string, $length=null){}
+    public static function fwrite($handle, $string, $length = null){}
 
     /**
      * @param $filename[required]
@@ -102,7 +108,7 @@ class Coroutine
      * @param $flags[optional]
      * @return mixed
      */
-    public static function writeFile($filename, $data, $flags=null){}
+    public static function writeFile($filename, $data, $flags = null){}
 
     /**
      * @param $hostname[required]
@@ -112,7 +118,7 @@ class Coroutine
      * @param $service[optional]
      * @return mixed
      */
-    public static function getaddrinfo($hostname, $family=null, $socktype=null, $protocol=null, $service=null){}
+    public static function getaddrinfo($hostname, $family = null, $socktype = null, $protocol = null, $service = null){}
 
     /**
      * @param $path[required]
@@ -126,7 +132,7 @@ class Coroutine
      * @param $limit[optional]
      * @return mixed
      */
-    public static function getBackTrace($cid, $options=null, $limit=null){}
+    public static function getBackTrace($cid, $options = null, $limit = null){}
 
     /**
      * @return mixed

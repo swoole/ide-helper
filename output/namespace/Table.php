@@ -13,7 +13,7 @@ class Table
      * @param $conflict_proportion[optional]
      * @return mixed
      */
-    public function __construct($table_size, $conflict_proportion=null){}
+    public function __construct($table_size, $conflict_proportion = null){}
 
     /**
      * @param $name[required]
@@ -21,7 +21,7 @@ class Table
      * @param $size[optional]
      * @return mixed
      */
-    public function column($name, $type, $size=null){}
+    public function column($name, $type, $size = null){}
 
     /**
      * @return mixed
@@ -45,7 +45,7 @@ class Table
      * @param $field[optional]
      * @return mixed
      */
-    public function get($key, $field=null){}
+    public function get($key, $field = null){}
 
     /**
      * @return mixed
@@ -70,7 +70,7 @@ class Table
      * @param $incrby[optional]
      * @return mixed
      */
-    public function incr($key, $column, $incrby=null){}
+    public function incr($key, $column, $incrby = null){}
 
     /**
      * @param $key[required]
@@ -78,7 +78,7 @@ class Table
      * @param $decrby[optional]
      * @return mixed
      */
-    public function decr($key, $column, $decrby=null){}
+    public function decr($key, $column, $decrby = null){}
 
     /**
      * @return mixed

@@ -11,7 +11,7 @@ class Channel
      * @param $size[optional]
      * @return mixed
      */
-    public function __construct($size=null){}
+    public function __construct($size = null){}
 
     /**
      * @param $data[required]
@@ -23,7 +23,7 @@ class Channel
      * @param $timeout[optional]
      * @return mixed
      */
-    public function pop($timeout=null){}
+    public function pop($timeout = null){}
 
     /**
      * @return mixed

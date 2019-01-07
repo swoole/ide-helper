@@ -15,7 +15,7 @@ class Runtime
      * @param $flags[optional]
      * @return mixed
      */
-    public static function enableCoroutine($enable=null, $flags=null){}
+    public static function enableCoroutine($enable = null, $flags = null){}
 
 
 }

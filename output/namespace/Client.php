@@ -31,7 +31,7 @@ class Client
      * @param $async[optional]
      * @return mixed
      */
-    public function __construct($type, $async=null){}
+    public function __construct($type, $async = null){}
 
     /**
      * @return mixed
@@ -51,21 +51,21 @@ class Client
      * @param $sock_flag[optional]
      * @return mixed
      */
-    public function connect($host, $port=null, $timeout=null, $sock_flag=null){}
+    public function connect($host, $port = null, $timeout = null, $sock_flag = null){}
 
     /**
      * @param $size[optional]
      * @param $flag[optional]
      * @return mixed
      */
-    public function recv($size=null, $flag=null){}
+    public function recv($size = null, $flag = null){}
 
     /**
      * @param $data[required]
      * @param $flag[optional]
      * @return mixed
      */
-    public function send($data, $flag=null){}
+    public function send($data, $flag = null){}
 
     /**
      * @param $dst_socket[required]
@@ -79,7 +79,7 @@ class Client
      * @param $length[optional]
      * @return mixed
      */
-    public function sendfile($filename, $offset=null, $length=null){}
+    public function sendfile($filename, $offset = null, $length = null){}
 
     /**
      * @param $ip[required]
@@ -119,7 +119,7 @@ class Client
      * @param $callback[optional]
      * @return mixed
      */
-    public function enableSSL($callback=null){}
+    public function enableSSL($callback = null){}
 
     /**
      * @return mixed
@@ -150,7 +150,7 @@ class Client
      * @param $force[optional]
      * @return mixed
      */
-    public function close($force=null){}
+    public function close($force = null){}
 
     /**
      * @param $event_name[required]
