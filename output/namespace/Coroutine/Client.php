@@ -80,7 +80,7 @@ class Client
      * @param $port[optional]
      * @return mixed
      */
-    public function recvfrom($length, $address, $port = null){}
+    public function recvfrom($length, &$address, &$port = null){}
 
     /**
      * @return mixed

@@ -184,7 +184,7 @@ function defer($callback){}
  * @param $timeout[optional]
  * @return mixed
  */
-function swoole_client_select($read_array, $write_array, $error_array, $timeout = null){}
+function swoole_client_select(&$read_array, &$write_array, &$error_array, $timeout = null){}
 
 /**
  * @param $read_array[required]
@@ -193,7 +193,7 @@ function swoole_client_select($read_array, $write_array, $error_array, $timeout 
  * @param $timeout[optional]
  * @return mixed
  */
-function swoole_select($read_array, $write_array, $error_array, $timeout = null){}
+function swoole_select(&$read_array, &$write_array, &$error_array, $timeout = null){}
 
 /**
  * @param $process_name[required]

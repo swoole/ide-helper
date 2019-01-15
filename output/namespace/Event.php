@@ -32,7 +32,7 @@ class Event
     /**
      * @return mixed
      */
-    public static function _exit(){}
+    public static function exit(){}
 
     /**
      * @param $fd[required]

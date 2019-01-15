@@ -60,7 +60,7 @@ class Socket
      * @param $timeout[optional]
      * @return mixed
      */
-    public function recvfrom($peername, $timeout = null){}
+    public function recvfrom(&$peername, $timeout = null){}
 
     /**
      * @param $addr[required]

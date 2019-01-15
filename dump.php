@@ -160,7 +160,7 @@ class ExtensionDocument
                 {
                     $default_value = self::getDefaultValue($param);
                     $comment .= " * @param \${$param->name}[" . ($param->isOptional() ? 'optional' : 'required') . "]\n";
-                    $vp[] = "\${$param->name}" . ($default_value ? " = {$default_value}" : '');
+                    $vp[] = ($param->isPassedByReference() ? '&' : '') . "\${$param->name}" . ($default_value ? " = {$default_value}" : '');
                 }
                 $comment .= " * @return mixed\n";
                 $comment .= " */\n";
@@ -253,7 +253,7 @@ class ExtensionDocument
                 {
                     $default_value = self::getDefaultValue($param);
                     $comment .= self::SPACE_5 . "* @param \${$param->name}[" . ($param->isOptional() ? 'optional' : 'required') . "]\n";
-                    $vp[] = "\${$param->name}" . ($default_value ? " = {$default_value}" : '');
+                    $vp[] = ($param->isPassedByReference() ? '&' : '') . "\${$param->name}" . ($default_value ? " = {$default_value}" : '');
                 }
             }
             if (!isset($config['return']))
