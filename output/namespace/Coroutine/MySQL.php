@@ -48,13 +48,6 @@ class MySQL
     public function nextResult(){}
 
     /**
-     * @param $string[required]
-     * @param $flags[optional]
-     * @return mixed
-     */
-    public function escape($string, $flags = null){}
-
-    /**
      * @param $timeout[optional]
      * @return mixed
      */
@@ -73,11 +66,11 @@ class MySQL
     public function rollback($timeout = null){}
 
     /**
-     * @param $query[required]
+     * @param $statement[required]
      * @param $timeout[optional]
      * @return mixed
      */
-    public function prepare($query, $timeout = null){}
+    public function prepare($statement, $timeout = null){}
 
     /**
      * @param $defer[optional]

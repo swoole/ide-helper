@@ -46,12 +46,6 @@ class Response
     public function status($http_code, $reason = null){}
 
     /**
-     * @param $compress_level[optional]
-     * @return mixed
-     */
-    public function gzip($compress_level = null){}
-
-    /**
      * @param $key[required]
      * @param $value[required]
      * @param $ucwords[optional]

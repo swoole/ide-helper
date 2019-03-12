@@ -57,6 +57,12 @@ class Server extends \Swoole\Server
     public function on($event_name, $callback){}
 
     /**
+     * @param $event_name[required]
+     * @return mixed
+     */
+    public function getCallback($event_name){}
+
+    /**
      * @param $settings[required]
      * @return mixed
      */
@@ -90,6 +96,12 @@ class Server extends \Swoole\Server
      * @return mixed
      */
     public function sendwait($conn_fd, $send_data){}
+
+    /**
+     * @param $fd[required]
+     * @return mixed
+     */
+    public function exists($fd){}
 
     /**
      * @param $fd[required]
@@ -273,12 +285,6 @@ class Server extends \Swoole\Server
      * @return mixed
      */
     public function stats(){}
-
-    /**
-     * @param $port[optional]
-     * @return mixed
-     */
-    public function getSocket($port = null){}
 
     /**
      * @param $fd[required]

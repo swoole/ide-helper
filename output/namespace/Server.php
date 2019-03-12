@@ -4,23 +4,17 @@ namespace Swoole;
 class Server
 {
 
-    private $onConnect;
-    private $onReceive;
-    private $onClose;
-    private $onPacket;
-    private $onBufferFull;
-    private $onBufferEmpty;
-    private $onStart;
-    private $onShutdown;
-    private $onWorkerStart;
-    private $onWorkerStop;
-    private $onWorkerExit;
-    private $onWorkerError;
-    private $onTask;
-    private $onFinish;
-    private $onManagerStart;
-    private $onManagerStop;
-    private $onPipeMessage;
+    private $on_start;
+    private $on_shutdown;
+    private $on_workerstart;
+    private $on_workerstop;
+    private $on_workerexit;
+    private $on_workererror;
+    private $on_task;
+    private $on_finish;
+    private $on_managerstart;
+    private $on_managerstop;
+    private $on_pipemessage;
     public $setting;
     public $connections;
     public $host;
@@ -70,6 +64,12 @@ class Server
      * @return mixed
      */
     public function on($event_name, $callback){}
+
+    /**
+     * @param $event_name[required]
+     * @return mixed
+     */
+    public function getCallback($event_name){}
 
     /**
      * @param $settings[required]
@@ -126,6 +126,12 @@ class Server
      * @return mixed
      */
     public function sendwait($conn_fd, $send_data){}
+
+    /**
+     * @param $fd[required]
+     * @return mixed
+     */
+    public function exists($fd){}
 
     /**
      * @param $fd[required]
@@ -309,12 +315,6 @@ class Server
      * @return mixed
      */
     public function stats(){}
-
-    /**
-     * @param $port[optional]
-     * @return mixed
-     */
-    public function getSocket($port = null){}
 
     /**
      * @param $fd[required]

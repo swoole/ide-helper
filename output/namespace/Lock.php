@@ -7,6 +7,7 @@ class Lock
     const MUTEX = 3;
     const SEM = 4;
     const RWLOCK = 1;
+    const SPINLOCK = 5;
 
     public $errCode;
 

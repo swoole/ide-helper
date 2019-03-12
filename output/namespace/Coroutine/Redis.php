@@ -1078,6 +1078,18 @@ class Redis
     public function subscribe($channels){}
 
     /**
+     * @param $channels[required]
+     * @return mixed
+     */
+    public function unsubscribe($channels){}
+
+    /**
+     * @param $patterns[required]
+     * @return mixed
+     */
+    public function pUnSubscribe($patterns){}
+
+    /**
      * @return mixed
      */
     public function multi(){}
