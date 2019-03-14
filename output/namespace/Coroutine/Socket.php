@@ -6,6 +6,7 @@ class Socket
 
     public $fd;
     public $errCode;
+    public $errMsg;
 
     /**
      * @param $domain[required]
