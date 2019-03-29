@@ -44,9 +44,10 @@ class Process
 
     /**
      * @param $usec[required]
+     * @param $type[optional]
      * @return mixed
      */
-    public static function alarm($usec){}
+    public static function alarm($usec, $type = null){}
 
     /**
      * @param $pid[required]
@@ -61,6 +62,12 @@ class Process
      * @return mixed
      */
     public static function daemon($nochdir = null, $noclose = null){}
+
+    /**
+     * @param $cpu_settings[required]
+     * @return mixed
+     */
+    public static function setaffinity($cpu_settings){}
 
     /**
      * @param $seconds[required]
@@ -138,6 +145,11 @@ class Process
      * @return mixed
      */
     public function exec($exec_file, $args){}
+
+    /**
+     * @return mixed
+     */
+    public function exportSocket(){}
 
     /**
      * @param $process_name[required]

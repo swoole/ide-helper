@@ -18,7 +18,7 @@ class Request
     /**
      * @return mixed
      */
-    public function rawcontent(){}
+    public function rawContent(){}
 
     /**
      * @return mixed

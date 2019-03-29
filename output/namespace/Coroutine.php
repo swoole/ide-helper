@@ -39,6 +39,12 @@ class Coroutine
     public static function set($options){}
 
     /**
+     * @param $cid[required]
+     * @return mixed
+     */
+    public static function exists($cid){}
+
+    /**
      * @return mixed
      */
     public static function yield(){}
@@ -49,10 +55,10 @@ class Coroutine
     public static function suspend(){}
 
     /**
-     * @param $uid[required]
+     * @param $cid[required]
      * @return mixed
      */
-    public static function resume($uid){}
+    public static function resume($cid){}
 
     /**
      * @return mixed
@@ -68,6 +74,17 @@ class Coroutine
      * @return mixed
      */
     public static function getuid(){}
+
+    /**
+     * @return mixed
+     */
+    public static function getPcid(){}
+
+    /**
+     * @param $cid[optional]
+     * @return mixed
+     */
+    public static function getContext($cid = null){}
 
     /**
      * @param $seconds[required]
@@ -127,12 +144,17 @@ class Coroutine
     public static function statvfs($path){}
 
     /**
-     * @param $cid[required]
+     * @param $cid[optional]
      * @param $options[optional]
      * @param $limit[optional]
      * @return mixed
      */
-    public static function getBackTrace($cid, $options = null, $limit = null){}
+    public static function getBackTrace($cid = null, $options = null, $limit = null){}
+
+    /**
+     * @return mixed
+     */
+    public static function list(){}
 
     /**
      * @return mixed

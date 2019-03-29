@@ -62,6 +62,12 @@ class Table
      * @param $key[required]
      * @return mixed
      */
+    public function exists($key){}
+
+    /**
+     * @param $key[required]
+     * @return mixed
+     */
     public function exist($key){}
 
     /**

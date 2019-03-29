@@ -40,12 +40,6 @@ class Server extends \Swoole\Http\Server
      * @param $fd[required]
      * @return mixed
      */
-    public function exist($fd){}
-
-    /**
-     * @param $fd[required]
-     * @return mixed
-     */
     public function isEstablished($fd){}
 
     /**
@@ -101,6 +95,12 @@ class Server extends \Swoole\Http\Server
     public function on($event_name, $callback){}
 
     /**
+     * @param $event_name[required]
+     * @return mixed
+     */
+    public function getCallback($event_name){}
+
+    /**
      * @param $settings[required]
      * @return mixed
      */
@@ -134,6 +134,18 @@ class Server extends \Swoole\Http\Server
      * @return mixed
      */
     public function sendwait($conn_fd, $send_data){}
+
+    /**
+     * @param $fd[required]
+     * @return mixed
+     */
+    public function exists($fd){}
+
+    /**
+     * @param $fd[required]
+     * @return mixed
+     */
+    public function exist($fd){}
 
     /**
      * @param $fd[required]
@@ -311,12 +323,6 @@ class Server extends \Swoole\Http\Server
      * @return mixed
      */
     public function stats(){}
-
-    /**
-     * @param $port[optional]
-     * @return mixed
-     */
-    public function getSocket($port = null){}
 
     /**
      * @param $fd[required]

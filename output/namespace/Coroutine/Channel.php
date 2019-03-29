@@ -15,9 +15,10 @@ class Channel
 
     /**
      * @param $data[required]
+     * @param $timeout[optional]
      * @return mixed
      */
-    public function push($data){}
+    public function push($data, $timeout = null){}
 
     /**
      * @param $timeout[optional]

@@ -4,16 +4,16 @@ namespace Swoole\Server;
 class Port
 {
 
-    public $onConnect;
-    public $onReceive;
-    public $onClose;
-    public $onPacket;
-    public $onBufferFull;
-    public $onBufferEmpty;
-    public $onRequest;
-    public $onHandShake;
-    public $onMessage;
-    public $onOpen;
+    private $onConnect;
+    private $onReceive;
+    private $onClose;
+    private $onPacket;
+    private $onBufferFull;
+    private $onBufferEmpty;
+    private $onRequest;
+    private $onHandShake;
+    private $onMessage;
+    private $onOpen;
     public $host;
     public $port;
     public $type;
@@ -43,11 +43,6 @@ class Port
      * @return mixed
      */
     public function on($event_name, $callback){}
-
-    /**
-     * @return mixed
-     */
-    public function getSocket(){}
 
 
 }
