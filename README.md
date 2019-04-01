@@ -1,19 +1,32 @@
-# Swoole IDE helper
+# Swoole IDE Helper
 
-This library allows to use completion in your preferred IDE.
+[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Software License][ico-license]](LICENSE)
 
+This package contains IDE help files for [Swoole](https://github.com/swoole/swoole-src). You may use it in your IDE to provide accurate autocompletion. 
 
-## Generate
+## Install
 
-```shell
-php dump.php
+You may add this package to your project using [Composer](https://getcomposer.org):
+
+```bash
+composer require swoole/ide-helper:@dev
+# or,
+composer require swoole/ide-helper:~4.3.0
 ```
 
-Add `output/` to your ide include path.
+It's better to install this package on only development systems by adding the `--dev` flag to your Composer commands:
 
+```bash
+composer require --dev swoole/ide-helper:@dev
+# or,
+composer require --dev swoole/ide-helper:~4.3.0
+```
 
-## Install in your project
+## Generate IDE Help Files
 
-```shell
-composer require swoole/ide-helper:dev-master
+Use following commands to generate IDE help files and put them under folder `output/`.
+
+```bash
+rm -rf ./output && php dump.php
 ```
