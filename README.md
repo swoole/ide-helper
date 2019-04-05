@@ -28,5 +28,5 @@ composer require --dev swoole/ide-helper:~4.3.0
 Use following commands to generate IDE help files and put them under folder `output/`.
 
 ```bash
-rm -rf ./output && php dump.php
+composer update && rm -rf ./output && ./bin/generator.php
 ```

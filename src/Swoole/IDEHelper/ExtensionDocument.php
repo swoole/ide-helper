@@ -1,7 +1,9 @@
 <?php
-define('OUTPUT_DIR', __DIR__ . '/output');
-define('CONFIG_DIR', __DIR__ . '/config');
-define('LANGUAGE', 'chinese');
+
+namespace Swoole\IDEHelper;
+
+use Reflection;
+use ReflectionExtension;
 
 class ExtensionDocument
 {
@@ -12,6 +14,21 @@ class ExtensionDocument
     const C_CONSTANT = 3;
     const SPACE_4 = '    ';
     const SPACE_5 = self::SPACE_4 . ' ';
+
+    /**
+     * @var string
+     */
+    protected $language;
+
+    /**
+     * @var string
+     */
+    protected $dirConfig;
+
+    /**
+     * @var string
+     */
+    protected $dirOutput;
 
     /**
      * @var string
@@ -53,7 +70,7 @@ class ExtensionDocument
         foreach ($ns as &$n) {
             $n = ucfirst($n);
         }
-        $path = OUTPUT_DIR . '/alias/' . implode('/', array_slice($ns, 1)) . '.php';
+        $path = $this->dirOutput . '/alias/' . implode('/', array_slice($ns, 1)) . '.php';
         if (!is_dir(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
@@ -96,7 +113,7 @@ class ExtensionDocument
             default:
                 return false;
         }
-        $file = CONFIG_DIR . '/' . LANGUAGE . '/' . strtolower($class) . '/' . $dir . '/' . $name . '.php';
+        $file = $this->dirConfig . '/' . $this->language . '/' . strtolower($class) . '/' . $dir . '/' . $name . '.php';
         if (is_file($file)) {
             return include $file;
         } else {
@@ -271,7 +288,7 @@ class ExtensionDocument
         });
 
 
-        $path = OUTPUT_DIR . '/namespace/' . implode('/', array_slice($ns, 1));
+        $path = $this->dirOutput . '/namespace/' . implode('/', array_slice($ns, 1));
 
         $namespace = implode('\\', array_slice($ns, 0, -1));
         $dir = dirname($path);
@@ -317,13 +334,25 @@ class ExtensionDocument
         return $class_def;
     }
 
-    public function __construct()
+    /**
+     * ExtensionDocument constructor.
+     *
+     * @param string $language
+     * @param string $dirOutput
+     * @param string $dirConfig
+     * @throws \ReflectionException
+     */
+    public function __construct(string $language, string $dirOutput, string $dirConfig)
     {
         if (!extension_loaded(self::EXTENSION_NAME)) {
             throw new \Exception("no " . self::EXTENSION_NAME . " extension.");
         }
-        $this->rf_ext = new ReflectionExtension(self::EXTENSION_NAME);
-        $this->version = $this->rf_ext->getVersion();
+
+        $this->language  = $language;
+        $this->dirOutput = $dirOutput;
+        $this->dirConfig = $dirConfig;
+        $this->rf_ext    = new ReflectionExtension(self::EXTENSION_NAME);
+        $this->version   = $this->rf_ext->getVersion();
     }
 
     public function export()
@@ -340,12 +369,12 @@ class ExtensionDocument
             $defines .= "define('$className', $ref);\n";
         }
 
-        if (!is_dir(OUTPUT_DIR)) {
-            mkdir(OUTPUT_DIR);
+        if (!is_dir($this->dirOutput)) {
+            mkdir($this->dirOutput);
         }
 
         file_put_contents(
-            OUTPUT_DIR . '/constants.php',
+            $this->dirOutput . '/constants.php',
             "<?php\n" . $defines
         );
 
@@ -356,7 +385,7 @@ class ExtensionDocument
         $fdefs = $this->getFunctionsDef($funcs);
 
         file_put_contents(
-            OUTPUT_DIR . '/functions.php',
+            $this->dirOutput . '/functions.php',
             "<?php\n/**\n * @since {$this->version}\n */\n\n{$fdefs}"
         );
 
@@ -384,13 +413,8 @@ class ExtensionDocument
             }
         }
         file_put_contents(
-            OUTPUT_DIR . '/classes.php',
+            $this->dirOutput . '/classes.php',
             $class_alias
         );
     }
 }
-
-(new ExtensionDocument())->export();
-
-echo "swoole version: " . swoole_version() . "\n";
-echo "dump success.\n";

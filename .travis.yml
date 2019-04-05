@@ -7,4 +7,4 @@ before_install:
   - composer update -n
 
 script:
-  - ./vendor/bin/phpcs -v --standard=PSR12 dump.php
+  - ./vendor/bin/phpcs -v --standard=PSR12 bin src
