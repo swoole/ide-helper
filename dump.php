@@ -30,7 +30,7 @@ class ExtensionDocument
     //     return in_array($word, $keywords);
     // }
 
-    static function formatComment($comment)
+    protected static function formatComment($comment)
     {
         $lines = explode("\n", $comment);
         foreach ($lines as &$li) {
@@ -44,7 +44,7 @@ class ExtensionDocument
         return implode("\n", $lines) . "\n";
     }
 
-    function exportShortAlias($className)
+    protected function exportShortAlias($className)
     {
         if (strtolower(substr($className, 0, 2)) != 'co') {
             return;
@@ -70,7 +70,7 @@ class ExtensionDocument
         file_put_contents($path, $content);
     }
 
-    static function getNamespaceAlias($className)
+    protected static function getNamespaceAlias($className)
     {
         if (strtolower($className) == 'co') {
             return "Swoole\\Coroutine";
@@ -81,7 +81,7 @@ class ExtensionDocument
         }
     }
 
-    function getConfig($class, $name, $type)
+    protected function getConfig($class, $name, $type)
     {
         switch ($type) {
             case self::C_CONSTANT:
@@ -104,7 +104,7 @@ class ExtensionDocument
         }
     }
 
-    static function getDefaultValue(\ReflectionParameter $parameter)
+    protected static function getDefaultValue(\ReflectionParameter $parameter)
     {
         try {
             $default_value = $parameter->getDefaultValue();
@@ -127,7 +127,7 @@ class ExtensionDocument
         return $default_value;
     }
 
-    function getFunctionsDef(array $functions)
+    protected function getFunctionsDef(array $functions)
     {
         $all = '';
         foreach ($functions as $function_name => $function) {
@@ -141,8 +141,12 @@ class ExtensionDocument
                 $comment = "/**\n";
                 foreach ($params as $param) {
                     $default_value = self::getDefaultValue($param);
-                    $comment .= " * @param \${$param->name}[" . ($param->isOptional() ? 'optional' : 'required') . "]\n";
-                    $vp[] = ($param->isPassedByReference() ? '&' : '') . "\${$param->name}" . ($default_value ? " = {$default_value}" : '');
+                    $comment .= " * @param \${$param->name}[" .
+                        ($param->isOptional() ? 'optional' : 'required') .
+                        "]\n";
+                    $vp[] = ($param->isPassedByReference() ? '&' : '') .
+                        "\${$param->name}" .
+                        ($default_value ? " = {$default_value}" : '');
                 }
                 $comment .= " * @return mixed\n";
                 $comment .= " */\n";
@@ -159,7 +163,7 @@ class ExtensionDocument
      * @param array $props
      * @return string
      */
-    function getPropertyDef($classname, array $props)
+    protected function getPropertyDef($classname, array $props)
     {
         $prop_str = "";
         foreach ($props as $k => $v) {
@@ -181,7 +185,7 @@ class ExtensionDocument
      * @param array $consts
      * @return string
      */
-    function getConstantsDef($classname, array $consts)
+    protected function getConstantsDef($classname, array $consts)
     {
         $all = "";
         foreach ($consts as $k => $v) {
@@ -200,7 +204,7 @@ class ExtensionDocument
      * @param array $methods
      * @return string
      */
-    function getMethodsDef($classname, array $methods)
+    protected function getMethodsDef($classname, array $methods)
     {
         $all = '';
         foreach ($methods as $k => $v) {
@@ -225,8 +229,13 @@ class ExtensionDocument
             if ($params) {
                 foreach ($params as $param) {
                     $default_value = self::getDefaultValue($param);
-                    $comment .= self::SPACE_5 . "* @param \${$param->name}[" . ($param->isOptional() ? 'optional' : 'required') . "]\n";
-                    $vp[] = ($param->isPassedByReference() ? '&' : '') . "\${$param->name}" . ($default_value ? " = {$default_value}" : '');
+                    $comment .= self::SPACE_5 .
+                        "* @param \${$param->name}[" .
+                        ($param->isOptional() ? 'optional' : 'required') .
+                        "]\n";
+                    $vp[] = ($param->isPassedByReference() ? '&' : '') .
+                        "\${$param->name}" .
+                        ($default_value ? " = {$default_value}" : '');
                 }
             }
             if (!isset($config['return'])) {
@@ -250,7 +259,7 @@ class ExtensionDocument
      * @param $classname
      * @param $ref  ReflectionClass
      */
-    function exportNamespaceClass($classname, $ref)
+    protected function exportNamespaceClass($classname, $ref)
     {
         $ns = explode('\\', $classname);
         if (strtolower($ns[0]) != self::EXTENSION_NAME) {
@@ -281,7 +290,7 @@ class ExtensionDocument
      * @param $ref ReflectionClass
      * @return string
      */
-    function getClassDef($classname, $ref)
+    protected function getClassDef($classname, $ref)
     {
         //获取属性定义
         $props = $this->getPropertyDef($classname, $ref->getProperties());
@@ -308,7 +317,7 @@ class ExtensionDocument
         return $class_def;
     }
 
-    function __construct()
+    public function __construct()
     {
         if (!extension_loaded(self::EXTENSION_NAME)) {
             throw new \Exception("no " . self::EXTENSION_NAME . " extension.");
@@ -317,7 +326,7 @@ class ExtensionDocument
         $this->version = $this->rf_ext->getVersion();
     }
 
-    function export()
+    public function export()
     {
         /**
          * 获取所有define常量
@@ -356,18 +365,22 @@ class ExtensionDocument
          */
         $classes = $this->rf_ext->getClasses();
         $class_alias = "<?php\n";
+        // There are three types of class names in Swoole:
+        // 1. short name of a class. Short names start with "co\". These classes can be found under folder output/alias.
+        // 2. fully qualified name (class name with namespace prefix), e.g., \Swoole\Timer. These classes can be found
+        //    under folder output/namespace.
+        // 3. snake_case. e.g., swoole_timer. These classes can be found in file output/classes.php.
         foreach ($classes as $className => $ref) {
-            //短命名别名
             if (strtolower(substr($className, 0, 3)) == 'co\\') {
                 $this->exportShortAlias($className);
-            }
-            //标准命名空间的类名，如 Swoole\Server
-            elseif (strchr($className, '\\')) {
+            } elseif (strchr($className, '\\')) {
                 $this->exportNamespaceClass($className, $ref);
-            }
-            //下划线分割类别名
-            else {
-                $class_alias .= sprintf("class_alias(%s::class, '%s');\n", self::getNamespaceAlias($className), $className);
+            } else {
+                $class_alias .= sprintf(
+                    "class_alias(%s::class, '%s');\n",
+                    self::getNamespaceAlias($className),
+                    $className
+                );
             }
         }
         file_put_contents(
