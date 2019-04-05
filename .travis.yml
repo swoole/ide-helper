@@ -1,0 +1,10 @@
+language: php
+
+php:
+  - 7.3
+
+before_install:
+  - composer update -n
+
+script:
+  - ./vendor/bin/phpcs -v --standard=PSR12 dump.php

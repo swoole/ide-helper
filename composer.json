@@ -8,5 +8,8 @@
             "name": "Team Swoole",
             "email": "team@swoole.com"
         }
-    ]
+    ],
+    "require-dev": {
+        "squizlabs/php_codesniffer": "~3.4.0"
+    }
 }
