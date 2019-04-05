@@ -3,7 +3,11 @@
 namespace Swoole\IDEHelper;
 
 use Reflection;
+use ReflectionClass;
+use ReflectionException;
 use ReflectionExtension;
+use ReflectionMethod;
+use ReflectionProperty;
 
 class ExtensionDocument
 {
@@ -47,7 +51,11 @@ class ExtensionDocument
     //     return in_array($word, $keywords);
     // }
 
-    protected static function formatComment($comment)
+    /**
+     * @param string $comment
+     * @return string
+     */
+    protected static function formatComment(string $comment): string
     {
         $lines = explode("\n", $comment);
         foreach ($lines as &$li) {
@@ -61,7 +69,10 @@ class ExtensionDocument
         return implode("\n", $lines) . "\n";
     }
 
-    protected function exportShortAlias($className)
+    /**
+     * @param string $className
+     */
+    protected function exportShortAlias(string $className): void
     {
         if (strtolower(substr($className, 0, 2)) != 'co') {
             return;
@@ -87,7 +98,11 @@ class ExtensionDocument
         file_put_contents($path, $content);
     }
 
-    protected static function getNamespaceAlias($className)
+    /**
+     * @param string $className
+     * @return string
+     */
+    protected static function getNamespaceAlias(string $className): string
     {
         if (strtolower($className) == 'co') {
             return "Swoole\\Coroutine";
@@ -98,7 +113,13 @@ class ExtensionDocument
         }
     }
 
-    protected function getConfig($class, $name, $type)
+    /**
+     * @param string $class
+     * @param string $name
+     * @param string $type
+     * @return array
+     */
+    protected function getConfig(string $class, string $name, string $type): array
     {
         switch ($type) {
             case self::C_CONSTANT:
@@ -121,7 +142,11 @@ class ExtensionDocument
         }
     }
 
-    protected static function getDefaultValue(\ReflectionParameter $parameter)
+    /**
+     * @param \ReflectionParameter $parameter
+     * @return string|null
+     */
+    protected static function getDefaultValue(\ReflectionParameter $parameter): ?string
     {
         try {
             $default_value = $parameter->getDefaultValue();
@@ -144,13 +169,14 @@ class ExtensionDocument
         return $default_value;
     }
 
-    protected function getFunctionsDef(array $functions)
+    /**
+     * @param ReflectionMethod[] $functions
+     * @return string
+     */
+    protected function getFunctionsDef(array $functions): string
     {
         $all = '';
         foreach ($functions as $function_name => $function) {
-            /**
-             * @var $function ReflectionMethod
-             */
             $comment = '';
             $vp = array();
             $params = $function->getParameters();
@@ -176,21 +202,14 @@ class ExtensionDocument
     }
 
     /**
-     * @param $classname
-     * @param array $props
+     * @param ReflectionProperty[] $props
      * @return string
      */
-    protected function getPropertyDef($classname, array $props)
+    protected function getPropertyDef(array $props): string
     {
         $prop_str = "";
         foreach ($props as $k => $v) {
-            /**
-             * @var $v ReflectionProperty
-             */
-            $modifiers = implode(
-                ' ',
-                Reflection::getModifierNames($v->getModifiers())
-            );
+            $modifiers = implode(' ', Reflection::getModifierNames($v->getModifiers()));
             $prop_str .= self::SPACE_4 . "{$modifiers} $" . $v->name . ";\n";
         }
 
@@ -198,11 +217,10 @@ class ExtensionDocument
     }
 
     /**
-     * @param $classname
-     * @param array $consts
+     * @param string[] $consts
      * @return string
      */
-    protected function getConstantsDef($classname, array $consts)
+    protected function getConstantsDef(array $consts): string
     {
         $all = "";
         foreach ($consts as $k => $v) {
@@ -218,16 +236,13 @@ class ExtensionDocument
 
     /**
      * @param $classname
-     * @param array $methods
+     * @param ReflectionMethod[] $methods
      * @return string
      */
-    protected function getMethodsDef($classname, array $methods)
+    protected function getMethodsDef(string $classname, array $methods): string
     {
         $all = '';
         foreach ($methods as $k => $v) {
-            /**
-             * @var $v ReflectionMethod
-             */
             if ($v->isFinal()) {
                 continue;
             }
@@ -273,10 +288,10 @@ class ExtensionDocument
     }
 
     /**
-     * @param $classname
-     * @param $ref  ReflectionClass
+     * @param string $classname
+     * @param ReflectionClass $ref
      */
-    protected function exportNamespaceClass($classname, $ref)
+    protected function exportNamespaceClass(string $classname, ReflectionClass $ref): void
     {
         $ns = explode('\\', $classname);
         if (strtolower($ns[0]) != self::EXTENSION_NAME) {
@@ -303,14 +318,14 @@ class ExtensionDocument
     }
 
     /**
-     * @param $classname string
-     * @param $ref ReflectionClass
+     * @param string $classname
+     * @param ReflectionClass $ref
      * @return string
      */
-    protected function getClassDef($classname, $ref)
+    protected function getClassDef(string $classname, ReflectionClass $ref): string
     {
         //获取属性定义
-        $props = $this->getPropertyDef($classname, $ref->getProperties());
+        $props = $this->getPropertyDef($ref->getProperties());
 
         if ($ref->getParentClass()) {
             $classname .= ' extends \\' . $ref->getParentClass()->name;
@@ -320,7 +335,7 @@ class ExtensionDocument
             $modifier = 'interface';
         }
         //获取常量定义
-        $consts = $this->getConstantsDef($classname, $ref->getConstants());
+        $consts = $this->getConstantsDef($ref->getConstants());
         //获取方法定义
         $mdefs = $this->getMethodsDef($classname, $ref->getMethods());
         $class_def = sprintf(
@@ -340,7 +355,7 @@ class ExtensionDocument
      * @param string $language
      * @param string $dirOutput
      * @param string $dirConfig
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct(string $language, string $dirOutput, string $dirConfig)
     {
@@ -355,7 +370,7 @@ class ExtensionDocument
         $this->version   = $this->rf_ext->getVersion();
     }
 
-    public function export()
+    public function export(): void
     {
         /**
          * 获取所有define常量
