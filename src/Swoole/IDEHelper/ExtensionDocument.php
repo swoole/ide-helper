@@ -153,7 +153,7 @@ class ExtensionDocument
             $class_alias .= "\n";
         }
 
-        file_put_contents($this->dirOutput . '/classes.php', $class_alias);
+        file_put_contents($this->dirOutput . '/aliases.php', $class_alias);
     }
 
     /**
