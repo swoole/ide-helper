@@ -44,6 +44,90 @@ class ExtensionDocument
      */
     protected $rf_ext;
 
+    /**
+     * ExtensionDocument constructor.
+     *
+     * @param string $language
+     * @param string $dirOutput
+     * @param string $dirConfig
+     * @throws ReflectionException
+     */
+    public function __construct(string $language, string $dirOutput, string $dirConfig)
+    {
+        if (!extension_loaded(self::EXTENSION_NAME)) {
+            throw new \Exception("no " . self::EXTENSION_NAME . " extension.");
+        }
+
+        $this->language  = $language;
+        $this->dirOutput = $dirOutput;
+        $this->dirConfig = $dirConfig;
+        $this->rf_ext    = new ReflectionExtension(self::EXTENSION_NAME);
+        $this->version   = $this->rf_ext->getVersion();
+    }
+
+    public function export(): void
+    {
+        /**
+         * 获取所有define常量
+         */
+        $consts = $this->rf_ext->getConstants();
+        $defines = '';
+        foreach ($consts as $className => $ref) {
+            if (!is_numeric($ref)) {
+                $ref = "'$ref'";
+            }
+            $defines .= "define('$className', $ref);\n";
+        }
+
+        if (!is_dir($this->dirOutput)) {
+            mkdir($this->dirOutput);
+        }
+
+        file_put_contents(
+            $this->dirOutput . '/constants.php',
+            "<?php\n" . $defines
+        );
+
+        /**
+         * 获取所有函数
+         */
+        $funcs = $this->rf_ext->getFunctions();
+        $fdefs = $this->getFunctionsDef($funcs);
+
+        file_put_contents(
+            $this->dirOutput . '/functions.php',
+            "<?php\n/**\n * @since {$this->version}\n */\n\n{$fdefs}"
+        );
+
+        /**
+         * 获取所有类
+         */
+        $classes = $this->rf_ext->getClasses();
+        $class_alias = "<?php\n";
+        // There are three types of class names in Swoole:
+        // 1. short name of a class. Short names start with "co\". These classes can be found under folder output/alias.
+        // 2. fully qualified name (class name with namespace prefix), e.g., \Swoole\Timer. These classes can be found
+        //    under folder output/namespace.
+        // 3. snake_case. e.g., swoole_timer. These classes can be found in file output/classes.php.
+        foreach ($classes as $className => $ref) {
+            if (strtolower(substr($className, 0, 3)) == 'co\\') {
+                $this->exportShortAlias($className);
+            } elseif (strchr($className, '\\')) {
+                $this->exportNamespaceClass($className, $ref);
+            } else {
+                $class_alias .= sprintf(
+                    "class_alias(%s::class, '%s');\n",
+                    self::getNamespaceAlias($className),
+                    $className
+                );
+            }
+        }
+        file_put_contents(
+            $this->dirOutput . '/classes.php',
+            $class_alias
+        );
+    }
+
     // static function isPHPKeyword($word)
     // {
     //     $keywords = array('exit', 'die', 'echo', 'class', 'interface', 'function', 'public', 'protected', 'private');
@@ -347,89 +431,5 @@ class ExtensionDocument
             $mdefs
         );
         return $class_def;
-    }
-
-    /**
-     * ExtensionDocument constructor.
-     *
-     * @param string $language
-     * @param string $dirOutput
-     * @param string $dirConfig
-     * @throws ReflectionException
-     */
-    public function __construct(string $language, string $dirOutput, string $dirConfig)
-    {
-        if (!extension_loaded(self::EXTENSION_NAME)) {
-            throw new \Exception("no " . self::EXTENSION_NAME . " extension.");
-        }
-
-        $this->language  = $language;
-        $this->dirOutput = $dirOutput;
-        $this->dirConfig = $dirConfig;
-        $this->rf_ext    = new ReflectionExtension(self::EXTENSION_NAME);
-        $this->version   = $this->rf_ext->getVersion();
-    }
-
-    public function export(): void
-    {
-        /**
-         * 获取所有define常量
-         */
-        $consts = $this->rf_ext->getConstants();
-        $defines = '';
-        foreach ($consts as $className => $ref) {
-            if (!is_numeric($ref)) {
-                $ref = "'$ref'";
-            }
-            $defines .= "define('$className', $ref);\n";
-        }
-
-        if (!is_dir($this->dirOutput)) {
-            mkdir($this->dirOutput);
-        }
-
-        file_put_contents(
-            $this->dirOutput . '/constants.php',
-            "<?php\n" . $defines
-        );
-
-        /**
-         * 获取所有函数
-         */
-        $funcs = $this->rf_ext->getFunctions();
-        $fdefs = $this->getFunctionsDef($funcs);
-
-        file_put_contents(
-            $this->dirOutput . '/functions.php',
-            "<?php\n/**\n * @since {$this->version}\n */\n\n{$fdefs}"
-        );
-
-        /**
-         * 获取所有类
-         */
-        $classes = $this->rf_ext->getClasses();
-        $class_alias = "<?php\n";
-        // There are three types of class names in Swoole:
-        // 1. short name of a class. Short names start with "co\". These classes can be found under folder output/alias.
-        // 2. fully qualified name (class name with namespace prefix), e.g., \Swoole\Timer. These classes can be found
-        //    under folder output/namespace.
-        // 3. snake_case. e.g., swoole_timer. These classes can be found in file output/classes.php.
-        foreach ($classes as $className => $ref) {
-            if (strtolower(substr($className, 0, 3)) == 'co\\') {
-                $this->exportShortAlias($className);
-            } elseif (strchr($className, '\\')) {
-                $this->exportNamespaceClass($className, $ref);
-            } else {
-                $class_alias .= sprintf(
-                    "class_alias(%s::class, '%s');\n",
-                    self::getNamespaceAlias($className),
-                    $className
-                );
-            }
-        }
-        file_put_contents(
-            $this->dirOutput . '/classes.php',
-            $class_alias
-        );
     }
 }
