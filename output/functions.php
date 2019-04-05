@@ -1,6 +1,6 @@
 <?php
 /**
- * @since 4.3.1
+ * List of functions from swoole 4.3.1.
  */
 
 function swoole_version(){}

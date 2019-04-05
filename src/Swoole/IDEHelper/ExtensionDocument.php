@@ -11,13 +11,13 @@ use ReflectionProperty;
 
 class ExtensionDocument
 {
-    const EXTENSION_NAME = 'swoole';
-
     const C_METHOD = 1;
     const C_PROPERTY = 2;
     const C_CONSTANT = 3;
     const SPACE_4 = '    ';
     const SPACE_5 = self::SPACE_4 . ' ';
+
+    protected $extensionName = 'swoole';
 
     /**
      * @var string
@@ -44,27 +44,41 @@ class ExtensionDocument
      */
     protected $rf_ext;
 
+    const ALIAS_SHORT_NAME_NEW = 1; // Short names of new coroutine classes.
+    const ALIAS_SHORT_NAME_OLD = 2; // Short names of old coroutine classes.
+    const ALIAS_SNAKE_CASE     = 3; // Class names in snake_case. e.g., swoole_timer.
+
+    protected $aliases = [
+        self::ALIAS_SHORT_NAME_NEW => [],
+        self::ALIAS_SHORT_NAME_OLD => [],
+        self::ALIAS_SNAKE_CASE     => [],
+    ];
+
     /**
      * ExtensionDocument constructor.
      *
      * @param string $language
      * @param string $dirOutput
      * @param string $dirConfig
+     * @throws Exception
      * @throws ReflectionException
      */
     public function __construct(string $language, string $dirOutput, string $dirConfig)
     {
-        if (!extension_loaded(self::EXTENSION_NAME)) {
-            throw new \Exception("no " . self::EXTENSION_NAME . " extension.");
+        if (!extension_loaded($this->extensionName)) {
+            throw new Exception("Extension $this->extensionName not enabled or not installed.");
         }
 
         $this->language  = $language;
         $this->dirOutput = $dirOutput;
         $this->dirConfig = $dirConfig;
-        $this->rf_ext    = new ReflectionExtension(self::EXTENSION_NAME);
+        $this->rf_ext    = new ReflectionExtension($this->extensionName);
         $this->version   = $this->rf_ext->getVersion();
     }
 
+    /**
+     * @throws Exception
+     */
     public function export(): void
     {
         /**
@@ -83,10 +97,7 @@ class ExtensionDocument
             mkdir($this->dirOutput);
         }
 
-        file_put_contents(
-            $this->dirOutput . '/constants.php',
-            "<?php\n" . $defines
-        );
+        file_put_contents($this->dirOutput . '/constants.php', "<?php\n" . $defines);
 
         /**
          * 获取所有函数
@@ -96,44 +107,54 @@ class ExtensionDocument
 
         file_put_contents(
             $this->dirOutput . '/functions.php',
-            "<?php\n/**\n * @since {$this->version}\n */\n\n{$fdefs}"
+            "<?php\n/**\n * List of functions from {$this->extensionName} {$this->version}.\n */\n\n{$fdefs}"
         );
 
         /**
          * 获取所有类
          */
         $classes = $this->rf_ext->getClasses();
-        $class_alias = "<?php\n";
         // There are three types of class names in Swoole:
-        // 1. short name of a class. Short names start with "co\". These classes can be found under folder output/alias.
+        // 1. short name of a class. Short names start with "co\", and they can be found in file output/classes.php.
         // 2. fully qualified name (class name with namespace prefix), e.g., \Swoole\Timer. These classes can be found
         //    under folder output/namespace.
-        // 3. snake_case. e.g., swoole_timer. These classes can be found in file output/classes.php.
+        // 3. snake_case. e.g., swoole_timer. These aliases can be found in file output/classes.php.
         foreach ($classes as $className => $ref) {
             if (strtolower(substr($className, 0, 3)) == 'co\\') {
-                $this->exportShortAlias($className);
+                $extends = ucwords(str_replace('co\\', 'Swoole\\Coroutine\\', $className), '\\');
+
+                if (class_exists($extends)) {
+                    $this->aliases[self::ALIAS_SHORT_NAME_NEW][$className] = $extends;
+                } else {
+                    $extends = ucwords(str_replace('co\\', 'Swoole\\', $className), '\\');
+                    if (class_exists($extends)) {
+                        $this->aliases[self::ALIAS_SHORT_NAME_OLD][$className] = $extends;
+                    } else {
+                        throw new Exception("Unable to detect the original class of alias {$className}.");
+                    }
+                }
             } elseif (strchr($className, '\\')) {
                 $this->exportNamespaceClass($className, $ref);
             } else {
-                $class_alias .= sprintf(
-                    "class_alias(%s::class, '%s');\n",
-                    self::getNamespaceAlias($className),
-                    $className
-                );
+                $this->aliases[self::ALIAS_SNAKE_CASE][$className] = self::getNamespaceAlias($className);
             }
         }
-        file_put_contents(
-            $this->dirOutput . '/classes.php',
-            $class_alias
-        );
-    }
 
-    // static function isPHPKeyword($word)
-    // {
-    //     $keywords = array('exit', 'die', 'echo', 'class', 'interface', 'function', 'public', 'protected', 'private');
-    //
-    //     return in_array($word, $keywords);
-    // }
+        $class_alias = "<?php\n\n";
+        foreach (array_filter($this->aliases) as $type => $aliases) {
+            asort($aliases);
+            foreach ($aliases as $alias => $original) {
+                if (self::ALIAS_SNAKE_CASE == $type) {
+                    $class_alias .= "class_alias({$original}::class, '{$alias}');\n";
+                } else {
+                    $class_alias .= "class_alias({$original}::class, {$alias}::class);\n";
+                }
+            }
+            $class_alias .= "\n";
+        }
+
+        file_put_contents($this->dirOutput . '/classes.php', $class_alias);
+    }
 
     /**
      * @param string $comment
@@ -151,35 +172,6 @@ class ExtensionDocument
             }
         }
         return implode("\n", $lines) . "\n";
-    }
-
-    /**
-     * @param string $className
-     */
-    protected function exportShortAlias(string $className): void
-    {
-        if (strtolower(substr($className, 0, 2)) != 'co') {
-            return;
-        }
-        $ns = explode('\\', $className);
-        foreach ($ns as &$n) {
-            $n = ucfirst($n);
-        }
-        $path = $this->dirOutput . '/alias/' . implode('/', array_slice($ns, 1)) . '.php';
-        if (!is_dir(dirname($path))) {
-            mkdir(dirname($path), 0777, true);
-        }
-        $extends = ucwords(str_replace('co\\', 'Swoole\\Coroutine\\', $className), '\\');
-        if (!class_exists($extends)) {
-            $extends = ucwords(str_replace('co\\', 'Swoole\\', $className), '\\');
-        }
-        $content = sprintf(
-            "<?php\nnamespace %s \n{\n" . self::SPACE_5 . "class %s extends \%s {}\n}\n",
-            implode('\\', array_slice($ns, 0, count($ns) - 1)),
-            end($ns),
-            $extends
-        );
-        file_put_contents($path, $content);
     }
 
     /**
@@ -378,7 +370,7 @@ class ExtensionDocument
     protected function exportNamespaceClass(string $classname, ReflectionClass $ref): void
     {
         $ns = explode('\\', $classname);
-        if (strtolower($ns[0]) != self::EXTENSION_NAME) {
+        if (strtolower($ns[0]) != $this->extensionName) {
             return;
         }
 
