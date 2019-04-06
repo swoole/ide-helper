@@ -6,8 +6,11 @@ use Reflection;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionExtension;
+use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionProperty;
+use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Reflection\ClassReflection;
 
 class ExtensionDocument
 {
@@ -78,12 +81,11 @@ class ExtensionDocument
 
     /**
      * @throws Exception
+     * @throws ReflectionException
      */
     public function export(): void
     {
-        /**
-         * 获取所有define常量
-         */
+        // Retrieve and save all constants.
         $consts = $this->rf_ext->getConstants();
         $defines = '';
         foreach ($consts as $className => $ref) {
@@ -99,20 +101,16 @@ class ExtensionDocument
 
         file_put_contents($this->dirOutput . '/constants.php', "<?php\n" . $defines);
 
-        /**
-         * 获取所有函数
-         */
+        // Retrieve and save all functions.
         $funcs = $this->rf_ext->getFunctions();
-        $fdefs = $this->getFunctionsDef($funcs);
+        $fdefs = $this->getFunctionsDef(...array_values($funcs));
 
         file_put_contents(
             $this->dirOutput . '/functions.php',
             "<?php\n/**\n * List of functions from {$this->extensionName} {$this->version}.\n */\n\n{$fdefs}"
         );
 
-        /**
-         * 获取所有类
-         */
+        // Retrieve and save all classes.
         $classes = $this->rf_ext->getClasses();
         // There are three types of class names in Swoole:
         // 1. short name of a class. Short names start with "co\", and they can be found in file output/classes.php.
@@ -246,13 +244,13 @@ class ExtensionDocument
     }
 
     /**
-     * @param ReflectionMethod[] $functions
+     * @param ReflectionFunction ...$functions
      * @return string
      */
-    protected function getFunctionsDef(array $functions): string
+    protected function getFunctionsDef(ReflectionFunction ...$functions): string
     {
         $all = '';
-        foreach ($functions as $function_name => $function) {
+        foreach ($functions as $function) {
             $comment = '';
             $vp = array();
             $params = $function->getParameters();
@@ -270,7 +268,7 @@ class ExtensionDocument
                 $comment .= " * @return mixed\n";
                 $comment .= " */\n";
             }
-            $comment .= sprintf("function %s(%s){}\n\n", $function_name, join(', ', $vp));
+            $comment .= sprintf("function %s(%s){}\n\n", $function->getName(), join(', ', $vp));
             $all .= $comment;
         }
 
@@ -366,6 +364,7 @@ class ExtensionDocument
     /**
      * @param string $classname
      * @param ReflectionClass $ref
+     * @throws ReflectionException
      */
     protected function exportNamespaceClass(string $classname, ReflectionClass $ref): void
     {
@@ -378,19 +377,10 @@ class ExtensionDocument
             $v = ucfirst($v);
         });
 
-
-        $path = $this->dirOutput . '/namespace/' . implode('/', array_slice($ns, 1));
-
-        $namespace = implode('\\', array_slice($ns, 0, -1));
-        $dir = dirname($path);
-        $name = basename($path);
-
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
-        }
-
-        $content = "<?php\nnamespace {$namespace};\n\n" . $this->getClassDef($name, $ref);
-        file_put_contents($path . '.php', $content);
+        $this->writeToPhpFile(
+            $this->dirOutput . '/namespace/' . implode('/', array_slice($ns, 1)) . '.php',
+            ClassGenerator::fromReflection(new ClassReflection($ref->getName()))->generate()
+        );
     }
 
     /**
@@ -423,5 +413,22 @@ class ExtensionDocument
             $mdefs
         );
         return $class_def;
+    }
+
+    /**
+     * @param string $path
+     * @param string $content
+     * @return ExtensionDocument
+     */
+    protected function writeToPhpFile(string $path, string $content): self
+    {
+        $dir = dirname($path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        file_put_contents($path, "<?php\n\n" . $content);
+
+        return $this;
     }
 }

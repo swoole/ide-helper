@@ -9,8 +9,11 @@
             "email": "team@swoole.com"
         }
     ],
-    "require-dev": {
+    "require": {
         "php": ">=7.3",
+        "zendframework/zend-code": "~3.3.0"
+    },
+    "require-dev": {
         "squizlabs/php_codesniffer": "~3.4.0"
     },
     "autoload": {
