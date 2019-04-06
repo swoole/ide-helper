@@ -243,18 +243,15 @@ class ExtensionDocument
     /**
      * @param string $classname
      * @param ReflectionClass $ref
+     * @throws Exception
      * @throws ReflectionException
      */
     protected function exportNamespaceClass(string $classname, ReflectionClass $ref): void
     {
         $ns = explode('\\', $classname);
-        if (strtolower($ns[0]) != $this->extensionName) {
-            return;
+        if (strcasecmp($ns[0], $this->extensionName) !== 0) {
+            throw new Exception("Class $classname should be under namespace \{$this->extensionName} but not.");
         }
-
-        array_walk($ns, function (&$v, $k) use (&$ns) {
-            $v = ucfirst($v);
-        });
 
         $this->writeToPhpFile(
             $this->dirOutput . '/namespace/' . implode('/', array_slice($ns, 1)) . '.php',
