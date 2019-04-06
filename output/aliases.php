@@ -1,18 +1,18 @@
 <?php
 
-class_alias(Swoole\Coroutine\Channel::class, co\channel::class);
-class_alias(Swoole\Coroutine\Client::class, co\client::class);
-class_alias(Swoole\Coroutine\Context::class, co\context::class);
-class_alias(Swoole\Coroutine\Http2\Client::class, co\http2\client::class);
-class_alias(Swoole\Coroutine\Http\Client::class, co\http\client::class);
-class_alias(Swoole\Coroutine\Http\Client\Exception::class, co\http\client\exception::class);
-class_alias(Swoole\Coroutine\Iterator::class, co\iterator::class);
-class_alias(Swoole\Coroutine\Mysql::class, co\mysql::class);
-class_alias(Swoole\Coroutine\Mysql\Exception::class, co\mysql\exception::class);
-class_alias(Swoole\Coroutine\Mysql\Statement::class, co\mysql\statement::class);
-class_alias(Swoole\Coroutine\Redis::class, co\redis::class);
-class_alias(Swoole\Coroutine\Socket::class, co\socket::class);
-class_alias(Swoole\Coroutine\Socket\Exception::class, co\socket\exception::class);
+class_alias(Swoole\Coroutine\Channel::class, 'co\channel');
+class_alias(Swoole\Coroutine\Client::class, 'co\client');
+class_alias(Swoole\Coroutine\Context::class, 'co\context');
+class_alias(Swoole\Coroutine\Http2\Client::class, 'co\http2\client');
+class_alias(Swoole\Coroutine\Http\Client::class, 'co\http\client');
+class_alias(Swoole\Coroutine\Http\Client\Exception::class, 'co\http\client\exception');
+class_alias(Swoole\Coroutine\Iterator::class, 'co\iterator');
+class_alias(Swoole\Coroutine\Mysql::class, 'co\mysql');
+class_alias(Swoole\Coroutine\Mysql\Exception::class, 'co\mysql\exception');
+class_alias(Swoole\Coroutine\Mysql\Statement::class, 'co\mysql\statement');
+class_alias(Swoole\Coroutine\Redis::class, 'co\redis');
+class_alias(Swoole\Coroutine\Socket::class, 'co\socket');
+class_alias(Swoole\Coroutine\Socket\Exception::class, 'co\socket\exception');
 
 class_alias(Swoole\Atomic::class, 'swoole_atomic');
 class_alias(Swoole\Atomic\Long::class, 'swoole_atomic_long');

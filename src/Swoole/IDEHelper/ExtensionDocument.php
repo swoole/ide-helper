@@ -142,11 +142,7 @@ class ExtensionDocument
         foreach (array_filter($this->aliases) as $type => $aliases) {
             asort($aliases);
             foreach ($aliases as $alias => $original) {
-                if (self::ALIAS_SNAKE_CASE == $type) {
-                    $class_alias .= "class_alias({$original}::class, '{$alias}');\n";
-                } else {
-                    $class_alias .= "class_alias({$original}::class, {$alias}::class);\n";
-                }
+                $class_alias .= "class_alias({$original}::class, '{$alias}');\n";
             }
             $class_alias .= "\n";
         }
