@@ -38,11 +38,6 @@ class ExtensionDocument
     protected $dirOutput;
 
     /**
-     * @var string
-     */
-    protected $version;
-
-    /**
      * @var ReflectionExtension
      */
     protected $rf_ext;
@@ -76,7 +71,6 @@ class ExtensionDocument
         $this->dirOutput = $dirOutput;
         $this->dirConfig = $dirConfig;
         $this->rf_ext    = new ReflectionExtension($this->extensionName);
-        $this->version   = $this->rf_ext->getVersion();
     }
 
     /**
@@ -86,20 +80,11 @@ class ExtensionDocument
     public function export(): void
     {
         // Retrieve and save all constants.
-        $consts = $this->rf_ext->getConstants();
         $defines = '';
-        foreach ($consts as $className => $ref) {
-            if (!is_numeric($ref)) {
-                $ref = "'$ref'";
-            }
-            $defines .= "define('$className', $ref);\n";
+        foreach ($this->rf_ext->getConstants() as $name => $value) {
+            $defines .= sprintf("define('%s', %s);\n", $name, (is_numeric($value) ? $value : "'{$value}'"));
         }
-
-        if (!is_dir($this->dirOutput)) {
-            mkdir($this->dirOutput);
-        }
-
-        file_put_contents($this->dirOutput . '/constants.php', "<?php\n" . $defines);
+        $this->writeToPhpFile($this->dirOutput . '/constants.php', $defines);
 
         // Retrieve and save all functions.
         $funcs = $this->rf_ext->getFunctions();
@@ -107,7 +92,7 @@ class ExtensionDocument
 
         file_put_contents(
             $this->dirOutput . '/functions.php',
-            "<?php\n/**\n * List of functions from {$this->extensionName} {$this->version}.\n */\n\n{$fdefs}"
+            "<?php\n/**\n * List of functions from {$this->extensionName} {$this->getVersion()}.\n */\n\n{$fdefs}"
         );
 
         // Retrieve and save all classes.
@@ -409,6 +394,14 @@ class ExtensionDocument
             $mdefs
         );
         return $class_def;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getVersion(): string
+    {
+        return $this->rf_ext->getVersion();
     }
 
     /**

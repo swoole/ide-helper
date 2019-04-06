@@ -1,4 +1,5 @@
 <?php
+
 define('SWOOLE_VERSION', '4.3.2-alpha');
 define('SWOOLE_VERSION_ID', 40302);
 define('SWOOLE_MAJOR_VERSION', 4);
