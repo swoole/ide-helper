@@ -290,59 +290,6 @@ class ExtensionDocument
     }
 
     /**
-     * @param $classname
-     * @param ReflectionMethod[] $methods
-     * @return string
-     */
-    protected function getMethodsDef(string $classname, array $methods): string
-    {
-        $all = '';
-        foreach ($methods as $k => $v) {
-            if ($v->isFinal()) {
-                continue;
-            }
-
-            $method_name = $v->name;
-
-            $vp = array();
-            $comment = self::SPACE_4 . "/**\n";
-
-            $config = $this->getConfig($classname, $method_name, self::C_METHOD);
-            if (!empty($config['comment'])) {
-                $comment .= self::formatComment($config['comment']);
-            }
-
-            $params = $v->getParameters();
-            if ($params) {
-                foreach ($params as $param) {
-                    $default_value = self::getDefaultValue($param);
-                    $comment .= self::SPACE_5 .
-                        "* @param \${$param->name}[" .
-                        ($param->isOptional() ? 'optional' : 'required') .
-                        "]\n";
-                    $vp[] = ($param->isPassedByReference() ? '&' : '') .
-                        "\${$param->name}" .
-                        ($default_value ? " = {$default_value}" : '');
-                }
-            }
-            if (!isset($config['return'])) {
-                $comment .= self::SPACE_5 . "* @return mixed\n";
-            } elseif (!empty($config['return'])) {
-                $comment .= self::SPACE_5 . "* @return {$config['return']}\n";
-            }
-            $comment .= self::SPACE_5 . "*/\n";
-            $modifiers = implode(
-                ' ',
-                Reflection::getModifierNames($v->getModifiers())
-            );
-            $comment .= sprintf(self::SPACE_4 . "%s function %s(%s){}\n\n", $modifiers, $method_name, join(', ', $vp));
-            $all .= $comment;
-        }
-
-        return $all;
-    }
-
-    /**
      * @param string $classname
      * @param ReflectionClass $ref
      * @throws ReflectionException
@@ -362,38 +309,6 @@ class ExtensionDocument
             $this->dirOutput . '/namespace/' . implode('/', array_slice($ns, 1)) . '.php',
             ClassGenerator::fromReflection(new ClassReflection($ref->getName()))->generate()
         );
-    }
-
-    /**
-     * @param string $classname
-     * @param ReflectionClass $ref
-     * @return string
-     */
-    protected function getClassDef(string $classname, ReflectionClass $ref): string
-    {
-        //获取属性定义
-        $props = $this->getPropertyDef($ref->getProperties());
-
-        if ($ref->getParentClass()) {
-            $classname .= ' extends \\' . $ref->getParentClass()->name;
-        }
-        $modifier = 'class';
-        if ($ref->isInterface()) {
-            $modifier = 'interface';
-        }
-        //获取常量定义
-        $consts = $this->getConstantsDef($ref->getConstants());
-        //获取方法定义
-        $mdefs = $this->getMethodsDef($classname, $ref->getMethods());
-        $class_def = sprintf(
-            "%s %s\n{\n%s\n%s\n%s\n}\n",
-            $modifier,
-            $classname,
-            $consts,
-            $props,
-            $mdefs
-        );
-        return $class_def;
     }
 
     /**
