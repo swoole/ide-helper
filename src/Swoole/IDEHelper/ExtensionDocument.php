@@ -7,8 +7,10 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionExtension;
 use ReflectionFunction;
-use ReflectionMethod;
+use ReflectionParameter;
 use ReflectionProperty;
+use Swoole\Coroutine;
+use Swoole\Coroutine\Channel;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Reflection\ClassReflection;
 
@@ -119,7 +121,7 @@ class ExtensionDocument
             } elseif (strchr($className, '\\')) {
                 $this->exportNamespaceClass($className, $ref);
             } else {
-                $this->aliases[self::ALIAS_SNAKE_CASE][$className] = self::getNamespaceAlias($className);
+                $this->aliases[self::ALIAS_SNAKE_CASE][$className] = $this->getNamespaceAlias($className);
             }
         }
 
@@ -136,33 +138,15 @@ class ExtensionDocument
     }
 
     /**
-     * @param string $comment
-     * @return string
-     */
-    protected static function formatComment(string $comment): string
-    {
-        $lines = explode("\n", $comment);
-        foreach ($lines as &$li) {
-            $li = ltrim($li);
-            if (isset($li[0]) && $li[0] != '*') {
-                $li = self::SPACE_5 . '*' . $li;
-            } else {
-                $li = self::SPACE_5 . $li;
-            }
-        }
-        return implode("\n", $lines) . "\n";
-    }
-
-    /**
      * @param string $className
      * @return string
      */
-    protected static function getNamespaceAlias(string $className): string
+    protected function getNamespaceAlias(string $className): string
     {
-        if (strtolower($className) == 'co') {
-            return "Swoole\\Coroutine";
-        } elseif (strtolower($className) == 'chan') {
-            return "Swoole\\Coroutine\\Channel";
+        if (strcasecmp($className, 'co') === 0) {
+            return Coroutine::class;
+        } elseif (strcasecmp($className, 'chan') === 0) {
+            return Channel::class;
         } else {
             return str_replace('_', '\\', ucwords($className, '_'));
         }
@@ -198,10 +182,10 @@ class ExtensionDocument
     }
 
     /**
-     * @param \ReflectionParameter $parameter
+     * @param ReflectionParameter $parameter
      * @return string|null
      */
-    protected static function getDefaultValue(\ReflectionParameter $parameter): ?string
+    protected function getDefaultValue(ReflectionParameter $parameter): ?string
     {
         try {
             $default_value = $parameter->getDefaultValue();
@@ -238,7 +222,7 @@ class ExtensionDocument
             if ($params) {
                 $comment = "/**\n";
                 foreach ($params as $param) {
-                    $default_value = self::getDefaultValue($param);
+                    $default_value = $this->getDefaultValue($param);
                     $comment .= " * @param \${$param->name}[" .
                         ($param->isOptional() ? 'optional' : 'required') .
                         "]\n";
