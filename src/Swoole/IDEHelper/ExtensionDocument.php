@@ -241,39 +241,6 @@ class ExtensionDocument
     }
 
     /**
-     * @param ReflectionProperty[] $props
-     * @return string
-     */
-    protected function getPropertyDef(array $props): string
-    {
-        $prop_str = "";
-        foreach ($props as $k => $v) {
-            $modifiers = implode(' ', Reflection::getModifierNames($v->getModifiers()));
-            $prop_str .= self::SPACE_4 . "{$modifiers} $" . $v->name . ";\n";
-        }
-
-        return $prop_str;
-    }
-
-    /**
-     * @param string[] $consts
-     * @return string
-     */
-    protected function getConstantsDef(array $consts): string
-    {
-        $all = "";
-        foreach ($consts as $k => $v) {
-            $all .= self::SPACE_4 . "const {$k} = ";
-            if (is_int($v)) {
-                $all .= "{$v};\n";
-            } else {
-                $all .= "'{$v}';\n";
-            }
-        }
-        return $all;
-    }
-
-    /**
      * @param string $classname
      * @param ReflectionClass $ref
      * @throws ReflectionException
