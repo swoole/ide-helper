@@ -1,92 +1,79 @@
 <?php
+
 namespace Swoole\Coroutine;
 
 class MySQL
 {
 
-    public $serverInfo;
-    public $sock;
-    public $connected;
-    public $connect_error;
-    public $connect_errno;
-    public $affected_rows;
-    public $insert_id;
-    public $error;
-    public $errno;
+    public $serverInfo = '';
 
-    /**
-     * @return mixed
-     */
-    public function __construct(){}
+    public $sock = -1;
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    public $connected = false;
 
-    /**
-     * @param $server_config[required]
-     * @return mixed
-     */
-    public function connect($server_config){}
+    public $connect_error = '';
 
-    /**
-     * @param $sql[required]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function query($sql, $timeout = null){}
+    public $connect_errno = 0;
 
-    /**
-     * @return mixed
-     */
-    public function recv(){}
+    public $affected_rows = 0;
 
-    /**
-     * @return mixed
-     */
-    public function nextResult(){}
+    public $insert_id = 0;
 
-    /**
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function begin($timeout = null){}
+    public $error = '';
 
-    /**
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function commit($timeout = null){}
+    public $errno = 0;
 
-    /**
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function rollback($timeout = null){}
+    public function __construct()
+    {
+    }
 
-    /**
-     * @param $statement[required]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function prepare($statement, $timeout = null){}
+    public function __destruct()
+    {
+    }
 
-    /**
-     * @param $defer[optional]
-     * @return mixed
-     */
-    public function setDefer($defer = null){}
+    public function connect(array $server_config)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function getDefer(){}
+    public function query($sql, $timeout = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function close(){}
+    public function recv()
+    {
+    }
+
+    public function nextResult()
+    {
+    }
+
+    public function begin($timeout = null)
+    {
+    }
+
+    public function commit($timeout = null)
+    {
+    }
+
+    public function rollback($timeout = null)
+    {
+    }
+
+    public function prepare($statement, $timeout = null)
+    {
+    }
+
+    public function setDefer($defer = null)
+    {
+    }
+
+    public function getDefer()
+    {
+    }
+
+    public function close()
+    {
+    }
 
 
 }

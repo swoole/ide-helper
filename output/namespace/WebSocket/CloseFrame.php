@@ -1,32 +1,15 @@
 <?php
+
 namespace Swoole\WebSocket;
 
-class CloseFrame extends \Swoole\WebSocket\Frame
+class CloseFrame extends Frame
 {
 
-    public $opcode;
-    public $code;
-    public $reason;
+    public $opcode = 8;
 
-    /**
-     * @return mixed
-     */
-    public function __toString(){}
+    public $code = 1000;
 
-    /**
-     * @param $data[required]
-     * @param $opcode[optional]
-     * @param $finish[optional]
-     * @param $mask[optional]
-     * @return mixed
-     */
-    public static function pack($data, $opcode = null, $finish = null, $mask = null){}
-
-    /**
-     * @param $data[required]
-     * @return mixed
-     */
-    public static function unpack($data){}
+    public $reason = '';
 
 
 }

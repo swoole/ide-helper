@@ -1,34 +1,41 @@
 <?php
+
 namespace Swoole\Http;
 
 class Request
 {
 
-    public $fd;
-    public $streamId;
-    public $header;
-    public $server;
-    public $request;
-    public $cookie;
-    public $get;
-    public $files;
-    public $post;
-    public $tmpfiles;
+    public $fd = 0;
 
-    /**
-     * @return mixed
-     */
-    public function rawContent(){}
+    public $streamId = 0;
 
-    /**
-     * @return mixed
-     */
-    public function getData(){}
+    public $header = null;
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    public $server = null;
+
+    public $request = null;
+
+    public $cookie = null;
+
+    public $get = null;
+
+    public $files = null;
+
+    public $post = null;
+
+    public $tmpfiles = null;
+
+    public function rawContent()
+    {
+    }
+
+    public function getData()
+    {
+    }
+
+    public function __destruct()
+    {
+    }
 
 
 }

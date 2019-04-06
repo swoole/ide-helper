@@ -1,44 +1,13 @@
 <?php
+
 namespace Swoole\Coroutine;
 
-class Iterator
+class Iterator extends \ArrayIterator
 {
 
+    const STD_PROP_LIST = 1;
 
-    /**
-     * @return mixed
-     */
-    public function rewind(){}
-
-    /**
-     * @return mixed
-     */
-    public function next(){}
-
-    /**
-     * @return mixed
-     */
-    public function current(){}
-
-    /**
-     * @return mixed
-     */
-    public function key(){}
-
-    /**
-     * @return mixed
-     */
-    public function valid(){}
-
-    /**
-     * @return mixed
-     */
-    public function count(){}
-
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    const ARRAY_AS_PROPS = 2;
 
 
 }

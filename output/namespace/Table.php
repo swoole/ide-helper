@@ -1,145 +1,103 @@
 <?php
+
 namespace Swoole;
 
-class Table
+class Table implements \Iterator, \Traversable, \ArrayAccess, \Countable
 {
+
     const TYPE_INT = 1;
+
     const TYPE_STRING = 7;
+
     const TYPE_FLOAT = 6;
 
+    public function __construct($table_size, $conflict_proportion = null)
+    {
+    }
 
-    /**
-     * @param $table_size[required]
-     * @param $conflict_proportion[optional]
-     * @return mixed
-     */
-    public function __construct($table_size, $conflict_proportion = null){}
+    public function column($name, $type, $size = null)
+    {
+    }
 
-    /**
-     * @param $name[required]
-     * @param $type[required]
-     * @param $size[optional]
-     * @return mixed
-     */
-    public function column($name, $type, $size = null){}
+    public function create()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function create(){}
+    public function destroy()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function destroy(){}
+    public function set($key, array $value)
+    {
+    }
 
-    /**
-     * @param $key[required]
-     * @param $value[required]
-     * @return mixed
-     */
-    public function set($key, $value){}
+    public function get($key, $field = null)
+    {
+    }
 
-    /**
-     * @param $key[required]
-     * @param $field[optional]
-     * @return mixed
-     */
-    public function get($key, $field = null){}
+    public function count()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function count(){}
+    public function del($key)
+    {
+    }
 
-    /**
-     * @param $key[required]
-     * @return mixed
-     */
-    public function del($key){}
+    public function exists($key)
+    {
+    }
 
-    /**
-     * @param $key[required]
-     * @return mixed
-     */
-    public function exists($key){}
+    public function exist($key)
+    {
+    }
 
-    /**
-     * @param $key[required]
-     * @return mixed
-     */
-    public function exist($key){}
+    public function incr($key, $column, $incrby = null)
+    {
+    }
 
-    /**
-     * @param $key[required]
-     * @param $column[required]
-     * @param $incrby[optional]
-     * @return mixed
-     */
-    public function incr($key, $column, $incrby = null){}
+    public function decr($key, $column, $decrby = null)
+    {
+    }
 
-    /**
-     * @param $key[required]
-     * @param $column[required]
-     * @param $decrby[optional]
-     * @return mixed
-     */
-    public function decr($key, $column, $decrby = null){}
+    public function getMemorySize()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function getMemorySize(){}
+    public function offsetExists($offset)
+    {
+    }
 
-    /**
-     * @param $offset[required]
-     * @return mixed
-     */
-    public function offsetExists($offset){}
+    public function offsetGet($offset)
+    {
+    }
 
-    /**
-     * @param $offset[required]
-     * @return mixed
-     */
-    public function offsetGet($offset){}
+    public function offsetSet($offset, $value)
+    {
+    }
 
-    /**
-     * @param $offset[required]
-     * @param $value[required]
-     * @return mixed
-     */
-    public function offsetSet($offset, $value){}
+    public function offsetUnset($offset)
+    {
+    }
 
-    /**
-     * @param $offset[required]
-     * @return mixed
-     */
-    public function offsetUnset($offset){}
+    public function rewind()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function rewind(){}
+    public function next()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function next(){}
+    public function current()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function current(){}
+    public function key()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function key(){}
-
-    /**
-     * @return mixed
-     */
-    public function valid(){}
+    public function valid()
+    {
+    }
 
 
 }

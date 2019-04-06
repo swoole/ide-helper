@@ -1,33 +1,29 @@
 <?php
+
 namespace Swoole\WebSocket;
 
 class Frame
 {
 
-    public $fd;
-    public $data;
-    public $opcode;
-    public $finish;
+    public $fd = 0;
 
-    /**
-     * @return mixed
-     */
-    public function __toString(){}
+    public $data = '';
 
-    /**
-     * @param $data[required]
-     * @param $opcode[optional]
-     * @param $finish[optional]
-     * @param $mask[optional]
-     * @return mixed
-     */
-    public static function pack($data, $opcode = null, $finish = null, $mask = null){}
+    public $opcode = 1;
 
-    /**
-     * @param $data[required]
-     * @return mixed
-     */
-    public static function unpack($data){}
+    public $finish = true;
+
+    public function __toString()
+    {
+    }
+
+    public static function pack($data, $opcode = null, $finish = null, $mask = null)
+    {
+    }
+
+    public static function unpack($data)
+    {
+    }
 
 
 }

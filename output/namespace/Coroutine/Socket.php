@@ -1,111 +1,83 @@
 <?php
+
 namespace Swoole\Coroutine;
 
 class Socket
 {
 
-    public $fd;
-    public $errCode;
-    public $errMsg;
+    public $fd = -1;
 
-    /**
-     * @param $domain[required]
-     * @param $type[required]
-     * @param $protocol[optional]
-     * @return mixed
-     */
-    public function __construct($domain, $type, $protocol = null){}
+    public $errCode = 0;
 
-    /**
-     * @param $address[required]
-     * @param $port[optional]
-     * @return mixed
-     */
-    public function bind($address, $port = null){}
+    public $errMsg = '';
 
-    /**
-     * @param $backlog[optional]
-     * @return mixed
-     */
-    public function listen($backlog = null){}
+    public function __construct($domain, $type, $protocol = null)
+    {
+    }
 
-    /**
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function accept($timeout = null){}
+    public function bind($address, $port = null)
+    {
+    }
 
-    /**
-     * @param $host[required]
-     * @param $port[optional]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function connect($host, $port = null, $timeout = null){}
+    public function listen($backlog = null)
+    {
+    }
 
-    /**
-     * @param $length[optional]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function recv($length = null, $timeout = null){}
+    public function accept($timeout = null)
+    {
+    }
 
-    /**
-     * @param $data[required]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function send($data, $timeout = null){}
+    public function connect($host, $port = null, $timeout = null)
+    {
+    }
 
-    /**
-     * @param $length[optional]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function recvAll($length = null, $timeout = null){}
+    public function recv($length = null, $timeout = null)
+    {
+    }
 
-    /**
-     * @param $data[required]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function sendAll($data, $timeout = null){}
+    public function send($data, $timeout = null)
+    {
+    }
 
-    /**
-     * @param $peername[required]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function recvfrom(&$peername, $timeout = null){}
+    public function recvAll($length = null, $timeout = null)
+    {
+    }
 
-    /**
-     * @param $addr[required]
-     * @param $port[required]
-     * @param $data[required]
-     * @return mixed
-     */
-    public function sendto($addr, $port, $data){}
+    public function sendAll($data, $timeout = null)
+    {
+    }
 
-    /**
-     * @param $how[required]
-     * @return mixed
-     */
-    public function shutdown($how){}
+    public function recvfrom(&$peername, $timeout = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function close(){}
+    public function sendto($addr, $port, $data)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function getpeername(){}
+    public function getOption($level, $opt_name)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function getsockname(){}
+    public function setOption($level, $opt_name, $opt_value)
+    {
+    }
+
+    public function shutdown($how)
+    {
+    }
+
+    public function close()
+    {
+    }
+
+    public function getpeername()
+    {
+    }
+
+    public function getsockname()
+    {
+    }
 
 
 }

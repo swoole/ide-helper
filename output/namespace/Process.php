@@ -1,161 +1,119 @@
 <?php
+
 namespace Swoole;
 
 class Process
 {
+
     const IPC_NOWAIT = 256;
+
     const PIPE_MASTER = 1;
+
     const PIPE_WORKER = 2;
+
     const PIPE_READ = 3;
+
     const PIPE_WRITE = 4;
 
-    public $pipe;
-    public $callback;
-    public $msgQueueId;
-    public $msgQueueKey;
-    public $pid;
-    public $id;
+    public $pipe = null;
 
-    /**
-     * @param $callback[required]
-     * @param $redirect_stdin_and_stdout[optional]
-     * @param $pipe_type[optional]
-     * @return mixed
-     */
-    public function __construct($callback, $redirect_stdin_and_stdout = null, $pipe_type = null){}
+    public $callback = null;
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    public $msgQueueId = null;
 
-    /**
-     * @param $blocking[optional]
-     * @return mixed
-     */
-    public static function wait($blocking = null){}
+    public $msgQueueKey = null;
 
-    /**
-     * @param $signal_no[required]
-     * @param $callback[required]
-     * @return mixed
-     */
-    public static function signal($signal_no, $callback){}
+    public $pid = null;
 
-    /**
-     * @param $usec[required]
-     * @param $type[optional]
-     * @return mixed
-     */
-    public static function alarm($usec, $type = null){}
+    public $id = null;
 
-    /**
-     * @param $pid[required]
-     * @param $signal_no[optional]
-     * @return mixed
-     */
-    public static function kill($pid, $signal_no = null){}
+    public function __construct(callable $callback, $redirect_stdin_and_stdout = null, $pipe_type = null, $enable_coroutine = null)
+    {
+    }
 
-    /**
-     * @param $nochdir[optional]
-     * @param $noclose[optional]
-     * @return mixed
-     */
-    public static function daemon($nochdir = null, $noclose = null){}
+    public function __destruct()
+    {
+    }
 
-    /**
-     * @param $cpu_settings[required]
-     * @return mixed
-     */
-    public static function setaffinity($cpu_settings){}
+    public static function wait($blocking = null)
+    {
+    }
 
-    /**
-     * @param $seconds[required]
-     * @return mixed
-     */
-    public function setTimeout($seconds){}
+    public static function signal($signal_no, $callback)
+    {
+    }
 
-    /**
-     * @param $blocking[required]
-     * @return mixed
-     */
-    public function setBlocking($blocking){}
+    public static function alarm($usec, $type = null)
+    {
+    }
 
-    /**
-     * @param $key[optional]
-     * @param $mode[optional]
-     * @param $capacity[optional]
-     * @return mixed
-     */
-    public function useQueue($key = null, $mode = null, $capacity = null){}
+    public static function kill($pid, $signal_no = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function statQueue(){}
+    public static function daemon($nochdir = null, $noclose = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function freeQueue(){}
+    public function setTimeout($seconds)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function start(){}
+    public function setBlocking($blocking)
+    {
+    }
 
-    /**
-     * @param $data[required]
-     * @return mixed
-     */
-    public function write($data){}
+    public function useQueue($key = null, $mode = null, $capacity = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function close(){}
+    public function statQueue()
+    {
+    }
 
-    /**
-     * @param $size[optional]
-     * @return mixed
-     */
-    public function read($size = null){}
+    public function freeQueue()
+    {
+    }
 
-    /**
-     * @param $data[required]
-     * @return mixed
-     */
-    public function push($data){}
+    public function start()
+    {
+    }
 
-    /**
-     * @param $size[optional]
-     * @return mixed
-     */
-    public function pop($size = null){}
+    public function write($data)
+    {
+    }
 
-    /**
-     * @param $exit_code[optional]
-     * @return mixed
-     */
-    public function exit($exit_code = null){}
+    public function close()
+    {
+    }
 
-    /**
-     * @param $exec_file[required]
-     * @param $args[required]
-     * @return mixed
-     */
-    public function exec($exec_file, $args){}
+    public function read($size = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function exportSocket(){}
+    public function push($data)
+    {
+    }
 
-    /**
-     * @param $process_name[required]
-     * @return mixed
-     */
-    public function name($process_name){}
+    public function pop($size = null)
+    {
+    }
+
+    public function exit($exit_code = null)
+    {
+    }
+
+    public function exec($exec_file, $args)
+    {
+    }
+
+    public function exportSocket()
+    {
+    }
+
+    public function name($process_name)
+    {
+    }
 
 
 }

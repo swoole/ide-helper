@@ -1,40 +1,37 @@
 <?php
+
 namespace Swoole\Coroutine\MySQL;
 
 class Statement
 {
 
-    public $affected_rows;
-    public $insert_id;
-    public $error;
-    public $errno;
+    public $affected_rows = 0;
 
-    /**
-     * @param $params[optional]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function execute($params = null, $timeout = null){}
+    public $insert_id = 0;
 
-    /**
-     * @return mixed
-     */
-    public function fetch(){}
+    public $error = '';
 
-    /**
-     * @return mixed
-     */
-    public function fetchAll(){}
+    public $errno = 0;
 
-    /**
-     * @return mixed
-     */
-    public function nextResult(){}
+    public function execute($params = null, $timeout = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    public function fetch()
+    {
+    }
+
+    public function fetchAll()
+    {
+    }
+
+    public function nextResult()
+    {
+    }
+
+    public function __destruct()
+    {
+    }
 
 
 }

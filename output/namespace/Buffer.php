@@ -1,69 +1,56 @@
 <?php
+
 namespace Swoole;
 
 class Buffer
 {
 
+    public $capacity = 128;
+
+    public $length = 0;
+
+    public function __construct($size = null)
+    {
+    }
+
+    public function __destruct()
+    {
+    }
 
     /**
-     * @param $size[optional]
-     * @return mixed
+     * @return string
      */
-    public function __construct($size = null){}
+    public function __toString()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    public function substr($offset, $length = null, $remove = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function __toString(){}
+    public function write($offset, $data)
+    {
+    }
 
-    /**
-     * @param $offset[required]
-     * @param $length[optional]
-     * @param $seek[optional]
-     * @return mixed
-     */
-    public function substr($offset, $length = null, $seek = null){}
+    public function read($offset, $length)
+    {
+    }
 
-    /**
-     * @param $offset[required]
-     * @param $data[required]
-     * @return mixed
-     */
-    public function write($offset, $data){}
+    public function append($data)
+    {
+    }
 
-    /**
-     * @param $offset[required]
-     * @param $length[required]
-     * @return mixed
-     */
-    public function read($offset, $length){}
+    public function expand($size)
+    {
+    }
 
-    /**
-     * @param $data[required]
-     * @return mixed
-     */
-    public function append($data){}
+    public function recycle()
+    {
+    }
 
-    /**
-     * @param $size[required]
-     * @return mixed
-     */
-    public function expand($size){}
-
-    /**
-     * @return mixed
-     */
-    public function recycle(){}
-
-    /**
-     * @return mixed
-     */
-    public function clear(){}
+    public function clear()
+    {
+    }
 
 
 }

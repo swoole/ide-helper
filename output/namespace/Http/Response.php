@@ -1,108 +1,69 @@
 <?php
+
 namespace Swoole\Http;
 
 class Response
 {
 
-    public $fd;
-    public $header;
-    public $cookie;
-    public $trailer;
+    public $fd = 0;
 
-    /**
-     * @return mixed
-     */
-    public function initHeader(){}
+    public $header = null;
 
-    /**
-     * @param $name[required]
-     * @param $value[optional]
-     * @param $expires[optional]
-     * @param $path[optional]
-     * @param $domain[optional]
-     * @param $secure[optional]
-     * @param $httponly[optional]
-     * @return mixed
-     */
-    public function cookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null){}
+    public $cookie = null;
 
-    /**
-     * @param $name[required]
-     * @param $value[optional]
-     * @param $expires[optional]
-     * @param $path[optional]
-     * @param $domain[optional]
-     * @param $secure[optional]
-     * @param $httponly[optional]
-     * @return mixed
-     */
-    public function rawcookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null){}
+    public $trailer = null;
 
-    /**
-     * @param $http_code[required]
-     * @param $reason[optional]
-     * @return mixed
-     */
-    public function status($http_code, $reason = null){}
+    public function initHeader()
+    {
+    }
 
-    /**
-     * @param $key[required]
-     * @param $value[required]
-     * @param $ucwords[optional]
-     * @return mixed
-     */
-    public function header($key, $value, $ucwords = null){}
+    public function cookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null)
+    {
+    }
 
-    /**
-     * @param $key[required]
-     * @param $value[required]
-     * @param $ucwords[optional]
-     * @return mixed
-     */
-    public function trailer($key, $value, $ucwords = null){}
+    public function rawcookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null)
+    {
+    }
 
-    /**
-     * @param $content[required]
-     * @return mixed
-     */
-    public function write($content){}
+    public function status($http_code, $reason = null)
+    {
+    }
 
-    /**
-     * @param $content[optional]
-     * @return mixed
-     */
-    public function end($content = null){}
+    public function header($key, $value, $ucwords = null)
+    {
+    }
 
-    /**
-     * @param $filename[required]
-     * @param $offset[optional]
-     * @param $length[optional]
-     * @return mixed
-     */
-    public function sendfile($filename, $offset = null, $length = null){}
+    public function trailer($key, $value, $ucwords = null)
+    {
+    }
 
-    /**
-     * @param $location[required]
-     * @param $http_code[optional]
-     * @return mixed
-     */
-    public function redirect($location, $http_code = null){}
+    public function write($content)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function detach(){}
+    public function end($content = null)
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @return mixed
-     */
-    public static function create($fd){}
+    public function sendfile($filename, $offset = null, $length = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    public function redirect($location, $http_code = null)
+    {
+    }
+
+    public function detach()
+    {
+    }
+
+    public static function create($fd)
+    {
+    }
+
+    public function __destruct()
+    {
+    }
 
 
 }

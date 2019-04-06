@@ -1,41 +1,33 @@
 <?php
+
 namespace Swoole\Table;
 
-class Row
+class Row implements \ArrayAccess
 {
 
-    public $key;
-    public $value;
+    public $key = null;
 
-    /**
-     * @param $offset[required]
-     * @return mixed
-     */
-    public function offsetExists($offset){}
+    public $value = null;
 
-    /**
-     * @param $offset[required]
-     * @return mixed
-     */
-    public function offsetGet($offset){}
+    public function offsetExists($offset)
+    {
+    }
 
-    /**
-     * @param $offset[required]
-     * @param $value[required]
-     * @return mixed
-     */
-    public function offsetSet($offset, $value){}
+    public function offsetGet($offset)
+    {
+    }
 
-    /**
-     * @param $offset[required]
-     * @return mixed
-     */
-    public function offsetUnset($offset){}
+    public function offsetSet($offset, $value)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    public function offsetUnset($offset)
+    {
+    }
+
+    public function __destruct()
+    {
+    }
 
 
 }

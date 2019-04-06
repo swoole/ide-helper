@@ -1,107 +1,85 @@
 <?php
+
 namespace Swoole\Coroutine;
 
 class Client
 {
+
     const MSG_OOB = 1;
+
     const MSG_PEEK = 2;
-    const MSG_DONTWAIT = 64;
-    const MSG_WAITALL = 256;
 
-    public $errCode;
-    public $errMsg;
-    public $sock;
-    public $type;
-    public $setting;
-    public $connected;
+    const MSG_DONTWAIT = 128;
 
-    /**
-     * @param $type[required]
-     * @return mixed
-     */
-    public function __construct($type){}
+    const MSG_WAITALL = 64;
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    public $errCode = 0;
 
-    /**
-     * @param $settings[required]
-     * @return mixed
-     */
-    public function set($settings){}
+    public $errMsg = '';
 
-    /**
-     * @param $host[required]
-     * @param $port[optional]
-     * @param $timeout[optional]
-     * @param $sock_flag[optional]
-     * @return mixed
-     */
-    public function connect($host, $port = null, $timeout = null, $sock_flag = null){}
+    public $sock = -1;
 
-    /**
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function recv($timeout = null){}
+    public $type = 0;
 
-    /**
-     * @param $length[optional]
-     * @return mixed
-     */
-    public function peek($length = null){}
+    public $setting = null;
 
-    /**
-     * @param $data[required]
-     * @return mixed
-     */
-    public function send($data){}
+    public $connected = false;
 
-    /**
-     * @param $filename[required]
-     * @param $offset[optional]
-     * @param $length[optional]
-     * @return mixed
-     */
-    public function sendfile($filename, $offset = null, $length = null){}
+    public function __construct($type)
+    {
+    }
 
-    /**
-     * @param $address[required]
-     * @param $port[required]
-     * @param $data[required]
-     * @return mixed
-     */
-    public function sendto($address, $port, $data){}
+    public function __destruct()
+    {
+    }
 
-    /**
-     * @param $length[required]
-     * @param $address[required]
-     * @param $port[optional]
-     * @return mixed
-     */
-    public function recvfrom($length, &$address, &$port = null){}
+    public function set(array $settings)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function isConnected(){}
+    public function connect($host, $port = null, $timeout = null, $sock_flag = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function getsockname(){}
+    public function recv($timeout = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function getpeername(){}
+    public function peek($length = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function close(){}
+    public function send($data)
+    {
+    }
+
+    public function sendfile($filename, $offset = null, $length = null)
+    {
+    }
+
+    public function sendto($address, $port, $data)
+    {
+    }
+
+    public function recvfrom($length, &$address, &$port = null)
+    {
+    }
+
+    public function isConnected()
+    {
+    }
+
+    public function getsockname()
+    {
+    }
+
+    public function getpeername()
+    {
+    }
+
+    public function close()
+    {
+    }
 
 
 }

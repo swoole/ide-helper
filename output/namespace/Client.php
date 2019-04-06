@@ -1,146 +1,125 @@
 <?php
+
 namespace Swoole;
 
 class Client
 {
+
     const MSG_OOB = 1;
+
     const MSG_PEEK = 2;
-    const MSG_DONTWAIT = 64;
-    const MSG_WAITALL = 256;
+
+    const MSG_DONTWAIT = 128;
+
+    const MSG_WAITALL = 64;
+
     const SHUT_RDWR = 2;
+
     const SHUT_RD = 0;
+
     const SHUT_WR = 1;
 
-    public $errCode;
-    public $sock;
-    public $reuse;
-    public $reuseCount;
-    public $type;
-    public $id;
-    public $setting;
-    private $onConnect;
-    private $onError;
-    private $onReceive;
-    private $onClose;
-    private $onBufferFull;
-    private $onBufferEmpty;
+    public $errCode = 0;
 
-    /**
-     * @param $type[required]
-     * @param $async[optional]
-     * @return mixed
-     */
-    public function __construct($type, $async = null){}
+    public $sock = -1;
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    public $reuse = false;
 
-    /**
-     * @param $settings[required]
-     * @return mixed
-     */
-    public function set($settings){}
+    public $reuseCount = 0;
 
-    /**
-     * @param $host[required]
-     * @param $port[optional]
-     * @param $timeout[optional]
-     * @param $sock_flag[optional]
-     * @return mixed
-     */
-    public function connect($host, $port = null, $timeout = null, $sock_flag = null){}
+    public $type = 0;
 
-    /**
-     * @param $size[optional]
-     * @param $flag[optional]
-     * @return mixed
-     */
-    public function recv($size = null, $flag = null){}
+    public $id = null;
 
-    /**
-     * @param $data[required]
-     * @param $flag[optional]
-     * @return mixed
-     */
-    public function send($data, $flag = null){}
+    public $setting = null;
 
-    /**
-     * @param $dst_socket[required]
-     * @return mixed
-     */
-    public function pipe($dst_socket){}
+    private $onConnect = null;
 
-    /**
-     * @param $filename[required]
-     * @param $offset[optional]
-     * @param $length[optional]
-     * @return mixed
-     */
-    public function sendfile($filename, $offset = null, $length = null){}
+    private $onError = null;
 
-    /**
-     * @param $ip[required]
-     * @param $port[required]
-     * @param $data[required]
-     * @return mixed
-     */
-    public function sendto($ip, $port, $data){}
+    private $onReceive = null;
 
-    /**
-     * @return mixed
-     */
-    public function sleep(){}
+    private $onClose = null;
 
-    /**
-     * @return mixed
-     */
-    public function wakeup(){}
+    private $onBufferFull = null;
 
-    /**
-     * @return mixed
-     */
-    public function pause(){}
+    private $onBufferEmpty = null;
 
-    /**
-     * @return mixed
-     */
-    public function resume(){}
+    public function __construct($type, $async = null)
+    {
+    }
 
-    /**
-     * @param $how[required]
-     * @return mixed
-     */
-    public function shutdown($how){}
+    public function __destruct()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function isConnected(){}
+    public function set(array $settings)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function getsockname(){}
+    public function connect($host, $port = null, $timeout = null, $sock_flag = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function getpeername(){}
+    public function recv($size = null, $flag = null)
+    {
+    }
 
-    /**
-     * @param $force[optional]
-     * @return mixed
-     */
-    public function close($force = null){}
+    public function send($data, $flag = null)
+    {
+    }
 
-    /**
-     * @param $event_name[required]
-     * @param $callback[required]
-     * @return mixed
-     */
-    public function on($event_name, $callback){}
+    public function pipe($dst_socket)
+    {
+    }
+
+    public function sendfile($filename, $offset = null, $length = null)
+    {
+    }
+
+    public function sendto($ip, $port, $data)
+    {
+    }
+
+    public function sleep()
+    {
+    }
+
+    public function wakeup()
+    {
+    }
+
+    public function pause()
+    {
+    }
+
+    public function resume()
+    {
+    }
+
+    public function shutdown($how)
+    {
+    }
+
+    public function isConnected()
+    {
+    }
+
+    public function getsockname()
+    {
+    }
+
+    public function getpeername()
+    {
+    }
+
+    public function close($force = null)
+    {
+    }
+
+    public function on($event_name, callable $callback)
+    {
+    }
 
 
 }

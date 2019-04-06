@@ -1,37 +1,25 @@
 <?php
+
 namespace Swoole;
 
 class Timer
 {
 
+    public static function tick($ms, callable $callback, ... $params)
+    {
+    }
 
-    /**
-     * @param $ms[required]
-     * @param $callback[required]
-     * @param $params[optional]
-     * @return mixed
-     */
-    public static function tick($ms, $callback, $params = null){}
+    public static function after($ms, callable $callback, ... $params)
+    {
+    }
 
-    /**
-     * @param $ms[required]
-     * @param $callback[required]
-     * @param $params[optional]
-     * @return mixed
-     */
-    public static function after($ms, $callback, $params = null){}
+    public static function exists($timer_id)
+    {
+    }
 
-    /**
-     * @param $timer_id[required]
-     * @return mixed
-     */
-    public static function exists($timer_id){}
-
-    /**
-     * @param $timer_id[required]
-     * @return mixed
-     */
-    public static function clear($timer_id){}
+    public static function clear($timer_id)
+    {
+    }
 
 
 }

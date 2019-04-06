@@ -1,55 +1,45 @@
 <?php
+
 namespace Swoole\Coroutine;
 
 class Channel
 {
 
-    public $capacity;
-    public $errCode;
+    public $capacity = 0;
 
-    /**
-     * @param $size[optional]
-     * @return mixed
-     */
-    public function __construct($size = null){}
+    public $errCode = 0;
 
-    /**
-     * @param $data[required]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function push($data, $timeout = null){}
+    public function __construct($size = null)
+    {
+    }
 
-    /**
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function pop($timeout = null){}
+    public function push($data, $timeout = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function isEmpty(){}
+    public function pop($timeout = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function isFull(){}
+    public function isEmpty()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function close(){}
+    public function isFull()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function stats(){}
+    public function close()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function length(){}
+    public function stats()
+    {
+    }
+
+    public function length()
+    {
+    }
 
 
 }

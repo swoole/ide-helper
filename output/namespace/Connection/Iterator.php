@@ -1,69 +1,57 @@
 <?php
+
 namespace Swoole\Connection;
 
-class Iterator
+class Iterator implements \Iterator, \ArrayAccess, \Countable
 {
 
+    public function __construct()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function rewind(){}
+    public function __destruct()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function next(){}
+    public function rewind()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function current(){}
+    public function next()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function key(){}
+    public function current()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function valid(){}
+    public function key()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function count(){}
+    public function valid()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    public function count()
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @return mixed
-     */
-    public function offsetExists($fd){}
+    public function offsetExists($fd)
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @return mixed
-     */
-    public function offsetGet($fd){}
+    public function offsetGet($fd)
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @param $value[required]
-     * @return mixed
-     */
-    public function offsetSet($fd, $value){}
+    public function offsetSet($fd, $value)
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @return mixed
-     */
-    public function offsetUnset($fd){}
+    public function offsetUnset($fd)
+    {
+    }
 
 
 }

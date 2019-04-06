@@ -1,48 +1,61 @@
 <?php
+
 namespace Swoole\Server;
 
 class Port
 {
 
-    private $onConnect;
-    private $onReceive;
-    private $onClose;
-    private $onPacket;
-    private $onBufferFull;
-    private $onBufferEmpty;
-    private $onRequest;
-    private $onHandShake;
-    private $onMessage;
-    private $onOpen;
-    public $host;
-    public $port;
-    public $type;
-    public $sock;
-    public $setting;
-    public $connections;
+    private $onConnect = null;
 
-    /**
-     * @return mixed
-     */
-    private function __construct(){}
+    private $onReceive = null;
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    private $onClose = null;
 
-    /**
-     * @param $settings[required]
-     * @return mixed
-     */
-    public function set($settings){}
+    private $onPacket = null;
 
-    /**
-     * @param $event_name[required]
-     * @param $callback[required]
-     * @return mixed
-     */
-    public function on($event_name, $callback){}
+    private $onBufferFull = null;
+
+    private $onBufferEmpty = null;
+
+    private $onRequest = null;
+
+    private $onHandShake = null;
+
+    private $onOpen = null;
+
+    private $onMessage = null;
+
+    public $host = null;
+
+    public $port = 0;
+
+    public $type = 0;
+
+    public $sock = -1;
+
+    public $setting = null;
+
+    public $connections = null;
+
+    private function __construct()
+    {
+    }
+
+    public function __destruct()
+    {
+    }
+
+    public function set(array $settings)
+    {
+    }
+
+    public function on($event_name, callable $callback)
+    {
+    }
+
+    public function getCallback($event_name)
+    {
+    }
 
 
 }

@@ -1,63 +1,49 @@
 <?php
+
 namespace Swoole;
 
 class Event
 {
 
+    public static function add($fd, ?callable $read_callback, ?callable $write_callback = null, $events = null)
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @param $read_callback[required]
-     * @param $write_callback[optional]
-     * @param $events[optional]
-     * @return mixed
-     */
-    public static function add($fd, $read_callback, $write_callback = null, $events = null){}
+    public static function del($fd)
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @return mixed
-     */
-    public static function del($fd){}
+    public static function set($fd, ?callable $read_callback = null, ?callable $write_callback = null, $events = null)
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @param $read_callback[optional]
-     * @param $write_callback[optional]
-     * @param $events[optional]
-     * @return mixed
-     */
-    public static function set($fd, $read_callback = null, $write_callback = null, $events = null){}
+    public static function exit()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public static function exit(){}
+    public static function write($fd, $data)
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @param $data[required]
-     * @return mixed
-     */
-    public static function write($fd, $data){}
+    public static function wait()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public static function wait(){}
+    public static function defer(callable $callback)
+    {
+    }
 
-    /**
-     * @param $callback[required]
-     * @return mixed
-     */
-    public static function defer($callback){}
+    public static function cycle(?callable $callback, $before = null)
+    {
+    }
 
-    /**
-     * @param $callback[required]
-     * @param $before[optional]
-     * @return mixed
-     */
-    public static function cycle($callback, $before = null){}
+    public static function dispatch()
+    {
+    }
+
+    public static function isset($fd, $events = null)
+    {
+    }
 
 
 }

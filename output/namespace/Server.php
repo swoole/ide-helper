@@ -1,327 +1,219 @@
 <?php
+
 namespace Swoole;
 
 class Server
 {
 
-    private $on_start;
-    private $on_shutdown;
-    private $on_workerstart;
-    private $on_workerstop;
-    private $on_workerexit;
-    private $on_workererror;
-    private $on_task;
-    private $on_finish;
-    private $on_managerstart;
-    private $on_managerstop;
-    private $on_pipemessage;
-    public $setting;
-    public $connections;
-    public $host;
-    public $port;
-    public $type;
-    public $mode;
-    public $ports;
-    public $master_pid;
-    public $manager_pid;
-    public $worker_id;
-    public $taskworker;
-    public $worker_pid;
+    private $onStart = null;
 
-    /**
-     * @param $host[required]
-     * @param $port[optional]
-     * @param $mode[optional]
-     * @param $sock_type[optional]
-     * @return mixed
-     */
-    public function __construct($host, $port = null, $mode = null, $sock_type = null){}
+    private $onShutdown = null;
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    private $onWorkerStart = null;
 
-    /**
-     * @param $host[required]
-     * @param $port[required]
-     * @param $sock_type[required]
-     * @return mixed
-     */
-    public function listen($host, $port, $sock_type){}
+    private $onWorkerStop = null;
 
-    /**
-     * @param $host[required]
-     * @param $port[required]
-     * @param $sock_type[required]
-     * @return mixed
-     */
-    public function addlistener($host, $port, $sock_type){}
+    private $onWorkerExit = null;
 
-    /**
-     * @param $event_name[required]
-     * @param $callback[required]
-     * @return mixed
-     */
-    public function on($event_name, $callback){}
+    private $onWorkerError = null;
 
-    /**
-     * @param $event_name[required]
-     * @return mixed
-     */
-    public function getCallback($event_name){}
+    private $onTask = null;
 
-    /**
-     * @param $settings[required]
-     * @return mixed
-     */
-    public function set($settings){}
+    private $onFinish = null;
 
-    /**
-     * @return mixed
-     */
-    public function start(){}
+    private $onManagerStart = null;
 
-    /**
-     
-     * 向客户端发送数据
-     *
-     *  * $data，发送的数据。TCP协议最大不得超过2M，UDP协议不得超过64K
-     *  * 发送成功会返回true，如果连接已被关闭或发送失败会返回false
-     *
-     * TCP服务器
-     * -------------------------------------------------------------------------
-     *  * send操作具有原子性，多个进程同时调用send向同一个连接发送数据，不会发生数据混杂
-     *  * 如果要发送超过2M的数据，可以将数据写入临时文件，然后通过sendfile接口进行发送
-     *
-     * swoole-1.6以上版本不需要$from_id
-     *
-     * UDP服务器
-     * ------------------------------------------------------------------------
-     *  * send操作会直接在worker进程内发送数据包，不会再经过主进程转发
-     *  * 使用fd保存客户端IP，from_id保存from_fd和port
-     *  * 如果在onReceive后立即向客户端发送数据，可以不传$reactor_id
-     *  * 如果向其他UDP客户端发送数据，必须要传入$reactor_id
-     *  * 在外网服务中发送超过64K的数据会分成多个传输单元进行发送，如果其中一个单元丢包，会导致整个包被丢弃。所以外网服务，建议发送1.5K以下的数据包
-     *
-     * @param $fd[required]
-     * @param $send_data[required]
-     * @param $server_socket[optional]
-     * @return bool
-     */
-    public function send($fd, $send_data, $server_socket = null){}
+    private $onManagerStop = null;
 
-    /**
-     * @param $ip[required]
-     * @param $port[required]
-     * @param $send_data[required]
-     * @param $server_socket[optional]
-     * @return mixed
-     */
-    public function sendto($ip, $port, $send_data, $server_socket = null){}
+    private $onPipeMessage = null;
 
-    /**
-     * @param $conn_fd[required]
-     * @param $send_data[required]
-     * @return mixed
-     */
-    public function sendwait($conn_fd, $send_data){}
+    public $setting = null;
 
-    /**
-     * @param $fd[required]
-     * @return mixed
-     */
-    public function exists($fd){}
+    public $connections = null;
 
-    /**
-     * @param $fd[required]
-     * @return mixed
-     */
-    public function exist($fd){}
+    public $host = '';
 
-    /**
-     * @param $fd[required]
-     * @param $is_protected[optional]
-     * @return mixed
-     */
-    public function protect($fd, $is_protected = null){}
+    public $port = 0;
 
-    /**
-     * @param $conn_fd[required]
-     * @param $filename[required]
-     * @param $offset[optional]
-     * @param $length[optional]
-     * @return mixed
-     */
-    public function sendfile($conn_fd, $filename, $offset = null, $length = null){}
+    public $type = 0;
 
-    /**
-     * @param $fd[required]
-     * @param $reset[optional]
-     * @return mixed
-     */
-    public function close($fd, $reset = null){}
+    public $mode = 0;
 
-    /**
-     * @param $fd[required]
-     * @return mixed
-     */
-    public function confirm($fd){}
+    public $ports = null;
 
-    /**
-     * @param $fd[required]
-     * @return mixed
-     */
-    public function pause($fd){}
+    public $master_pid = 0;
 
-    /**
-     * @param $fd[required]
-     * @return mixed
-     */
-    public function resume($fd){}
+    public $manager_pid = 0;
 
-    /**
-     * @param $data[required]
-     * @param $worker_id[optional]
-     * @param $finish_callback[optional]
-     * @return mixed
-     */
-    public function task($data, $worker_id = null, $finish_callback = null){}
+    public $worker_id = -1;
 
-    /**
-     * @param $data[required]
-     * @param $timeout[optional]
-     * @param $worker_id[optional]
-     * @return mixed
-     */
-    public function taskwait($data, $timeout = null, $worker_id = null){}
+    public $taskworker = false;
 
-    /**
-     * @param $tasks[required]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function taskWaitMulti($tasks, $timeout = null){}
+    public $worker_pid = 0;
 
-    /**
-     * @param $tasks[required]
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function taskCo($tasks, $timeout = null){}
+    public function __construct($host, $port = null, $mode = null, $sock_type = null)
+    {
+    }
 
-    /**
-     * @param $data[required]
-     * @return mixed
-     */
-    public function finish($data){}
+    public function __destruct()
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function reload(){}
+    public function listen($host, $port, $sock_type)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function shutdown(){}
+    public function addlistener($host, $port, $sock_type)
+    {
+    }
 
-    /**
-     * @param $worker_id[optional]
-     * @return mixed
-     */
-    public function stop($worker_id = null){}
+    public function on($event_name, callable $callback)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function getLastError(){}
+    public function getCallback($event_name)
+    {
+    }
 
-    /**
-     * @param $reactor_id[required]
-     * @return mixed
-     */
-    public function heartbeat($reactor_id){}
+    public function set(array $settings)
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @param $reactor_id[optional]
-     * @return mixed
-     */
-    public function connection_info($fd, $reactor_id = null){}
+    public function start()
+    {
+    }
 
-    /**
-     * @param $start_fd[required]
-     * @param $find_count[optional]
-     * @return mixed
-     */
-    public function connection_list($start_fd, $find_count = null){}
+    public function send($fd, $send_data, $server_socket = null)
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @param $reactor_id[optional]
-     * @return mixed
-     */
-    public function getClientInfo($fd, $reactor_id = null){}
+    public function sendto($ip, $port, $send_data, $server_socket = null)
+    {
+    }
 
-    /**
-     * @param $start_fd[required]
-     * @param $find_count[optional]
-     * @return mixed
-     */
-    public function getClientList($start_fd, $find_count = null){}
+    public function sendwait($conn_fd, $send_data)
+    {
+    }
 
-    /**
-     * @param $ms[required]
-     * @param $callback[required]
-     * @param $param[optional]
-     * @return mixed
-     */
-    public function after($ms, $callback, $param = null){}
+    public function exists($fd)
+    {
+    }
 
-    /**
-     * @param $ms[required]
-     * @param $callback[required]
-     * @return mixed
-     */
-    public function tick($ms, $callback){}
+    public function exist($fd)
+    {
+    }
 
-    /**
-     * @param $timer_id[required]
-     * @return mixed
-     */
-    public function clearTimer($timer_id){}
+    public function protect($fd, $is_protected = null)
+    {
+    }
 
-    /**
-     * @param $callback[required]
-     * @return mixed
-     */
-    public function defer($callback){}
+    public function sendfile($conn_fd, $filename, $offset = null, $length = null)
+    {
+    }
 
-    /**
-     * @param $message[required]
-     * @param $dst_worker_id[required]
-     * @return mixed
-     */
-    public function sendMessage($message, $dst_worker_id){}
+    public function close($fd, $reset = null)
+    {
+    }
 
-    /**
-     * @param $process[required]
-     * @return mixed
-     */
-    public function addProcess($process){}
+    public function confirm($fd)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function stats(){}
+    public function pause($fd)
+    {
+    }
 
-    /**
-     * @param $fd[required]
-     * @param $uid[required]
-     * @return mixed
-     */
-    public function bind($fd, $uid){}
+    public function resume($fd)
+    {
+    }
+
+    public function task($data, $worker_id = null, ?callable $finish_callback = null)
+    {
+    }
+
+    public function taskwait($data, $timeout = null, $worker_id = null)
+    {
+    }
+
+    public function taskWaitMulti(array $tasks, $timeout = null)
+    {
+    }
+
+    public function taskCo(array $tasks, $timeout = null)
+    {
+    }
+
+    public function finish($data)
+    {
+    }
+
+    public function reload()
+    {
+    }
+
+    public function shutdown()
+    {
+    }
+
+    public function stop($worker_id = null)
+    {
+    }
+
+    public function getLastError()
+    {
+    }
+
+    public function heartbeat($reactor_id)
+    {
+    }
+
+    public function connection_info($fd, $reactor_id = null)
+    {
+    }
+
+    public function connection_list($start_fd, $find_count = null)
+    {
+    }
+
+    public function getClientInfo($fd, $reactor_id = null)
+    {
+    }
+
+    public function getClientList($start_fd, $find_count = null)
+    {
+    }
+
+    public function after($ms, callable $callback, $param = null)
+    {
+    }
+
+    public function tick($ms, callable $callback)
+    {
+    }
+
+    public function clearTimer($timer_id)
+    {
+    }
+
+    public function defer(callable $callback)
+    {
+    }
+
+    public function sendMessage($message, $dst_worker_id)
+    {
+    }
+
+    public function addProcess(\swoole_process $process)
+    {
+    }
+
+    public function stats()
+    {
+    }
+
+    public function bind($fd, $uid)
+    {
+    }
 
 
 }

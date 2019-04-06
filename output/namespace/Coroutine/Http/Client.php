@@ -1,153 +1,121 @@
 <?php
+
 namespace Swoole\Coroutine\Http;
 
 class Client
 {
 
-    public $errCode;
-    public $errMsg;
-    public $connected;
-    public $host;
-    public $port;
-    public $ssl;
-    public $setting;
-    public $requestMethod;
-    public $requestHeaders;
-    public $requestBody;
-    public $uploadFiles;
-    public $downloadFile;
-    public $downloadOffset;
-    public $statusCode;
-    public $headers;
-    public $set_cookie_headers;
-    public $cookies;
-    public $body;
+    public $errCode = 0;
 
-    /**
-     * @param $host[required]
-     * @param $port[optional]
-     * @param $ssl[optional]
-     * @return mixed
-     */
-    public function __construct($host, $port = null, $ssl = null){}
+    public $errMsg = '';
 
-    /**
-     * @return mixed
-     */
-    public function __destruct(){}
+    public $connected = false;
 
-    /**
-     * @param $settings[required]
-     * @return mixed
-     */
-    public function set($settings){}
+    public $host = '';
 
-    /**
-     * @return mixed
-     */
-    public function getDefer(){}
+    public $port = 0;
 
-    /**
-     * @param $defer[optional]
-     * @return mixed
-     */
-    public function setDefer($defer = null){}
+    public $ssl = false;
 
-    /**
-     * @param $method[required]
-     * @return mixed
-     */
-    public function setMethod($method){}
+    public $setting = null;
 
-    /**
-     * @param $headers[required]
-     * @return mixed
-     */
-    public function setHeaders($headers){}
+    public $requestMethod = null;
 
-    /**
-     * @param $cookies[required]
-     * @return mixed
-     */
-    public function setCookies($cookies){}
+    public $requestHeaders = null;
 
-    /**
-     * @param $data[required]
-     * @return mixed
-     */
-    public function setData($data){}
+    public $requestBody = null;
 
-    /**
-     * @param $path[required]
-     * @return mixed
-     */
-    public function execute($path){}
+    public $uploadFiles = null;
 
-    /**
-     * @param $path[required]
-     * @return mixed
-     */
-    public function get($path){}
+    public $downloadFile = null;
 
-    /**
-     * @param $path[required]
-     * @param $data[required]
-     * @return mixed
-     */
-    public function post($path, $data){}
+    public $downloadOffset = 0;
 
-    /**
-     * @param $path[required]
-     * @param $file[required]
-     * @param $offset[optional]
-     * @return mixed
-     */
-    public function download($path, $file, $offset = null){}
+    public $statusCode = 0;
 
-    /**
-     * @param $path[required]
-     * @return mixed
-     */
-    public function upgrade($path){}
+    public $headers = null;
 
-    /**
-     * @param $path[required]
-     * @param $name[required]
-     * @param $type[optional]
-     * @param $filename[optional]
-     * @param $offset[optional]
-     * @param $length[optional]
-     * @return mixed
-     */
-    public function addFile($path, $name, $type = null, $filename = null, $offset = null, $length = null){}
+    public $set_cookie_headers = null;
 
-    /**
-     * @param $path[required]
-     * @param $name[required]
-     * @param $type[optional]
-     * @param $filename[optional]
-     * @return mixed
-     */
-    public function addData($path, $name, $type = null, $filename = null){}
+    public $cookies = null;
 
-    /**
-     * @param $timeout[optional]
-     * @return mixed
-     */
-    public function recv($timeout = null){}
+    public $body = '';
 
-    /**
-     * @param $data[required]
-     * @param $opcode[optional]
-     * @param $finish[optional]
-     * @return mixed
-     */
-    public function push($data, $opcode = null, $finish = null){}
+    public function __construct($host, $port = null, $ssl = null)
+    {
+    }
 
-    /**
-     * @return mixed
-     */
-    public function close(){}
+    public function __destruct()
+    {
+    }
+
+    public function set(array $settings)
+    {
+    }
+
+    public function getDefer()
+    {
+    }
+
+    public function setDefer($defer = null)
+    {
+    }
+
+    public function setMethod($method)
+    {
+    }
+
+    public function setHeaders(array $headers)
+    {
+    }
+
+    public function setCookies(array $cookies)
+    {
+    }
+
+    public function setData($data)
+    {
+    }
+
+    public function execute($path)
+    {
+    }
+
+    public function get($path)
+    {
+    }
+
+    public function post($path, $data)
+    {
+    }
+
+    public function download($path, $file, $offset = null)
+    {
+    }
+
+    public function upgrade($path)
+    {
+    }
+
+    public function addFile($path, $name, $type = null, $filename = null, $offset = null, $length = null)
+    {
+    }
+
+    public function addData($path, $name, $type = null, $filename = null)
+    {
+    }
+
+    public function recv($timeout = null)
+    {
+    }
+
+    public function push($data, $opcode = null, $finish = null)
+    {
+    }
+
+    public function close()
+    {
+    }
 
 
 }
