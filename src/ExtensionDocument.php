@@ -2,16 +2,16 @@
 
 namespace Swoole\IDEHelper;
 
-use Reflection;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionExtension;
 use ReflectionFunction;
 use ReflectionParameter;
-use ReflectionProperty;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Generator\DocBlock\Tag\ReturnTag;
+use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Reflection\ClassReflection;
 
 class ExtensionDocument
@@ -52,6 +52,14 @@ class ExtensionDocument
         self::ALIAS_SHORT_NAME_NEW => [],
         self::ALIAS_SHORT_NAME_OLD => [],
         self::ALIAS_SNAKE_CASE     => [],
+    ];
+
+    /**
+     * Methods that don't need to have return type specified.
+     */
+    const IGNORED_METHODS = [
+        '__construct' => null,
+        '__destruct'  => null,
     ];
 
     /**
@@ -253,9 +261,30 @@ class ExtensionDocument
             throw new Exception("Class $classname should be under namespace \{$this->extensionName} but not.");
         }
 
+        $class = ClassGenerator::fromReflection(new ClassReflection($ref->getName()));
+        foreach ($class->getMethods() as $method) {
+            if ((null === $method->getReturnType()) && !array_key_exists($method->getName(), self::IGNORED_METHODS)) {
+                $method->setDocBlock(
+                    DocBlockGenerator::fromArray(
+                        [
+                            'shortDescription' => null,
+                            'longDescription'  => null,
+                            'tags'             => [
+                                new ReturnTag(
+                                    [
+                                        'datatype' => 'mixed',
+                                    ]
+                                ),
+                            ],
+                        ]
+                    )
+                );
+            }
+        }
+
         $this->writeToPhpFile(
             $this->dirOutput . '/namespace/' . implode('/', array_slice($ns, 1)) . '.php',
-            ClassGenerator::fromReflection(new ClassReflection($ref->getName()))->generate()
+            $class->generate()
         );
     }
 
