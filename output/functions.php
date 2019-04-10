@@ -3,10 +3,19 @@
  * List of functions from swoole 4.3.2-rc2.
  */
 
+/**
+ * @return mixed
+ */
 function swoole_version(){}
 
+/**
+ * @return mixed
+ */
 function swoole_cpu_num(){}
 
+/**
+ * @return mixed
+ */
 function swoole_last_error(){}
 
 /**
@@ -33,8 +42,14 @@ function swoole_event_set($fd, $read_callback = null, $write_callback = null, $e
  */
 function swoole_event_del($fd){}
 
+/**
+ * @return mixed
+ */
 function swoole_event_exit(){}
 
+/**
+ * @return mixed
+ */
 function swoole_event_wait(){}
 
 /**
@@ -57,6 +72,9 @@ function swoole_event_defer($callback){}
  */
 function swoole_event_cycle($callback, $before = null){}
 
+/**
+ * @return mixed
+ */
 function swoole_event_dispatch(){}
 
 /**
@@ -163,8 +181,14 @@ function swoole_select(&$read_array, &$write_array, &$error_array, $timeout = nu
  */
 function swoole_set_process_name($process_name){}
 
+/**
+ * @return mixed
+ */
 function swoole_get_local_ip(){}
 
+/**
+ * @return mixed
+ */
 function swoole_get_local_mac(){}
 
 /**
@@ -174,6 +198,9 @@ function swoole_get_local_mac(){}
  */
 function swoole_strerror($errno, $error_type = null){}
 
+/**
+ * @return mixed
+ */
 function swoole_errno(){}
 
 /**
@@ -189,7 +216,13 @@ function swoole_hashcode($data, $type = null){}
  */
 function swoole_get_mime_type($filename){}
 
+/**
+ * @return mixed
+ */
 function swoole_clear_dns_cache(){}
 
+/**
+ * @return mixed
+ */
 function swoole_internal_call_user_shutdown_begin(){}
 
