@@ -224,23 +224,20 @@ class ExtensionDocument
     {
         $all = '';
         foreach ($functions as $function) {
-            $comment = '';
             $vp = array();
+            $comment = "/**\n";
             $params = $function->getParameters();
-            if ($params) {
-                $comment = "/**\n";
-                foreach ($params as $param) {
-                    $default_value = $this->getDefaultValue($param);
-                    $comment .= " * @param \${$param->name}[" .
-                        ($param->isOptional() ? 'optional' : 'required') .
-                        "]\n";
-                    $vp[] = ($param->isPassedByReference() ? '&' : '') .
-                        "\${$param->name}" .
-                        ($default_value ? " = {$default_value}" : '');
-                }
-                $comment .= " * @return mixed\n";
-                $comment .= " */\n";
+            foreach ($params as $param) {
+                $default_value = $this->getDefaultValue($param);
+                $comment .= " * @param \${$param->name}[" .
+                    ($param->isOptional() ? 'optional' : 'required') .
+                    "]\n";
+                $vp[] = ($param->isPassedByReference() ? '&' : '') .
+                    "\${$param->name}" .
+                    ($default_value ? " = {$default_value}" : '');
             }
+            $comment .= " * @return mixed\n";
+            $comment .= " */\n";
             $comment .= sprintf("function %s(%s){}\n\n", $function->getName(), join(', ', $vp));
             $all .= $comment;
         }
