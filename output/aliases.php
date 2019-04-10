@@ -10,6 +10,7 @@ class_alias(Swoole\Coroutine\Iterator::class, 'co\iterator');
 class_alias(Swoole\Coroutine\Mysql::class, 'co\mysql');
 class_alias(Swoole\Coroutine\Mysql\Exception::class, 'co\mysql\exception');
 class_alias(Swoole\Coroutine\Mysql\Statement::class, 'co\mysql\statement');
+class_alias(Swoole\Coroutine\Postgresql::class, 'co\postgresql');
 class_alias(Swoole\Coroutine\Redis::class, 'co\redis');
 class_alias(Swoole\Coroutine\Socket::class, 'co\socket');
 class_alias(Swoole\Coroutine\Socket\Exception::class, 'co\socket\exception');

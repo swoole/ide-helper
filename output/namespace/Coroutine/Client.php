@@ -65,6 +65,18 @@ class Client
     {
     }
 
+    public function enableSSL()
+    {
+    }
+
+    public function getPeerCert()
+    {
+    }
+
+    public function verifyPeerCert()
+    {
+    }
+
     public function isConnected()
     {
     }
@@ -78,6 +90,10 @@ class Client
     }
 
     public function close()
+    {
+    }
+
+    public function getSocket()
     {
     }
 

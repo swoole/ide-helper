@@ -79,5 +79,9 @@ class Socket
     {
     }
 
+    public function getSocket()
+    {
+    }
+
 
 }

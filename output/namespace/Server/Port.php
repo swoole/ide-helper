@@ -57,5 +57,9 @@ class Port
     {
     }
 
+    public function getSocket()
+    {
+    }
+
 
 }

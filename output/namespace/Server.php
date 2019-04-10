@@ -211,6 +211,10 @@ class Server
     {
     }
 
+    public function getSocket($port = null)
+    {
+    }
+
     public function bind($fd, $uid)
     {
     }

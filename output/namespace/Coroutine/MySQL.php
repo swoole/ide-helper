@@ -47,6 +47,10 @@ class MySQL
     {
     }
 
+    public function escape($string, $flags = null)
+    {
+    }
+
     public function begin($timeout = null)
     {
     }

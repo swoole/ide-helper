@@ -45,6 +45,8 @@ class Client
 
     private $onBufferEmpty = null;
 
+    private $onSSLReady = null;
+
     public function __construct($type, $async = null)
     {
     }
@@ -101,6 +103,18 @@ class Client
     {
     }
 
+    public function enableSSL(callable $callback = null)
+    {
+    }
+
+    public function getPeerCert()
+    {
+    }
+
+    public function verifyPeerCert()
+    {
+    }
+
     public function isConnected()
     {
     }
@@ -118,6 +132,10 @@ class Client
     }
 
     public function on($event_name, callable $callback)
+    {
+    }
+
+    public function getSocket()
     {
     }
 
