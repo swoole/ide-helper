@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Swoole\\IDEHelper\\": "src/Swoole/IDEHelper/"
+            "Swoole\\IDEHelper\\": "src/"
         }
     }
 }
