@@ -13,6 +13,9 @@ class Task
 
     public $flags = 0;
 
+    /**
+     * @return mixed
+     */
     public function finish($data)
     {
     }

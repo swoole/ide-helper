@@ -13,14 +13,23 @@ class Frame
 
     public $finish = true;
 
+    /**
+     * @return mixed
+     */
     public function __toString()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public static function pack($data, $opcode = null, $finish = null, $mask = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public static function unpack($data)
     {
     }

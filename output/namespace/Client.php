@@ -55,86 +55,149 @@ class Client
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function set(array $settings)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function connect($host, $port = null, $timeout = null, $sock_flag = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function recv($size = null, $flag = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function send($data, $flag = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function pipe($dst_socket)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function sendfile($filename, $offset = null, $length = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function sendto($ip, $port, $data)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function sleep()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function wakeup()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function pause()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function resume()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function shutdown($how)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function enableSSL(callable $callback = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function getPeerCert()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function verifyPeerCert()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function isConnected()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function getsockname()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function getpeername()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function close($force = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function on($event_name, callable $callback)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function getSocket()
     {
     }

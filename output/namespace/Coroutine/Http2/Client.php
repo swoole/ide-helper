@@ -29,42 +29,72 @@ class Client
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function set(array $settings)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function connect()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function stats($key = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function isStreamExist($stream_id)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function send($request)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function write($stream_id, $data, $end_stream = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function recv($timeout = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function goaway($error_code = null, $debug_data = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function ping()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function close()
     {
     }

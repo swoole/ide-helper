@@ -49,70 +49,121 @@ class Client
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function set(array $settings)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function getDefer()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function setDefer($defer = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function setMethod($method)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function setHeaders(array $headers)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function setCookies(array $cookies)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function setData($data)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function execute($path)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function get($path)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function post($path, $data)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function download($path, $file, $offset = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function upgrade($path)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function addFile($path, $name, $type = null, $filename = null, $offset = null, $length = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function addData($path, $name, $type = null, $filename = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function recv($timeout = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function push($data, $opcode = null, $finish = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function close()
     {
     }

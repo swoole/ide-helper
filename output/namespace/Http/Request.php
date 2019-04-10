@@ -25,10 +25,16 @@ class Request
 
     public $tmpfiles = null;
 
+    /**
+     * @return mixed
+     */
     public function rawContent()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function getData()
     {
     }

@@ -45,18 +45,30 @@ class Port
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function set(array $settings)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function on($event_name, callable $callback)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function getCallback($event_name)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function getSocket()
     {
     }

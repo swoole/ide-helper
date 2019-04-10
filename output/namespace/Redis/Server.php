@@ -19,18 +19,30 @@ class Server extends \Swoole\Server
 
     const MAP = 6;
 
+    /**
+     * @return mixed
+     */
     public function start()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function setHandler($command, callable $callback)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function getHandler($command)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public static function format($type, $value = null)
     {
     }

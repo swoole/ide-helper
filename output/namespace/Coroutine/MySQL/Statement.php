@@ -13,18 +13,30 @@ class Statement
 
     public $errno = 0;
 
+    /**
+     * @return mixed
+     */
     public function execute($params = null, $timeout = null)
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function fetch()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function fetchAll()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function nextResult()
     {
     }
