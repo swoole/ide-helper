@@ -106,10 +106,10 @@ class ExtensionDocument
         // Retrieve and save all classes.
         $classes = $this->rf_ext->getClasses();
         // There are three types of class names in Swoole:
-        // 1. short name of a class. Short names start with "Co\", and they can be found in file output/classes.php.
+        // 1. short name of a class. Short names start with "Co\", and they can be found in file output/aliases.php.
         // 2. fully qualified name (class name with namespace prefix), e.g., \Swoole\Timer. These classes can be found
         //    under folder output/namespace.
-        // 3. snake_case. e.g., swoole_timer. These aliases can be found in file output/classes.php.
+        // 3. snake_case. e.g., swoole_timer. These aliases can be found in file output/aliases.php.
         foreach ($classes as $className => $ref) {
             if (strtolower(substr($className, 0, 3)) == 'co\\') {
                 $className = ucwords($className, '\\');
