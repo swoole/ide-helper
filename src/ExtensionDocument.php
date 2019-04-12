@@ -44,14 +44,12 @@ class ExtensionDocument
      */
     protected $rf_ext;
 
-    const ALIAS_SHORT_NAME_NEW = 1; // Short names of new coroutine classes.
-    const ALIAS_SHORT_NAME_OLD = 2; // Short names of old coroutine classes.
-    const ALIAS_SNAKE_CASE     = 3; // Class names in snake_case. e.g., swoole_timer.
+    const ALIAS_SHORT_NAME = 1; // Short names of coroutine classes.
+    const ALIAS_SNAKE_CASE = 2; // Class names in snake_case. e.g., swoole_timer.
 
     protected $aliases = [
-        self::ALIAS_SHORT_NAME_NEW => [],
-        self::ALIAS_SHORT_NAME_OLD => [],
-        self::ALIAS_SNAKE_CASE     => [],
+        self::ALIAS_SHORT_NAME => [],
+        self::ALIAS_SNAKE_CASE => [],
     ];
 
     /**
@@ -108,24 +106,14 @@ class ExtensionDocument
         // Retrieve and save all classes.
         $classes = $this->rf_ext->getClasses();
         // There are three types of class names in Swoole:
-        // 1. short name of a class. Short names start with "co\", and they can be found in file output/classes.php.
+        // 1. short name of a class. Short names start with "Co\", and they can be found in file output/classes.php.
         // 2. fully qualified name (class name with namespace prefix), e.g., \Swoole\Timer. These classes can be found
         //    under folder output/namespace.
         // 3. snake_case. e.g., swoole_timer. These aliases can be found in file output/classes.php.
         foreach ($classes as $className => $ref) {
             if (strtolower(substr($className, 0, 3)) == 'co\\') {
-                $extends = ucwords(str_replace('co\\', 'Swoole\\Coroutine\\', $className), '\\');
-
-                if (class_exists($extends)) {
-                    $this->aliases[self::ALIAS_SHORT_NAME_NEW][$className] = $extends;
-                } else {
-                    $extends = ucwords(str_replace('co\\', 'Swoole\\', $className), '\\');
-                    if (class_exists($extends)) {
-                        $this->aliases[self::ALIAS_SHORT_NAME_OLD][$className] = $extends;
-                    } else {
-                        throw new Exception("Unable to detect the original class of alias {$className}.");
-                    }
-                }
+                $className = ucwords($className, '\\');
+                $this->aliases[self::ALIAS_SHORT_NAME][$className] = $ref->getName();
             } elseif (strchr($className, '\\')) {
                 $this->exportNamespaceClass($className, $ref);
             } else {
@@ -133,13 +121,13 @@ class ExtensionDocument
             }
         }
 
-        $class_alias = "<?php\n\n";
+        $class_alias = "<?php\n";
         foreach (array_filter($this->aliases) as $type => $aliases) {
+            $class_alias .= "\n";
             asort($aliases);
             foreach ($aliases as $alias => $original) {
-                $class_alias .= "class_alias({$original}::class, '{$alias}');\n";
+                $class_alias .= "class_alias('\\{$original}', '\\{$alias}');\n";
             }
-            $class_alias .= "\n";
         }
 
         file_put_contents($this->dirOutput . '/aliases.php', $class_alias);
@@ -255,7 +243,7 @@ class ExtensionDocument
     {
         $ns = explode('\\', $classname);
         if (strcasecmp($ns[0], $this->extensionName) !== 0) {
-            throw new Exception("Class $classname should be under namespace \{$this->extensionName} but not.");
+            throw new Exception("Class $classname should be under namespace \\{$this->extensionName} but not.");
         }
 
         $class = ClassGenerator::fromReflection(new ClassReflection($ref->getName()));
