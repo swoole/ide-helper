@@ -4,6 +4,7 @@ class_alias('\Swoole\Coroutine\Channel', '\Co\Channel');
 class_alias('\Swoole\Coroutine\Client', '\Co\Client');
 class_alias('\Swoole\Coroutine\Context', '\Co\Context');
 class_alias('\Swoole\Coroutine\Http2\Client', '\Co\Http2\Client');
+class_alias('\Swoole\Coroutine\Http2\Client\Exception', '\Co\Http2\Client\Exception');
 class_alias('\Swoole\Coroutine\Http\Client', '\Co\Http\Client');
 class_alias('\Swoole\Coroutine\Http\Client\Exception', '\Co\Http\Client\Exception');
 class_alias('\Swoole\Coroutine\Iterator', '\Co\Iterator');
