@@ -12,7 +12,7 @@ You may add this package to your project using [Composer](https://getcomposer.or
 
 ```bash
 composer require swoole/ide-helper:@dev
-# or,
+# or you may install a specific version, like:
 composer require swoole/ide-helper:~4.3.0
 ```
 
@@ -20,14 +20,17 @@ It's better to install this package on only development systems by adding the `-
 
 ```bash
 composer require --dev swoole/ide-helper:@dev
-# or,
+# or you may install a specific version, like:
 composer require --dev swoole/ide-helper:~4.3.0
 ```
 
 ## Generate IDE Help Files
 
-Use following commands to generate IDE help files and put them under folder `output/`.
+Have Docker running first, then use following commands to generate IDE help files and put them under folder `output/`.
 
 ```bash
-composer update && rm -rf ./output && ./bin/generator.php
+./bin/generator.sh swoole-version
+# Please replace "swoole-version" with a Swoole version #. e.g.,
+./bin/generator.sh 4.3.1
+./bin/generator.sh 4.3.2
 ```
