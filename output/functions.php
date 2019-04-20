@@ -1,7 +1,4 @@
 <?php
-/**
- * List of functions from swoole 4.3.3.
- */
 
 /**
  * @return mixed

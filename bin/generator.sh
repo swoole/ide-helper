@@ -25,7 +25,7 @@ if ! docker image inspect ${DOCKER_IMAGE} >/dev/null 2>&1 ; then
 fi
 
 rm -rf  ./output
-docker run --rm -v "`pwd`":/var/www -t ${DOCKER_IMAGE} bash -c "composer update && ./bin/generator.php"
+docker run --rm -v "`pwd`":/var/www -t ${DOCKER_IMAGE} bash -c "composer install && ./bin/generator.php"
 if hash git 2>/dev/null ; then
     git add ./output
 fi

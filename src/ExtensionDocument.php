@@ -95,13 +95,7 @@ class ExtensionDocument
         $this->writeToPhpFile($this->dirOutput . '/constants.php', $defines);
 
         // Retrieve and save all functions.
-        $funcs = $this->rf_ext->getFunctions();
-        $fdefs = $this->getFunctionsDef(...array_values($funcs));
-
-        file_put_contents(
-            $this->dirOutput . '/functions.php',
-            "<?php\n/**\n * List of functions from {$this->extensionName} {$this->getVersion()}.\n */\n\n{$fdefs}"
-        );
+        $this->writeToPhpFile($this->dirOutput . '/functions.php', $this->getFunctionsDef());
 
         // Retrieve and save all classes.
         $classes = $this->rf_ext->getClasses();
@@ -205,13 +199,12 @@ class ExtensionDocument
     }
 
     /**
-     * @param ReflectionFunction ...$functions
      * @return string
      */
-    protected function getFunctionsDef(ReflectionFunction ...$functions): string
+    protected function getFunctionsDef(): string
     {
         $all = '';
-        foreach ($functions as $function) {
+        foreach ($this->rf_ext->getFunctions() as $function) {
             $vp = array();
             $comment = "/**\n";
             $params = $function->getParameters();
