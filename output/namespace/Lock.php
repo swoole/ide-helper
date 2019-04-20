@@ -13,6 +13,8 @@ class Lock
 
     const RWLOCK = 1;
 
+    const SPINLOCK = 5;
+
     public $errCode = 0;
 
     public function __construct($type = null, $filename = null)

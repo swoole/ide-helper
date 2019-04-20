@@ -51,7 +51,14 @@ class Response
     /**
      * @return mixed
      */
-    public function trailer($key, $value, $ucwords = null)
+    public function trailer($key, $value)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function ping()
     {
     }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * List of functions from swoole 4.3.2.
+ * List of functions from swoole 4.3.3.
  */
 
 /**

@@ -9,9 +9,9 @@ class Client
 
     const MSG_PEEK = 2;
 
-    const MSG_DONTWAIT = 128;
+    const MSG_DONTWAIT = 64;
 
-    const MSG_WAITALL = 64;
+    const MSG_WAITALL = 256;
 
     const SHUT_RDWR = 2;
 
