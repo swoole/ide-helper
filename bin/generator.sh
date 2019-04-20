@@ -2,8 +2,8 @@
 
 set -e
 
-if [ -z ${1} ] ; then
-    echo "Error: Swoole version is empty."
+if [[ -z ${1} ]] ; then
+    echo "Error: Swoole version # is not specified."
     echo "How to run the script:"
     echo "    ${0} swoole-version"
     echo "For example:"
@@ -26,4 +26,6 @@ fi
 
 rm -rf  ./output
 docker run --rm -v "`pwd`":/var/www -t ${DOCKER_IMAGE} bash -c "composer update && ./bin/generator.php"
-git add ./output
+if hash git 2>/dev/null ; then
+    git add ./output
+fi
