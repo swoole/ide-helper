@@ -115,16 +115,17 @@ class ExtensionDocument
             }
         }
 
-        $class_alias = "<?php\n";
+        $class_alias = '';
         foreach (array_filter($this->aliases) as $type => $aliases) {
-            $class_alias .= "\n";
+            if (!empty($class_alias)) {
+                $class_alias .= "\n";
+            }
             asort($aliases);
             foreach ($aliases as $alias => $original) {
                 $class_alias .= "class_alias('\\{$original}', '\\{$alias}');\n";
             }
         }
-
-        file_put_contents($this->dirOutput . '/aliases.php', $class_alias);
+        $this->writeToPhpFile($this->dirOutput . '/aliases.php', $class_alias);
     }
 
     /**

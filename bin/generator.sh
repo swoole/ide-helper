@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# To generate IDE helper files of specified version of Swoole.
+# To generate IDE help files of specified version of Swoole.
 #
 # How to use this script:
 #     ./bin/generator.sh master  # "master" is a branch name.
