@@ -6,12 +6,9 @@ RUN \
     docker-php-ext-install sockets              && \
     apt-get update                              && \
     apt-get install -y libpq-dev libssl-dev     && \
-    pecl update-channels                        && \
-    pecl install                                   \
-        --onlyreqdeps                              \
-        --nobuild                                  \
-        swoole-${SWOOLE_VERSION}                && \
-    cd "$(pecl config-get temp_dir)/swoole"     && \
+    curl -sfL -o swoole.tar.gz https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz && \
+    tar -zxvf swoole.tar.gz                     && \
+    cd swoole-src-${SWOOLE_VERSION}             && \
     phpize                                      && \
     ./configure                                    \
         --enable-sockets                           \
@@ -22,6 +19,8 @@ RUN \
     make                                        && \
     make install                                && \
     docker-php-ext-enable swoole                && \
+    cd ..                                       && \
+    rm -r swoole-src-${SWOOLE_VERSION}          && \
     rm -r /var/lib/apt/lists/*                  && \
     echo '#!/usr/bin/env bash' > /entrypoint.sh && \
     echo 'exec "$@"'          >> /entrypoint.sh && \
