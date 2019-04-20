@@ -11,10 +11,10 @@ RUN \
     git checkout ${SWOOLE_VERSION}              && \
     phpize                                      && \
     ./configure                                    \
-        --enable-sockets                           \
-        --enable-openssl                           \
         --enable-http2                             \
-        --enable-mysqlnd                        && \
+        --enable-mysqlnd                           \
+        --enable-openssl                           \
+        --enable-sockets                        && \
     make                                        && \
     make install                                && \
     docker-php-ext-enable swoole                && \

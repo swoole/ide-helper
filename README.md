@@ -13,7 +13,7 @@ You may add this package to your project using [Composer](https://getcomposer.or
 ```bash
 composer require swoole/ide-helper:@dev
 # or you may install a specific version, like:
-composer require swoole/ide-helper:~4.3.0
+composer require swoole/ide-helper:~4.3.3
 ```
 
 It's better to install this package on only development systems by adding the `--dev` flag to your Composer commands:
@@ -21,10 +21,10 @@ It's better to install this package on only development systems by adding the `-
 ```bash
 composer require --dev swoole/ide-helper:@dev
 # or you may install a specific version, like:
-composer require --dev swoole/ide-helper:~4.3.0
+composer require --dev swoole/ide-helper:~4.3.3
 ```
 
-## Generate IDE Help Files
+## Generate IDE Helper Files
 
 Have Docker running first, then use script _./bin/generator.sh_ to generate IDE help files and put them under folder
 `output/`. This script accepts one parameter only, which should be a branch name, a tag or a commit number of repository
