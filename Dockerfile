@@ -14,8 +14,7 @@ RUN \
         --enable-sockets                           \
         --enable-openssl                           \
         --enable-http2                             \
-        --enable-mysqlnd                           \
-        --enable-coroutine-postgresql           && \
+        --enable-mysqlnd                        && \
     make                                        && \
     make install                                && \
     docker-php-ext-enable swoole                && \
