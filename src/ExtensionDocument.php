@@ -128,6 +128,14 @@ class ExtensionDocument
     }
 
     /**
+     * @return string
+     */
+    public function getVersion(): string
+    {
+        return $this->rf_ext->getVersion();
+    }
+
+    /**
      * @param string $className
      * @return string
      */
@@ -264,14 +272,6 @@ class ExtensionDocument
             $this->dirOutput . '/namespace/' . implode('/', array_slice($ns, 1)) . '.php',
             $class->generate()
         );
-    }
-
-    /**
-     * @return string
-     */
-    protected function getVersion(): string
-    {
-        return $this->rf_ext->getVersion();
     }
 
     /**

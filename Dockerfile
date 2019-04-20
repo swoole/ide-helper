@@ -1,3 +1,7 @@
+# To create Docker image of specificied version of Swoole.
+#
+# Please check script bin/generator.sh to see how to build and use the Docker image.
+#
 FROM php:7.3-cli
 
 ARG SWOOLE_VERSION

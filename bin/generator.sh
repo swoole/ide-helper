@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+#
+# To generate IDE helper files of specified version of Swoole.
+#
+# How to use this script:
+#     ./bin/generator.sh master  # "master" is a branch name.
+#     ./bin/generator.sh v4.3.3  # "v4.3.3" is a tag.
+#     ./bin/generator.sh 49d44ca # "49d44ca" is a Git commit number.
+#
 
 set -e
 
@@ -7,7 +15,7 @@ if [[ -z ${1} ]] ; then
     echo "How to run the script:"
     echo "    ${0} swoole-version"
     echo "For example:"
-    echo "    ${0} 4.0.0"
+    echo "    ${0} 4.3.3"
     exit 1
 fi
 
