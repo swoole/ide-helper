@@ -5,10 +5,10 @@ ARG SWOOLE_VERSION
 RUN \
     docker-php-ext-install sockets              && \
     apt-get update                              && \
-    apt-get install -y libpq-dev libssl-dev     && \
-    curl -sfL -o swoole.tar.gz https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz && \
-    tar -zxvf swoole.tar.gz                     && \
-    cd swoole-src-${SWOOLE_VERSION}             && \
+    apt-get install -y git libpq-dev libssl-dev && \
+    git clone https://github.com/swoole/swoole-src.git && \
+    cd swoole-src                               && \
+    git checkout ${SWOOLE_VERSION}              && \
     phpize                                      && \
     ./configure                                    \
         --enable-sockets                           \
@@ -20,8 +20,7 @@ RUN \
     make install                                && \
     docker-php-ext-enable swoole                && \
     cd ..                                       && \
-    rm -r swoole-src-${SWOOLE_VERSION}          && \
-    rm -r /var/lib/apt/lists/*                  && \
+    rm -r swoole-src /var/lib/apt/lists/*       && \
     echo '#!/usr/bin/env bash' > /entrypoint.sh && \
     echo 'exec "$@"'          >> /entrypoint.sh && \
     chmod +x /entrypoint.sh                     && \
