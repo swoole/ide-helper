@@ -11,19 +11,20 @@
 set -e
 
 if [[ -z ${1} ]] ; then
-    echo "Error: Swoole version # is not specified."
-    echo "How to run the script:"
-    echo "    ${0} swoole-version"
-    echo "For example:"
-    echo "    ${0} 4.3.3"
+    echo "Error: a branch name, a tag or a commit number of following Git repository must be passed in:"
+    echo "    https://github.com/swoole/swoole-src"
+    echo "How to run this script:"
+    echo "    ${0} master  # 'master' is a branch name."
+    echo "    ${0} v4.3.3  # 'v4.3.3' is a tag."
+    echo "    ${0} 49d44ca # '49d44ca' is a Git commit number."
     exit 1
 fi
 
 pushd "`dirname "$0"`" > /dev/null
-ROOT_PATH="`pwd -P`/.." # Switch to root directory of project "ide-helper".
+ROOT_PATH="`pwd -P`/.."
 popd > /dev/null # Switch back to current directory.
 
-cd "${ROOT_PATH}"
+cd "${ROOT_PATH}" # Switch to root directory of project "ide-helper".
 
 docker build --build-arg SWOOLE_VERSION=${1} -t swoole/ide-helper .
 docker run --rm -v "`pwd`":/var/www -t swoole/ide-helper bash -c \
