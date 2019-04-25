@@ -106,7 +106,7 @@ class ExtensionDocument
         // 3. snake_case. e.g., swoole_timer. These aliases can be found in file output/aliases.php.
         foreach ($classes as $className => $ref) {
             if (strtolower(substr($className, 0, 3)) == 'co\\') {
-                $className = ucwords($className, '\\');
+                $className = str_replace('Swoole\\Coroutine', 'Co', $ref->getName());
                 $this->aliases[self::ALIAS_SHORT_NAME][$className] = $ref->getName();
             } elseif (strchr($className, '\\')) {
                 $this->exportNamespaceClass($className, $ref);
