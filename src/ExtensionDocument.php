@@ -95,21 +95,15 @@ class ExtensionDocument
         $this->writeToPhpFile($this->dirOutput . '/constants.php', $defines);
 
         // Retrieve and save all functions.
-        $funcs = $this->rf_ext->getFunctions();
-        $fdefs = $this->getFunctionsDef(...array_values($funcs));
-
-        file_put_contents(
-            $this->dirOutput . '/functions.php',
-            "<?php\n/**\n * List of functions from {$this->extensionName} {$this->getVersion()}.\n */\n\n{$fdefs}"
-        );
+        $this->writeToPhpFile($this->dirOutput . '/functions.php', $this->getFunctionsDef());
 
         // Retrieve and save all classes.
         $classes = $this->rf_ext->getClasses();
         // There are three types of class names in Swoole:
-        // 1. short name of a class. Short names start with "Co\", and they can be found in file output/classes.php.
+        // 1. short name of a class. Short names start with "Co\", and they can be found in file output/aliases.php.
         // 2. fully qualified name (class name with namespace prefix), e.g., \Swoole\Timer. These classes can be found
         //    under folder output/namespace.
-        // 3. snake_case. e.g., swoole_timer. These aliases can be found in file output/classes.php.
+        // 3. snake_case. e.g., swoole_timer. These aliases can be found in file output/aliases.php.
         foreach ($classes as $className => $ref) {
             if (strtolower(substr($className, 0, 3)) == 'co\\') {
                 $className = ucwords($className, '\\');
@@ -121,16 +115,25 @@ class ExtensionDocument
             }
         }
 
-        $class_alias = "<?php\n";
+        $class_alias = '';
         foreach (array_filter($this->aliases) as $type => $aliases) {
-            $class_alias .= "\n";
+            if (!empty($class_alias)) {
+                $class_alias .= "\n";
+            }
             asort($aliases);
             foreach ($aliases as $alias => $original) {
                 $class_alias .= "class_alias({$original}::class, {$alias}::class);\n";
             }
         }
+        $this->writeToPhpFile($this->dirOutput . '/aliases.php', $class_alias);
+    }
 
-        file_put_contents($this->dirOutput . '/aliases.php', $class_alias);
+    /**
+     * @return string
+     */
+    public function getVersion(): string
+    {
+        return $this->rf_ext->getVersion();
     }
 
     /**
@@ -205,13 +208,12 @@ class ExtensionDocument
     }
 
     /**
-     * @param ReflectionFunction ...$functions
      * @return string
      */
-    protected function getFunctionsDef(ReflectionFunction ...$functions): string
+    protected function getFunctionsDef(): string
     {
         $all = '';
-        foreach ($functions as $function) {
+        foreach ($this->rf_ext->getFunctions() as $function) {
             $vp = array();
             $comment = "/**\n";
             $params = $function->getParameters();
@@ -271,14 +273,6 @@ class ExtensionDocument
             $this->dirOutput . '/namespace/' . implode('/', array_slice($ns, 1)) . '.php',
             $class->generate()
         );
-    }
-
-    /**
-     * @return string
-     */
-    protected function getVersion(): string
-    {
-        return $this->rf_ext->getVersion();
     }
 
     /**
