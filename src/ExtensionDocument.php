@@ -126,7 +126,7 @@ class ExtensionDocument
             $class_alias .= "\n";
             asort($aliases);
             foreach ($aliases as $alias => $original) {
-                $class_alias .= "class_alias('\\{$original}', '\\{$alias}');\n";
+                $class_alias .= "class_alias({$original}::class, {$alias}::class);\n";
             }
         }
 
