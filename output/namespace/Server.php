@@ -251,20 +251,6 @@ class Server
     /**
      * @return mixed
      */
-    public function connection_info($fd, $reactor_id = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function connection_list($start_fd, $find_count = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
     public function getClientInfo($fd, $reactor_id = null)
     {
     }
@@ -279,28 +265,14 @@ class Server
     /**
      * @return mixed
      */
-    public function after($ms, callable $callback, $param = null)
+    public function connection_info($fd, $reactor_id = null)
     {
     }
 
     /**
      * @return mixed
      */
-    public function tick($ms, callable $callback)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function clearTimer($timer_id)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function defer(callable $callback)
+    public function connection_list($start_fd, $find_count = null)
     {
     }
 

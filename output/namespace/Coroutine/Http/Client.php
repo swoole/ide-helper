@@ -87,6 +87,13 @@ class Client
     /**
      * @return mixed
      */
+    public function setBasicAuth($username, $password)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function setCookies(array $cookies)
     {
     }
@@ -95,6 +102,20 @@ class Client
      * @return mixed
      */
     public function setData($data)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function addFile($path, $name, $type = null, $filename = null, $offset = null, $length = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function addData($path, $name, $type = null, $filename = null)
     {
     }
 
@@ -129,6 +150,34 @@ class Client
     /**
      * @return mixed
      */
+    public function getBody()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHeaders()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCookies()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatusCode()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function upgrade($path)
     {
     }
@@ -136,14 +185,7 @@ class Client
     /**
      * @return mixed
      */
-    public function addFile($path, $name, $type = null, $filename = null, $offset = null, $length = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function addData($path, $name, $type = null, $filename = null)
+    public function push($data, $opcode = null, $finish = null)
     {
     }
 
@@ -151,13 +193,6 @@ class Client
      * @return mixed
      */
     public function recv($timeout = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function push($data, $opcode = null, $finish = null)
     {
     }
 

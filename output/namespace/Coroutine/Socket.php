@@ -53,7 +53,21 @@ class Socket
     /**
      * @return mixed
      */
+    public function recvPacket($timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function send($data, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function sendFile($filename, $offset = null, $length = null)
     {
     }
 
@@ -95,6 +109,13 @@ class Socket
     /**
      * @return mixed
      */
+    public function setProtocol(array $settings)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function setOption($level, $opt_name, $opt_value)
     {
     }
@@ -103,6 +124,13 @@ class Socket
      * @return mixed
      */
     public function shutdown($how)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function cancel($event = null)
     {
     }
 
@@ -124,13 +152,6 @@ class Socket
      * @return mixed
      */
     public function getsockname()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSocket()
     {
     }
 

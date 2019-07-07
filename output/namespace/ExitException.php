@@ -5,6 +5,10 @@ namespace Swoole;
 class ExitException extends Exception
 {
 
+    private $flags = 0;
+
+    private $status = 0;
+
     /**
      * @return mixed
      */

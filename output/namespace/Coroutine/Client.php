@@ -17,7 +17,9 @@ class Client
 
     public $errMsg = '';
 
-    public $sock = -1;
+    public $fd = -1;
+
+    private $socket = null;
 
     public $type = 0;
 
@@ -141,7 +143,7 @@ class Client
     /**
      * @return mixed
      */
-    public function getSocket()
+    public function exportSocket()
     {
     }
 

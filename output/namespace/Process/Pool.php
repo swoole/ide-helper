@@ -7,7 +7,9 @@ class Pool
 
     public $master_pid = -1;
 
-    public function __construct($worker_num, $ipc_type = null, $msgqueue_key = null)
+    public $workers = null;
+
+    public function __construct($worker_num, $ipc_type = null, $msgqueue_key = null, $enable_coroutine = null)
     {
     }
 
@@ -25,7 +27,7 @@ class Pool
     /**
      * @return mixed
      */
-    public function getProcess()
+    public function getProcess($worker_id = null)
     {
     }
 

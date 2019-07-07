@@ -15,20 +15,6 @@ class Coroutine
     /**
      * @return mixed
      */
-    public static function exec($command, $get_error_stream = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function gethostbyname($domain_name, $family = null, $timeout = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
     public static function defer($callback)
     {
     }
@@ -106,6 +92,55 @@ class Coroutine
     /**
      * @return mixed
      */
+    public static function getBackTrace($cid = null, $options = null, $limit = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function list()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function listCoroutines()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function enableScheduler()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function disableScheduler()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function exec($command, $get_error_stream = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function gethostbyname($domain_name, $family = null, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public static function sleep($seconds)
     {
     }
@@ -148,7 +183,7 @@ class Coroutine
     /**
      * @return mixed
      */
-    public static function getaddrinfo($hostname, $family = null, $socktype = null, $protocol = null, $service = null)
+    public static function getaddrinfo($hostname, $family = null, $socktype = null, $protocol = null, $service = null, $timeout = null)
     {
     }
 
@@ -156,27 +191,6 @@ class Coroutine
      * @return mixed
      */
     public static function statvfs($path)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function getBackTrace($cid = null, $options = null, $limit = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function list()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function listCoroutines()
     {
     }
 

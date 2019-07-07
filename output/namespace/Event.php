@@ -29,21 +29,14 @@ class Event
     /**
      * @return mixed
      */
-    public static function exit()
+    public static function isset($fd, $events = null)
     {
     }
 
     /**
      * @return mixed
      */
-    public static function write($fd, $data)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function wait()
+    public static function dispatch()
     {
     }
 
@@ -64,14 +57,21 @@ class Event
     /**
      * @return mixed
      */
-    public static function dispatch()
+    public static function write($fd, $data)
     {
     }
 
     /**
      * @return mixed
      */
-    public static function isset($fd, $events = null)
+    public static function wait()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function exit()
     {
     }
 

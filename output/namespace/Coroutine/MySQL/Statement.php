@@ -5,6 +5,8 @@ namespace Swoole\Coroutine\MySQL;
 class Statement
 {
 
+    public $id = 0;
+
     public $affected_rows = 0;
 
     public $insert_id = 0;
@@ -23,25 +25,35 @@ class Statement
     /**
      * @return mixed
      */
-    public function fetch()
+    public function fetch($timeout = null)
     {
     }
 
     /**
      * @return mixed
      */
-    public function fetchAll()
+    public function fetchAll($timeout = null)
     {
     }
 
     /**
      * @return mixed
      */
-    public function nextResult()
+    public function nextResult($timeout = null)
     {
     }
 
-    public function __destruct()
+    /**
+     * @return mixed
+     */
+    public function recv($timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function close()
     {
     }
 

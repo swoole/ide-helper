@@ -21,6 +21,8 @@ class Client
 
     public $port = 0;
 
+    public $ssl = false;
+
     public function __construct($host, $port = null, $ssl = null)
     {
     }

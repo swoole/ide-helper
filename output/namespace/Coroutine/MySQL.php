@@ -5,15 +5,15 @@ namespace Swoole\Coroutine;
 class MySQL
 {
 
-    public $serverInfo = '';
+    public $serverInfo = null;
 
     public $sock = -1;
 
     public $connected = false;
 
-    public $connect_error = '';
-
     public $connect_errno = 0;
+
+    public $connect_error = '';
 
     public $affected_rows = 0;
 
@@ -34,7 +34,21 @@ class MySQL
     /**
      * @return mixed
      */
-    public function connect(array $server_config)
+    public function getDefer()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function setDefer($defer = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function connect(array $server_config = null)
     {
     }
 
@@ -48,7 +62,14 @@ class MySQL
     /**
      * @return mixed
      */
-    public function recv()
+    public function fetch()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function fetchAll()
     {
     }
 
@@ -62,7 +83,14 @@ class MySQL
     /**
      * @return mixed
      */
-    public function escape($string, $flags = null)
+    public function prepare($query, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function recv()
     {
     }
 
@@ -90,21 +118,7 @@ class MySQL
     /**
      * @return mixed
      */
-    public function prepare($statement, $timeout = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function setDefer($defer = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefer()
+    public function escape($string, $flags = null)
     {
     }
 

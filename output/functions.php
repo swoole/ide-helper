@@ -16,100 +16,6 @@ function swoole_cpu_num(){}
 function swoole_last_error(){}
 
 /**
- * @param $fd[required]
- * @param $read_callback[required]
- * @param $write_callback[optional]
- * @param $events[optional]
- * @return mixed
- */
-function swoole_event_add($fd, $read_callback, $write_callback = null, $events = null){}
-
-/**
- * @param $fd[required]
- * @param $read_callback[optional]
- * @param $write_callback[optional]
- * @param $events[optional]
- * @return mixed
- */
-function swoole_event_set($fd, $read_callback = null, $write_callback = null, $events = null){}
-
-/**
- * @param $fd[required]
- * @return mixed
- */
-function swoole_event_del($fd){}
-
-/**
- * @return mixed
- */
-function swoole_event_exit(){}
-
-/**
- * @return mixed
- */
-function swoole_event_wait(){}
-
-/**
- * @param $fd[required]
- * @param $data[required]
- * @return mixed
- */
-function swoole_event_write($fd, $data){}
-
-/**
- * @param $callback[required]
- * @return mixed
- */
-function swoole_event_defer($callback){}
-
-/**
- * @param $callback[required]
- * @param $before[optional]
- * @return mixed
- */
-function swoole_event_cycle($callback, $before = null){}
-
-/**
- * @return mixed
- */
-function swoole_event_dispatch(){}
-
-/**
- * @param $fd[required]
- * @param $events[optional]
- * @return mixed
- */
-function swoole_event_isset($fd, $events = null){}
-
-/**
- * @param $ms[required]
- * @param $callback[required]
- * @param $params[optional]
- * @return mixed
- */
-function swoole_timer_after($ms, $callback, $params = null){}
-
-/**
- * @param $ms[required]
- * @param $callback[required]
- * @param $params[optional]
- * @return mixed
- */
-function swoole_timer_tick($ms, $callback, $params = null){}
-
-/**
- * @param $timer_id[required]
- * @return mixed
- */
-function swoole_timer_exists($timer_id){}
-
-/**
- * @param $timer_id[required]
- * @return mixed
- */
-function swoole_timer_clear($timer_id){}
-
-/**
  * @param $domain_name[required]
  * @param $timeout[optional]
  * @return mixed
@@ -222,4 +128,117 @@ function swoole_clear_dns_cache(){}
  * @return mixed
  */
 function swoole_internal_call_user_shutdown_begin(){}
+
+/**
+ * @param $fd[required]
+ * @param $read_callback[required]
+ * @param $write_callback[optional]
+ * @param $events[optional]
+ * @return mixed
+ */
+function swoole_event_add($fd, $read_callback, $write_callback = null, $events = null){}
+
+/**
+ * @param $fd[required]
+ * @return mixed
+ */
+function swoole_event_del($fd){}
+
+/**
+ * @param $fd[required]
+ * @param $read_callback[optional]
+ * @param $write_callback[optional]
+ * @param $events[optional]
+ * @return mixed
+ */
+function swoole_event_set($fd, $read_callback = null, $write_callback = null, $events = null){}
+
+/**
+ * @param $fd[required]
+ * @param $events[optional]
+ * @return mixed
+ */
+function swoole_event_isset($fd, $events = null){}
+
+/**
+ * @return mixed
+ */
+function swoole_event_dispatch(){}
+
+/**
+ * @param $callback[required]
+ * @return mixed
+ */
+function swoole_event_defer($callback){}
+
+/**
+ * @param $callback[required]
+ * @param $before[optional]
+ * @return mixed
+ */
+function swoole_event_cycle($callback, $before = null){}
+
+/**
+ * @param $fd[required]
+ * @param $data[required]
+ * @return mixed
+ */
+function swoole_event_write($fd, $data){}
+
+/**
+ * @return mixed
+ */
+function swoole_event_wait(){}
+
+/**
+ * @return mixed
+ */
+function swoole_event_exit(){}
+
+/**
+ * @param $ms[required]
+ * @param $callback[required]
+ * @return mixed
+ */
+function swoole_timer_after($ms, $callback){}
+
+/**
+ * @param $ms[required]
+ * @param $callback[required]
+ * @return mixed
+ */
+function swoole_timer_tick($ms, $callback){}
+
+/**
+ * @param $timer_id[required]
+ * @return mixed
+ */
+function swoole_timer_exists($timer_id){}
+
+/**
+ * @param $timer_id[required]
+ * @return mixed
+ */
+function swoole_timer_info($timer_id){}
+
+/**
+ * @return mixed
+ */
+function swoole_timer_stats(){}
+
+/**
+ * @return mixed
+ */
+function swoole_timer_list(){}
+
+/**
+ * @param $timer_id[required]
+ * @return mixed
+ */
+function swoole_timer_clear($timer_id){}
+
+/**
+ * @return mixed
+ */
+function swoole_timer_clear_all(){}
 
