@@ -6,8 +6,8 @@
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-use Swoole\IDEHelper\ExtensionDocument;
+use Swoole\IDEHelper\Extensions\Swoole;
 
-$doc = new ExtensionDocument('chinese', dirname(__DIR__) . '/output', dirname(__DIR__) . '/config');
-$doc->export();
-echo "IDE help files for Swoole {$doc->getVersion()} are generated successfully.\n";
+$generator = new Swoole('chinese', dirname(__DIR__) . '/output', dirname(__DIR__) . '/config');
+$generator->export();
+echo "IDE help files for Swoole {$generator->getVersion()} are generated successfully.\n";

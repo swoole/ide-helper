@@ -5,7 +5,6 @@ namespace Swoole\IDEHelper;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionExtension;
-use ReflectionFunction;
 use ReflectionParameter;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
@@ -14,15 +13,18 @@ use Zend\Code\Generator\DocBlock\Tag\ReturnTag;
 use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Reflection\ClassReflection;
 
-class ExtensionDocument
+abstract class AbstractStubGenerator
 {
-    const C_METHOD = 1;
+    const C_METHOD   = 1;
     const C_PROPERTY = 2;
     const C_CONSTANT = 3;
-    const SPACE_4 = '    ';
-    const SPACE_5 = self::SPACE_4 . ' ';
+    const SPACE_4    = '    ';
+    const SPACE_5    = self::SPACE_4 . ' ';
 
-    protected $extensionName = 'swoole';
+    /**
+     * @var string
+     */
+    protected $extension;
 
     /**
      * @var string
@@ -61,7 +63,7 @@ class ExtensionDocument
     ];
 
     /**
-     * ExtensionDocument constructor.
+     * AbstractStubGenerator constructor.
      *
      * @param string $language
      * @param string $dirOutput
@@ -71,14 +73,16 @@ class ExtensionDocument
      */
     public function __construct(string $language, string $dirOutput, string $dirConfig)
     {
-        if (!extension_loaded($this->extensionName)) {
-            throw new Exception("Extension $this->extensionName not enabled or not installed.");
+        $this->init();
+
+        if (!extension_loaded($this->extension)) {
+            throw new Exception("Extension $this->extension not enabled or not installed.");
         }
 
         $this->language  = $language;
         $this->dirOutput = $dirOutput;
         $this->dirConfig = $dirConfig;
-        $this->rf_ext    = new ReflectionExtension($this->extensionName);
+        $this->rf_ext    = new ReflectionExtension($this->extension);
     }
 
     /**
@@ -244,8 +248,8 @@ class ExtensionDocument
     protected function exportNamespaceClass(string $classname, ReflectionClass $ref): void
     {
         $ns = explode('\\', $classname);
-        if (strcasecmp($ns[0], $this->extensionName) !== 0) {
-            throw new Exception("Class $classname should be under namespace \\{$this->extensionName} but not.");
+        if (strcasecmp($ns[0], $this->extension) !== 0) {
+            throw new Exception("Class $classname should be under namespace \\{$this->extension} but not.");
         }
 
         $class = ClassGenerator::fromReflection(new ClassReflection($ref->getName()));
@@ -278,7 +282,7 @@ class ExtensionDocument
     /**
      * @param string $path
      * @param string $content
-     * @return ExtensionDocument
+     * @return AbstractStubGenerator
      */
     protected function writeToPhpFile(string $path, string $content): self
     {
@@ -291,4 +295,9 @@ class ExtensionDocument
 
         return $this;
     }
+
+    /**
+     * @return AbstractStubGenerator
+     */
+    abstract protected function init(): AbstractStubGenerator;
 }
