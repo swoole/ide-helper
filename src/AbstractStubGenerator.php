@@ -65,13 +65,10 @@ abstract class AbstractStubGenerator
     /**
      * AbstractStubGenerator constructor.
      *
-     * @param string $language
-     * @param string $dirOutput
-     * @param string $dirConfig
      * @throws Exception
      * @throws ReflectionException
      */
-    public function __construct(string $language, string $dirOutput, string $dirConfig)
+    public function __construct()
     {
         $this->init();
 
@@ -79,9 +76,9 @@ abstract class AbstractStubGenerator
             throw new Exception("Extension $this->extension not enabled or not installed.");
         }
 
-        $this->language  = $language;
-        $this->dirOutput = $dirOutput;
-        $this->dirConfig = $dirConfig;
+        $this->language  = 'chinese';
+        $this->dirOutput = dirname(__DIR__) . '/output/' . $this->extension;
+        $this->dirConfig = dirname(__DIR__) . '/config';
         $this->rf_ext    = new ReflectionExtension($this->extension);
     }
 
