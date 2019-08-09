@@ -697,6 +697,34 @@ class Redis
     /**
      * @return mixed
      */
+    public function zPopMin($key, $count)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function zPopMax($key, $count)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function bzPopMin($key, $timeout_or_key, $extra_args = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function bzPopMax($key, $timeout_or_key, $extra_args = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function zDeleteRangeByScore($key, $min, $max)
     {
     }

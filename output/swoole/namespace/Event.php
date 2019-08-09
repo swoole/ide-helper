@@ -71,6 +71,13 @@ class Event
     /**
      * @return mixed
      */
+    public static function rshutdown()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public static function exit()
     {
     }
