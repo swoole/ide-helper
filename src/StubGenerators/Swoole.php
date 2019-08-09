@@ -1,6 +1,6 @@
 <?php
 
-namespace Swoole\IDEHelper\Extensions;
+namespace Swoole\IDEHelper\StubGenerators;
 
 use Swoole\IDEHelper\AbstractStubGenerator;
 use Swoole\IDEHelper\Constant;
@@ -8,7 +8,7 @@ use Swoole\IDEHelper\Constant;
 /**
  * Class Swoole
  *
- * @package Swoole\IDEHelper\Extensions
+ * @package Swoole\IDEHelper\StubGenerators
  */
 class Swoole extends AbstractStubGenerator
 {

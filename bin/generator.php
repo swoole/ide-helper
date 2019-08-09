@@ -7,10 +7,10 @@
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 use Swoole\IDEHelper\AbstractStubGenerator;
-use Swoole\IDEHelper\Extensions\Swoole;
-use Swoole\IDEHelper\Extensions\SwooleAsync;
-use Swoole\IDEHelper\Extensions\SwooleOrm;
-use Swoole\IDEHelper\Extensions\SwooleSerialize;
+use Swoole\IDEHelper\StubGenerators\Swoole;
+use Swoole\IDEHelper\StubGenerators\SwooleAsync;
+use Swoole\IDEHelper\StubGenerators\SwooleOrm;
+use Swoole\IDEHelper\StubGenerators\SwooleSerialize;
 
 /** @var AbstractStubGenerator[] $generators */
 $generators = [
