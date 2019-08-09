@@ -8,11 +8,17 @@ use ReflectionExtension;
 use ReflectionParameter;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
+use Swoole\IDEHelper\Rules\NamespaceRule;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\DocBlock\Tag\ReturnTag;
 use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Reflection\ClassReflection;
 
+/**
+ * Class AbstractStubGenerator
+ *
+ * @package Swoole\IDEHelper
+ */
 abstract class AbstractStubGenerator
 {
     const C_METHOD   = 1;
@@ -89,14 +95,19 @@ abstract class AbstractStubGenerator
     public function export(): void
     {
         // Retrieve and save all constants.
-        $defines = '';
-        foreach ($this->rf_ext->getConstants() as $name => $value) {
-            $defines .= sprintf("define('%s', %s);\n", $name, (is_numeric($value) ? $value : "'{$value}'"));
+        if ($this->rf_ext->getConstants()) {
+            $defines = '';
+            foreach ($this->rf_ext->getConstants() as $name => $value) {
+                $defines .= sprintf("define('%s', %s);\n", $name, (is_numeric($value) ? $value : "'{$value}'"));
+            }
+            $this->writeToPhpFile($this->dirOutput . '/constants.php', $defines);
         }
-        $this->writeToPhpFile($this->dirOutput . '/constants.php', $defines);
 
         // Retrieve and save all functions.
-        $this->writeToPhpFile($this->dirOutput . '/functions.php', $this->getFunctionsDef());
+        $output = $this->getFunctionsDef();
+        if (!empty($output)) {
+            $this->writeToPhpFile($this->dirOutput . '/functions.php', $output);
+        }
 
         // Retrieve and save all classes.
         $classes = $this->rf_ext->getClasses();
@@ -135,6 +146,25 @@ abstract class AbstractStubGenerator
     public function getVersion(): string
     {
         return $this->rf_ext->getVersion();
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtension(): string
+    {
+        return $this->extension;
+    }
+
+    /**
+     * @param string $extension
+     * @return $this
+     */
+    public function setExtension(string $extension): self
+    {
+        $this->extension = $extension;
+
+        return $this;
     }
 
     /**
@@ -244,10 +274,7 @@ abstract class AbstractStubGenerator
      */
     protected function exportNamespaceClass(string $classname, ReflectionClass $ref): void
     {
-        $ns = explode('\\', $classname);
-        if (strcasecmp($ns[0], $this->extension) !== 0) {
-            throw new Exception("Class $classname should be under namespace \\{$this->extension} but not.");
-        }
+        (new NamespaceRule($this))->validate($classname);
 
         $class = ClassGenerator::fromReflection(new ClassReflection($ref->getName()));
         foreach ($class->getMethods() as $method) {
@@ -271,7 +298,7 @@ abstract class AbstractStubGenerator
         }
 
         $this->writeToPhpFile(
-            $this->dirOutput . '/namespace/' . implode('/', array_slice($ns, 1)) . '.php',
+            $this->dirOutput . '/namespace/' . implode('/', array_slice(explode('\\', $classname), 1)) . '.php',
             $class->generate()
         );
     }

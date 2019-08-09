@@ -6,18 +6,18 @@ use Swoole\IDEHelper\AbstractStubGenerator;
 use Swoole\IDEHelper\Constant;
 
 /**
- * Class Swoole
+ * Class SwooleAsync
  *
  * @package Swoole\IDEHelper\Extensions
  */
-class Swoole extends AbstractStubGenerator
+class SwooleAsync extends AbstractStubGenerator
 {
     /**
      * @inheritDoc
      */
     protected function init(): AbstractStubGenerator
     {
-        $this->extension = Constant::EXT_SWOOLE;
+        $this->extension = Constant::EXT_SWOOLE_ASYNC;
 
         return $this;
     }
