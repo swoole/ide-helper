@@ -10,7 +10,7 @@
 set -e
 
 if [[ -z ${1} ]] ; then
-    echo "Error: a branch name, a tag or a commit number of following Git repository must be passed in:"
+    echo "Error: a branch name, a Swoole version # of following Git repository must be passed in:"
     echo "    https://github.com/swoole/swoole-src"
     echo "How to run this script:"
     echo "    ${0} master # 'master' is a branch name."

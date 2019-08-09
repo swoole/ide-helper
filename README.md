@@ -31,7 +31,6 @@ Have Docker running first, then use script _./bin/generator.sh_ to generate IDE 
 [https://github.com/swoole/swoole-src](https://github.com/swoole/swoole-src). e.g.,
 
 ```bash
-./bin/generator.sh master  # "master" is a branch name.
-./bin/generator.sh v4.3.3  # "v4.3.3" is a tag.
-./bin/generator.sh 49d44ca # "49d44ca" is a Git commit number.
+./bin/generator.sh master # "master" is a branch name.
+./bin/generator.sh 4.3.3  # "4.3.3" is a tag.
 ```
