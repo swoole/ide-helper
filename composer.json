@@ -13,7 +13,7 @@
         "squizlabs/php_codesniffer": "~3.4.0",
         "zendframework/zend-code": "~3.3.0"
     },
-    "autoload": {
+    "autoload-dev": {
         "psr-4": {
             "Swoole\\IDEHelper\\": "src/"
         }
