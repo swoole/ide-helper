@@ -24,11 +24,12 @@ popd > /dev/null # Switch back to current directory.
 
 cd "${ROOT_PATH}" # Switch to root directory of project "ide-helper".
 
-docker run --rm                     \
-    -v "`pwd`":/var/www             \
-    -e SWOOLE_EXT_ASYNC=enabled    \
-    -e SWOOLE_EXT_ORM=enabled      \
-    -e SWOOLE_EXT_SERIALIZE=enabled \
-    -t deminy/swoole:${1}-php7.3    \
+docker run --rm                      \
+    -v "`pwd`":/var/www              \
+    -e SWOOLE_EXT_ASYNC=enabled      \
+    -e SWOOLE_EXT_ORM=enabled        \
+    -e SWOOLE_EXT_POSTGRESQL=enabled \
+    -e SWOOLE_EXT_SERIALIZE=enabled  \
+    -t deminy/swoole:${1}-php7.3     \
     bash -c "composer install && rm -rf ./output && ./bin/generator.php"
 git add ./output
