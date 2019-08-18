@@ -8,6 +8,13 @@ class Timer
     /**
      * @return mixed
      */
+    public static function set(array $settings)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public static function tick($ms, callable $callback, ... $params)
     {
     }

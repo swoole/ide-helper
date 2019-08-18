@@ -19,7 +19,7 @@ class Server
 
     public $errMsg = '';
 
-    public function __construct()
+    public function __construct($host, $port = null, $ssl = null, $reuse_port = null)
     {
     }
 

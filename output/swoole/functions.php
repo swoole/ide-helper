@@ -36,12 +36,6 @@ function swoole_async_set($settings){}
 function swoole_coroutine_create($func, $params = null){}
 
 /**
- * @param $command[required]
- * @return mixed
- */
-function swoole_coroutine_exec($command){}
-
-/**
  * @param $callback[required]
  * @return mixed
  */
@@ -194,6 +188,12 @@ function swoole_event_wait(){}
  * @return mixed
  */
 function swoole_event_exit(){}
+
+/**
+ * @param $settings[required]
+ * @return mixed
+ */
+function swoole_timer_set($settings){}
 
 /**
  * @param $ms[required]

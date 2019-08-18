@@ -13,8 +13,6 @@ class Request
 
     public $server = null;
 
-    public $request = null;
-
     public $cookie = null;
 
     public $get = null;

@@ -16,6 +16,7 @@ class_alias(Swoole\Coroutine\Redis::class, Co\Redis::class);
 class_alias(Swoole\Coroutine\Scheduler::class, Co\Scheduler::class);
 class_alias(Swoole\Coroutine\Socket::class, Co\Socket::class);
 class_alias(Swoole\Coroutine\Socket\Exception::class, Co\Socket\Exception::class);
+class_alias(Swoole\Coroutine\System::class, Co\System::class);
 
 class_alias(Swoole\Atomic::class, swoole_atomic::class);
 class_alias(Swoole\Atomic\Long::class, swoole_atomic_long::class);

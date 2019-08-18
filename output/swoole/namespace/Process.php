@@ -80,6 +80,13 @@ class Process
     /**
      * @return mixed
      */
+    public function set(array $settings)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function setTimeout($seconds)
     {
     }

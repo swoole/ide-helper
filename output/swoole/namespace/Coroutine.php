@@ -127,14 +127,21 @@ class Coroutine
     /**
      * @return mixed
      */
-    public static function exec($command, $get_error_stream = null)
+    public static function gethostbyname($domain_name, $family = null, $timeout = null)
     {
     }
 
     /**
      * @return mixed
      */
-    public static function gethostbyname($domain_name, $family = null, $timeout = null)
+    public static function dnsLookup($domain_name, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function exec($command, $get_error_stream = null)
     {
     }
 

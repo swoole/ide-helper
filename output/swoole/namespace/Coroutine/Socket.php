@@ -123,7 +123,7 @@ class Socket
     /**
      * @return mixed
      */
-    public function shutdown($how)
+    public function shutdown($how = null)
     {
     }
 

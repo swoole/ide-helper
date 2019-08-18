@@ -20,6 +20,13 @@ class Pool
     /**
      * @return mixed
      */
+    public function set(array $settings)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function on($event_name, callable $callback)
     {
     }

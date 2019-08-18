@@ -1,6 +1,7 @@
 <?php
 
 class_alias(Swoole\Async::class, swoole_async::class);
+class_alias(Swoole\Async\Client::class, swoole_async_client::class);
 class_alias(Swoole\Channel::class, swoole_channel::class);
 class_alias(Swoole\Http\Client::class, swoole_http_client::class);
 class_alias(Swoole\Memory\Pool::class, swoole_memory_pool::class);
