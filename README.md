@@ -27,10 +27,9 @@ composer require --dev swoole/ide-helper:~4.3.3
 ## Generate IDE Help Files
 
 Have Docker running first, then use script _./bin/generator.sh_ to generate IDE help files and put them under folder
-`output/`. This script accepts one parameter only, which should be a branch name, a tag or a commit number of repository
-[https://github.com/swoole/swoole-src](https://github.com/swoole/swoole-src). e.g.,
+`output/` with commands like following:
 
 ```bash
-./bin/generator.sh master # "master" is a branch name.
-./bin/generator.sh 4.3.3  # "4.3.3" is a tag.
+./bin/generator.sh       # To generate stubs with latest code from the master branch of Swoole.
+./bin/generator.sh 4.4.3 # To generate stubs for a specific version of Swoole.
 ```

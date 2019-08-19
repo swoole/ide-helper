@@ -1,22 +1,13 @@
 #!/usr/bin/env bash
 #
-# To generate IDE help files of specified version of Swoole.
+# To generate IDE help files of Swoole.
 #
 # How to use this script:
-#     ./bin/generator.sh master # "master" is a branch name.
-#     ./bin/generator.sh 4.4.3  # "4.4.3" is a Swoole version #.
+#     ./bin/generator.sh       # To generate stubs with latest code from the master branch of Swoole.
+#     ./bin/generator.sh 4.4.3 # To generate stubs for a specific version of Swoole.
 #
 
 set -e
-
-if [[ -z ${1} ]] ; then
-    echo "Error: a branch name, a Swoole version # of following Git repository must be passed in:"
-    echo "    https://github.com/swoole/swoole-src"
-    echo "How to run this script:"
-    echo "    ${0} master # 'master' is a branch name."
-    echo "    ${0} 4.4.3  # '4.4.3' is a Swoole version #."
-    exit 1
-fi
 
 pushd "`dirname "$0"`" > /dev/null
 ROOT_PATH="`pwd -P`/.."
@@ -24,12 +15,26 @@ popd > /dev/null # Switch back to current directory.
 
 cd "${ROOT_PATH}" # Switch to root directory of project "ide-helper".
 
+if [ -z "${1}" ] ; then
+    echo INFO: Generating stubs with latest code from the master branch of Swoole.
+    image_tag=latest
+else
+    if [[ "${1}" =~ ^[1-9]\d*\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-\w+)?$ ]] ; then
+        echo INFO: Generating stubs for Swoole ${1}.
+        image_tag=${1}-php7.3
+    else
+        echo "Error: '${1}' is not a valid Swoole version."
+        exit 1
+    fi
+fi
+
+rm -rf ./output
 docker run --rm                      \
     -v "`pwd`":/var/www              \
     -e SWOOLE_EXT_ASYNC=enabled      \
     -e SWOOLE_EXT_ORM=enabled        \
     -e SWOOLE_EXT_POSTGRESQL=enabled \
     -e SWOOLE_EXT_SERIALIZE=enabled  \
-    -t deminy/swoole:${1}-php7.3     \
-    bash -c "composer install && rm -rf ./output && ./bin/generator.php"
+    -t deminy/swoole:${image_tag}    \
+    bash -c "composer install && ./bin/generator.php"
 git add ./output
