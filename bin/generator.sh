@@ -35,6 +35,6 @@ docker run --rm                      \
     -e SWOOLE_EXT_ORM=enabled        \
     -e SWOOLE_EXT_POSTGRESQL=enabled \
     -e SWOOLE_EXT_SERIALIZE=enabled  \
-    -t deminy/swoole:${image_tag}    \
+    -t phpswoole/swoole:${image_tag}    \
     bash -c "composer install && ./bin/generator.php"
 git add ./output
