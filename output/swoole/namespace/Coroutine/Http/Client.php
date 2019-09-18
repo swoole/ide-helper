@@ -178,6 +178,13 @@ class Client
     /**
      * @return mixed
      */
+    public function getHeaderOut()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function upgrade($path)
     {
     }

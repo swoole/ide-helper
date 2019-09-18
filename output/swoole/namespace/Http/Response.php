@@ -25,21 +25,21 @@ class Response
     /**
      * @return mixed
      */
-    public function cookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null)
+    public function cookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null, $samesite = null)
     {
     }
 
     /**
      * @return mixed
      */
-    public function setCookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null)
+    public function setCookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null, $samesite = null)
     {
     }
 
     /**
      * @return mixed
      */
-    public function rawcookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null)
+    public function rawcookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null, $samesite = null)
     {
     }
 
