@@ -4,7 +4,7 @@
 #
 # How to use this script:
 #     ./bin/generator.sh       # To generate stubs with latest code from the master branch of Swoole.
-#     ./bin/generator.sh 4.4.3 # To generate stubs for a specific version of Swoole.
+#     ./bin/generator.sh 4.4.7 # To generate stubs for a specific version of Swoole.
 #
 
 set -e

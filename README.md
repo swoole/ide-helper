@@ -13,7 +13,7 @@ You may add this package to your project using [Composer](https://getcomposer.or
 ```bash
 composer require swoole/ide-helper:@dev
 # or you may install a specific version, like:
-composer require swoole/ide-helper:~4.3.3
+composer require swoole/ide-helper:~4.4.7
 ```
 
 It's better to install this package on only development systems by adding the `--dev` flag to your Composer commands:
@@ -21,7 +21,7 @@ It's better to install this package on only development systems by adding the `-
 ```bash
 composer require --dev swoole/ide-helper:@dev
 # or you may install a specific version, like:
-composer require --dev swoole/ide-helper:~4.3.3
+composer require --dev swoole/ide-helper:~4.4.7
 ```
 
 ## Generate IDE Help Files
@@ -31,5 +31,5 @@ Have Docker running first, then use script _./bin/generator.sh_ to generate IDE 
 
 ```bash
 ./bin/generator.sh       # To generate stubs with latest code from the master branch of Swoole.
-./bin/generator.sh 4.4.3 # To generate stubs for a specific version of Swoole.
+./bin/generator.sh 4.4.7 # To generate stubs for a specific version of Swoole.
 ```
