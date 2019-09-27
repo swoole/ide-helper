@@ -24,8 +24,6 @@ abstract class AbstractStubGenerator
     const C_METHOD   = 1;
     const C_PROPERTY = 2;
     const C_CONSTANT = 3;
-    const SPACE_4    = '    ';
-    const SPACE_5    = self::SPACE_4 . ' ';
 
     /**
      * @var string
@@ -310,12 +308,21 @@ abstract class AbstractStubGenerator
      */
     protected function writeToPhpFile(string $path, string $content): self
     {
-        $dir = dirname($path);
+        $this->mkdir(dirname($path));
+        file_put_contents($path, "<?php\n\n" . $content);
+
+        return $this;
+    }
+
+    /**
+     * @param string $dir
+     * @return AbstractStubGenerator
+     */
+    protected function mkdir(string $dir): self
+    {
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
-
-        file_put_contents($path, "<?php\n\n" . $content);
 
         return $this;
     }

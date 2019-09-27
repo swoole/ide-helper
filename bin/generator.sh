@@ -27,6 +27,7 @@ else
         exit 1
     fi
 fi
+image_tag=${image_tag}-dev
 
 rm -rf ./output
 docker run --rm                      \
@@ -35,6 +36,6 @@ docker run --rm                      \
     -e SWOOLE_EXT_ORM=enabled        \
     -e SWOOLE_EXT_POSTGRESQL=enabled \
     -e SWOOLE_EXT_SERIALIZE=enabled  \
-    -t phpswoole/swoole:${image_tag}    \
-    bash -c "composer install && ./bin/generator.php"
+    -t phpswoole/swoole:${image_tag} \
+    bash -c "composer install && SWOOLE_SRC_DIR=/swoole-src ./bin/generator.php"
 git add ./output

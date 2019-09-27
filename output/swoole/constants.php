@@ -1,12 +1,12 @@
 <?php
 
-define('SWOOLE_VERSION', '4.4.7');
-define('SWOOLE_VERSION_ID', 40407);
+define('SWOOLE_VERSION', '4.4.7-alpha');
+define('SWOOLE_VERSION_ID', 40408);
 define('SWOOLE_MAJOR_VERSION', 4);
 define('SWOOLE_MINOR_VERSION', 4);
-define('SWOOLE_RELEASE_VERSION', 7);
-define('SWOOLE_EXTRA_VERSION', '');
-define('SWOOLE_DEBUG', '');
+define('SWOOLE_RELEASE_VERSION', 8);
+define('SWOOLE_EXTRA_VERSION', 'alpha');
+define('SWOOLE_DEBUG', '1');
 define('SWOOLE_BASE', 1);
 define('SWOOLE_PROCESS', 2);
 define('SWOOLE_IPC_UNSOCK', 1);

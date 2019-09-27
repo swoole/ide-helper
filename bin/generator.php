@@ -9,6 +9,7 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 use Swoole\IDEHelper\AbstractStubGenerator;
 use Swoole\IDEHelper\StubGenerators\Swoole;
 use Swoole\IDEHelper\StubGenerators\SwooleAsync;
+use Swoole\IDEHelper\StubGenerators\SwooleLib;
 use Swoole\IDEHelper\StubGenerators\SwooleOrm;
 use Swoole\IDEHelper\StubGenerators\SwoolePostgresql;
 use Swoole\IDEHelper\StubGenerators\SwooleSerialize;
@@ -16,6 +17,7 @@ use Swoole\IDEHelper\StubGenerators\SwooleSerialize;
 /** @var AbstractStubGenerator[] $generators */
 $generators = [
     new Swoole(),
+    new SwooleLib(),
     new SwooleAsync(),
     new SwooleOrm(),
     new SwoolePostgresql(),
