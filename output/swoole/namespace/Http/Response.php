@@ -148,6 +148,13 @@ class Response
     {
     }
 
+    /**
+     * @return mixed
+     */
+    public function close()
+    {
+    }
+
     public function __destruct()
     {
     }

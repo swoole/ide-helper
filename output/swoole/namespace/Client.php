@@ -33,21 +33,7 @@ class Client
 
     public $setting = null;
 
-    private $onConnect = null;
-
-    private $onError = null;
-
-    private $onReceive = null;
-
-    private $onClose = null;
-
-    private $onBufferFull = null;
-
-    private $onBufferEmpty = null;
-
-    private $onSSLReady = null;
-
-    public function __construct($type, $async = null)
+    public function __construct($type, $async = null, $id = null)
     {
     }
 
@@ -86,13 +72,6 @@ class Client
     /**
      * @return mixed
      */
-    public function pipe($dst_socket)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
     public function sendfile($filename, $offset = null, $length = null)
     {
     }
@@ -107,34 +86,6 @@ class Client
     /**
      * @return mixed
      */
-    public function sleep()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function wakeup()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function pause()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function resume()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
     public function shutdown($how)
     {
     }
@@ -142,7 +93,7 @@ class Client
     /**
      * @return mixed
      */
-    public function enableSSL(callable $callback = null)
+    public function enableSSL()
     {
     }
 
@@ -185,13 +136,6 @@ class Client
      * @return mixed
      */
     public function close($force = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function on($event_name, callable $callback)
     {
     }
 
