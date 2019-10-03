@@ -13,6 +13,7 @@ use Swoole\IDEHelper\StubGenerators\SwooleLib;
 use Swoole\IDEHelper\StubGenerators\SwooleOrm;
 use Swoole\IDEHelper\StubGenerators\SwoolePostgresql;
 use Swoole\IDEHelper\StubGenerators\SwooleSerialize;
+use Swoole\IDEHelper\StubGenerators\SwooleZookeeper;
 
 /** @var AbstractStubGenerator[] $generators */
 $generators = [
@@ -22,6 +23,7 @@ $generators = [
     new SwooleOrm(),
     new SwoolePostgresql(),
     new SwooleSerialize(),
+    new SwooleZookeeper(),
 ];
 foreach ($generators as $generator) {
     $generator->export();

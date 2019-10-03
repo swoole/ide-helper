@@ -14,4 +14,5 @@ class Constant
     const EXT_SWOOLE_ORM        = 'swoole_orm';
     const EXT_SWOOLE_POSTGRESQL = 'swoole_postgresql';
     const EXT_SWOOLE_SERIALIZE  = 'swoole_serialize';
+    const EXT_SWOOLE_ZOOKEEPER  = 'swoole_zookeeper';
 }

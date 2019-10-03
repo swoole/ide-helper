@@ -72,7 +72,7 @@ class SwooleLib extends AbstractStubGenerator
         if (empty($this->libDir)) {
             throw new Exception("Swoole library directory is not specified.");
         } elseif (!is_dir($this->libDir)) {
-            throw new Exception("Swoole library directory specified is invalid.");
+            throw new Exception("Swoole library directory \"{$this->libDir}\" is invalid.");
         }
 
         return $this;
