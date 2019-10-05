@@ -36,6 +36,7 @@ docker run --rm                      \
     -e SWOOLE_EXT_ORM=enabled        \
     -e SWOOLE_EXT_POSTGRESQL=enabled \
     -e SWOOLE_EXT_SERIALIZE=enabled  \
+    -e SWOOLE_EXT_ZOOKEEPER=enabled  \
     -t phpswoole/swoole:${image_tag} \
     bash -c "composer install && SWOOLE_SRC_DIR=/usr/src/swoole ./bin/generator.php"
 git add ./output
