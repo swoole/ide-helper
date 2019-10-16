@@ -20,5 +20,12 @@ class Task
     {
     }
 
+    /**
+     * @return mixed
+     */
+    public static function pack($data)
+    {
+    }
+
 
 }

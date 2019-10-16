@@ -66,7 +66,7 @@ class Process
     /**
      * @return mixed
      */
-    public static function daemon($nochdir = null, $noclose = null)
+    public static function daemon($nochdir = null, $noclose = null, $pipes = null)
     {
     }
 
