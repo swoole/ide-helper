@@ -19,5 +19,12 @@ class Runtime
     {
     }
 
+    /**
+     * @return mixed
+     */
+    public static function getHookFlags()
+    {
+    }
+
 
 }

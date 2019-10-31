@@ -20,6 +20,7 @@ class Constant
     const EVENT_WORKER_EXIT = 'workerExit';
     const EVENT_WORKER_ERROR = 'workerError';
     const EVENT_WORKER_STOP = 'workerStop';
+    const EVENT_PIPE_MESSAGE = 'pipeMessage';
     const EVENT_MANAGER_START = 'managerStart';
     const EVENT_MANAGER_STOP = 'managerStop';
     const EVENT_ERROR = 'error';
@@ -28,6 +29,7 @@ class Constant
     const OPTION_ENABLE_SIGNALFD = 'enable_signalfd';
     const OPTION_DNS_CACHE_REFRESH_TIME = 'dns_cache_refresh_time';
     const OPTION_SOCKET_BUFFER_SIZE = 'socket_buffer_size';
+    const OPTION_SOCKET_SEND_TIMEOUT = 'socket_send_timeout';
     const OPTION_LOG_LEVEL = 'log_level';
     const OPTION_THREAD_NUM = 'thread_num';
     const OPTION_MIN_THREAD_NUM = 'min_thread_num';
