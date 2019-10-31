@@ -24,6 +24,18 @@ composer require --dev swoole/ide-helper:@dev
 composer require --dev swoole/ide-helper:~4.4.7
 ```
 
+## Alternatives
+
+The stubs are created by reverse-engineering the Swoole extensions directly; thus there is no documentation included,
+and type hinting is missing in many places. The Swoole team has tried its best to keep the stubs up to date, and we do
+want to add inline documentation and type hinting in the future; however, due to limited resources we don't know when it
+will be ready.
+ 
+Here are some alternatives you can consider:
+
+* [eaglewu/swoole-ide-helper](https://github.com/wudi/swoole-ide-helper)
+* [swoft/swoole-ide-helper](https://github.com/swoft-cloud/swoole-ide-helper)
+
 ## Generate IDE Help Files
 
 Have Docker running first, then use script _./bin/generator.sh_ to generate IDE help files and put them under folder
