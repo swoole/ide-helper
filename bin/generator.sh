@@ -19,7 +19,7 @@ if [ -z "${1}" ] ; then
     echo INFO: Generating stubs with latest code from the master branch of Swoole.
     image_tag=latest
 else
-    if [[ "${1}" =~ ^[1-9]\d*\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-\w+)?$ ]] ; then
+    if [[ "${1}" =~ ^[1-9][0-9]*\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[A-Za-z0-9_]+)?$ ]] ; then
         echo INFO: Generating stubs for Swoole ${1}.
         image_tag=${1}-php7.3
     else
