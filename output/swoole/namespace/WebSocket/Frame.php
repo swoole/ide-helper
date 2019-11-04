@@ -11,7 +11,9 @@ class Frame
 
     public $opcode = 1;
 
-    public $finish = true;
+    public $flags = 1;
+
+    public $finish = null;
 
     /**
      * @return mixed
