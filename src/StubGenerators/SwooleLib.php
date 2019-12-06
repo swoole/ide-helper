@@ -12,6 +12,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @package Swoole\IDEHelper\StubGenerators
  * @see https://github.com/swoole/swoole-src/tree/master/library
+ * @deprecated Swoole Library is in a separate package since Swoole 4.4.13.
  */
 class SwooleLib extends AbstractStubGenerator
 {

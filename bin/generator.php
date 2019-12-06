@@ -18,7 +18,7 @@ use Swoole\IDEHelper\StubGenerators\SwooleZookeeper;
 /** @var AbstractStubGenerator[] $generators */
 $generators = [
     new Swoole(),
-    new SwooleLib(),
+    // new SwooleLib(),
     new SwooleAsync(),
     new SwooleOrm(),
     new SwoolePostgresql(),
