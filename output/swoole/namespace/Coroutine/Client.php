@@ -21,7 +21,7 @@ class Client
 
     private $socket = null;
 
-    public $type = 0;
+    public $type = 1;
 
     public $setting = null;
 

@@ -192,7 +192,7 @@ class Client
     /**
      * @return mixed
      */
-    public function push($data, $opcode = null, $finish = null)
+    public function push($data, $opcode = null, $flags = null)
     {
     }
 

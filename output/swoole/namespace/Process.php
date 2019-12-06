@@ -17,8 +17,6 @@ class Process
 
     public $pipe = null;
 
-    public $callback = null;
-
     public $msgQueueId = null;
 
     public $msgQueueKey = null;
@@ -26,6 +24,8 @@ class Process
     public $pid = null;
 
     public $id = null;
+
+    private $callback = null;
 
     public function __construct(callable $callback, $redirect_stdin_and_stdout = null, $pipe_type = null, $enable_coroutine = null)
     {

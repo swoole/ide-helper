@@ -1,14 +1,16 @@
 <?php
 
-define('SWOOLE_VERSION', '4.4.12');
-define('SWOOLE_VERSION_ID', 40412);
+define('SWOOLE_VERSION', '4.4.13RC1');
+define('SWOOLE_VERSION_ID', 40413);
 define('SWOOLE_MAJOR_VERSION', 4);
 define('SWOOLE_MINOR_VERSION', 4);
-define('SWOOLE_RELEASE_VERSION', 12);
-define('SWOOLE_EXTRA_VERSION', '');
+define('SWOOLE_RELEASE_VERSION', 13);
+define('SWOOLE_EXTRA_VERSION', 'RC1');
 define('SWOOLE_DEBUG', '1');
+define('SWOOLE_HAVE_COMPRESSION', '1');
 define('SWOOLE_HAVE_ZLIB', '1');
 define('SWOOLE_USE_HTTP2', '1');
+define('SWOOLE_USE_SHORTNAME', '1');
 define('SWOOLE_BASE', 1);
 define('SWOOLE_PROCESS', 2);
 define('SWOOLE_IPC_UNSOCK', 1);

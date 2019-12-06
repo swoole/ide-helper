@@ -137,7 +137,7 @@ class Response
     /**
      * @return mixed
      */
-    public function push()
+    public function push($data, $opcode = null, $flags = null)
     {
     }
 

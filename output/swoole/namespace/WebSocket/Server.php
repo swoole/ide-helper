@@ -10,7 +10,7 @@ class Server extends \Swoole\Http\Server
     /**
      * @return mixed
      */
-    public function push($fd, $data, $opcode = null, $finish = null)
+    public function push($fd, $data, $opcode = null, $flags = null)
     {
     }
 
@@ -31,7 +31,7 @@ class Server extends \Swoole\Http\Server
     /**
      * @return mixed
      */
-    public static function pack($data, $opcode = null, $finish = null, $mask = null)
+    public static function pack($data, $opcode = null, $flags = null)
     {
     }
 

@@ -107,7 +107,7 @@ class zookeeper
     /**
      * @return mixed
      */
-    public function waitEvent()
+    public function wait()
     {
     }
 
