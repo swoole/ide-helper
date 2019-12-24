@@ -2,6 +2,7 @@
 
 namespace Swoole\IDEHelper;
 
+use GuzzleHttp\Client;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionExtension;
@@ -9,6 +10,7 @@ use ReflectionParameter;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 use Swoole\IDEHelper\Rules\NamespaceRule;
+use Symfony\Component\Filesystem\Filesystem;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\DocBlock\Tag\ReturnTag;
 use Zend\Code\Generator\DocBlockGenerator;
@@ -24,6 +26,8 @@ abstract class AbstractStubGenerator
     const C_METHOD   = 1;
     const C_PROPERTY = 2;
     const C_CONSTANT = 3;
+
+    const DEFAULT_VERSION = "master";
 
     /**
      * @var string
@@ -49,6 +53,11 @@ abstract class AbstractStubGenerator
      * @var ReflectionExtension
      */
     protected $rf_ext;
+
+    /**
+     * @var string
+     */
+    protected $rf_version;
 
     const ALIAS_SHORT_NAME = 1; // Short names of coroutine classes.
     const ALIAS_SNAKE_CASE = 2; // Class names in snake_case. e.g., swoole_timer.
@@ -322,6 +331,66 @@ abstract class AbstractStubGenerator
     {
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @param string $version
+     * @param string $targetDir
+     * @return $this
+     * @throws Exception
+     */
+    protected function download(string $name, string $version = self::DEFAULT_VERSION, string $targetDir = ""): self
+    {
+        $version   = $version ?: self::DEFAULT_VERSION;
+        $targetDir = $targetDir ?: $name;
+
+        if (preg_match("/^v[0-9]+\.[0-9]+\.[0-9]+(\-[A-Za-z0-9]+)?$/", $version)) {
+            $downloadUrl = "https://github.com/swoole/${name}/archive/${version}.zip";
+            $version     = substr($version, 1);
+        } elseif (preg_match("/^[0-9]+\.[0-9]+\.[0-9]+(\-[A-Za-z0-9]+)?$/", $version)) {
+            $downloadUrl = "https://github.com/swoole/${name}/archive/v${version}.zip";
+        } else {
+            $downloadUrl = "https://github.com/swoole/${name}/archive/${version}.zip";
+        }
+        $unzippedDir = "${name}-${version}";
+
+        if (file_exists("temp.zip")) {
+            unlink("temp.zip");
+        }
+        $this->deleteDir($unzippedDir)->deleteDir($targetDir);
+
+        (new Client())->get($downloadUrl, ["sink" => "temp.zip"]);
+
+        shell_exec("unzip temp.zip");
+        if (!is_dir($unzippedDir)) {
+            throw new Exception(
+                sprintf(
+                    "Top directory in the zip file downloaded from URL '%s' is not '%s'.",
+                    $downloadUrl,
+                    $unzippedDir
+                )
+            );
+        }
+        rename($unzippedDir, $targetDir);
+        unlink("temp.zip");
+
+        return $this;
+    }
+
+    /**
+     * @param string $dir
+     * @param bool $recreate
+     * @throws Exception
+     */
+    protected function deleteDir(string $dir, bool $recreate = false): self
+    {
+        (new Filesystem())->remove($dir);
+        if ($recreate) {
+            $this->mkdir($dir);
         }
 
         return $this;

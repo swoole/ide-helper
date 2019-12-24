@@ -12,15 +12,20 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @package Swoole\IDEHelper\StubGenerators
  * @see https://github.com/swoole/swoole-src/tree/master/library
- * @deprecated Swoole Library is in a separate package since Swoole 4.4.13.
+ * @see https://github.com/swoole/swoole-src/blob/v4.4.13/php_swoole_library.h#L5
  */
 class SwooleLib extends AbstractStubGenerator
 {
     const EXTRA_FILES = [
-        "ext",
-        "std",
+        "examples",
+        "src/ext",
+        "src/std",
+        "src/constants.php",
+        "src/functions.php",
+        ".gitignore",
+        "LICENSE",
         "README.md",
-        "config.inc",
+        "composer.json",
     ];
 
     /**
@@ -38,7 +43,7 @@ class SwooleLib extends AbstractStubGenerator
     {
         parent::__construct();
 
-        $this->extension = "swoole_lib";
+        $this->extension = "swoole_library";
         $this->dirOutput = dirname($this->dirOutput) . DIRECTORY_SEPARATOR . $this->extension;
     }
 
@@ -47,10 +52,9 @@ class SwooleLib extends AbstractStubGenerator
      */
     public function export(): void
     {
-        $this->mkdir($this->dirOutput);
+        $this->download("library", $this->rf_version, $this->dirOutput);
 
         $fileSystem = new Filesystem();
-        $fileSystem->mirror($this->libDir, $this->dirOutput);
         foreach (self::EXTRA_FILES as $file) {
             $fileSystem->remove($this->dirOutput . DIRECTORY_SEPARATOR . $file);
         }
@@ -62,19 +66,8 @@ class SwooleLib extends AbstractStubGenerator
      */
     protected function init(): AbstractStubGenerator
     {
-        $this->extension = Constant::EXT_SWOOLE;
-
-        if (!empty($_SERVER["SWOOLE_LIB_DIR"])) {
-            $this->libDir = $_SERVER["SWOOLE_LIB_DIR"];
-        } elseif (!empty($_SERVER["SWOOLE_SRC_DIR"])) {
-            $this->libDir = $_SERVER["SWOOLE_SRC_DIR"] . DIRECTORY_SEPARATOR . "library";
-        }
-
-        if (empty($this->libDir)) {
-            throw new Exception("Swoole library directory is not specified.");
-        } elseif (!is_dir($this->libDir)) {
-            throw new Exception("Swoole library directory \"{$this->libDir}\" is invalid.");
-        }
+        $this->extension  = Constant::EXT_SWOOLE; // Set to a dummy value temporarily.
+        $this->rf_version = $_SERVER["SWOOLE_LIB_VERSION"] ?? self::DEFAULT_VERSION;
 
         return $this;
     }

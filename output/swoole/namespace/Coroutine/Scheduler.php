@@ -5,8 +5,6 @@ namespace Swoole\Coroutine;
 class Scheduler
 {
 
-    private $_list = null;
-
     /**
      * @return mixed
      */
