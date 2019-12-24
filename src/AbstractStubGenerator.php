@@ -23,11 +23,11 @@ use Zend\Code\Reflection\ClassReflection;
  */
 abstract class AbstractStubGenerator
 {
-    const C_METHOD   = 1;
-    const C_PROPERTY = 2;
-    const C_CONSTANT = 3;
+    protected const C_METHOD   = 1;
+    protected const C_PROPERTY = 2;
+    protected const C_CONSTANT = 3;
 
-    const DEFAULT_VERSION = "master";
+    protected const DEFAULT_VERSION = "master";
 
     /**
      * @var string
@@ -59,8 +59,8 @@ abstract class AbstractStubGenerator
      */
     protected $rf_version;
 
-    const ALIAS_SHORT_NAME = 1; // Short names of coroutine classes.
-    const ALIAS_SNAKE_CASE = 2; // Class names in snake_case. e.g., swoole_timer.
+    protected const ALIAS_SHORT_NAME = 1; // Short names of coroutine classes.
+    protected const ALIAS_SNAKE_CASE = 2; // Class names in snake_case. e.g., swoole_timer.
 
     protected $aliases = [
         self::ALIAS_SHORT_NAME => [],
@@ -70,7 +70,7 @@ abstract class AbstractStubGenerator
     /**
      * Methods that don't need to have return type specified.
      */
-    const IGNORED_METHODS = [
+    protected const IGNORED_METHODS = [
         '__construct' => null,
         '__destruct'  => null,
     ];

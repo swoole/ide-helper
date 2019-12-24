@@ -16,7 +16,7 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class SwooleLib extends AbstractStubGenerator
 {
-    const EXTRA_FILES = [
+    private const EXTRA_FILES = [
         "examples",
         "src/ext",
         "src/std",

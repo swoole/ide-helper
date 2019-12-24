@@ -9,10 +9,10 @@ namespace Swoole\IDEHelper;
  */
 class Constant
 {
-    const EXT_SWOOLE            = 'swoole';
-    const EXT_SWOOLE_ASYNC      = 'swoole_async';
-    const EXT_SWOOLE_ORM        = 'swoole_orm';
-    const EXT_SWOOLE_POSTGRESQL = 'swoole_postgresql';
-    const EXT_SWOOLE_SERIALIZE  = 'swoole_serialize';
-    const EXT_SWOOLE_ZOOKEEPER  = 'swoole_zookeeper';
+    public const EXT_SWOOLE            = 'swoole';
+    public const EXT_SWOOLE_ASYNC      = 'swoole_async';
+    public const EXT_SWOOLE_ORM        = 'swoole_orm';
+    public const EXT_SWOOLE_POSTGRESQL = 'swoole_postgresql';
+    public const EXT_SWOOLE_SERIALIZE  = 'swoole_serialize';
+    public const EXT_SWOOLE_ZOOKEEPER  = 'swoole_zookeeper';
 }

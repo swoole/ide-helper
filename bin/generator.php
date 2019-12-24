@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * To generate IDE help files of Swoole.
  */
