@@ -11,6 +11,10 @@ class Table implements \Iterator, \Traversable, \ArrayAccess, \Countable
 
     const TYPE_FLOAT = 6;
 
+    public $size;
+
+    public $memorySize;
+
     public function __construct($table_size, $conflict_proportion = null)
     {
     }
