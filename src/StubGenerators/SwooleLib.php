@@ -29,11 +29,6 @@ class SwooleLib extends AbstractStubGenerator
     ];
 
     /**
-     * @var string
-     */
-    protected $libDir;
-
-    /**
      * AbstractStubGenerator constructor.
      *
      * @throws Exception
