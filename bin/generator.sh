@@ -7,8 +7,8 @@
 #     ./bin/generator.sh master
 #     ./bin/generator.sh a236ce004518e166b483d8d72cf5cc9ac2282164
 #
-# The only parameter accepted is to specify which version of Swoole libary to be integrated in. By default it will have
-# latest Swoole libary included (from the master branch).
+# The only parameter accepted is to specify which version of Swoole library to be integrated in. By default it will have
+# latest Swoole library included (from the master branch).
 #
 
 set -e

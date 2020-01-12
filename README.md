@@ -49,6 +49,10 @@ Have Docker running first, then use script _./bin/generator.sh_ to generate IDE 
 `output/` with commands like following:
 
 ```bash
-./bin/generator.sh       # To generate stubs with latest code from the master branch of Swoole.
-./bin/generator.sh 4.4.7 # To generate stubs for a specific version of Swoole.
+./bin/generator.sh
+./bin/generator.sh master
+./bin/generator.sh a236ce004518e166b483d8d72cf5cc9ac2282164
 ```
+
+The only parameter accepted is to specify which version of [Swoole library](https://github.com/swoole/library) to be
+integrated in. By default it will have latest Swoole library included (from the master branch).
