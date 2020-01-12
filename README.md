@@ -24,13 +24,6 @@ composer require --dev swoole/ide-helper:@dev
 composer require --dev swoole/ide-helper:~4.4.7
 ```
 
-[Swoole Library](https://github.com/swoole/library) is not included in this repository. To add Swoole Library, please
-run Composer commands like:
-
-```bash
-composer require swoole/library:@dev
-```
-
 ## Alternatives
 
 The stubs are created by reverse-engineering the Swoole extensions directly; thus there is no documentation included,
