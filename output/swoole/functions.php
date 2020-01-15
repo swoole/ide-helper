@@ -42,19 +42,6 @@ function swoole_coroutine_create($func, $params = null){}
 function swoole_coroutine_defer($callback){}
 
 /**
- * @param $func[required]
- * @param $params[optional]
- * @return mixed
- */
-function go($func, $params = null){}
-
-/**
- * @param $callback[required]
- * @return mixed
- */
-function defer($callback){}
-
-/**
  * @param $read_array[required]
  * @param $write_array[required]
  * @param $error_array[required]
@@ -122,6 +109,18 @@ function swoole_clear_dns_cache(){}
  * @return mixed
  */
 function swoole_internal_call_user_shutdown_begin(){}
+
+/**
+ * @param $func[required]
+ * @return mixed
+ */
+function go($func){}
+
+/**
+ * @param $callback[required]
+ * @return mixed
+ */
+function defer($callback){}
 
 /**
  * @param $fd[required]
