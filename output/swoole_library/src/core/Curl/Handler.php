@@ -1,5 +1,5 @@
 <?php
-/** @noinspection PhpComposerExtensionStubsInspection, PhpDuplicateSwitchCaseBodyInspection */
+/** @noinspection PhpComposerExtensionStubsInspection, PhpDuplicateSwitchCaseBodyInspection, PhpInconsistentReturnPointsInspection */
 
 namespace Swoole\Curl;
 
@@ -7,11 +7,10 @@ use ReflectionClass;
 use Swoole;
 use Swoole\Coroutine\Http\Client;
 use CURLFile;
-use Iterator;
 use Swoole\Curl\Exception as CurlException;
 use Swoole\Http\Status;
 
-class Handler
+final class Handler
 {
     /**
      * @var Client
@@ -57,15 +56,15 @@ class Handler
     private $infile;
     private $infileSize = PHP_INT_MAX;
     private $outputStream;
-    private $proxy_type;
+    private $proxyType;
     private $proxy;
-    private $proxy_port = 1080;
-    private $proxy_username;
-    private $proxy_password;
+    private $proxyPort = 1080;
+    private $proxyUsername;
+    private $proxyPassword;
     private $clientOptions = [];
     private $followLocation = false;
     private $autoReferer = false;
-    private $maxRedirs;
+    private $maxRedirects;
     private $withHeader = false;
     private $nobody = false;
 
@@ -78,14 +77,16 @@ class Handler
     /** @var callable */
     private $progressFunction;
 
-    public $returnTransfer = false;
-    public $method = 'GET';
-    public $headers = [];
+    private $returnTransfer = false;
+    private $method = '';
+    private $headers = [];
 
-    public $transfer;
+    private $transfer = null;
 
-    public $errCode = 0;
-    public $errMsg = '';
+    private $errCode = 0;
+    private $errMsg = '';
+
+    private $closed = false;
 
     public function __construct(string $url = '')
     {
@@ -100,6 +101,22 @@ class Handler
             $urlInfo = $this->urlInfo;
         }
         $this->client = new Client($urlInfo['host'], $urlInfo['port'], $urlInfo['scheme'] === 'https');
+    }
+
+    private function getUrl(): string
+    {
+        if (empty($this->urlInfo['path'])) {
+            $url = '/';
+        } else {
+            $url = $this->urlInfo['path'];
+        }
+        if (!empty($this->urlInfo['query'])) {
+            $url .= '?' . $this->urlInfo['query'];
+        }
+        if (!empty($this->urlInfo['fragment'])) {
+            $url .= '#' . $this->urlInfo['fragment'];
+        }
+        return $url;
     }
 
     private function setUrl(string $url, bool $setInfo = true): bool
@@ -172,7 +189,254 @@ class Handler
         }
     }
 
-    public function execute()
+    private function setError($code, $msg = ''): void
+    {
+        $this->errCode = $code;
+        $this->errMsg = $msg ? $msg : curl_strerror($code);
+    }
+
+    /**
+     * @param int $opt
+     * @param mixed $value
+     * @return bool
+     * @throws Swoole\Curl\Exception
+     */
+    private function setOption(int $opt, $value): bool
+    {
+        switch ($opt) {
+            // case CURLOPT_STDERR:
+            // case CURLOPT_WRITEHEADER:
+            case CURLOPT_FILE:
+            case CURLOPT_INFILE:
+                if (!is_resource($value)) {
+                    trigger_error(E_USER_WARNING, 'swoole_curl_setopt(): supplied argument is not a valid File-Handle resource');
+                    return false;
+                }
+                break;
+        }
+
+        switch ($opt) {
+            /**
+             * Basic
+             */
+            case CURLOPT_URL:
+                return $this->setUrl($value);
+            case CURLOPT_PORT:
+                $this->setPort($value);
+                break;
+            case CURLOPT_RETURNTRANSFER:
+                $this->returnTransfer = $value;
+                $this->transfer = '';
+                break;
+            case CURLOPT_ENCODING:
+                if (empty($value)) {
+                    if (defined('SWOOLE_HAVE_ZLIB')) {
+                        $value = 'gzip, deflate';
+                    }
+                    if (defined('SWOOLE_HAVE_BROTLI')) {
+                        if (!empty($value)) {
+                            $value = 'br, ' . $value;
+                        } else {
+                            $value = 'br';
+                        }
+                    }
+                    if (empty($value)) {
+                        break;
+                    }
+                }
+                $this->headers['Accept-Encoding'] = $value;
+                break;
+            case CURLOPT_PROXYTYPE:
+                if ($value !== CURLPROXY_HTTP and $value !== CURLPROXY_SOCKS5) {
+                    throw new Swoole\Curl\Exception(
+                        'swoole_curl_setopt(): Only support following CURLOPT_PROXYTYPE values: CURLPROXY_HTTP, CURLPROXY_SOCKS5'
+                    );
+                }
+                $this->proxyType = $value;
+                break;
+            case CURLOPT_PROXY:
+                $this->proxy = $value;
+                break;
+            case CURLOPT_PROXYPORT:
+                $this->proxyPort = $value;
+                break;
+            case CURLOPT_PROXYUSERNAME:
+                $this->proxyUsername = $value;
+                break;
+            case CURLOPT_PROXYPASSWORD:
+                $this->proxyPassword = $value;
+                break;
+            case CURLOPT_PROXYUSERPWD:
+                $usernamePassword = explode(':', $value);
+                $this->proxyUsername = urldecode($usernamePassword[0]);
+                $this->proxyPassword = urldecode($usernamePassword[1] ?? null);
+                break;
+            case CURLOPT_PROXYAUTH:
+                /* ignored temporarily */
+                break;
+            case CURLOPT_NOBODY:
+                $this->nobody = boolval($value);
+                $this->method = 'HEAD';
+                break;
+            case CURLOPT_IPRESOLVE:
+                if ($value !== CURL_IPRESOLVE_WHATEVER and $value !== CURL_IPRESOLVE_V4) {
+                    throw new Swoole\Curl\Exception(
+                        'swoole_curl_setopt(): Only support following CURLOPT_IPRESOLVE values: CURL_IPRESOLVE_WHATEVER, CURL_IPRESOLVE_V4'
+                    );
+                }
+                break;
+            /**
+             * Ignore options
+             */
+            case CURLOPT_VERBOSE:
+                // trigger_error(E_USER_WARNING, 'swoole_curl_setopt(): CURLOPT_VERBOSE is not supported');
+            case CURLOPT_SSLVERSION:
+            case CURLOPT_NOSIGNAL:
+            case CURLOPT_FRESH_CONNECT:
+                /**
+                 * From PHP 5.1.3, this option has no effect: the raw output will always be returned when CURLOPT_RETURNTRANSFER is used.
+                 */
+            case CURLOPT_BINARYTRANSFER: /* TODO */
+            case CURLOPT_DNS_USE_GLOBAL_CACHE:
+            case CURLOPT_DNS_CACHE_TIMEOUT:
+            case CURLOPT_STDERR:
+            case CURLOPT_WRITEHEADER:
+            case CURLOPT_BUFFERSIZE:
+                break;
+            /**
+             * SSL
+             */
+            case CURLOPT_SSL_VERIFYHOST:
+                break;
+            case CURLOPT_SSL_VERIFYPEER:
+                $this->clientOptions['ssl_verify_peer'] = $value;
+                break;
+            /**
+             * Http POST
+             */
+            case CURLOPT_POST:
+                $this->method = 'POST';
+                break;
+            case CURLOPT_POSTFIELDS:
+                $this->postData = $value;
+                if (!$this->method) {
+                    $this->method = 'POST';
+                }
+                break;
+            /**
+             * Upload
+             */
+            case CURLOPT_SAFE_UPLOAD:
+                if (!$value) {
+                    trigger_error('swoole_curl_setopt(): Disabling safe uploads is no longer supported', E_USER_WARNING);
+                    return false;
+                }
+                break;
+            /**
+             * Http Header
+             */
+            case CURLOPT_HTTPHEADER:
+                if (!is_array($value) and !is_iterable($value)) {
+                    trigger_error('swoole_curl_setopt(): You must pass either an object or an array with the CURLOPT_HTTPHEADER argument', E_USER_WARNING);
+                    return false;
+                }
+                foreach ($value as $header) {
+                    $header = explode(':', $header, 2);
+                    $headerName = $header[0];
+                    $headerValue = trim($header[1] ?? '');
+                    $this->headers[$headerName] = $headerValue;
+                }
+                break;
+            case CURLOPT_REFERER:
+                $this->headers['Referer'] = $value;
+                break;
+            case CURLINFO_HEADER_OUT:
+                $this->withHeaderOut = boolval($value);
+                break;
+            case CURLOPT_FILETIME:
+                $this->withFileTime = boolval($value);
+                break;
+            case CURLOPT_USERAGENT:
+                $this->headers['User-Agent'] = $value;
+                break;
+            case CURLOPT_CUSTOMREQUEST:
+                $this->method = (string)$value;
+                break;
+            case CURLOPT_PROTOCOLS:
+                if ($value > 3) {
+                    throw new CurlException("swoole_curl_setopt(): CURLOPT_PROTOCOLS[{$value}] is not supported");
+                }
+                break;
+            case CURLOPT_HTTP_VERSION:
+                if ($value != CURL_HTTP_VERSION_1_1) {
+                    trigger_error("swoole_curl_setopt(): CURLOPT_HTTP_VERSION[{$value}] is not supported", E_USER_WARNING);
+                    return false;
+                }
+                break;
+            /**
+             * Http Cookie
+             */
+            case CURLOPT_COOKIE:
+                $this->headers['Cookie'] = $value;
+                break;
+            case CURLOPT_CONNECTTIMEOUT:
+                $this->clientOptions['connect_timeout'] = $value;
+                break;
+            case CURLOPT_CONNECTTIMEOUT_MS:
+                $this->clientOptions['connect_timeout'] = $value / 1000;
+                break;
+            case CURLOPT_TIMEOUT:
+                $this->clientOptions['timeout'] = $value;
+                break;
+            case CURLOPT_TIMEOUT_MS:
+                $this->clientOptions['timeout'] = $value / 1000;
+                break;
+            case CURLOPT_FILE:
+                $this->outputStream = $value;
+                break;
+            case CURLOPT_HEADER:
+                $this->withHeader = $value;
+                break;
+            case CURLOPT_HEADERFUNCTION:
+                $this->headerFunction = $value;
+                break;
+            case CURLOPT_READFUNCTION:
+                $this->readFunction = $value;
+                break;
+            case CURLOPT_WRITEFUNCTION:
+                $this->writeFunction = $value;
+                break;
+            case CURLOPT_PROGRESSFUNCTION:
+                $this->progressFunction = $value;
+                break;
+            case CURLOPT_USERPWD:
+                $this->headers['Authorization'] = 'Basic ' . base64_encode($value);
+                break;
+            case CURLOPT_FOLLOWLOCATION:
+                $this->followLocation = $value;
+                break;
+            case CURLOPT_AUTOREFERER:
+                $this->autoReferer = $value;
+                break;
+            case CURLOPT_MAXREDIRS:
+                $this->maxRedirects = $value;
+                break;
+            case CURLOPT_PUT:
+                $this->method = 'PUT';
+                break;
+            case CURLOPT_INFILE:
+                $this->infile = $value;
+                break;
+            case CURLOPT_INFILESIZE:
+                $this->infileSize = $value;
+                break;
+            default:
+                throw new Swoole\Curl\Exception("swoole_curl_setopt(): option[{$opt}] is not supported");
+        }
+        return true;
+    }
+
+    private function execute()
     {
         $this->info['redirect_count'] = $this->info['starttransfer_time'] = 0;
         $this->info['redirect_url'] = '';
@@ -194,7 +458,7 @@ class Handler
              */
             if ($this->proxy) {
                 $proxy = explode(':', $this->proxy);
-                $proxy_port = $proxy[1] ?? $this->proxy_port;
+                $proxyPort = $proxy[1] ?? $this->proxyPort;
                 $proxy = $proxy[0];
                 if (!filter_var($proxy, FILTER_VALIDATE_IP)) {
                     $ip = Swoole\Coroutine::gethostbyname($proxy, AF_INET, $this->clientOptions['connect_timeout'] ?? -1);
@@ -205,25 +469,25 @@ class Handler
                         $this->proxy = $proxy = $ip;
                     }
                 }
-                switch ($this->proxy_type) {
+                switch ($this->proxyType) {
                     case CURLPROXY_HTTP:
-                        $proxy_options = [
+                        $proxyOptions = [
                             'http_proxy_host' => $proxy,
-                            'http_proxy_port' => $proxy_port,
-                            'http_proxy_username' => $this->proxy_username,
-                            'http_proxy_password' => $this->proxy_password
+                            'http_proxy_port' => $proxyPort,
+                            'http_proxy_username' => $this->proxyUsername,
+                            'http_proxy_password' => $this->proxyPassword
                         ];
                         break;
                     case CURLPROXY_SOCKS5:
-                        $proxy_options = [
+                        $proxyOptions = [
                             'socks5_host' => $proxy,
-                            'socks5_port' => $proxy_port,
-                            'socks5_username' => $this->proxy_username,
-                            'socks5_password' => $this->proxy_password
+                            'socks5_port' => $proxyPort,
+                            'socks5_username' => $this->proxyUsername,
+                            'socks5_password' => $this->proxyPassword
                         ];
                         break;
                     default:
-                        throw new CurlException("Unexpected proxy type [{$this->proxy_type}]");
+                        throw new CurlException("Unexpected proxy type [{$this->proxyType}]");
                 }
             }
             /**
@@ -231,12 +495,14 @@ class Handler
              */
             $client->set(
                 $this->clientOptions +
-                ($proxy_options ?? [])
+                ($proxyOptions ?? [])
             );
             /**
              * Method
              */
-            $client->setMethod($this->method);
+            if ($this->method) {
+                $client->setMethod($this->method);
+            }
             /**
              * Infile
              */
@@ -281,6 +547,12 @@ class Handler
              * Http Headers
              */
             $this->headers['Host'] = $this->urlInfo['host'] . (isset($this->urlInfo['port']) ? (':' . $this->urlInfo['port']) : ''); /* TODO: remove it (built-in support) */
+            // remove empty headers (keep same with raw cURL)
+            foreach ($this->headers as $headerName => $headerValue) {
+                if ($headerValue === '') {
+                    unset($this->headers[$headerName]);
+                }
+            }
             $client->setHeaders($this->headers);
             /**
              * Execute
@@ -297,7 +569,7 @@ class Handler
             if ($client->statusCode >= 300 and $client->statusCode < 400 and isset($client->headers['location'])) {
                 $redirectParsedUrl = $this->getRedirectUrl($client->headers['location']);
                 $redirectUrl = static::unparseUrl($redirectParsedUrl);
-                if ($this->followLocation and (null === $this->maxRedirs or $this->info['redirect_count'] < $this->maxRedirs)) {
+                if ($this->followLocation and (null === $this->maxRedirects or $this->info['redirect_count'] < $this->maxRedirects)) {
                     if ($this->info['redirect_count'] === 0) {
                         $this->info['starttransfer_time'] = microtime(true) - $timeBegin;
                         $redirectBeginTime = microtime(true);
@@ -390,284 +662,7 @@ class Handler
         }
     }
 
-    public function close(): void
-    {
-        $this->client = null;
-    }
-
-    private function setError($code, $msg = ''): void
-    {
-        $this->errCode = $code;
-        $this->errMsg = $msg ? $msg : curl_strerror($code);
-    }
-
-    private function getUrl(): string
-    {
-        if (empty($this->urlInfo['path'])) {
-            $url = '/';
-        } else {
-            $url = $this->urlInfo['path'];
-        }
-        if (!empty($this->urlInfo['query'])) {
-            $url .= '?' . $this->urlInfo['query'];
-        }
-        if (!empty($this->urlInfo['fragment'])) {
-            $url .= '#' . $this->urlInfo['fragment'];
-        }
-        return $url;
-    }
-
-    /**
-     * @param int $opt
-     * @param mixed $value
-     * @return bool
-     * @throws Swoole\Curl\Exception
-     */
-    public function setOption(int $opt, $value): bool
-    {
-        switch ($opt) {
-            // case CURLOPT_STDERR:
-            // case CURLOPT_WRITEHEADER:
-            case CURLOPT_FILE:
-            case CURLOPT_INFILE:
-                if (!is_resource($value)) {
-                    trigger_error(E_USER_WARNING, 'swoole_curl_setopt(): supplied argument is not a valid File-Handle resource');
-                    return false;
-                }
-                break;
-        }
-
-        switch ($opt) {
-            /**
-             * Basic
-             */
-            case CURLOPT_URL:
-                return $this->setUrl($value);
-            case CURLOPT_PORT:
-                $this->setPort($value);
-                break;
-            case CURLOPT_RETURNTRANSFER:
-                $this->returnTransfer = $value;
-                $this->transfer = '';
-                break;
-            case CURLOPT_ENCODING:
-                if (empty($value)) {
-                    if (defined('SWOOLE_HAVE_ZLIB')) {
-                        $value = 'gzip, deflate';
-                    }
-                    if (defined('SWOOLE_HAVE_BROTLI')) {
-                        if (!empty($value)) {
-                            $value = 'br, ' . $value;
-                        } else {
-                            $value = 'br';
-                        }
-                    }
-                    if (empty($value)) {
-                        break;
-                    }
-                }
-                $this->headers['Accept-Encoding'] = $value;
-                break;
-            case CURLOPT_PROXYTYPE:
-                if ($value !== CURLPROXY_HTTP and $value !== CURLPROXY_SOCKS5) {
-                    throw new Swoole\Curl\Exception(
-                        'swoole_curl_setopt(): Only support following CURLOPT_PROXYTYPE values: CURLPROXY_HTTP, CURLPROXY_SOCKS5'
-                    );
-                }
-                $this->proxy_type = $value;
-                break;
-            case CURLOPT_PROXY:
-                $this->proxy = $value;
-                break;
-            case CURLOPT_PROXYPORT:
-                $this->proxy_port = $value;
-                break;
-            case CURLOPT_PROXYUSERNAME:
-                $this->proxy_username = $value;
-                break;
-            case CURLOPT_PROXYPASSWORD:
-                $this->proxy_password = $value;
-                break;
-            case CURLOPT_PROXYUSERPWD:
-                $user_pwd = explode(':', $value);
-                $this->proxy_username = urldecode($user_pwd[0]);
-                $this->proxy_password = urldecode($user_pwd[1] ?? null);
-                break;
-            case CURLOPT_PROXYAUTH:
-                /* ignored temporarily */
-                break;
-            case CURLOPT_NOBODY:
-                $this->nobody = boolval($value);
-                $this->method = 'HEAD';
-                break;
-            case CURLOPT_IPRESOLVE:
-                if ($value !== CURL_IPRESOLVE_WHATEVER and $value !== CURL_IPRESOLVE_V4) {
-                    throw new Swoole\Curl\Exception(
-                        'swoole_curl_setopt(): Only support following CURLOPT_IPRESOLVE values: CURL_IPRESOLVE_WHATEVER, CURL_IPRESOLVE_V4'
-                    );
-                }
-                break;
-            /**
-             * Ignore options
-             */
-            case CURLOPT_VERBOSE:
-                // trigger_error(E_USER_WARNING, 'swoole_curl_setopt(): CURLOPT_VERBOSE is not supported');
-            case CURLOPT_SSLVERSION:
-            case CURLOPT_NOSIGNAL:
-            case CURLOPT_FRESH_CONNECT:
-                /**
-                 * From PHP 5.1.3, this option has no effect: the raw output will always be returned when CURLOPT_RETURNTRANSFER is used.
-                 */
-            case CURLOPT_BINARYTRANSFER: /* TODO */
-            case CURLOPT_DNS_USE_GLOBAL_CACHE:
-            case CURLOPT_DNS_CACHE_TIMEOUT:
-            case CURLOPT_STDERR:
-            case CURLOPT_WRITEHEADER:
-            case CURLOPT_BUFFERSIZE:
-                break;
-            /**
-             * SSL
-             */
-            case CURLOPT_SSL_VERIFYHOST:
-                break;
-            case CURLOPT_SSL_VERIFYPEER:
-                $this->clientOptions['ssl_verify_peer'] = $value;
-                break;
-            /**
-             * Http Post
-             */
-            case CURLOPT_POST:
-                $this->method = 'POST';
-                break;
-            case CURLOPT_POSTFIELDS:
-                $this->postData = $value;
-                $this->method = 'POST';
-                break;
-            /**
-             * Upload
-             */
-            case CURLOPT_SAFE_UPLOAD:
-                if (!$value) {
-                    trigger_error('swoole_curl_setopt(): Disabling safe uploads is no longer supported', E_USER_WARNING);
-                    return false;
-                }
-                break;
-            /**
-             * Http Header
-             */
-            case CURLOPT_HTTPHEADER:
-                if (!is_array($value) and !($value instanceof Iterator)) {
-                    trigger_error('swoole_curl_setopt(): You must pass either an object or an array with the CURLOPT_HTTPHEADER argument', E_USER_WARNING);
-                    return false;
-                }
-                foreach ($value as $header) {
-                    list($k, $v) = explode(':', $header);
-                    $v = trim($v);
-                    if ($v) {
-                        $this->headers[$k] = $v;
-                    }
-                }
-                break;
-            case CURLOPT_REFERER:
-                $this->headers['Referer'] = $value;
-                break;
-            case CURLINFO_HEADER_OUT:
-                $this->withHeaderOut = boolval($value);
-                break;
-            case CURLOPT_FILETIME:
-                $this->withFileTime = boolval($value);
-                break;
-            case CURLOPT_USERAGENT:
-                $this->headers['User-Agent'] = $value;
-                break;
-            case CURLOPT_CUSTOMREQUEST:
-                $this->method = (string)$value;
-                break;
-            case CURLOPT_PROTOCOLS:
-                if ($value > 3) {
-                    throw new CurlException("swoole_curl_setopt(): CURLOPT_PROTOCOLS[{$value}] is not supported");
-                }
-                break;
-            case CURLOPT_HTTP_VERSION:
-                if ($value != CURL_HTTP_VERSION_1_1) {
-                    trigger_error("swoole_curl_setopt(): CURLOPT_HTTP_VERSION[{$value}] is not supported", E_USER_WARNING);
-                    return false;
-                }
-                break;
-            /**
-             * Http Cookie
-             */
-            case CURLOPT_COOKIE:
-                $this->headers['Cookie'] = $value;
-                break;
-            case CURLOPT_CONNECTTIMEOUT:
-                $this->clientOptions['connect_timeout'] = $value;
-                break;
-            case CURLOPT_CONNECTTIMEOUT_MS:
-                $this->clientOptions['connect_timeout'] = $value / 1000;
-                break;
-            case CURLOPT_TIMEOUT:
-                $this->clientOptions['timeout'] = $value;
-                break;
-            case CURLOPT_TIMEOUT_MS:
-                $this->clientOptions['timeout'] = $value / 1000;
-                break;
-            case CURLOPT_FILE:
-                $this->outputStream = $value;
-                break;
-            case CURLOPT_HEADER:
-                $this->withHeader = $value;
-                break;
-            case CURLOPT_HEADERFUNCTION:
-                $this->headerFunction = $value;
-                break;
-            case CURLOPT_READFUNCTION:
-                $this->readFunction = $value;
-                break;
-            case CURLOPT_WRITEFUNCTION:
-                $this->writeFunction = $value;
-                break;
-            case CURLOPT_PROGRESSFUNCTION:
-                $this->progressFunction = $value;
-                break;
-            case CURLOPT_USERPWD:
-                $this->headers['Authorization'] = 'Basic ' . base64_encode($value);
-                break;
-            case CURLOPT_FOLLOWLOCATION:
-                $this->followLocation = $value;
-                break;
-            case CURLOPT_AUTOREFERER:
-                $this->autoReferer = $value;
-                break;
-            case CURLOPT_MAXREDIRS:
-                $this->maxRedirs = $value;
-                break;
-            case CURLOPT_PUT:
-                $this->method = 'PUT';
-                break;
-            case CURLOPT_INFILE:
-                $this->infile = $value;
-                break;
-            case CURLOPT_INFILESIZE:
-                $this->infileSize = $value;
-                break;
-            default:
-                throw new Swoole\Curl\Exception("swoole_curl_setopt(): option[{$opt}] is not supported");
-        }
-        return true;
-    }
-
-    public function getInfo(): array
-    {
-        return $this->info;
-    }
-
-    public function reset(): void
-    {
-        foreach ((new ReflectionClass(static::class))->getDefaultProperties() as $name => $value) {
-            $this->$name = $value;
-        }
-    }
+    /* ====== Redirect helper ====== */
 
     private static function unparseUrl(array $parsedUrl): string
     {
@@ -713,5 +708,73 @@ class Handler
             }
         }
         return $redirectUri;
+    }
+
+    /* ====== Public APIs ====== */
+
+    public function isAvailable(): bool
+    {
+        if ($this->closed) {
+            trigger_error('supplied resource is not a valid cURL handle resource', E_USER_WARNING);
+            return false;
+        }
+        return true;
+    }
+
+    public function setOpt(int $opt, $value): bool
+    {
+        return $this->isAvailable() and $this->setOption($opt, $value);
+    }
+
+    public function exec()
+    {
+        if (!$this->isAvailable()) {
+            return false;
+        }
+        return $this->execute();
+    }
+
+    public function getInfo()
+    {
+        return $this->isAvailable() ? $this->info : false;
+    }
+
+    public function errno()
+    {
+        return $this->isAvailable() ? $this->errCode : false;
+    }
+
+    public function error()
+    {
+        return $this->isAvailable() ? $this->errMsg : false;
+    }
+
+    public function reset()
+    {
+        if (!$this->isAvailable()) {
+            return false;
+        }
+        foreach ((new ReflectionClass(static::class))->getDefaultProperties() as $name => $value) {
+            $this->$name = $value;
+        }
+    }
+
+    public function getContent()
+    {
+        if (!$this->isAvailable()) {
+            return false;
+        }
+        return $this->transfer;
+    }
+
+    public function close()
+    {
+        if (!$this->isAvailable()) {
+            return false;
+        }
+        foreach ($this as &$property) {
+            $property = null;
+        }
+        $this->closed = true;
     }
 }
