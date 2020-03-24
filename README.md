@@ -34,7 +34,6 @@ will be ready.
 Here are some alternatives you can consider:
 
 * [eaglewu/swoole-ide-helper](https://github.com/wudi/swoole-ide-helper)
-* [swoft/swoole-ide-helper](https://github.com/swoft-cloud/swoole-ide-helper)
 
 ## Generate IDE Help Files
 
@@ -42,10 +41,12 @@ Have Docker running first, then use script _./bin/generator.sh_ to generate IDE 
 `output/` with commands like following:
 
 ```bash
-./bin/generator.sh
-./bin/generator.sh master
-./bin/generator.sh a236ce004518e166b483d8d72cf5cc9ac2282164
+./bin/generator.sh 4.4.16
+./bin/generator.sh 4.4.16 master
+./bin/generator.sh 4.4.16 4.4.16
+./bin/generator.sh 4.4.16 b5c9cede8c6150feba50d0e28d56de355fa69d16
+#
 ```
 
-The only parameter accepted is to specify which version of [Swoole library](https://github.com/swoole/library) to be
-integrated in. By default it will have latest Swoole library included (from the master branch).
+The first parameter specifies a stable release of Swoole. The second parameter is optional; it is to specify which
+version of [Swoole library](https://github.com/swoole/library) to be integrated with (by default it will have the latest Swoole library included).
