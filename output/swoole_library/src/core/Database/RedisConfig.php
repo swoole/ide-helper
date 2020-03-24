@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
 declare(strict_types=1);
 
 namespace Swoole\Database;
@@ -7,18 +15,25 @@ class RedisConfig
 {
     /** @var string */
     protected $host = '127.0.0.1';
+
     /** @var int */
     protected $port = 6379;
+
     /** @var float */
     protected $timeout = 0.0;
+
     /** @var string */
     protected $reserved = '';
+
     /** @var int */
     protected $retry_interval = 0;
+
     /** @var float */
     protected $read_timeout = 0.0;
+
     /** @var string */
     protected $auth = '';
+
     /** @var int */
     protected $dbIndex = 0;
 

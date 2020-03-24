@@ -1,187 +1,370 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
 declare(strict_types=1);
 
 namespace Swoole;
 
 class Constant
 {
-    const EVENT_RECEIVE = 'receive';
-    const EVENT_CONNECT = 'connect';
-    const EVENT_CLOSE = 'close';
-    const EVENT_PACKET = 'packet';
-    const EVENT_REQUEST = 'request';
-    const EVENT_MESSAGE = 'message';
-    const EVENT_OPEN = 'open';
-    const EVENT_HANDSHAKE = 'handshake';
-    const EVENT_TASK = 'task';
-    const EVENT_FINISH = 'finish';
-    const EVENT_START = 'start';
-    const EVENT_SHUTDOWN = 'shutdown';
-    const EVENT_WORKER_START = 'workerStart';
-    const EVENT_WORKER_EXIT = 'workerExit';
-    const EVENT_WORKER_ERROR = 'workerError';
-    const EVENT_WORKER_STOP = 'workerStop';
-    const EVENT_PIPE_MESSAGE = 'pipeMessage';
-    const EVENT_MANAGER_START = 'managerStart';
-    const EVENT_MANAGER_STOP = 'managerStop';
-    const EVENT_ERROR = 'error';
+    public const EVENT_RECEIVE = 'receive';
+
+    public const EVENT_CONNECT = 'connect';
+
+    public const EVENT_CLOSE = 'close';
+
+    public const EVENT_PACKET = 'packet';
+
+    public const EVENT_REQUEST = 'request';
+
+    public const EVENT_MESSAGE = 'message';
+
+    public const EVENT_OPEN = 'open';
+
+    public const EVENT_HANDSHAKE = 'handshake';
+
+    public const EVENT_TASK = 'task';
+
+    public const EVENT_FINISH = 'finish';
+
+    public const EVENT_START = 'start';
+
+    public const EVENT_SHUTDOWN = 'shutdown';
+
+    public const EVENT_WORKER_START = 'workerStart';
+
+    public const EVENT_WORKER_EXIT = 'workerExit';
+
+    public const EVENT_WORKER_ERROR = 'workerError';
+
+    public const EVENT_WORKER_STOP = 'workerStop';
+
+    public const EVENT_PIPE_MESSAGE = 'pipeMessage';
+
+    public const EVENT_MANAGER_START = 'managerStart';
+
+    public const EVENT_MANAGER_STOP = 'managerStop';
+
+    public const EVENT_ERROR = 'error';
 
     /* {{{ OPTION */
-    const OPTION_ENABLE_SIGNALFD = 'enable_signalfd';
-    const OPTION_DNS_CACHE_REFRESH_TIME = 'dns_cache_refresh_time';
-    const OPTION_SOCKET_BUFFER_SIZE = 'socket_buffer_size';
-    const OPTION_SOCKET_SEND_TIMEOUT = 'socket_send_timeout';
-    const OPTION_LOG_LEVEL = 'log_level';
-    const OPTION_THREAD_NUM = 'thread_num';
-    const OPTION_MIN_THREAD_NUM = 'min_thread_num';
-    const OPTION_MAX_THREAD_NUM = 'max_thread_num';
-    const OPTION_DISPLAY_ERRORS = 'display_errors';
-    const OPTION_SOCKET_DONTWAIT = 'socket_dontwait';
-    const OPTION_DNS_LOOKUP_RANDOM = 'dns_lookup_random';
-    const OPTION_DNS_SERVER = 'dns_server';
-    const OPTION_USE_ASYNC_RESOLVER = 'use_async_resolver';
-    const OPTION_ENABLE_COROUTINE = 'enable_coroutine';
-    const OPTION_ENABLE_REUSE_PORT = 'enable_reuse_port';
-    const OPTION_SSL_METHOD = 'ssl_method';
-    const OPTION_SSL_PROTOCOLS = 'ssl_protocols';
-    const OPTION_SSL_COMPRESS = 'ssl_compress';
-    const OPTION_SSL_CERT_FILE = 'ssl_cert_file';
-    const OPTION_SSL_KEY_FILE = 'ssl_key_file';
-    const OPTION_SSL_PASSPHRASE = 'ssl_passphrase';
-    const OPTION_SSL_HOST_NAME = 'ssl_host_name';
-    const OPTION_SSL_VERIFY_PEER = 'ssl_verify_peer';
-    const OPTION_SSL_ALLOW_SELF_SIGNED = 'ssl_allow_self_signed';
-    const OPTION_SSL_CAFILE = 'ssl_cafile';
-    const OPTION_SSL_CAPATH = 'ssl_capath';
-    const OPTION_SSL_VERIFY_DEPTH = 'ssl_verify_depth';
-    const OPTION_OPEN_EOF_CHECK = 'open_eof_check';
-    const OPTION_OPEN_EOF_SPLIT = 'open_eof_split';
-    const OPTION_PACKAGE_EOF = 'package_eof';
-    const OPTION_OPEN_MQTT_PROTOCOL = 'open_mqtt_protocol';
-    const OPTION_OPEN_LENGTH_CHECK = 'open_length_check';
-    const OPTION_PACKAGE_LENGTH_TYPE = 'package_length_type';
-    const OPTION_PACKAGE_LENGTH_OFFSET = 'package_length_offset';
-    const OPTION_PACKAGE_BODY_OFFSET = 'package_body_offset';
-    const OPTION_PACKAGE_LENGTH_FUNC = 'package_length_func';
-    const OPTION_PACKAGE_MAX_LENGTH = 'package_max_length';
-    const OPTION_BUFFER_HIGH_WATERMARK = 'buffer_high_watermark';
-    const OPTION_BUFFER_LOW_WATERMARK = 'buffer_low_watermark';
-    const OPTION_BIND_PORT = 'bind_port';
-    const OPTION_BIND_ADDRESS = 'bind_address';
-    const OPTION_OPEN_TCP_NODELAY = 'open_tcp_nodelay';
-    const OPTION_SOCKS5_HOST = 'socks5_host';
-    const OPTION_SOCKS5_PORT = 'socks5_port';
-    const OPTION_SOCKS5_USERNAME = 'socks5_username';
-    const OPTION_SOCKS5_PASSWORD = 'socks5_password';
-    const OPTION_HTTP_PROXY_HOST = 'http_proxy_host';
-    const OPTION_HTTP_PROXY_PORT = 'http_proxy_port';
-    const OPTION_HTTP_PROXY_USERNAME = 'http_proxy_username';
-    const OPTION_HTTP_PROXY_USER = 'http_proxy_user';
-    const OPTION_HTTP_PROXY_PASSWORD = 'http_proxy_password';
-    const OPTION_TIMEOUT = 'timeout';
-    const OPTION_CONNECT_TIMEOUT = 'connect_timeout';
-    const OPTION_READ_TIMEOUT = 'read_timeout';
-    const OPTION_WRITE_TIMEOUT = 'write_timeout';
-    const OPTION_SSL_DISABLE_COMPRESSION = 'ssl_disable_compression';
-    const OPTION_MAX_COROUTINE = 'max_coroutine';
-    const OPTION_HOOK_FLAGS = 'hook_flags';
-    const OPTION_C_STACK_SIZE = 'c_stack_size';
-    const OPTION_STACK_SIZE = 'stack_size';
-    const OPTION_SOCKET_CONNECT_TIMEOUT = 'socket_connect_timeout';
-    const OPTION_SOCKET_TIMEOUT = 'socket_timeout';
-    const OPTION_SOCKET_READ_TIMEOUT = 'socket_read_timeout';
-    const OPTION_SOCKET_WRITE_TIMEOUT = 'socket_write_timeout';
-    const OPTION_TRACE_FLAGS = 'trace_flags';
-    const OPTION_DNS_CACHE_EXPIRE = 'dns_cache_expire';
-    const OPTION_DNS_CACHE_CAPACITY = 'dns_cache_capacity';
-    const OPTION_AIO_CORE_WORKER_NUM = 'aio_core_worker_num';
-    const OPTION_AIO_WORKER_NUM = 'aio_worker_num';
-    const OPTION_AIO_MAX_WAIT_TIME = 'aio_max_wait_time';
-    const OPTION_AIO_MAX_IDLE_TIME = 'aio_max_idle_time';
-    const OPTION_RECONNECT = 'reconnect';
-    const OPTION_DEFER = 'defer';
-    const OPTION_KEEP_ALIVE = 'keep_alive';
-    const OPTION_WEBSOCKET_MASK = 'websocket_mask';
-    const OPTION_WEBSOCKET_COMPRESSION = 'websocket_compression';
-    const OPTION_HOST = 'host';
-    const OPTION_PORT = 'port';
-    const OPTION_SSL = 'ssl';
-    const OPTION_USER = 'user';
-    const OPTION_PASSWORD = 'password';
-    const OPTION_DATABASE = 'database';
-    const OPTION_CHARSET = 'charset';
-    const OPTION_STRICT_TYPE = 'strict_type';
-    const OPTION_FETCH_MODE = 'fetch_mode';
-    const OPTION_SERIALIZE = 'serialize';
-    const OPTION_COMPATIBILITY_MODE = 'compatibility_mode';
-    const OPTION_CHROOT = 'chroot';
-    const OPTION_GROUP = 'group';
-    const OPTION_DAEMONIZE = 'daemonize';
-    const OPTION_DEBUG_MODE = 'debug_mode';
-    const OPTION_PID_FILE = 'pid_file';
-    const OPTION_REACTOR_NUM = 'reactor_num';
-    const OPTION_SINGLE_THREAD = 'single_thread';
-    const OPTION_WORKER_NUM = 'worker_num';
-    const OPTION_MAX_WAIT_TIME = 'max_wait_time';
-    const OPTION_MAX_CORO_NUM = 'max_coro_num';
-    const OPTION_SEND_TIMEOUT = 'send_timeout';
-    const OPTION_DISPATCH_MODE = 'dispatch_mode';
-    const OPTION_SEND_YIELD = 'send_yield';
-    const OPTION_DISPATCH_FUNC = 'dispatch_func';
-    const OPTION_LOG_FILE = 'log_file';
-    const OPTION_DISCARD_TIMEOUT_REQUEST = 'discard_timeout_request';
-    const OPTION_ENABLE_UNSAFE_EVENT = 'enable_unsafe_event';
-    const OPTION_ENABLE_DELAY_RECEIVE = 'enable_delay_receive';
-    const OPTION_TASK_USE_OBJECT = 'task_use_object';
-    const OPTION_TASK_ENABLE_COROUTINE = 'task_enable_coroutine';
-    const OPTION_TASK_WORKER_NUM = 'task_worker_num';
-    const OPTION_TASK_IPC_MODE = 'task_ipc_mode';
-    const OPTION_TASK_TMPDIR = 'task_tmpdir';
-    const OPTION_TASK_MAX_REQUEST = 'task_max_request';
-    const OPTION_TASK_MAX_REQUEST_GRACE = 'task_max_request_grace';
-    const OPTION_MAX_CONNECTION = 'max_connection';
-    const OPTION_MAX_CONN = 'max_conn';
-    const OPTION_HEARTBEAT_CHECK_INTERVAL = 'heartbeat_check_interval';
-    const OPTION_HEARTBEAT_IDLE_TIME = 'heartbeat_idle_time';
-    const OPTION_MAX_REQUEST = 'max_request';
-    const OPTION_MAX_REQUEST_GRACE = 'max_request_grace';
-    const OPTION_RELOAD_ASYNC = 'reload_async';
-    const OPTION_OPEN_CPU_AFFINITY = 'open_cpu_affinity';
-    const OPTION_CPU_AFFINITY_IGNORE = 'cpu_affinity_ignore';
-    const OPTION_HTTP_PARSE_COOKIE = 'http_parse_cookie';
-    const OPTION_HTTP_PARSE_POST = 'http_parse_post';
-    const OPTION_HTTP_PARSE_FILES = 'http_parse_files';
-    const OPTION_HTTP_COMPRESSION = 'http_compression';
-    const OPTION_HTTP_GZIP_LEVEL = 'http_gzip_level';
-    const OPTION_HTTP_COMPRESSION_LEVEL = 'http_compression_level';
-    const OPTION_UPLOAD_TMP_DIR = 'upload_tmp_dir';
-    const OPTION_ENABLE_STATIC_HANDLER = 'enable_static_handler';
-    const OPTION_DOCUMENT_ROOT = 'document_root';
-    const OPTION_STATIC_HANDLER_LOCATIONS = 'static_handler_locations';
-    const OPTION_BUFFER_INPUT_SIZE = 'buffer_input_size';
-    const OPTION_BUFFER_OUTPUT_SIZE = 'buffer_output_size';
-    const OPTION_MESSAGE_QUEUE_KEY = 'message_queue_key';
-    const OPTION_BACKLOG = 'backlog';
-    const OPTION_KERNEL_SOCKET_RECV_BUFFER_SIZE = 'kernel_socket_recv_buffer_size';
-    const OPTION_KERNEL_SOCKET_SEND_BUFFER_SIZE = 'kernel_socket_send_buffer_size';
-    const OPTION_TCP_DEFER_ACCEPT = 'tcp_defer_accept';
-    const OPTION_OPEN_TCP_KEEPALIVE = 'open_tcp_keepalive';
-    const OPTION_OPEN_HTTP_PROTOCOL = 'open_http_protocol';
-    const OPTION_OPEN_WEBSOCKET_PROTOCOL = 'open_websocket_protocol';
-    const OPTION_WEBSOCKET_SUBPROTOCOL = 'websocket_subprotocol';
-    const OPTION_OPEN_WEBSOCKET_CLOSE_FRAME = 'open_websocket_close_frame';
-    const OPTION_OPEN_HTTP2_PROTOCOL = 'open_http2_protocol';
-    const OPTION_OPEN_REDIS_PROTOCOL = 'open_redis_protocol';
-    const OPTION_TCP_KEEPIDLE = 'tcp_keepidle';
-    const OPTION_TCP_KEEPINTERVAL = 'tcp_keepinterval';
-    const OPTION_TCP_KEEPCOUNT = 'tcp_keepcount';
-    const OPTION_TCP_FASTOPEN = 'tcp_fastopen';
-    const OPTION_PACKAGE_BODY_START = 'package_body_start';
-    const OPTION_SSL_CLIENT_CERT_FILE = 'ssl_client_cert_file';
-    const OPTION_SSL_PREFER_SERVER_CIPHERS = 'ssl_prefer_server_ciphers';
-    const OPTION_SSL_CIPHERS = 'ssl_ciphers';
-    const OPTION_SSL_ECDH_CURVE = 'ssl_ecdh_curve';
-    const OPTION_SSL_DHPARAM = 'ssl_dhparam';
-    const OPTION_OPEN_SSL = 'open_ssl';
+    public const OPTION_ENABLE_SIGNALFD = 'enable_signalfd';
+
+    public const OPTION_DNS_CACHE_REFRESH_TIME = 'dns_cache_refresh_time';
+
+    public const OPTION_SOCKET_BUFFER_SIZE = 'socket_buffer_size';
+
+    public const OPTION_SOCKET_SEND_TIMEOUT = 'socket_send_timeout';
+
+    public const OPTION_LOG_LEVEL = 'log_level';
+
+    public const OPTION_THREAD_NUM = 'thread_num';
+
+    public const OPTION_MIN_THREAD_NUM = 'min_thread_num';
+
+    public const OPTION_MAX_THREAD_NUM = 'max_thread_num';
+
+    public const OPTION_DISPLAY_ERRORS = 'display_errors';
+
+    public const OPTION_SOCKET_DONTWAIT = 'socket_dontwait';
+
+    public const OPTION_DNS_LOOKUP_RANDOM = 'dns_lookup_random';
+
+    public const OPTION_DNS_SERVER = 'dns_server';
+
+    public const OPTION_USE_ASYNC_RESOLVER = 'use_async_resolver';
+
+    public const OPTION_ENABLE_COROUTINE = 'enable_coroutine';
+
+    public const OPTION_ENABLE_REUSE_PORT = 'enable_reuse_port';
+
+    public const OPTION_SSL_METHOD = 'ssl_method';
+
+    public const OPTION_SSL_PROTOCOLS = 'ssl_protocols';
+
+    public const OPTION_SSL_COMPRESS = 'ssl_compress';
+
+    public const OPTION_SSL_CERT_FILE = 'ssl_cert_file';
+
+    public const OPTION_SSL_KEY_FILE = 'ssl_key_file';
+
+    public const OPTION_SSL_PASSPHRASE = 'ssl_passphrase';
+
+    public const OPTION_SSL_HOST_NAME = 'ssl_host_name';
+
+    public const OPTION_SSL_VERIFY_PEER = 'ssl_verify_peer';
+
+    public const OPTION_SSL_ALLOW_SELF_SIGNED = 'ssl_allow_self_signed';
+
+    public const OPTION_SSL_CAFILE = 'ssl_cafile';
+
+    public const OPTION_SSL_CAPATH = 'ssl_capath';
+
+    public const OPTION_SSL_VERIFY_DEPTH = 'ssl_verify_depth';
+
+    public const OPTION_OPEN_EOF_CHECK = 'open_eof_check';
+
+    public const OPTION_OPEN_EOF_SPLIT = 'open_eof_split';
+
+    public const OPTION_PACKAGE_EOF = 'package_eof';
+
+    public const OPTION_OPEN_MQTT_PROTOCOL = 'open_mqtt_protocol';
+
+    public const OPTION_OPEN_LENGTH_CHECK = 'open_length_check';
+
+    public const OPTION_PACKAGE_LENGTH_TYPE = 'package_length_type';
+
+    public const OPTION_PACKAGE_LENGTH_OFFSET = 'package_length_offset';
+
+    public const OPTION_PACKAGE_BODY_OFFSET = 'package_body_offset';
+
+    public const OPTION_PACKAGE_LENGTH_FUNC = 'package_length_func';
+
+    public const OPTION_PACKAGE_MAX_LENGTH = 'package_max_length';
+
+    public const OPTION_BUFFER_HIGH_WATERMARK = 'buffer_high_watermark';
+
+    public const OPTION_BUFFER_LOW_WATERMARK = 'buffer_low_watermark';
+
+    public const OPTION_BIND_PORT = 'bind_port';
+
+    public const OPTION_BIND_ADDRESS = 'bind_address';
+
+    public const OPTION_OPEN_TCP_NODELAY = 'open_tcp_nodelay';
+
+    public const OPTION_SOCKS5_HOST = 'socks5_host';
+
+    public const OPTION_SOCKS5_PORT = 'socks5_port';
+
+    public const OPTION_SOCKS5_USERNAME = 'socks5_username';
+
+    public const OPTION_SOCKS5_PASSWORD = 'socks5_password';
+
+    public const OPTION_HTTP_PROXY_HOST = 'http_proxy_host';
+
+    public const OPTION_HTTP_PROXY_PORT = 'http_proxy_port';
+
+    public const OPTION_HTTP_PROXY_USERNAME = 'http_proxy_username';
+
+    public const OPTION_HTTP_PROXY_USER = 'http_proxy_user';
+
+    public const OPTION_HTTP_PROXY_PASSWORD = 'http_proxy_password';
+
+    public const OPTION_TIMEOUT = 'timeout';
+
+    public const OPTION_CONNECT_TIMEOUT = 'connect_timeout';
+
+    public const OPTION_READ_TIMEOUT = 'read_timeout';
+
+    public const OPTION_WRITE_TIMEOUT = 'write_timeout';
+
+    public const OPTION_SSL_DISABLE_COMPRESSION = 'ssl_disable_compression';
+
+    public const OPTION_MAX_COROUTINE = 'max_coroutine';
+
+    public const OPTION_HOOK_FLAGS = 'hook_flags';
+
+    public const OPTION_C_STACK_SIZE = 'c_stack_size';
+
+    public const OPTION_STACK_SIZE = 'stack_size';
+
+    public const OPTION_SOCKET_CONNECT_TIMEOUT = 'socket_connect_timeout';
+
+    public const OPTION_SOCKET_TIMEOUT = 'socket_timeout';
+
+    public const OPTION_SOCKET_READ_TIMEOUT = 'socket_read_timeout';
+
+    public const OPTION_SOCKET_WRITE_TIMEOUT = 'socket_write_timeout';
+
+    public const OPTION_TRACE_FLAGS = 'trace_flags';
+
+    public const OPTION_DNS_CACHE_EXPIRE = 'dns_cache_expire';
+
+    public const OPTION_DNS_CACHE_CAPACITY = 'dns_cache_capacity';
+
+    public const OPTION_AIO_CORE_WORKER_NUM = 'aio_core_worker_num';
+
+    public const OPTION_AIO_WORKER_NUM = 'aio_worker_num';
+
+    public const OPTION_AIO_MAX_WAIT_TIME = 'aio_max_wait_time';
+
+    public const OPTION_AIO_MAX_IDLE_TIME = 'aio_max_idle_time';
+
+    public const OPTION_RECONNECT = 'reconnect';
+
+    public const OPTION_DEFER = 'defer';
+
+    public const OPTION_KEEP_ALIVE = 'keep_alive';
+
+    public const OPTION_WEBSOCKET_MASK = 'websocket_mask';
+
+    public const OPTION_WEBSOCKET_COMPRESSION = 'websocket_compression';
+
+    public const OPTION_HOST = 'host';
+
+    public const OPTION_PORT = 'port';
+
+    public const OPTION_SSL = 'ssl';
+
+    public const OPTION_USER = 'user';
+
+    public const OPTION_PASSWORD = 'password';
+
+    public const OPTION_DATABASE = 'database';
+
+    public const OPTION_CHARSET = 'charset';
+
+    public const OPTION_STRICT_TYPE = 'strict_type';
+
+    public const OPTION_FETCH_MODE = 'fetch_mode';
+
+    public const OPTION_SERIALIZE = 'serialize';
+
+    public const OPTION_COMPATIBILITY_MODE = 'compatibility_mode';
+
+    public const OPTION_CHROOT = 'chroot';
+
+    public const OPTION_GROUP = 'group';
+
+    public const OPTION_DAEMONIZE = 'daemonize';
+
+    public const OPTION_DEBUG_MODE = 'debug_mode';
+
+    public const OPTION_PID_FILE = 'pid_file';
+
+    public const OPTION_REACTOR_NUM = 'reactor_num';
+
+    public const OPTION_SINGLE_THREAD = 'single_thread';
+
+    public const OPTION_WORKER_NUM = 'worker_num';
+
+    public const OPTION_MAX_WAIT_TIME = 'max_wait_time';
+
+    public const OPTION_MAX_CORO_NUM = 'max_coro_num';
+
+    public const OPTION_SEND_TIMEOUT = 'send_timeout';
+
+    public const OPTION_DISPATCH_MODE = 'dispatch_mode';
+
+    public const OPTION_SEND_YIELD = 'send_yield';
+
+    public const OPTION_DISPATCH_FUNC = 'dispatch_func';
+
+    public const OPTION_LOG_FILE = 'log_file';
+
+    public const OPTION_DISCARD_TIMEOUT_REQUEST = 'discard_timeout_request';
+
+    public const OPTION_ENABLE_UNSAFE_EVENT = 'enable_unsafe_event';
+
+    public const OPTION_ENABLE_DELAY_RECEIVE = 'enable_delay_receive';
+
+    public const OPTION_TASK_USE_OBJECT = 'task_use_object';
+
+    public const OPTION_TASK_ENABLE_COROUTINE = 'task_enable_coroutine';
+
+    public const OPTION_TASK_WORKER_NUM = 'task_worker_num';
+
+    public const OPTION_TASK_IPC_MODE = 'task_ipc_mode';
+
+    public const OPTION_TASK_TMPDIR = 'task_tmpdir';
+
+    public const OPTION_TASK_MAX_REQUEST = 'task_max_request';
+
+    public const OPTION_TASK_MAX_REQUEST_GRACE = 'task_max_request_grace';
+
+    public const OPTION_MAX_CONNECTION = 'max_connection';
+
+    public const OPTION_MAX_CONN = 'max_conn';
+
+    public const OPTION_HEARTBEAT_CHECK_INTERVAL = 'heartbeat_check_interval';
+
+    public const OPTION_HEARTBEAT_IDLE_TIME = 'heartbeat_idle_time';
+
+    public const OPTION_MAX_REQUEST = 'max_request';
+
+    public const OPTION_MAX_REQUEST_GRACE = 'max_request_grace';
+
+    public const OPTION_RELOAD_ASYNC = 'reload_async';
+
+    public const OPTION_OPEN_CPU_AFFINITY = 'open_cpu_affinity';
+
+    public const OPTION_CPU_AFFINITY_IGNORE = 'cpu_affinity_ignore';
+
+    public const OPTION_HTTP_PARSE_COOKIE = 'http_parse_cookie';
+
+    public const OPTION_HTTP_PARSE_POST = 'http_parse_post';
+
+    public const OPTION_HTTP_PARSE_FILES = 'http_parse_files';
+
+    public const OPTION_HTTP_COMPRESSION = 'http_compression';
+
+    public const OPTION_HTTP_COMPRESSION_LEVEL = 'http_compression_level';
+
+    public const OPTION_HTTP_GZIP_LEVEL = 'http_gzip_level';
+
+    public const OPTION_UPLOAD_TMP_DIR = 'upload_tmp_dir';
+
+    public const OPTION_ENABLE_STATIC_HANDLER = 'enable_static_handler';
+
+    public const OPTION_DOCUMENT_ROOT = 'document_root';
+
+    public const OPTION_STATIC_HANDLER_LOCATIONS = 'static_handler_locations';
+
+    public const OPTION_BUFFER_INPUT_SIZE = 'buffer_input_size';
+
+    public const OPTION_BUFFER_OUTPUT_SIZE = 'buffer_output_size';
+
+    public const OPTION_MESSAGE_QUEUE_KEY = 'message_queue_key';
+
+    public const OPTION_BACKLOG = 'backlog';
+
+    public const OPTION_KERNEL_SOCKET_RECV_BUFFER_SIZE = 'kernel_socket_recv_buffer_size';
+
+    public const OPTION_KERNEL_SOCKET_SEND_BUFFER_SIZE = 'kernel_socket_send_buffer_size';
+
+    public const OPTION_TCP_DEFER_ACCEPT = 'tcp_defer_accept';
+
+    public const OPTION_OPEN_TCP_KEEPALIVE = 'open_tcp_keepalive';
+
+    public const OPTION_OPEN_HTTP_PROTOCOL = 'open_http_protocol';
+
+    public const OPTION_OPEN_WEBSOCKET_PROTOCOL = 'open_websocket_protocol';
+
+    public const OPTION_WEBSOCKET_SUBPROTOCOL = 'websocket_subprotocol';
+
+    public const OPTION_OPEN_WEBSOCKET_CLOSE_FRAME = 'open_websocket_close_frame';
+
+    public const OPTION_OPEN_HTTP2_PROTOCOL = 'open_http2_protocol';
+
+    public const OPTION_OPEN_REDIS_PROTOCOL = 'open_redis_protocol';
+
+    public const OPTION_TCP_KEEPIDLE = 'tcp_keepidle';
+
+    public const OPTION_TCP_KEEPINTERVAL = 'tcp_keepinterval';
+
+    public const OPTION_TCP_KEEPCOUNT = 'tcp_keepcount';
+
+    public const OPTION_TCP_FASTOPEN = 'tcp_fastopen';
+
+    public const OPTION_PACKAGE_BODY_START = 'package_body_start';
+
+    public const OPTION_SSL_CLIENT_CERT_FILE = 'ssl_client_cert_file';
+
+    public const OPTION_SSL_PREFER_SERVER_CIPHERS = 'ssl_prefer_server_ciphers';
+
+    public const OPTION_SSL_CIPHERS = 'ssl_ciphers';
+
+    public const OPTION_SSL_ECDH_CURVE = 'ssl_ecdh_curve';
+
+    public const OPTION_SSL_DHPARAM = 'ssl_dhparam';
+
+    public const OPTION_OPEN_SSL = 'open_ssl';
+
     /* }}} OPTION */
 }

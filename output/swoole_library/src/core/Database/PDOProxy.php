@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
 declare(strict_types=1);
 
 namespace Swoole\Database;
@@ -23,6 +31,7 @@ class PDOProxy extends ObjectProxy
 
     /** @var callable */
     protected $constructor;
+
     /** @var int */
     protected $round = 0;
 
@@ -31,6 +40,37 @@ class PDOProxy extends ObjectProxy
         parent::__construct($constructor());
         $this->__object->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
         $this->constructor = $constructor;
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        for ($n = 3; $n--;) {
+            $ret = @$this->__object->{$name}(...$arguments);
+            if ($ret === false) {
+                /* no more chances or non-IO failures */
+                $errorInfo = $this->__object->errorInfo();
+                if (
+                    !in_array($errorInfo[1], static::IO_ERRORS, true) ||
+                    $n === 0 ||
+                    $this->__object->inTransaction()
+                ) {
+                    $exception = new PDOException($errorInfo[2], $errorInfo[1]);
+                    $exception->errorInfo = $errorInfo;
+                    throw $exception;
+                }
+                $this->reconnect();
+                continue;
+            }
+            if (
+                strcasecmp($name, 'prepare') === 0 ||
+                strcasecmp($name, 'query') === 0
+            ) {
+                $ret = new PDOStatementProxy($ret, $this);
+            }
+            break;
+        }
+        /* @noinspection PhpUndefinedVariableInspection */
+        return $ret;
     }
 
     public function getRound(): int
@@ -60,36 +100,5 @@ class PDOProxy extends ObjectProxy
     public function inTransaction(): bool
     {
         return $this->__object->inTransaction();
-    }
-
-    public function __call(string $name, array $arguments)
-    {
-        for ($n = 3; $n--;) {
-            $ret = @$this->__object->$name(...$arguments);
-            if ($ret === false) {
-                /* no more chances or non-IO failures */
-                $errorInfo = $this->__object->errorInfo();
-                if (
-                    !in_array($errorInfo[1], static::IO_ERRORS, true) ||
-                    $n === 0 ||
-                    $this->__object->inTransaction()
-                ) {
-                    $exception = new PDOException($errorInfo[2], $errorInfo[1]);
-                    $exception->errorInfo = $errorInfo;
-                    throw $exception;
-                }
-                $this->reconnect();
-                continue;
-            }
-            if (
-                strcasecmp($name, 'prepare') === 0 ||
-                strcasecmp($name, 'query') === 0
-            ) {
-                $ret = new PDOStatementProxy($ret, $this);
-            }
-            break;
-        }
-        /** @noinspection PhpUndefinedVariableInspection */
-        return $ret;
     }
 }

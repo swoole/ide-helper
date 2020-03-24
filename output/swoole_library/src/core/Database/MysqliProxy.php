@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
 declare(strict_types=1);
 
 namespace Swoole\Database;
@@ -19,13 +27,16 @@ class MysqliProxy extends ObjectProxy
 
     /** @var string */
     protected $charsetContext;
+
     /** @var null|array */
     protected $setOptContext;
+
     /** @var null|array */
     protected $changeUserContext;
 
     /** @var callable */
     protected $constructor;
+
     /** @var int */
     protected $round = 0;
 
@@ -33,6 +44,32 @@ class MysqliProxy extends ObjectProxy
     {
         parent::__construct($constructor());
         $this->constructor = $constructor;
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        for ($n = 3; $n--;) {
+            $ret = @$this->__object->{$name}(...$arguments);
+            if ($ret === false) {
+                /* no more chances or non-IO failures */
+                if (
+                    !in_array($this->__object->errno, static::IO_ERRORS, true) ||
+                    $n === 0
+                ) {
+                    throw new MysqliException($this->__object->error, $this->__object->errno);
+                }
+                $this->reconnect();
+                continue;
+            }
+            if (strcasecmp($name, 'prepare') === 0) {
+                $ret = new MysqliStatementProxy($ret, $arguments[0], $this);
+            } elseif (strcasecmp($name, 'stmt_init') === 0) {
+                $ret = new MysqliStatementProxy($ret, null, $this);
+            }
+            break;
+        }
+        /* @noinspection PhpUndefinedVariableInspection */
+        return $ret;
     }
 
     public function getRound(): int
@@ -75,31 +112,5 @@ class MysqliProxy extends ObjectProxy
     {
         $this->changeUserContext = [$user, $password, $database];
         return $this->__object->change_user($user, $password, $database);
-    }
-
-    public function __call(string $name, array $arguments)
-    {
-        for ($n = 3; $n--;) {
-            $ret = @$this->__object->$name(...$arguments);
-            if ($ret === false) {
-                /* no more chances or non-IO failures */
-                if (
-                    !in_array($this->__object->errno, static::IO_ERRORS, true) ||
-                    $n === 0
-                ) {
-                    throw new MysqliException($this->__object->error, $this->__object->errno);
-                }
-                $this->reconnect();
-                continue;
-            }
-            if (strcasecmp($name, 'prepare') === 0) {
-                $ret = new MysqliStatementProxy($ret, $arguments[0], $this);
-            } elseif (strcasecmp($name, 'stmt_init') === 0) {
-                $ret = new MysqliStatementProxy($ret, null, $this);
-            }
-            break;
-        }
-        /** @noinspection PhpUndefinedVariableInspection */
-        return $ret;
     }
 }

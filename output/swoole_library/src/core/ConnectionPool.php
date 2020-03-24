@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
 declare(strict_types=1);
 
 namespace Swoole;
@@ -13,13 +21,17 @@ class ConnectionPool
 
     /** @var Channel */
     protected $pool;
+
     /** @var callable */
     protected $constructor;
+
     /** @var int */
     protected $size;
+
     /** @var int */
     protected $num;
-    /** @var string|null */
+
+    /** @var null|string */
     protected $proxy;
 
     public function __construct(callable $constructor, int $size = self::DEFAULT_SIZE, ?string $proxy = null)
@@ -28,23 +40,6 @@ class ConnectionPool
         $this->constructor = $constructor;
         $this->num = 0;
         $this->proxy = $proxy;
-    }
-
-    protected function make(): void
-    {
-        $this->num++;
-        try {
-            if ($this->proxy) {
-                $connection = new $this->proxy($this->constructor);
-            } else {
-                $constructor = $this->constructor;
-                $connection = $constructor();
-            }
-        } catch (Throwable $throwable) {
-            $this->num--;
-            throw $throwable;
-        }
-        $this->put($connection);
     }
 
     public function fill(): void
@@ -83,5 +78,22 @@ class ConnectionPool
         $this->pool->close();
         $this->pool = null;
         $this->num = 0;
+    }
+
+    protected function make(): void
+    {
+        $this->num++;
+        try {
+            if ($this->proxy) {
+                $connection = new $this->proxy($this->constructor);
+            } else {
+                $constructor = $this->constructor;
+                $connection = $constructor();
+            }
+        } catch (Throwable $throwable) {
+            $this->num--;
+            throw $throwable;
+        }
+        $this->put($connection);
     }
 }

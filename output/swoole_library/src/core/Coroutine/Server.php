@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
 declare(strict_types=1);
 
 namespace Swoole\Coroutine;
@@ -11,30 +19,33 @@ class Server
 {
     /** @var string */
     public $host = '';
+
     /** @var int */
     public $port = 0;
+
     /** @var int */
     public $type = AF_INET;
+
     /** @var int */
     public $fd = -1;
+
     /** @var int */
     public $errCode = 0;
+
     /** @var array */
     public $setting = [];
 
     /** @var bool */
     protected $running = false;
-    /** @var callable|null */
+
+    /** @var null|callable */
     protected $fn;
+
     /** @var Socket */
     protected $socket;
 
     /**
      * Server constructor.
-     * @param string $host
-     * @param int $port
-     * @param bool $ssl
-     * @param bool $reuse_port
      * @throws Exception
      */
     public function __construct(string $host, int $port = 0, bool $ssl = false, bool $reuse_port = false)
@@ -60,7 +71,7 @@ class Server
             throw new Exception("bind({$this->host}:{$port}) failed", $socket->errCode);
         }
         if (!$socket->listen()) {
-            throw new Exception("listen() failed", $socket->errCode);
+            throw new Exception('listen() failed', $socket->errCode);
         }
         $this->port = $socket->getsockname()['port'] ?? 0;
         $this->fd = $socket->fd;
@@ -98,7 +109,7 @@ class Server
         }
 
         while ($this->running) {
-            /** @var $conn Socket */
+            /** @var Socket $conn */
             $conn = $socket->accept();
             if ($conn) {
                 $conn->setProtocol($this->setting);
@@ -110,14 +121,15 @@ class Server
                     _wait:
                     Coroutine::sleep(1);
                     continue;
-                } elseif ($socket->errCode == SOCKET_ETIMEDOUT) {
+                }
+                if ($socket->errCode == SOCKET_ETIMEDOUT) {
                     continue;
-                } elseif ($socket->errCode == SOCKET_ECANCELED) {
-                    break;
-                } else {
-                    trigger_error("accept failed, Error: {$socket->errMsg}[{$socket->errCode}]", E_USER_WARNING);
+                }
+                if ($socket->errCode == SOCKET_ECANCELED) {
                     break;
                 }
+                trigger_error("accept failed, Error: {$socket->errMsg}[{$socket->errCode}]", E_USER_WARNING);
+                break;
             }
         }
 

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
 declare(strict_types=1);
 
 namespace Swoole\Database;
@@ -14,15 +22,19 @@ class MysqliStatementProxy extends ObjectProxy
 
     /** @var null|string */
     protected $queryString;
+
     /** @var null|array */
     protected $attrSetContext;
+
     /** @var null|array */
     protected $bindParamContext;
+
     /** @var null|array */
     protected $bindResultContext;
 
-    /** @var MysqliProxy|Mysqli */
+    /** @var Mysqli|MysqliProxy */
     protected $parent;
+
     /** @var int */
     protected $parentRound;
 
@@ -34,28 +46,10 @@ class MysqliStatementProxy extends ObjectProxy
         $this->parentRound = $parent->getRound();
     }
 
-    public function attr_set($attr, $mode): bool
-    {
-        $this->attrSetContext[$attr] = $mode;
-        return $this->__object->attr_set($attr, $mode);
-    }
-
-    public function bind_param($types, &...$arguments): bool
-    {
-        $this->bindParamContext = [$types, $arguments];
-        return $this->__object->bind_param($types, ...$arguments);
-    }
-
-    public function bind_result(&...$arguments): bool
-    {
-        $this->bindResultContext = $arguments;
-        return $this->__object->bind_result(...$arguments);
-    }
-
     public function __call(string $name, array $arguments)
     {
         for ($n = 3; $n--;) {
-            $ret = @$this->__object->$name(...$arguments);
+            $ret = @$this->__object->{$name}(...$arguments);
             if ($ret === false) {
                 /* no more chances or non-IO failures or in transaction */
                 if (
@@ -91,7 +85,25 @@ class MysqliStatementProxy extends ObjectProxy
             }
             break;
         }
-        /** @noinspection PhpUndefinedVariableInspection */
+        /* @noinspection PhpUndefinedVariableInspection */
         return $ret;
+    }
+
+    public function attr_set($attr, $mode): bool
+    {
+        $this->attrSetContext[$attr] = $mode;
+        return $this->__object->attr_set($attr, $mode);
+    }
+
+    public function bind_param($types, &...$arguments): bool
+    {
+        $this->bindParamContext = [$types, $arguments];
+        return $this->__object->bind_param($types, ...$arguments);
+    }
+
+    public function bind_result(&...$arguments): bool
+    {
+        $this->bindResultContext = $arguments;
+        return $this->__object->bind_result(...$arguments);
     }
 }

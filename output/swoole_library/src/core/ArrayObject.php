@@ -1,4 +1,13 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
+declare(strict_types=1);
 
 namespace Swoole;
 
@@ -17,24 +26,22 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
 
     /**
      * ArrayObject constructor.
-     * @param array $array
      */
     public function __construct(array $array = [])
     {
         $this->array = $array;
     }
 
-    /**
-     * @return bool
-     */
+    public function __toArray(): array
+    {
+        return $this->array;
+    }
+
     public function isEmpty(): bool
     {
         return empty($this->array);
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return count($this->array);
@@ -56,9 +63,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
         return key($this->array);
     }
 
-    /**
-     * @return bool
-     */
     public function valid(): bool
     {
         return array_key_exists($this->key(), $this->array);
@@ -81,8 +85,8 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $key
-     * @return ArrayObject|StringObject|mixed
+     * @param mixed $key
+     * @return ArrayObject|StringObject
      */
     public function get($key)
     {
@@ -90,8 +94,8 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param mixed $key
+     * @param mixed $value
      * @return $this
      */
     public function set($key, $value): self
@@ -101,7 +105,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $key
+     * @param mixed $key
      * @return $this
      */
     public function delete($key): self
@@ -111,9 +115,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $value
-     * @param bool $strict
-     * @param bool $loop
+     * @param mixed $value
      * @return $this
      */
     public function remove($value, bool $strict = true, bool $loop = false): self
@@ -140,7 +142,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
 
     /**
      * @param mixed $key
-     * @return mixed|null
+     * @return null|mixed
      */
     public function offsetGet($key)
     {
@@ -154,7 +156,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
      * @param mixed $key
      * @param mixed $value
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         $this->array[$key] = $value;
     }
@@ -162,7 +164,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     /**
      * @param mixed $key
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         unset($this->array[$key]);
     }
@@ -177,8 +179,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $key
-     * @return bool
+     * @param mixed $key
      */
     public function exists($key): bool
     {
@@ -186,9 +187,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $value
-     * @param bool $strict
-     * @return bool
+     * @param mixed $value
      */
     public function contains($value, bool $strict = true): bool
     {
@@ -196,8 +195,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $value
-     * @param bool $strict
+     * @param mixed $value
      * @return mixed
      */
     public function indexOf($value, bool $strict = true)
@@ -206,8 +204,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $value
-     * @param bool $strict
+     * @param mixed $value
      * @return mixed
      */
     public function lastIndexOf($value, bool $strict = true)
@@ -226,27 +223,19 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $needle
-     * @param $strict
+     * @param mixed $needle
      * @return mixed
      */
-    public function search($needle, $strict = true)
+    public function search($needle, bool $strict = true)
     {
         return array_search($needle, $this->array, $strict);
     }
 
-    /**
-     * @param string $glue
-     * @return StringObject
-     */
     public function join(string $glue = ''): StringObject
     {
         return static::detectStringType(implode($glue, $this->array));
     }
 
-    /**
-     * @return StringObject
-     */
     public function serialize(): StringObject
     {
         return static::detectStringType(serialize($this->array));
@@ -258,7 +247,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
      */
     public function unserialize($string): self
     {
-        $this->array = (array)unserialize((string)$string);
+        $this->array = (array) unserialize((string) $string);
         return $this;
     }
 
@@ -279,7 +268,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return int
      */
     public function push($value)
@@ -288,7 +277,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return int
      */
     public function pushBack($value)
@@ -297,8 +286,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param int $offset
-     * @param $value
+     * @param mixed $value
      * @return $this
      */
     public function insert(int $offset, $value): self
@@ -327,9 +315,8 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $offset
+     * @param mixed $offset
      * @param int $length
-     * @param bool $preserve_keys
      * @return static
      */
     public function slice($offset, int $length = null, bool $preserve_keys = false): self
@@ -338,7 +325,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @return ArrayObject|StringObject|mixed
+     * @return ArrayObject|mixed|StringObject
      */
     public function randomGet()
     {
@@ -346,7 +333,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $fn callable
      * @return $this
      */
     public function each(callable $fn): self
@@ -358,7 +344,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $fn callable
      * @return static
      */
     public function map(callable $fn): self
@@ -367,7 +352,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $fn callable
      * @return mixed
      */
     public function reduce(callable $fn)
@@ -394,7 +378,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $column_key
+     * @param mixed $column_key
      * @param mixed ...$index
      * @return static
      */
@@ -404,7 +388,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param int $sort_flags
      * @return static
      */
     public function unique(int $sort_flags = SORT_STRING): self
@@ -413,7 +396,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param bool $preserve_keys
      * @return static
      */
     public function reverse(bool $preserve_keys = false): self
@@ -422,8 +404,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param int $size
-     * @param bool $preserve_keys
      * @return static
      */
     public function chunk(int $size, bool $preserve_keys = false): self
@@ -432,7 +412,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * Swap keys and values in an array
+     * Swap keys and values in an array.
      * @return static
      */
     public function flip(): self
@@ -441,8 +421,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param $fn callable
-     * @param int $flag
      * @return static
      */
     public function filter(callable $fn, int $flag = 0): self
@@ -453,7 +431,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     /**
      * | Function name     | Sorts by | Maintains key association   | Order of sort               | Related functions |
      * | :---------------- | :------- | :-------------------------- | :-------------------------- | :---------------- |
-     * | array_multisort() | value    | associative yes, numeric no | first array or sort options | array_walk()      |
+     * | array_multisort() | value    | associative yes, numeric no | first array or sort options  | array_walk()      |
      * | asort()           | value    | yes                         | low to high                 | arsort()          |
      * | arsort()          | value    | yes                         | high to low                 | asort()           |
      * | krsort()          | key      | yes                         | high to low                 | ksort()           |
@@ -461,16 +439,14 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
      * | natcasesort()     | value    | yes                         | natural, case insensitive   | natsort()         |
      * | natsort()         | value    | yes                         | natural                     | natcasesort()     |
      * | rsort()           | value    | no                          | high to low                 | sort()            |
-     * | shuffle()         | value    | no                          | random                      | array_rand()      |
+     * | shuffle()          | value    | no                          | random                      | array_rand()      |
      * | sort()            | value    | no                          | low to high                 | rsort()           |
-     * | uasort()          | value    | yes                         | user defined                | uksort()          |
-     * | uksort()          | key      | yes                         | user defined                | uasort()          |
-     * | usort()           | value    | no                          | user defined                | uasort()          |
+     * | uasort()          | value    | yes                         | user defined                 | uksort()          |
+     * | uksort()          | key      | yes                         | user defined                 | uasort()          |
+     * | usort()           | value    | no                          | user defined                 | uasort()          |
      */
 
     /**
-     * @param int $sort_order
-     * @param int $sort_flags
      * @return $this
      */
     public function multiSort(int $sort_order = SORT_ASC, int $sort_flags = SORT_REGULAR): self
@@ -482,7 +458,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param int $sort_flags
      * @return $this
      */
     public function asort(int $sort_flags = SORT_REGULAR): self
@@ -494,7 +469,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param int $sort_flags
      * @return $this
      */
     public function arsort(int $sort_flags = SORT_REGULAR): self
@@ -506,7 +480,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param int $sort_flags
      * @return $this
      */
     public function krsort(int $sort_flags = SORT_REGULAR): self
@@ -518,7 +491,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param int $sort_flags
      * @return $this
      */
     public function ksort(int $sort_flags = SORT_REGULAR): self
@@ -552,7 +524,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param int $sort_flags
      * @return $this
      */
     public function rsort(int $sort_flags = SORT_REGULAR): self
@@ -575,7 +546,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param int $sort_flags
      * @return $this
      */
     public function sort(int $sort_flags = SORT_REGULAR): self
@@ -587,7 +557,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param callable $value_compare_func
      * @return $this
      */
     public function uasort(callable $value_compare_func): self
@@ -599,7 +568,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param callable $value_compare_func
      * @return $this
      */
     public function uksort(callable $value_compare_func): self
@@ -611,7 +579,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @param callable $value_compare_func
      * @return $this
      */
     public function usort(callable $value_compare_func): self
@@ -623,39 +590,26 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
-     * @return array
-     */
-    public function __toArray(): array
-    {
-        return $this->array;
-    }
-
-    /**
-     * @param $value
-     * @return ArrayObject|StringObject|mixed
+     * @param mixed $value
+     * @return ArrayObject|mixed|StringObject
      */
     protected static function detectType($value)
     {
         if (is_string($value)) {
             return static::detectStringType($value);
-        } elseif (is_array($value)) {
-            return static::detectArrayType($value);
-        } else {
-            return $value;
         }
+        if (is_array($value)) {
+            return static::detectArrayType($value);
+        }
+        return $value;
     }
 
-    /**
-     * @param string $value
-     * @return StringObject
-     */
     protected static function detectStringType(string $value): StringObject
     {
         return new StringObject($value);
     }
 
     /**
-     * @param array $value
      * @return static
      */
     protected static function detectArrayType(array $value): self

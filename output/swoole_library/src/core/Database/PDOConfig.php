@@ -1,26 +1,59 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
 declare(strict_types=1);
 
 namespace Swoole\Database;
 
 class PDOConfig
 {
+    public const DRIVER_MYSQL = 'mysql';
+
+    public const DRIVER_PGSQL = 'pgsql';
+
+    /** @var string */
+    protected $driver = self::DRIVER_MYSQL;
+
     /** @var string */
     protected $host = '127.0.0.1';
+
     /** @var int */
     protected $port = 3306;
-    /** @var string|null */
+
+    /** @var null|string */
     protected $unixSocket;
+
     /** @var string */
     protected $dbname = 'test';
+
     /** @var string */
     protected $charset = 'utf8mb4';
+
     /** @var string */
     protected $username = 'root';
+
     /** @var string */
     protected $password = 'root';
+
     /** @var array */
     protected $options = [];
+
+    public function getDriver(): string
+    {
+        return $this->driver;
+    }
+
+    public function withDriver(string $driver): self
+    {
+        $this->driver = $driver;
+        return $this;
+    }
 
     public function getHost(): string
     {
@@ -113,5 +146,18 @@ class PDOConfig
     {
         $this->options = $options;
         return $this;
+    }
+
+    /**
+     * Returns the list of available drivers
+     *
+     * @return string[]
+     */
+    public static function getAvailableDrivers()
+    {
+        return [
+            self::DRIVER_MYSQL,
+            self::DRIVER_PGSQL,
+        ];
     }
 }

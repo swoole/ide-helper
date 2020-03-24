@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
 declare(strict_types=1);
 
 namespace Swoole\Database;
@@ -14,6 +22,7 @@ class PDOPool extends ConnectionPool
 {
     /** @var int */
     protected $size = 64;
+
     /** @var PDOConfig */
     protected $config;
 
@@ -22,9 +31,9 @@ class PDOPool extends ConnectionPool
         $this->config = $config;
         parent::__construct(function () {
             return new PDO(
-                "mysql:" .
+                "{$this->config->getDriver()}:" .
                 (
-                $this->config->hasUnixSocket() ?
+                    $this->config->hasUnixSocket() ?
                     "unix_socket={$this->config->getUnixSocket()};" :
                     "host={$this->config->getHost()};" . "port={$this->config->getPort()};"
                 ) .

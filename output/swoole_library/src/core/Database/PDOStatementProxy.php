@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
 declare(strict_types=1);
 
 namespace Swoole\Database;
@@ -15,17 +23,22 @@ class PDOStatementProxy extends ObjectProxy
 
     /** @var null|array */
     protected $setAttributeContext;
+
     /** @var null|array */
     protected $setFetchModeContext;
+
     /** @var null|array */
     protected $bindParamContext;
+
     /** @var null|array */
     protected $bindColumnContext;
+
     /** @var null|array */
     protected $bindValueContext;
 
-    /** @var PDOProxy|PDO */
+    /** @var PDO|PDOProxy */
     protected $parent;
+
     /** @var int */
     protected $parentRound;
 
@@ -36,40 +49,10 @@ class PDOStatementProxy extends ObjectProxy
         $this->parentRound = $parent->getRound();
     }
 
-    public function setAttribute(int $attribute, $value): bool
-    {
-        $this->setAttributeContext[$attribute] = $value;
-        return $this->__object->setAttribute($attribute, $value);
-    }
-
-    public function setFetchMode(int $mode, $classNameObject = null, array $ctorarfg = []): bool
-    {
-        $this->setFetchModeContext = [$mode, $classNameObject, $ctorarfg];
-        return $this->__object->setFetchMode($mode, $classNameObject, $ctorarfg);
-    }
-
-    public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR, $length = null, $driver_options = null): bool
-    {
-        $this->bindParamContext[$parameter] = [$variable, $data_type, $length, $driver_options];
-        return $this->__object->bindParam($parameter, $variable, $data_type, $length, $driver_options);
-    }
-
-    public function bindColumn($column, &$param, $type = null, $maxlen = null, $driverdata = null): bool
-    {
-        $this->bindColumnContext[$column] = [$param, $type, $maxlen, $driverdata];
-        return $this->__object->bindColumn($column, $param, $type, $maxlen, $driverdata);
-    }
-
-    public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR): bool
-    {
-        $this->bindValueContext[$parameter] = [$value, $data_type];
-        return $this->__object->bindValue($parameter, $value, $data_type);
-    }
-
     public function __call(string $name, array $arguments)
     {
         for ($n = 3; $n--;) {
-            $ret = @$this->__object->$name(...$arguments);
+            $ret = @$this->__object->{$name}(...$arguments);
             if ($ret === false) {
                 /* no more chances or non-IO failures or in transaction */
                 if (
@@ -78,9 +61,13 @@ class PDOStatementProxy extends ObjectProxy
                     $this->parent->inTransaction()
                 ) {
                     $errorInfo = $this->__object->errorInfo();
-                    $exception = new PDOException($errorInfo[2], $errorInfo[1]);
-                    $exception->errorInfo = $errorInfo;
-                    throw $exception;
+
+                    // '00000' means “no error.”, as specified by ANSI SQL and ODBC.
+                    if ($errorInfo[0] !== '00000') {
+                        $exception = new PDOException($errorInfo[2], $errorInfo[1]);
+                        $exception->errorInfo = $errorInfo;
+                        throw $exception;
+                    }
                 }
                 if ($this->parent->getRound() === $this->parentRound) {
                     /* if not equal, parent has reconnected */
@@ -121,7 +108,40 @@ class PDOStatementProxy extends ObjectProxy
             }
             break;
         }
-        /** @noinspection PhpUndefinedVariableInspection */
+        /* @noinspection PhpUndefinedVariableInspection */
         return $ret;
+    }
+
+    public function setAttribute(int $attribute, $value): bool
+    {
+        $this->setAttributeContext[$attribute] = $value;
+        return $this->__object->setAttribute($attribute, $value);
+    }
+
+    public function setFetchMode(int $mode, $classNameObject = null, array $ctorarfg = []): bool
+    {
+        $this->setFetchModeContext = [$mode, $classNameObject, $ctorarfg];
+        if (!isset($classNameObject)) {
+            return $this->__object->setFetchMode($mode);
+        }
+        return $this->__object->setFetchMode($mode, $classNameObject, $ctorarfg);
+    }
+
+    public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR, $length = null, $driver_options = null): bool
+    {
+        $this->bindParamContext[$parameter] = [$variable, $data_type, $length, $driver_options];
+        return $this->__object->bindParam($parameter, $variable, $data_type, $length, $driver_options);
+    }
+
+    public function bindColumn($column, &$param, $type = null, $maxlen = null, $driverdata = null): bool
+    {
+        $this->bindColumnContext[$column] = [$param, $type, $maxlen, $driverdata];
+        return $this->__object->bindColumn($column, $param, $type, $maxlen, $driverdata);
+    }
+
+    public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR): bool
+    {
+        $this->bindValueContext[$parameter] = [$value, $data_type];
+        return $this->__object->bindValue($parameter, $value, $data_type);
     }
 }

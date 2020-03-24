@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of Swoole.
+ *
+ * @link     https://www.swoole.com
+ * @contact  team@swoole.com
+ * @license  https://github.com/swoole/library/blob/master/LICENSE
+ */
+
 declare(strict_types=1);
 
 namespace Swoole\Database;
@@ -7,18 +15,25 @@ class MysqliConfig
 {
     /** @var string */
     protected $host = '127.0.0.1';
+
     /** @var int */
     protected $port = 3306;
-    /** @var string|null */
+
+    /** @var null|string */
     protected $unixSocket = '';
+
     /** @var string */
     protected $dbname = 'test';
+
     /** @var string */
     protected $charset = 'utf8mb4';
+
     /** @var string */
     protected $username = 'root';
+
     /** @var string */
     protected $password = 'root';
+
     /** @var array */
     protected $options = [];
 
