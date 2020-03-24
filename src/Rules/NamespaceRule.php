@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\IDEHelper\Rules;
 
 use Swoole\IDEHelper\Constant;

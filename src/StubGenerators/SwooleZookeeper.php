@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\IDEHelper\StubGenerators;
 
 use Swoole\IDEHelper\AbstractStubGenerator;
