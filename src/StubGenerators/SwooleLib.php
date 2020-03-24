@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\IDEHelper\StubGenerators;
 
+use DirectoryIterator;
 use Swoole\IDEHelper\AbstractStubGenerator;
 use Swoole\IDEHelper\Constant;
 use Swoole\IDEHelper\Exception;
@@ -16,16 +19,11 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class SwooleLib extends AbstractStubGenerator
 {
-    private const EXTRA_FILES = [
-        "examples",
+    private const EXTRA_SRC_FILES = [
         "src/ext",
         "src/std",
         "src/constants.php",
         "src/functions.php",
-        ".gitignore",
-        "LICENSE",
-        "README.md",
-        "composer.json",
     ];
 
     /**
@@ -49,8 +47,15 @@ class SwooleLib extends AbstractStubGenerator
     {
         $this->download("library", $this->rf_version, $this->dirOutput);
 
+        $extraFiles = self::EXTRA_SRC_FILES;
+        /** @var DirectoryIterator $file */
+        foreach (new DirectoryIterator($this->dirOutput) as $file) {
+            if (!$file->isDot() && ($file->getFilename() != 'src')) {
+                $extraFiles[] = $file->getFilename();
+            }
+        }
         $fileSystem = new Filesystem();
-        foreach (self::EXTRA_FILES as $file) {
+        foreach ($extraFiles as $file) {
             $fileSystem->remove($this->dirOutput . DIRECTORY_SEPARATOR . $file);
         }
     }
