@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+declare(strict_types=1);
+
 /**
  * To generate IDE help files of Swoole.
  */
@@ -20,11 +22,11 @@ use Swoole\IDEHelper\StubGenerators\SwooleZookeeper;
 $generators = [
     new Swoole(),
     new SwooleLib(),
-    new SwooleAsync(),
-    new SwooleOrm(),
-    new SwoolePostgresql(),
-    new SwooleSerialize(),
-    new SwooleZookeeper(),
+    // new SwooleAsync(),
+    // new SwooleOrm(),
+    // new SwoolePostgresql(),
+    // new SwooleSerialize(),
+    // new SwooleZookeeper(),
 ];
 foreach ($generators as $generator) {
     $generator->export();
