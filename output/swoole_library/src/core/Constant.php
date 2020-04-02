@@ -174,6 +174,8 @@ class Constant
 
     public const OPTION_STACK_SIZE = 'stack_size';
 
+    public const OPTION_SOCKET_DNS_TIMEOUT = 'socket_dns_timeout';
+
     public const OPTION_SOCKET_CONNECT_TIMEOUT = 'socket_connect_timeout';
 
     public const OPTION_SOCKET_TIMEOUT = 'socket_timeout';
@@ -246,6 +248,8 @@ class Constant
 
     public const OPTION_MAX_WAIT_TIME = 'max_wait_time';
 
+    public const OPTION_MAX_QUEUED_BYTES = 'max_queued_bytes';
+
     public const OPTION_MAX_CORO_NUM = 'max_coro_num';
 
     public const OPTION_SEND_TIMEOUT = 'send_timeout';
@@ -316,7 +320,11 @@ class Constant
 
     public const OPTION_STATIC_HANDLER_LOCATIONS = 'static_handler_locations';
 
+    public const OPTION_INPUT_BUFFER_SIZE = 'input_buffer_size';
+
     public const OPTION_BUFFER_INPUT_SIZE = 'buffer_input_size';
+
+    public const OPTION_OUTPUT_BUFFER_SIZE = 'output_buffer_size';
 
     public const OPTION_BUFFER_OUTPUT_SIZE = 'buffer_output_size';
 
@@ -365,6 +373,8 @@ class Constant
     public const OPTION_SSL_DHPARAM = 'ssl_dhparam';
 
     public const OPTION_OPEN_SSL = 'open_ssl';
+
+    public const OPTION_OPEN_FASTCGI_PROTOCOL = 'open_fastcgi_protocol';
 
     /* }}} OPTION */
 }

@@ -17,6 +17,7 @@ use Swoole\ObjectProxy;
 
 class PDOProxy extends ObjectProxy
 {
+    public const IO_METHOD_REGEX = '/^query|prepare|exec|beginTransaction|commit|rollback$/i';
     public const IO_ERRORS = [
         2002, // MYSQLND_CR_CONNECTION_ERROR
         2006, // MYSQLND_CR_SERVER_GONE_ERROR
@@ -47,8 +48,12 @@ class PDOProxy extends ObjectProxy
         for ($n = 3; $n--;) {
             $ret = @$this->__object->{$name}(...$arguments);
             if ($ret === false) {
-                /* no more chances or non-IO failures */
+                /* non-IO method */
+                if (!preg_match(static::IO_METHOD_REGEX, $name)) {
+                    break;
+                }
                 $errorInfo = $this->__object->errorInfo();
+                /* no more chances or non-IO failures */
                 if (
                     !in_array($errorInfo[1], static::IO_ERRORS, true) ||
                     $n === 0 ||

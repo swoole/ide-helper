@@ -444,6 +444,9 @@ final class Handler
                     $header = explode(':', $header, 2);
                     $headerName = $header[0];
                     $headerValue = trim($header[1] ?? '');
+                    if (strlen($headerValue) === 0) {
+                        continue;
+                    }
                     $this->headers[$headerName] = $headerValue;
                 }
                 break;
@@ -508,6 +511,12 @@ final class Handler
                 break;
             case CURLOPT_PROGRESSFUNCTION:
                 $this->progressFunction = $value;
+                break;
+            case CURLOPT_HTTPAUTH:
+                if (!($value & CURLAUTH_BASIC)) {
+                    trigger_error("swoole_curl_setopt(): CURLOPT_HTTPAUTH[{$value}] is not supported", E_USER_WARNING);
+                    return false;
+                }
                 break;
             case CURLOPT_USERPWD:
                 $this->headers['Authorization'] = 'Basic ' . base64_encode($value);
@@ -647,7 +656,7 @@ final class Handler
             /*
              * Http Headers
              */
-            $this->headers['Host'] = $this->urlInfo['host'] . (isset($this->urlInfo['port']) ? (':' . $this->urlInfo['port']) : ''); /* TODO: remove it (built-in support) */
+            $this->headers['Host'] = $this->urlInfo['host'];
             // remove empty headers (keep same with raw cURL)
             foreach ($this->headers as $headerName => $headerValue) {
                 if ($headerValue === '') {

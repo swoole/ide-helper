@@ -34,7 +34,7 @@ class WaitGroup
         }
         $count = $this->count + $delta;
         if ($count < 0) {
-            throw new InvalidArgumentException('negative WaitGroup counter');
+            throw new InvalidArgumentException('WaitGroup misuse: negative counter');
         }
         $this->count = $count;
     }
@@ -43,7 +43,7 @@ class WaitGroup
     {
         $count = $this->count - 1;
         if ($count < 0) {
-            throw new BadMethodCallException('negative WaitGroup counter');
+            throw new BadMethodCallException('WaitGroup misuse: negative counter');
         }
         $this->count = $count;
         if ($count === 0 && $this->waiting) {
@@ -53,6 +53,9 @@ class WaitGroup
 
     public function wait(float $timeout = -1): bool
     {
+        if ($this->waiting) {
+            throw new BadMethodCallException('WaitGroup misuse: reused before previous wait has returned');
+        }
         if ($this->count > 0) {
             $this->waiting = true;
             $done = $this->chan->pop($timeout);

@@ -54,6 +54,10 @@ class PDOStatementProxy extends ObjectProxy
         for ($n = 3; $n--;) {
             $ret = @$this->__object->{$name}(...$arguments);
             if ($ret === false) {
+                /* no IO */
+                if (strtolower($name) !== 'execute') {
+                    break;
+                }
                 /* no more chances or non-IO failures or in transaction */
                 if (
                     !in_array($this->__object->errorInfo()[1], $this->parent::IO_ERRORS, true) ||

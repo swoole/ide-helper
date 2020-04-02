@@ -49,8 +49,13 @@ class MysqliStatementProxy extends ObjectProxy
     public function __call(string $name, array $arguments)
     {
         for ($n = 3; $n--;) {
+            $this->__object->errno = 0;
             $ret = @$this->__object->{$name}(...$arguments);
             if ($ret === false) {
+                /* no error */
+                if ($this->__object->errno === 0) {
+                    break;
+                }
                 /* no more chances or non-IO failures or in transaction */
                 if (
                     !in_array($this->__object->errno, $this->parent::IO_ERRORS, true) ||
