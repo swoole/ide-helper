@@ -82,8 +82,6 @@ class Constant
 
     public const OPTION_ENABLE_COROUTINE = 'enable_coroutine';
 
-    public const OPTION_ENABLE_REUSE_PORT = 'enable_reuse_port';
-
     public const OPTION_SSL_METHOD = 'ssl_method';
 
     public const OPTION_SSL_PROTOCOLS = 'ssl_protocols';
@@ -169,6 +167,8 @@ class Constant
     public const OPTION_MAX_COROUTINE = 'max_coroutine';
 
     public const OPTION_HOOK_FLAGS = 'hook_flags';
+
+    public const OPTION_ENABLE_PREEMPTIVE_SCHEDULER = 'enable_preemptive_scheduler';
 
     public const OPTION_C_STACK_SIZE = 'c_stack_size';
 
@@ -268,6 +268,8 @@ class Constant
 
     public const OPTION_ENABLE_DELAY_RECEIVE = 'enable_delay_receive';
 
+    public const OPTION_ENABLE_REUSE_PORT = 'enable_reuse_port';
+
     public const OPTION_TASK_USE_OBJECT = 'task_use_object';
 
     public const OPTION_TASK_ENABLE_COROUTINE = 'task_enable_coroutine';
@@ -317,6 +319,10 @@ class Constant
     public const OPTION_ENABLE_STATIC_HANDLER = 'enable_static_handler';
 
     public const OPTION_DOCUMENT_ROOT = 'document_root';
+
+    public const OPTION_HTTP_AUTOINDEX = 'http_autoindex';
+
+    public const OPTION_HTTP_INDEX_FILES = 'http_index_files';
 
     public const OPTION_STATIC_HANDLER_LOCATIONS = 'static_handler_locations';
 

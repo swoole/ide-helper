@@ -15,6 +15,9 @@ use Swoole\Coroutine;
 use Swoole\Coroutine\Server\Connection;
 use Swoole\Exception;
 
+/* compatibility constant */
+define('SWOOLE_COROUTINE_SOCKET_HAVE_SSL_HANDSHAKE', method_exists(Socket::class, 'sslHandshake'));
+
 class Server
 {
     /** @var string */
@@ -53,13 +56,11 @@ class Server
         $_host = swoole_string($host);
         if ($_host->contains('::')) {
             $this->type = AF_INET6;
+        } elseif ($_host->startsWith('unix:/')) {
+            $host = $_host->substr(5)->__toString();
+            $this->type = AF_UNIX;
         } else {
-            if ($_host->startsWith('unix:/')) {
-                $host = $_host->substr(5)->__toString();
-                $this->type = AF_UNIX;
-            } else {
-                $this->type = AF_INET;
-            }
+            $this->type = AF_INET;
         }
         $this->host = $host;
 
@@ -98,7 +99,7 @@ class Server
     public function start(): bool
     {
         $this->running = true;
-        if ($this->fn == null) {
+        if ($this->fn === null) {
             $this->errCode = SOCKET_EINVAL;
             return false;
         }
@@ -113,7 +114,20 @@ class Server
             $conn = $socket->accept();
             if ($conn) {
                 $conn->setProtocol($this->setting);
-                if (Coroutine::create($this->fn, new Connection($conn)) < 0) {
+                if (SWOOLE_COROUTINE_SOCKET_HAVE_SSL_HANDSHAKE && $this->setting['open_ssl'] ?? false) {
+                    $fn = static function ($fn, $connection) {
+                        /* @var $connection Connection */
+                        if (!$connection->exportSocket()->sslHandshake()) {
+                            return;
+                        }
+                        $fn($connection);
+                    };
+                    $arguments = [$this->fn, new Connection($conn)];
+                } else {
+                    $fn = $this->fn;
+                    $arguments = [new Connection($conn)];
+                }
+                if (Coroutine::create($fn, ...$arguments) < 0) {
                     goto _wait;
                 }
             } else {

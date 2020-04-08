@@ -46,6 +46,20 @@ class Socket
     /**
      * @return mixed
      */
+    public function checkLiveness()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function peek($length = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function recv($length = null, $timeout = null)
     {
     }
@@ -117,6 +131,13 @@ class Socket
      * @return mixed
      */
     public function setOption($level, $opt_name, $opt_value)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function sslHandshake()
     {
     }
 

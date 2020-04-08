@@ -13,6 +13,10 @@ class Server
 
     private $onWorkerStop = null;
 
+    private $onBeforeReload = null;
+
+    private $onAfterReload = null;
+
     private $onWorkerExit = null;
 
     private $onWorkerError = null;
@@ -259,6 +263,48 @@ class Server
      * @return mixed
      */
     public function getClientList($start_fd, $find_count = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getInstance()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWorkerId()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWorkerPid()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWorkerStatus($worker_id = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getManagerPid()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMasterPid()
     {
     }
 

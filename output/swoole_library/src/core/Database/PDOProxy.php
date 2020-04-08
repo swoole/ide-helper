@@ -18,6 +18,7 @@ use Swoole\ObjectProxy;
 class PDOProxy extends ObjectProxy
 {
     public const IO_METHOD_REGEX = '/^query|prepare|exec|beginTransaction|commit|rollback$/i';
+
     public const IO_ERRORS = [
         2002, // MYSQLND_CR_CONNECTION_ERROR
         2006, // MYSQLND_CR_SERVER_GONE_ERROR

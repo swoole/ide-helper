@@ -20,7 +20,6 @@ class_alias(Swoole\Coroutine\System::class, Co\System::class);
 
 class_alias(Swoole\Atomic::class, swoole_atomic::class);
 class_alias(Swoole\Atomic\Long::class, swoole_atomic_long::class);
-class_alias(Swoole\Buffer::class, swoole_buffer::class);
 class_alias(Swoole\Client::class, swoole_client::class);
 class_alias(Swoole\Connection\Iterator::class, swoole_connection_iterator::class);
 class_alias(Swoole\Coroutine::class, co::class);

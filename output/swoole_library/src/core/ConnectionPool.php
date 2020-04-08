@@ -44,7 +44,7 @@ class ConnectionPool
 
     public function fill(): void
     {
-        while ($this->size < $this->num) {
+        while ($this->size > $this->num) {
             $this->make();
         }
     }
