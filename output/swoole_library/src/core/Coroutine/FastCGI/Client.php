@@ -61,7 +61,7 @@ class Client
     public function execute(Request $request, float $timeout = -1): Response
     {
         if (!$this->socket) {
-            $socket = new Socket($this->af, SOCK_STREAM, IPPROTO_IP);
+            $this->socket = $socket = new Socket($this->af, SOCK_STREAM, IPPROTO_IP);
             $socket->setProtocol([
                 'open_ssl' => $this->ssl,
                 'open_fastcgi_protocol' => true,
@@ -69,7 +69,6 @@ class Client
             if (!$socket->connect($this->host, $this->port, $timeout)) {
                 $this->ioException();
             }
-            $this->socket = $socket;
         } else {
             $socket = $this->socket;
         }

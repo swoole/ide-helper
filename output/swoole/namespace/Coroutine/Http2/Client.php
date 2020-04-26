@@ -83,13 +83,6 @@ class Client
     /**
      * @return mixed
      */
-    public function read($timeout = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
     public function goaway($error_code = null, $debug_data = null)
     {
     }

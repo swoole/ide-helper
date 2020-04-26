@@ -33,13 +33,6 @@ class Request
     /**
      * @return mixed
      */
-    public function getContent()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
     public function getData()
     {
     }

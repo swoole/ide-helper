@@ -70,6 +70,7 @@ class ConnectionPool
         } else {
             /* connection broken */
             $this->num -= 1;
+            $this->make();
         }
     }
 

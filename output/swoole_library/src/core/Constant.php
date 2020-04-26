@@ -208,6 +208,20 @@ class Constant
 
     public const OPTION_WEBSOCKET_COMPRESSION = 'websocket_compression';
 
+    public const OPTION_HTTP_PARSE_COOKIE = 'http_parse_cookie';
+
+    public const OPTION_HTTP_PARSE_POST = 'http_parse_post';
+
+    public const OPTION_HTTP_PARSE_FILES = 'http_parse_files';
+
+    public const OPTION_HTTP_COMPRESSION = 'http_compression';
+
+    public const OPTION_HTTP_COMPRESSION_LEVEL = 'http_compression_level';
+
+    public const OPTION_HTTP_GZIP_LEVEL = 'http_gzip_level';
+
+    public const OPTION_UPLOAD_TMP_DIR = 'upload_tmp_dir';
+
     public const OPTION_HOST = 'host';
 
     public const OPTION_PORT = 'port';
@@ -301,20 +315,6 @@ class Constant
     public const OPTION_OPEN_CPU_AFFINITY = 'open_cpu_affinity';
 
     public const OPTION_CPU_AFFINITY_IGNORE = 'cpu_affinity_ignore';
-
-    public const OPTION_HTTP_PARSE_COOKIE = 'http_parse_cookie';
-
-    public const OPTION_HTTP_PARSE_POST = 'http_parse_post';
-
-    public const OPTION_HTTP_PARSE_FILES = 'http_parse_files';
-
-    public const OPTION_HTTP_COMPRESSION = 'http_compression';
-
-    public const OPTION_HTTP_COMPRESSION_LEVEL = 'http_compression_level';
-
-    public const OPTION_HTTP_GZIP_LEVEL = 'http_gzip_level';
-
-    public const OPTION_UPLOAD_TMP_DIR = 'upload_tmp_dir';
 
     public const OPTION_ENABLE_STATIC_HANDLER = 'enable_static_handler';
 

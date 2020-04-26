@@ -7,7 +7,7 @@
  * @license  https://github.com/swoole/library/blob/master/LICENSE
  */
 
-/** @noinspection PhpComposerExtensionStubsInspection, PhpDuplicateSwitchCaseBodyInspection, PhpInconsistentReturnPointsInspection */
+/* @noinspection PhpComposerExtensionStubsInspection, PhpDuplicateSwitchCaseBodyInspection, PhpInconsistentReturnPointsInspection */
 
 declare(strict_types=1);
 
@@ -404,6 +404,8 @@ final class Handler
             case CURLOPT_STDERR:
             case CURLOPT_WRITEHEADER:
             case CURLOPT_BUFFERSIZE:
+            case CURLOPT_SSLCERTTYPE:
+            case CURLOPT_SSLKEYTYPE:
                 break;
             /*
              * SSL
@@ -412,6 +414,12 @@ final class Handler
                 break;
             case CURLOPT_SSL_VERIFYPEER:
                 $this->clientOptions['ssl_verify_peer'] = $value;
+                break;
+            case CURLOPT_SSLCERT:
+                $this->clientOptions['ssl_cert_file'] = $value;
+                break;
+            case CURLOPT_SSLKEY:
+                $this->clientOptions['ssl_key_file'] = $value;
                 break;
             /*
              * Http POST
@@ -546,6 +554,10 @@ final class Handler
             case CURLOPT_INFILESIZE:
                 $this->infileSize = $value;
                 break;
+            case CURLOPT_HTTPGET:
+                /* Since GET is the default, this is only necessary if the request method has been changed. */
+                $this->method = 'GET';
+                break;
             default:
                 throw new Swoole\Curl\Exception("swoole_curl_setopt(): option[{$opt}] is not supported");
         }
@@ -567,8 +579,8 @@ final class Handler
         if (!$this->client) {
             $this->create();
         }
-        $client = $this->client;
         do {
+            $client = $this->client;
             /*
              * Http Proxy
              */

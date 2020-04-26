@@ -28,14 +28,17 @@ class RedisPool extends ConnectionPool
         $this->config = $config;
         parent::__construct(function () {
             $redis = new Redis();
-            $redis->connect(
+            /* Compatible with different versions of Redis extension as much as possible */
+            $arguments = [
                 $this->config->getHost(),
                 $this->config->getPort(),
                 $this->config->getTimeout(),
                 $this->config->getReserved(),
                 $this->config->getRetryInterval(),
-                $this->config->getReadTimeout()
-            );
+                $this->config->getReadTimeout(),
+            ];
+            $arguments = array_filter($arguments);
+            $redis->connect(...$arguments);
             if ($this->config->getAuth()) {
                 $redis->auth($this->config->getAuth());
             }

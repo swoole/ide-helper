@@ -99,13 +99,6 @@ class Coroutine
     /**
      * @return mixed
      */
-    public static function getElapsed($cid = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
     public static function list()
     {
     }
@@ -205,34 +198,6 @@ class Coroutine
      * @return mixed
      */
     public static function statvfs($path)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function wait($timeout = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function waitPid($pid, $timeout = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function waitSignal($signo, $timeout = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function waitEvent($fd, $events = null, $timeout = null)
     {
     }
 

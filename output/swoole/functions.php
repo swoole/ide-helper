@@ -95,43 +95,10 @@ function swoole_errno(){}
 function swoole_hashcode($data, $type = null){}
 
 /**
- * @param $suffix[required]
- * @param $mime_type[required]
- * @return mixed
- */
-function swoole_mime_type_add($suffix, $mime_type){}
-
-/**
- * @param $suffix[required]
- * @param $mime_type[required]
- * @return mixed
- */
-function swoole_mime_type_set($suffix, $mime_type){}
-
-/**
- * @param $suffix[required]
- * @param $mime_type[required]
- * @return mixed
- */
-function swoole_mime_type_delete($suffix, $mime_type){}
-
-/**
- * @param $filename[required]
- * @return mixed
- */
-function swoole_mime_type_get($filename){}
-
-/**
  * @param $filename[required]
  * @return mixed
  */
 function swoole_get_mime_type($filename){}
-
-/**
- * @param $filename[required]
- * @return mixed
- */
-function swoole_mime_type_exists($filename){}
 
 /**
  * @return mixed

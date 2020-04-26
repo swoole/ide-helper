@@ -14,7 +14,6 @@ namespace Swoole\Database;
 use PDO;
 use PDOException;
 use PDOStatement;
-use Swoole\ObjectProxy;
 
 class PDOStatementProxy extends ObjectProxy
 {

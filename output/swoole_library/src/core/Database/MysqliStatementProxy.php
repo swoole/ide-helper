@@ -13,10 +13,11 @@ namespace Swoole\Database;
 
 use mysqli;
 use mysqli_stmt;
-use Swoole\ObjectProxy;
 
 class MysqliStatementProxy extends ObjectProxy
 {
+    public const IO_METHOD_REGEX = '/^close|execute|fetch|prepare$/i';
+
     /** @var mysqli_stmt */
     protected $__object;
 
@@ -49,11 +50,10 @@ class MysqliStatementProxy extends ObjectProxy
     public function __call(string $name, array $arguments)
     {
         for ($n = 3; $n--;) {
-            $this->__object->errno = 0;
             $ret = @$this->__object->{$name}(...$arguments);
             if ($ret === false) {
-                /* no error */
-                if ($this->__object->errno === 0) {
+                /* non-IO method */
+                if (!preg_match(static::IO_METHOD_REGEX, $name)) {
                     break;
                 }
                 /* no more chances or non-IO failures or in transaction */

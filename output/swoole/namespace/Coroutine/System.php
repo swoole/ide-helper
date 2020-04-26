@@ -82,33 +82,5 @@ class System
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public static function wait($timeout = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function waitPid($pid, $timeout = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function waitSignal($signo, $timeout = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function waitEvent($fd, $events = null, $timeout = null)
-    {
-    }
-
 
 }

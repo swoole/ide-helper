@@ -9,8 +9,6 @@
 
 declare(strict_types=1);
 
-/** @noinspection PhpComposerExtensionStubsInspection */
-
 namespace Swoole;
 
 class MultibyteStringObject extends StringObject
