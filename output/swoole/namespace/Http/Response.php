@@ -123,7 +123,7 @@ class Response
     /**
      * @return mixed
      */
-    public static function create($fd)
+    public static function create($server, $fd = null)
     {
     }
 

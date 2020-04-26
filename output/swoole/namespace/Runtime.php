@@ -8,13 +8,6 @@ class Runtime
     /**
      * @return mixed
      */
-    public static function enableStrictMode()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
     public static function enableCoroutine($enable = null, $flags = null)
     {
     }
@@ -23,6 +16,13 @@ class Runtime
      * @return mixed
      */
     public static function getHookFlags()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function setHookFlags($flags)
     {
     }
 

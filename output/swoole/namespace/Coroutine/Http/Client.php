@@ -129,6 +129,20 @@ class Client
     /**
      * @return mixed
      */
+    public function getpeername()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getsockname()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function get($path)
     {
     }
@@ -179,6 +193,13 @@ class Client
      * @return mixed
      */
     public function getHeaderOut()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPeerCert()
     {
     }
 
