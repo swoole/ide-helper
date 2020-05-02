@@ -13,10 +13,10 @@ use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 use Swoole\IDEHelper\Rules\NamespaceRule;
 use Symfony\Component\Filesystem\Filesystem;
-use Zend\Code\Generator\ClassGenerator;
-use Zend\Code\Generator\DocBlock\Tag\ReturnTag;
-use Zend\Code\Generator\DocBlockGenerator;
-use Zend\Code\Reflection\ClassReflection;
+use Laminas\Code\Generator\ClassGenerator;
+use Laminas\Code\Generator\DocBlock\Tag\ReturnTag;
+use Laminas\Code\Generator\DocBlockGenerator;
+use Laminas\Code\Reflection\ClassReflection;
 
 /**
  * Class AbstractStubGenerator
