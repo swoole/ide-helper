@@ -25,6 +25,6 @@ rm -rf ./output
 docker run --rm                     \
     -v "$(pwd)":/var/www            \
     -e SWOOLE_LIB_VERSION=${2}      \
-    -t phpswoole/swoole:${1}-php7.2 \
+    -t phpswoole/swoole:${1}-php7.1 \
     bash -c "composer install && ./bin/generator.php"
 git add ./output
