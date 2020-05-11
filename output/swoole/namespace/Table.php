@@ -2,14 +2,14 @@
 
 namespace Swoole;
 
-class Table implements \Iterator, \Traversable, \ArrayAccess, \Countable
+class Table implements \Iterator, \Traversable, \ArrayAccess
 {
 
-    const TYPE_INT = 1;
+    public const TYPE_INT = 1;
 
-    const TYPE_STRING = 7;
+    public const TYPE_STRING = 7;
 
-    const TYPE_FLOAT = 6;
+    public const TYPE_FLOAT = 6;
 
     public function __construct($table_size, $conflict_proportion = null)
     {

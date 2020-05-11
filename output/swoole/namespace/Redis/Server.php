@@ -5,19 +5,19 @@ namespace Swoole\Redis;
 class Server extends \Swoole\Server
 {
 
-    const NIL = 1;
+    public const NIL = 1;
 
-    const ERROR = 0;
+    public const ERROR = 0;
 
-    const STATUS = 2;
+    public const STATUS = 2;
 
-    const INT = 3;
+    public const INT = 3;
 
-    const STRING = 4;
+    public const STRING = 4;
 
-    const SET = 5;
+    public const SET = 5;
 
-    const MAP = 6;
+    public const MAP = 6;
 
     /**
      * @return mixed

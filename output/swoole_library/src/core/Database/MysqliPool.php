@@ -27,7 +27,11 @@ class MysqliPool extends ConnectionPool
     {
         $this->config = $config;
         parent::__construct(function () {
-            $mysqli = new mysqli(
+            $mysqli = new mysqli();
+            foreach ($this->config->getOptions() as $option => $value) {
+                $mysqli->set_opt($option, $value);
+            }
+            $mysqli->real_connect(
                 $this->config->getHost(),
                 $this->config->getUsername(),
                 $this->config->getPassword(),
@@ -37,9 +41,6 @@ class MysqliPool extends ConnectionPool
             );
             if ($mysqli->connect_errno) {
                 throw new MysqliException($mysqli->connect_errno, $mysqli->connect_errno);
-            }
-            foreach ($this->config->getOptions() as $option => $value) {
-                $mysqli->set_opt($option, $value);
             }
             return $mysqli;
         }, $size, MysqliProxy::class);

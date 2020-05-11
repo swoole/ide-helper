@@ -5,9 +5,9 @@ namespace Swoole\Coroutine;
 class Context extends \ArrayObject
 {
 
-    const STD_PROP_LIST = 1;
+    public const STD_PROP_LIST = 1;
 
-    const ARRAY_AS_PROPS = 2;
+    public const ARRAY_AS_PROPS = 2;
 
 
 }

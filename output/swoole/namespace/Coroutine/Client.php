@@ -5,13 +5,13 @@ namespace Swoole\Coroutine;
 class Client
 {
 
-    const MSG_OOB = 1;
+    public const MSG_OOB = 1;
 
-    const MSG_PEEK = 2;
+    public const MSG_PEEK = 2;
 
-    const MSG_DONTWAIT = 64;
+    public const MSG_DONTWAIT = 64;
 
-    const MSG_WAITALL = 256;
+    public const MSG_WAITALL = 256;
 
     public $errCode = 0;
 
@@ -19,11 +19,11 @@ class Client
 
     public $fd = -1;
 
-    private $socket = null;
+    private $socket;
 
     public $type = 1;
 
-    public $setting = null;
+    public $setting;
 
     public $connected = false;
 

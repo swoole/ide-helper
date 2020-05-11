@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Swoole\FastCGI;
 
+use InvalidArgumentException;
 use Swoole\FastCGI\Record\EndRequest;
 use Swoole\FastCGI\Record\Stderr;
 use Swoole\FastCGI\Record\Stdout;

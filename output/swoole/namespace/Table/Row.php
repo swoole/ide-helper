@@ -5,9 +5,9 @@ namespace Swoole\Table;
 class Row implements \ArrayAccess
 {
 
-    public $key = null;
+    public $key;
 
-    public $value = null;
+    public $value;
 
     /**
      * @return mixed

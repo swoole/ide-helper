@@ -7,13 +7,13 @@ class Server
 
     public $fd = -1;
 
-    public $host = null;
+    public $host;
 
     public $port = -1;
 
     public $ssl = false;
 
-    public $settings = null;
+    public $settings;
 
     public $errCode = 0;
 

@@ -9,9 +9,9 @@ class Request
 
     public $method = 'GET';
 
-    public $headers = null;
+    public $headers;
 
-    public $cookies = null;
+    public $cookies;
 
     public $data = '';
 

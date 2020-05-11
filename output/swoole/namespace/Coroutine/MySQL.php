@@ -5,7 +5,7 @@ namespace Swoole\Coroutine;
 class MySQL
 {
 
-    public $serverInfo = null;
+    public $serverInfo;
 
     public $sock = -1;
 

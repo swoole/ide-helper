@@ -5,7 +5,7 @@ namespace Swoole\WebSocket;
 class Server extends \Swoole\Http\Server
 {
 
-    private $onHandshake = null;
+    private $onHandshake;
 
     /**
      * @return mixed

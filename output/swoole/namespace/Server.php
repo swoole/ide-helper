@@ -5,35 +5,35 @@ namespace Swoole;
 class Server
 {
 
-    private $onStart = null;
+    private $onStart;
 
-    private $onShutdown = null;
+    private $onShutdown;
 
-    private $onWorkerStart = null;
+    private $onWorkerStart;
 
-    private $onWorkerStop = null;
+    private $onWorkerStop;
 
-    private $onBeforeReload = null;
+    private $onBeforeReload;
 
-    private $onAfterReload = null;
+    private $onAfterReload;
 
-    private $onWorkerExit = null;
+    private $onWorkerExit;
 
-    private $onWorkerError = null;
+    private $onWorkerError;
 
-    private $onTask = null;
+    private $onTask;
 
-    private $onFinish = null;
+    private $onFinish;
 
-    private $onManagerStart = null;
+    private $onManagerStart;
 
-    private $onManagerStop = null;
+    private $onManagerStop;
 
-    private $onPipeMessage = null;
+    private $onPipeMessage;
 
-    public $setting = null;
+    public $setting;
 
-    public $connections = null;
+    public $connections;
 
     public $host = '';
 
@@ -43,7 +43,7 @@ class Server
 
     public $mode = 0;
 
-    public $ports = null;
+    public $ports;
 
     public $master_pid = 0;
 

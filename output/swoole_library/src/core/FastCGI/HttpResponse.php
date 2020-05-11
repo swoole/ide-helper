@@ -37,12 +37,24 @@ class HttpResponse extends Response
         if (strlen($body) === 0) {
             return;
         }
-        [$headers, $body] = @explode("\r\n\r\n", $body, 2);
-        $headers = explode("\r\n", $headers);
+        $array = explode("\r\n\r\n", $body, 2); // An array that contains the HTTP headers and the body.
+        if (count($array) != 2) {
+            $this->withStatusCode(Status::BAD_GATEWAY)->withReasonPhrase('Invalid FastCGI Response')->withError($body);
+            return;
+        }
+        $headers = explode("\r\n", $array[0]);
+        $body = $array[1];
         foreach ($headers as $header) {
-            [$name, $value] = @explode(': ', $header, 2);
+            $array = explode(':', $header, 2); // An array that contains the name and the value of an HTTP header.
+            if (count($array) != 2) {
+                continue; // Invalid HTTP header? Ignore it!
+            }
+            $name = trim($array[0]);
+            $value = trim($array[1]);
             if (strcasecmp($name, 'Status') === 0) {
-                [$statusCode, $reasonPhrase] = @explode(' ', $value, 2);
+                $array = explode(' ', $value, 2); // An array that contains the status code (and the reason phrase).
+                $statusCode = $array[0];
+                $reasonPhrase = $array[1] ?? null;
             } elseif (strcasecmp($name, 'Set-Cookie') === 0) {
                 $this->withSetCookieHeaderLine($value);
             } else {

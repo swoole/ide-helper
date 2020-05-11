@@ -5,27 +5,27 @@ namespace Swoole;
 class Process
 {
 
-    const IPC_NOWAIT = 256;
+    public const IPC_NOWAIT = 256;
 
-    const PIPE_MASTER = 1;
+    public const PIPE_MASTER = 1;
 
-    const PIPE_WORKER = 2;
+    public const PIPE_WORKER = 2;
 
-    const PIPE_READ = 3;
+    public const PIPE_READ = 3;
 
-    const PIPE_WRITE = 4;
+    public const PIPE_WRITE = 4;
 
-    public $pipe = null;
+    public $pipe;
 
-    public $msgQueueId = null;
+    public $msgQueueId;
 
-    public $msgQueueKey = null;
+    public $msgQueueKey;
 
-    public $pid = null;
+    public $pid;
 
-    public $id = null;
+    public $id;
 
-    private $callback = null;
+    private $callback;
 
     public function __construct(callable $callback, $redirect_stdin_and_stdout = null, $pipe_type = null, $enable_coroutine = null)
     {

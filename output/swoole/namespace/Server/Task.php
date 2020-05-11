@@ -5,7 +5,7 @@ namespace Swoole\Server;
 class Task
 {
 
-    public $data = null;
+    public $data;
 
     public $id = -1;
 

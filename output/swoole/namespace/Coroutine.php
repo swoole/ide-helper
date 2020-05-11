@@ -162,21 +162,14 @@ class Coroutine
     /**
      * @return mixed
      */
-    public static function fread($handle, $length = null)
+    public static function getaddrinfo($hostname, $family = null, $socktype = null, $protocol = null, $service = null, $timeout = null)
     {
     }
 
     /**
      * @return mixed
      */
-    public static function fgets($handle)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function fwrite($handle, $string, $length = null)
+    public static function statvfs($path)
     {
     }
 
@@ -191,20 +184,6 @@ class Coroutine
      * @return mixed
      */
     public static function writeFile($filename, $data, $flags = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function getaddrinfo($hostname, $family = null, $socktype = null, $protocol = null, $service = null, $timeout = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function statvfs($path)
     {
     }
 
@@ -233,6 +212,27 @@ class Coroutine
      * @return mixed
      */
     public static function waitEvent($fd, $events = null, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function fread($handle, $length = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function fgets($handle)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function fwrite($handle, $string, $length = null)
     {
     }
 
