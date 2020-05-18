@@ -234,7 +234,7 @@ class Server
     /**
      * @return mixed
      */
-    public function stop($worker_id = null)
+    public function stop($worker_id = null, $waitEvent = false)
     {
     }
 
