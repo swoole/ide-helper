@@ -111,6 +111,7 @@ class Server
 
         while ($this->running) {
             /** @var Socket $conn */
+            $conn = null;
             $conn = $socket->accept();
             if ($conn) {
                 $conn->setProtocol($this->setting);

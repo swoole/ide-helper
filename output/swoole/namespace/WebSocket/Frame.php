@@ -13,7 +13,7 @@ class Frame
 
     public $flags = 1;
 
-    public $finish = null;
+    public $finish;
 
     /**
      * @return mixed

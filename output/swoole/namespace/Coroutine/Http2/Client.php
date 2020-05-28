@@ -13,11 +13,11 @@ class Client
 
     public $type = 0;
 
-    public $setting = null;
+    public $setting;
 
     public $connected = false;
 
-    public $host = null;
+    public $host;
 
     public $port = 0;
 

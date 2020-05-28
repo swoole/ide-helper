@@ -13,13 +13,13 @@ class Response
 
     public $pipeline = false;
 
-    public $headers = null;
+    public $headers;
 
-    public $set_cookie_headers = null;
+    public $set_cookie_headers;
 
-    public $cookies = null;
+    public $cookies;
 
-    public $data = null;
+    public $data;
 
 
 }

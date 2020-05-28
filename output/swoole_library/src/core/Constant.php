@@ -54,15 +54,29 @@ class Constant
     public const EVENT_ERROR = 'error';
 
     /* {{{ OPTION */
+    public const OPTION_DEBUG_MODE = 'debug_mode';
+
+    public const OPTION_TRACE_FLAGS = 'trace_flags';
+
+    public const OPTION_LOG_FILE = 'log_file';
+
+    public const OPTION_LOG_LEVEL = 'log_level';
+
+    public const OPTION_LOG_DATE_FORMAT = 'log_date_format';
+
+    public const OPTION_LOG_DATE_WITH_MICROSECONDS = 'log_date_with_microseconds';
+
+    public const OPTION_DISPLAY_ERRORS = 'display_errors';
+
+    public const OPTION_DNS_SERVER = 'dns_server';
+
+    public const OPTION_SOCKET_SEND_TIMEOUT = 'socket_send_timeout';
+
     public const OPTION_ENABLE_SIGNALFD = 'enable_signalfd';
 
     public const OPTION_DNS_CACHE_REFRESH_TIME = 'dns_cache_refresh_time';
 
     public const OPTION_SOCKET_BUFFER_SIZE = 'socket_buffer_size';
-
-    public const OPTION_SOCKET_SEND_TIMEOUT = 'socket_send_timeout';
-
-    public const OPTION_LOG_LEVEL = 'log_level';
 
     public const OPTION_THREAD_NUM = 'thread_num';
 
@@ -70,13 +84,9 @@ class Constant
 
     public const OPTION_MAX_THREAD_NUM = 'max_thread_num';
 
-    public const OPTION_DISPLAY_ERRORS = 'display_errors';
-
     public const OPTION_SOCKET_DONTWAIT = 'socket_dontwait';
 
     public const OPTION_DNS_LOOKUP_RANDOM = 'dns_lookup_random';
-
-    public const OPTION_DNS_SERVER = 'dns_server';
 
     public const OPTION_USE_ASYNC_RESOLVER = 'use_async_resolver';
 
@@ -184,8 +194,6 @@ class Constant
 
     public const OPTION_SOCKET_WRITE_TIMEOUT = 'socket_write_timeout';
 
-    public const OPTION_TRACE_FLAGS = 'trace_flags';
-
     public const OPTION_DNS_CACHE_EXPIRE = 'dns_cache_expire';
 
     public const OPTION_DNS_CACHE_CAPACITY = 'dns_cache_capacity';
@@ -250,8 +258,6 @@ class Constant
 
     public const OPTION_DAEMONIZE = 'daemonize';
 
-    public const OPTION_DEBUG_MODE = 'debug_mode';
-
     public const OPTION_PID_FILE = 'pid_file';
 
     public const OPTION_REACTOR_NUM = 'reactor_num';
@@ -273,8 +279,6 @@ class Constant
     public const OPTION_SEND_YIELD = 'send_yield';
 
     public const OPTION_DISPATCH_FUNC = 'dispatch_func';
-
-    public const OPTION_LOG_FILE = 'log_file';
 
     public const OPTION_DISCARD_TIMEOUT_REQUEST = 'discard_timeout_request';
 

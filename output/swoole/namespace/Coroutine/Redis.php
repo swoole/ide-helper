@@ -9,7 +9,7 @@ class Redis
 
     public $port = 0;
 
-    public $setting = null;
+    public $setting;
 
     public $sock = -1;
 

@@ -7,13 +7,13 @@ class Response
 
     public $fd = 0;
 
-    public $socket = null;
+    public $socket;
 
-    public $header = null;
+    public $header;
 
-    public $cookie = null;
+    public $cookie;
 
-    public $trailer = null;
+    public $trailer;
 
     /**
      * @return mixed
