@@ -641,9 +641,11 @@ final class Handler
                 $client->setMethod($this->method);
             }
             /*
-             * Infile
+             * Data
              */
             if ($this->infile) {
+                // Infile
+                // Notice: we make its priority higher than postData but raw cURL will send both of them
                 $data = '';
                 while (true) {
                     $nLength = $this->infileSize - strlen($data);
@@ -656,33 +658,33 @@ final class Handler
                     $data .= fread($this->infile, $nLength);
                 }
                 $client->setData($data);
+                // Notice: although we reset it, raw cURL never do this
                 $this->infile = null;
                 $this->infileSize = PHP_INT_MAX;
-            }
-            /*
-             * Upload File
-             */
-            if ($this->postData and is_array($this->postData)) {
-                foreach ($this->postData as $k => $v) {
-                    if ($v instanceof CURLFile) {
-                        $client->addFile($v->getFilename(), $k, $v->getMimeType() ?: 'application/octet-stream', $v->getPostFilename());
-                        unset($this->postData[$k]);
+            } else {
+                // POST data
+                if ($this->postData) {
+                    if (is_string($this->postData)) {
+                        if (empty($this->headers['Content-Type'])) {
+                            $this->headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                        }
+                    } elseif (is_array($this->postData)) {
+                        foreach ($this->postData as $k => $v) {
+                            if ($v instanceof CURLFile) {
+                                $client->addFile($v->getFilename(), $k, $v->getMimeType() ?: 'application/octet-stream', $v->getPostFilename());
+                                unset($this->postData[$k]);
+                            }
+                        }
                     }
                 }
-            }
-            /*
-             * Post Data
-             */
-            if ($this->postData) {
-                if (is_string($this->postData) and empty($this->headers['Content-Type'])) {
-                    $this->headers['Content-Type'] = 'application/x-www-form-urlencoded';
-                }
                 $client->setData($this->postData);
-                $this->postData = [];
             }
             /*
-             * Http Headers
+             * Headers
              */
+            // Notice: setHeaders must be placed last, because headers may be changed by other parts
+            // As much as possible to ensure that Host is the first header.
+            // See: http://tools.ietf.org/html/rfc7230#section-5.4
             $this->headers['Host'] = $this->urlInfo['host'];
             // remove empty headers (keep same with raw cURL)
             foreach ($this->headers as $headerName => $headerValue) {

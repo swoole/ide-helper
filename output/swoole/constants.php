@@ -1,10 +1,10 @@
 <?php
 
-define('SWOOLE_VERSION', '4.5.1');
-define('SWOOLE_VERSION_ID', 40501);
+define('SWOOLE_VERSION', '4.5.2');
+define('SWOOLE_VERSION_ID', 40502);
 define('SWOOLE_MAJOR_VERSION', 4);
 define('SWOOLE_MINOR_VERSION', 5);
-define('SWOOLE_RELEASE_VERSION', 1);
+define('SWOOLE_RELEASE_VERSION', 2);
 define('SWOOLE_EXTRA_VERSION', '');
 define('SWOOLE_DEBUG', '');
 define('SWOOLE_HAVE_COMPRESSION', '1');
@@ -176,6 +176,8 @@ define('SWOOLE_LOG_NOTICE', 3);
 define('SWOOLE_LOG_WARNING', 4);
 define('SWOOLE_LOG_ERROR', 5);
 define('SWOOLE_LOG_NONE', 6);
+define('SWOOLE_LOG_ROTATION_SINGLE', 0);
+define('SWOOLE_LOG_ROTATION_DAILY', 1);
 define('SWOOLE_IPC_NONE', 0);
 define('SWOOLE_IPC_UNIXSOCK', 1);
 define('SWOOLE_IPC_SOCKET', 3);

@@ -66,6 +66,8 @@ class Constant
 
     public const OPTION_LOG_DATE_WITH_MICROSECONDS = 'log_date_with_microseconds';
 
+    public const OPTION_LOG_ROTATION = 'log_rotation';
+
     public const OPTION_DISPLAY_ERRORS = 'display_errors';
 
     public const OPTION_DNS_SERVER = 'dns_server';
@@ -73,6 +75,8 @@ class Constant
     public const OPTION_SOCKET_SEND_TIMEOUT = 'socket_send_timeout';
 
     public const OPTION_ENABLE_SIGNALFD = 'enable_signalfd';
+
+    public const OPTION_WAIT_SIGNAL = 'wait_signal';
 
     public const OPTION_DNS_CACHE_REFRESH_TIME = 'dns_cache_refresh_time';
 
