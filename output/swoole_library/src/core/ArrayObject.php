@@ -37,6 +37,11 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
         return $this->array;
     }
 
+    public function toArray(): array
+    {
+        return $this->array;
+    }
+
     public function isEmpty(): bool
     {
         return empty($this->array);
@@ -94,6 +99,30 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
+     * @return mixed
+     */
+    public function last()
+    {
+        $key = array_key_last($this->array);
+        if ($key === null) {
+            return null;
+        }
+        return $this->get($key);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function first()
+    {
+        $key = array_key_first($this->array);
+        if ($key === null) {
+            return null;
+        }
+        return $this->get($key);
+    }
+
+    /**
      * @param mixed $key
      * @param mixed $value
      * @return $this
@@ -122,12 +151,12 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     {
         do {
             $key = $this->search($value, $strict);
-            if ($key) {
-                unset($this->array[$key]);
-            } else {
+            if ($key === false) {
                 break;
             }
+            unset($this->array[$key]);
         } while ($loop);
+
         return $this;
     }
 
@@ -273,7 +302,16 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
      */
     public function push($value)
     {
-        return array_push($this->array, $value);
+        return $this->pushBack($value);
+    }
+
+    /**
+     * @param mixed $value
+     * @return int
+     */
+    public function pushFront($value)
+    {
+        return array_unshift($this->array, $value);
     }
 
     /**
@@ -282,7 +320,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
      */
     public function pushBack($value)
     {
-        return array_unshift($this->array, $value);
+        return array_push($this->array, $value);
     }
 
     /**
@@ -303,7 +341,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
      */
     public function pop()
     {
-        return array_pop($this->array);
+        return $this->popBack();
     }
 
     /**
@@ -312,6 +350,14 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function popFront()
     {
         return array_shift($this->array);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function popBack()
+    {
+        return array_pop($this->array);
     }
 
     /**
@@ -344,29 +390,30 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
+     * @param array $args
      * @return static
      */
-    public function map(callable $fn): self
+    public function map(callable $fn, ...$args): self
     {
-        return new static(array_map($fn, $this->array));
+        return new static(array_map($fn, $this->array, ...$args));
     }
 
     /**
+     * @param null $initial
      * @return mixed
      */
-    public function reduce(callable $fn)
+    public function reduce(callable $fn, $initial = null)
     {
-        return array_reduce($this->array, $fn);
+        return array_reduce($this->array, $fn, $initial);
     }
 
     /**
-     * @param int $search_value
-     * @param bool $strict
+     * @param array $args
      * @return static
      */
-    public function keys(int $search_value = null, $strict = false): self
+    public function keys(...$args): self
     {
-        return new static(array_keys($this->array, $search_value, $strict));
+        return new static(array_keys($this->array, ...$args));
     }
 
     /**
@@ -379,12 +426,12 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
 
     /**
      * @param mixed $column_key
-     * @param mixed ...$index
+     * @param mixed $index
      * @return static
      */
-    public function column($column_key, ...$index): self
+    public function column($column_key, $index = null): self
     {
-        return new static(array_column($this->array, $column_key, ...$index));
+        return new static(array_column($this->array, $column_key, $index));
     }
 
     /**
@@ -445,17 +492,6 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
      * | uksort()          | key      | yes                         | user defined                 | uasort()          |
      * | usort()           | value    | no                          | user defined                 | uasort()          |
      */
-
-    /**
-     * @return $this
-     */
-    public function multiSort(int $sort_order = SORT_ASC, int $sort_flags = SORT_REGULAR): self
-    {
-        if (array_multisort($this->array, $sort_order, $sort_flags) !== true) {
-            throw new RuntimeException('array_multisort() failed');
-        }
-        return $this;
-    }
 
     /**
      * @return $this

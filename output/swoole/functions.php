@@ -135,6 +135,11 @@ function swoole_mime_type_exists($filename){}
 /**
  * @return mixed
  */
+function swoole_mime_type_list(){}
+
+/**
+ * @return mixed
+ */
 function swoole_clear_dns_cache(){}
 
 /**
