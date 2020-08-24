@@ -72,15 +72,27 @@ class Constant
 
     public const OPTION_DNS_SERVER = 'dns_server';
 
+    public const OPTION_SOCKET_DNS_TIMEOUT = 'socket_dns_timeout';
+
+    public const OPTION_SOCKET_CONNECT_TIMEOUT = 'socket_connect_timeout';
+
+    public const OPTION_SOCKET_WRITE_TIMEOUT = 'socket_write_timeout';
+
     public const OPTION_SOCKET_SEND_TIMEOUT = 'socket_send_timeout';
+
+    public const OPTION_SOCKET_READ_TIMEOUT = 'socket_read_timeout';
+
+    public const OPTION_SOCKET_RECV_TIMEOUT = 'socket_recv_timeout';
+
+    public const OPTION_SOCKET_BUFFER_SIZE = 'socket_buffer_size';
+
+    public const OPTION_SOCKET_TIMEOUT = 'socket_timeout';
 
     public const OPTION_ENABLE_SIGNALFD = 'enable_signalfd';
 
     public const OPTION_WAIT_SIGNAL = 'wait_signal';
 
     public const OPTION_DNS_CACHE_REFRESH_TIME = 'dns_cache_refresh_time';
-
-    public const OPTION_SOCKET_BUFFER_SIZE = 'socket_buffer_size';
 
     public const OPTION_THREAD_NUM = 'thread_num';
 
@@ -188,16 +200,6 @@ class Constant
 
     public const OPTION_STACK_SIZE = 'stack_size';
 
-    public const OPTION_SOCKET_DNS_TIMEOUT = 'socket_dns_timeout';
-
-    public const OPTION_SOCKET_CONNECT_TIMEOUT = 'socket_connect_timeout';
-
-    public const OPTION_SOCKET_TIMEOUT = 'socket_timeout';
-
-    public const OPTION_SOCKET_READ_TIMEOUT = 'socket_read_timeout';
-
-    public const OPTION_SOCKET_WRITE_TIMEOUT = 'socket_write_timeout';
-
     public const OPTION_DNS_CACHE_EXPIRE = 'dns_cache_expire';
 
     public const OPTION_DNS_CACHE_CAPACITY = 'dns_cache_capacity';
@@ -213,6 +215,8 @@ class Constant
     public const OPTION_RECONNECT = 'reconnect';
 
     public const OPTION_DEFER = 'defer';
+
+    public const OPTION_LOWERCASE_HEADER = 'lowercase_header';
 
     public const OPTION_KEEP_ALIVE = 'keep_alive';
 
@@ -371,6 +375,8 @@ class Constant
     public const OPTION_TCP_KEEPINTERVAL = 'tcp_keepinterval';
 
     public const OPTION_TCP_KEEPCOUNT = 'tcp_keepcount';
+
+    public const OPTION_TCP_USER_TIMEOUT = 'tcp_user_timeout';
 
     public const OPTION_TCP_FASTOPEN = 'tcp_fastopen';
 

@@ -118,7 +118,7 @@ class MySQL
     /**
      * @return mixed
      */
-    public function escape($String, $flags = null)
+    public function escape($string, $flags = null)
     {
     }
 

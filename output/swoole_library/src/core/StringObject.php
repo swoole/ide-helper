@@ -156,14 +156,25 @@ class StringObject
         return strpos($this->string, $needle) === 0;
     }
 
-    public function contains(string $subString): bool
-    {
-        return strpos($this->string, $subString) !== false;
-    }
-
     public function endsWith(string $needle): bool
     {
         return strrpos($this->string, $needle) === (strlen($this->string) - strlen($needle));
+    }
+
+    public function equals($str, bool $strict = false): bool
+    {
+        if ($str instanceof StringObject) {
+            $str = strval($str);
+        }
+        if ($strict) {
+            return $this->string === $str;
+        }
+        return $this->string == $str;
+    }
+
+    public function contains(string $subString): bool
+    {
+        return strpos($this->string, $subString) !== false;
     }
 
     public function split(string $delimiter, int $limit = PHP_INT_MAX): ArrayObject
