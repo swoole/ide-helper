@@ -115,6 +115,22 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     }
 
     /**
+     * @return null|int|string
+     */
+    public function firstKey()
+    {
+        return array_key_first($this->array);
+    }
+
+    /**
+     * @return null|int|string
+     */
+    public function lastKey()
+    {
+        return array_key_last($this->array);
+    }
+
+    /**
      * @return mixed
      */
     public function first()

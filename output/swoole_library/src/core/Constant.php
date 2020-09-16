@@ -108,8 +108,6 @@ class Constant
 
     public const OPTION_ENABLE_COROUTINE = 'enable_coroutine';
 
-    public const OPTION_SSL_METHOD = 'ssl_method';
-
     public const OPTION_SSL_PROTOCOLS = 'ssl_protocols';
 
     public const OPTION_SSL_COMPRESS = 'ssl_compress';
@@ -365,6 +363,10 @@ class Constant
     public const OPTION_WEBSOCKET_SUBPROTOCOL = 'websocket_subprotocol';
 
     public const OPTION_OPEN_WEBSOCKET_CLOSE_FRAME = 'open_websocket_close_frame';
+
+    public const OPTION_OPEN_WEBSOCKET_PING_FRAME = 'open_websocket_ping_frame';
+
+    public const OPTION_OPEN_WEBSOCKET_PONG_FRAME = 'open_websocket_pong_frame';
 
     public const OPTION_OPEN_HTTP2_PROTOCOL = 'open_http2_protocol';
 
