@@ -15,8 +15,6 @@ class PDOConfig
 {
     public const DRIVER_MYSQL = 'mysql';
 
-    public const DRIVER_PGSQL = 'pgsql';
-
     /** @var string */
     protected $driver = self::DRIVER_MYSQL;
 
@@ -157,7 +155,6 @@ class PDOConfig
     {
         return [
             self::DRIVER_MYSQL,
-            self::DRIVER_PGSQL,
         ];
     }
 }

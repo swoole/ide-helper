@@ -20,7 +20,6 @@ class StringObject
 
     /**
      * StringObject constructor.
-     * @param $string
      */
     public function __construct(string $string = '')
     {
@@ -104,7 +103,7 @@ class StringObject
     /**
      * @return static
      */
-    public function lrim(): self
+    public function ltrim(): self
     {
         return new static(ltrim($this->string));
     }
@@ -131,6 +130,19 @@ class StringObject
     }
 
     /**
+     * @param $str
+     */
+    public function append($str): StringObject
+    {
+        if (is_string($str)) {
+            $this->string .= $str;
+        } else {
+            $this->string .= strval($str);
+        }
+        return $this;
+    }
+
+    /**
      * @param null|int $count
      * @return static
      */
@@ -144,14 +156,25 @@ class StringObject
         return strpos($this->string, $needle) === 0;
     }
 
+    public function endsWith(string $needle): bool
+    {
+        return strrpos($this->string, $needle) === (strlen($this->string) - strlen($needle));
+    }
+
+    public function equals($str, bool $strict = false): bool
+    {
+        if ($str instanceof StringObject) {
+            $str = strval($str);
+        }
+        if ($strict) {
+            return $this->string === $str;
+        }
+        return $this->string == $str;
+    }
+
     public function contains(string $subString): bool
     {
         return strpos($this->string, $subString) !== false;
-    }
-
-    public function endsWith(string $needle): bool
-    {
-        return strrpos($this->string, $needle) === (strlen($needle) - 1);
     }
 
     public function split(string $delimiter, int $limit = PHP_INT_MAX): ArrayObject
@@ -161,13 +184,16 @@ class StringObject
 
     public function char(int $index): string
     {
+        if ($index > strlen($this->string)) {
+            return '';
+        }
         return $this->string[$index];
     }
 
     /**
      * @return static
      */
-    public function chunkSplit(int $chunkLength = 1, string $chunkEnd = '')
+    public function chunkSplit(int $chunkLength = 76, string $chunkEnd = '')
     {
         return new static(chunk_split($this->string, ...func_get_args()));
     }
@@ -177,10 +203,7 @@ class StringObject
         return static::detectArrayType(str_split($this->string, ...func_get_args()));
     }
 
-    /**
-     * @return string
-     */
-    public function toString()
+    public function toString(): string
     {
         return $this->string;
     }

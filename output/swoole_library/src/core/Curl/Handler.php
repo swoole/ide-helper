@@ -132,6 +132,16 @@ final class Handler
         }
     }
 
+    public function __toString()
+    {
+        if (PHP_VERSION_ID < 70200) {
+            $id = spl_object_hash($this);
+        } else {
+            $id = spl_object_id($this);
+        }
+        return "Object({$id}) of type (curl)";
+    }
+
     /* ====== Public APIs ====== */
 
     public function isAvailable(): bool
@@ -486,8 +496,13 @@ final class Handler
                 $this->method = (string) $value;
                 break;
             case CURLOPT_PROTOCOLS:
-                if ($value > 3) {
+                if (($value & ~(CURLPROTO_HTTP | CURLPROTO_HTTPS)) != 0) {
                     throw new CurlException("swoole_curl_setopt(): CURLOPT_PROTOCOLS[{$value}] is not supported");
+                }
+                break;
+            case CURLOPT_REDIR_PROTOCOLS:
+                if (($value & ~(CURLPROTO_HTTP | CURLPROTO_HTTPS)) != 0) {
+                    throw new CurlException("swoole_curl_setopt(): CURLOPT_REDIR_PROTOCOLS[{$value}] is not supported");
                 }
                 break;
             case CURLOPT_HTTP_VERSION:
@@ -685,10 +700,9 @@ final class Handler
             // Notice: setHeaders must be placed last, because headers may be changed by other parts
             // As much as possible to ensure that Host is the first header.
             // See: http://tools.ietf.org/html/rfc7230#section-5.4
-            $this->headers['Host'] = $this->urlInfo['host'];
-            // remove empty headers (keep same with raw cURL)
             foreach ($this->headers as $headerName => $headerValue) {
                 if ($headerValue === '') {
+                    // remove empty headers (keep same with raw cURL)
                     unset($this->headers[$headerName]);
                 }
             }
@@ -701,6 +715,8 @@ final class Handler
                 $errCode = $client->errCode;
                 if ($errCode == SWOOLE_ERROR_DNSLOOKUP_RESOLVE_FAILED or $errCode == SWOOLE_ERROR_DNSLOOKUP_RESOLVE_TIMEOUT) {
                     $this->setError(CURLE_COULDNT_RESOLVE_HOST, 'Could not resolve host: ' . $client->host);
+                } else {
+                    $this->setError($errCode, $client->errMsg);
                 }
                 $this->info['total_time'] = microtime(true) - $timeBegin;
                 return false;

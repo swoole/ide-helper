@@ -40,7 +40,7 @@ class MysqliPool extends ConnectionPool
                 $this->config->getUnixSocket()
             );
             if ($mysqli->connect_errno) {
-                throw new MysqliException($mysqli->connect_errno, $mysqli->connect_errno);
+                throw new MysqliException($mysqli->connect_error, $mysqli->connect_errno);
             }
             return $mysqli;
         }, $size, MysqliProxy::class);

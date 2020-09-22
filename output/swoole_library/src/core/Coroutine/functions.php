@@ -27,3 +27,17 @@ function batch(array $tasks, float $timeout = -1): array
     $wg->wait($timeout);
     return $tasks;
 }
+
+function parallel(int $n, callable $fn): void
+{
+    $count = $n;
+    $wg = new WaitGroup();
+    $wg->add($n);
+    while ($count--) {
+        Coroutine::create(function () use ($fn, $wg) {
+            $fn();
+            $wg->done();
+        });
+    }
+    $wg->wait();
+}
