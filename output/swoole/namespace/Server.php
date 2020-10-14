@@ -55,6 +55,8 @@ class Server
 
     public $worker_pid = 0;
 
+    public $stats_timer;
+
     public function __construct($host, $port = null, $mode = null, $sock_type = null)
     {
     }

@@ -88,6 +88,13 @@ class Response
     /**
      * @return mixed
      */
+    public function goaway()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function write($content)
     {
     }

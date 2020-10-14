@@ -14,7 +14,7 @@ namespace Swoole\Process;
 use Swoole\Constant;
 use function Swoole\Coroutine\run;
 
-class ProcessManager
+class Manager
 {
     /**
      * @var Pool

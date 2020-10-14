@@ -15,8 +15,7 @@ use Swoole\Coroutine;
 
 function batch(array $tasks, float $timeout = -1): array
 {
-    $wg = new WaitGroup();
-    $wg->add(count($tasks));
+    $wg = new WaitGroup(count($tasks));
     foreach ($tasks as $id => $task) {
         Coroutine::create(function () use ($wg, &$tasks, $id, $task) {
             $tasks[$id] = null;
@@ -31,8 +30,7 @@ function batch(array $tasks, float $timeout = -1): array
 function parallel(int $n, callable $fn): void
 {
     $count = $n;
-    $wg = new WaitGroup();
-    $wg->add($n);
+    $wg = new WaitGroup($n);
     while ($count--) {
         Coroutine::create(function () use ($fn, $wg) {
             $fn();
@@ -40,4 +38,18 @@ function parallel(int $n, callable $fn): void
         });
     }
     $wg->wait();
+}
+
+function map(array $list, callable $fn, float $timeout = -1): array
+{
+    $wg = new WaitGroup(count($list));
+    foreach ($list as $id => $elem) {
+        Coroutine::create(function () use ($wg, &$list, $id, $elem, $fn): void {
+            $list[$id] = null;
+            $list[$id] = $fn($elem);
+            $wg->done();
+        });
+    }
+    $wg->wait($timeout);
+    return $list;
 }

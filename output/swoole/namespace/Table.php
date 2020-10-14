@@ -67,6 +67,13 @@ class Table implements \Iterator, \ArrayAccess
     /**
      * @return mixed
      */
+    public function delete($key)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function exists($key)
     {
     }

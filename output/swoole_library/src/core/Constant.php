@@ -372,6 +372,8 @@ class Constant
 
     public const OPTION_OPEN_REDIS_PROTOCOL = 'open_redis_protocol';
 
+    public const OPTION_MAX_IDLE_TIME = 'max_idle_time';
+
     public const OPTION_TCP_KEEPIDLE = 'tcp_keepidle';
 
     public const OPTION_TCP_KEEPINTERVAL = 'tcp_keepinterval';
