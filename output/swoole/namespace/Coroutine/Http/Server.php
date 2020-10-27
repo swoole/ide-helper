@@ -44,7 +44,7 @@ class Server
     /**
      * @return mixed
      */
-    public function onAccept()
+    private function onAccept()
     {
     }
 

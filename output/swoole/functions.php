@@ -143,6 +143,26 @@ function swoole_mime_type_list(){}
 function swoole_clear_dns_cache(){}
 
 /**
+ * @param $str[required]
+ * @param $offset[required]
+ * @param $length[optional]
+ * @param $options[optional]
+ * @return mixed
+ */
+function swoole_substr_unserialize($str, $offset, $length = null, $options = null){}
+
+/**
+ * @param $json[required]
+ * @param $offset[required]
+ * @param $length[optional]
+ * @param $associative[optional]
+ * @param $depth[optional]
+ * @param $flags[optional]
+ * @return mixed
+ */
+function swoole_substr_json_decode($json, $offset, $length = null, $associative = null, $depth = null, $flags = null){}
+
+/**
  * @return mixed
  */
 function swoole_internal_call_user_shutdown_begin(){}
