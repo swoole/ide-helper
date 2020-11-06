@@ -81,6 +81,34 @@ class Socket
     /**
      * @return mixed
      */
+    public function readVector($io_vector, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function readVectorAll($io_vector, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function writeVector($io_vector, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function writeVectorAll($io_vector, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function sendFile($filename, $offset = null, $length = null)
     {
     }

@@ -27,13 +27,15 @@ class Barrier
     {
         if ($this->timer != -1) {
             Timer::clear($this->timer);
-            if (static::$cancel_list[$this->cid]) {
+            if (isset(static::$cancel_list[$this->cid])) {
                 unset(static::$cancel_list[$this->cid]);
                 return;
             }
         }
-        if ($this->cid != -1) {
+        if ($this->cid != -1 && $this->cid != Coroutine::getCid()) {
             Coroutine::resume($this->cid);
+        } else {
+            static::$cancel_list[$this->cid] = true;
         }
     }
 
@@ -59,6 +61,8 @@ class Barrier
             });
         }
         $barrier = null;
-        Coroutine::yield();
+        if (!isset(self::$cancel_list[$cid])) {
+            Coroutine::yield();
+        }
     }
 }
