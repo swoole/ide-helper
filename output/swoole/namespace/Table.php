@@ -11,6 +11,10 @@ class Table implements \Iterator, \ArrayAccess
 
     public const TYPE_FLOAT = 2;
 
+    public $size;
+
+    public $memorySize;
+
     public function __construct($table_size, $conflict_proportion = null)
     {
     }
@@ -96,6 +100,13 @@ class Table implements \Iterator, \ArrayAccess
      * @return mixed
      */
     public function decr($key, $column, $decrby = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSize()
     {
     }
 

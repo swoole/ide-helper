@@ -73,13 +73,6 @@ class Process
     /**
      * @return mixed
      */
-    public static function setaffinity(array $cpu_settings)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
     public function set(array $settings)
     {
     }
