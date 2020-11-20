@@ -115,6 +115,8 @@ final class Handler
 
     private $headers = [];
 
+    private $headerMap = [];
+
     private $transfer;
 
     private $errCode = 0;
@@ -124,6 +126,8 @@ final class Handler
     private $failOnError = false;
 
     private $closed = false;
+
+    private $cookieJar = '';
 
     public function __construct(string $url = '')
     {
@@ -310,6 +314,28 @@ final class Handler
         $this->errMsg = $msg ? $msg : curl_strerror($code);
     }
 
+    private function hasHeader(string $headerName): bool
+    {
+        return isset($this->headerMap[strtolower($headerName)]);
+    }
+
+    private function setHeader(string $headerName, string $value): void
+    {
+        $lowerCaseHeaderName = strtolower($headerName);
+
+        if (isset($this->headerMap[$lowerCaseHeaderName])) {
+            unset($this->headers[$this->headerMap[$lowerCaseHeaderName]]);
+        }
+
+        if ($value !== '') {
+            $this->headers[$headerName] = $value;
+            $this->headerMap[$lowerCaseHeaderName] = $headerName;
+        } else {
+            // remove empty headers (keep same with raw cURL)
+            unset($this->headerMap[$lowerCaseHeaderName]);
+        }
+    }
+
     /**
      * @param mixed $value
      * @throws Swoole\Curl\Exception
@@ -360,7 +386,7 @@ final class Handler
                         break;
                     }
                 }
-                $this->headers['Accept-Encoding'] = $value;
+                $this->setHeader('Accept-Encoding', $value);
                 break;
             case CURLOPT_PROXYTYPE:
                 if ($value !== CURLPROXY_HTTP and $value !== CURLPROXY_SOCKS5) {
@@ -412,9 +438,9 @@ final class Handler
             case CURLOPT_SSLVERSION:
             case CURLOPT_NOSIGNAL:
             case CURLOPT_FRESH_CONNECT:
-                /*
-                 * From PHP 5.1.3, this option has no effect: the raw output will always be returned when CURLOPT_RETURNTRANSFER is used.
-                 */
+            /*
+             * From PHP 5.1.3, this option has no effect: the raw output will always be returned when CURLOPT_RETURNTRANSFER is used.
+             */
             case CURLOPT_BINARYTRANSFER: /* TODO */
             case CURLOPT_DNS_USE_GLOBAL_CACHE:
             case CURLOPT_DNS_CACHE_TIMEOUT:
@@ -423,6 +449,10 @@ final class Handler
             case CURLOPT_BUFFERSIZE:
             case CURLOPT_SSLCERTTYPE:
             case CURLOPT_SSLKEYTYPE:
+            case CURLOPT_NOPROXY:
+            case CURLOPT_CERTINFO:
+            case CURLOPT_HEADEROPT:
+            case CURLOPT_PROXYHEADER:
                 break;
             /*
              * SSL
@@ -443,6 +473,11 @@ final class Handler
                 break;
             case CURLOPT_CAPATH:
                 $this->clientOptions[Constant::OPTION_SSL_CAPATH] = $value;
+                break;
+            case CURLOPT_KEYPASSWD:
+            case CURLOPT_SSLCERTPASSWD:
+            case CURLOPT_SSLKEYPASSWD:
+                $this->clientOptions[Constant::OPTION_SSL_PASSPHRASE] = $value;
                 break;
             /*
              * Http POST
@@ -477,14 +512,11 @@ final class Handler
                     $header = explode(':', $header, 2);
                     $headerName = $header[0];
                     $headerValue = trim($header[1] ?? '');
-                    if (strlen($headerValue) === 0) {
-                        continue;
-                    }
-                    $this->headers[$headerName] = $headerValue;
+                    $this->setHeader($headerName, $headerValue);
                 }
                 break;
             case CURLOPT_REFERER:
-                $this->headers['Referer'] = $value;
+                $this->setHeader('Referer', $value);
                 break;
             case CURLINFO_HEADER_OUT:
                 $this->withHeaderOut = boolval($value);
@@ -493,7 +525,7 @@ final class Handler
                 $this->withFileTime = boolval($value);
                 break;
             case CURLOPT_USERAGENT:
-                $this->headers['User-Agent'] = $value;
+                $this->setHeader('User-Agent', $value);
                 break;
             case CURLOPT_CUSTOMREQUEST:
                 $this->method = (string) $value;
@@ -521,7 +553,15 @@ final class Handler
              * Http Cookie
              */
             case CURLOPT_COOKIE:
-                $this->headers['Cookie'] = $value;
+                $this->setHeader('Cookie', $value);
+                break;
+            case CURLOPT_COOKIEJAR:
+                $this->cookieJar = (string) $value;
+                break;
+            case CURLOPT_COOKIEFILE:
+                if (is_file((string) $value)) {
+                    $this->setHeader('Cookie', file_get_contents($value));
+                }
                 break;
             case CURLOPT_CONNECTTIMEOUT:
                 $this->clientOptions[Constant::OPTION_CONNECT_TIMEOUT] = $value;
@@ -560,7 +600,7 @@ final class Handler
                 }
                 break;
             case CURLOPT_USERPWD:
-                $this->headers['Authorization'] = 'Basic ' . base64_encode($value);
+                $this->setHeader('Cookie', 'Basic ' . base64_encode($value));
                 break;
             case CURLOPT_FOLLOWLOCATION:
                 $this->followLocation = $value;
@@ -683,8 +723,8 @@ final class Handler
                 // POST data
                 if ($this->postData) {
                     if (is_string($this->postData)) {
-                        if (empty($this->headers['Content-Type'])) {
-                            $this->headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                        if (!$this->hasHeader('content-type')) {
+                            $this->setHeader('Content-Type', 'application/x-www-form-urlencoded');
                         }
                     } elseif (is_array($this->postData)) {
                         foreach ($this->postData as $k => $v) {
@@ -703,12 +743,6 @@ final class Handler
             // Notice: setHeaders must be placed last, because headers may be changed by other parts
             // As much as possible to ensure that Host is the first header.
             // See: http://tools.ietf.org/html/rfc7230#section-5.4
-            foreach ($this->headers as $headerName => $headerValue) {
-                if ($headerValue === '') {
-                    // remove empty headers (keep same with raw cURL)
-                    unset($this->headers[$headerName]);
-                }
-            }
             $client->setHeaders($this->headers);
             /**
              * Execute.
@@ -737,7 +771,7 @@ final class Handler
                         $this->method = 'GET';
                     }
                     if ($this->autoReferer) {
-                        $this->headers['Referer'] = $this->info['url'];
+                        $this->setHeader('Referer', $this->info['url']);
                     }
                     $this->setUrl($redirectUrl, false);
                     $this->setUrlInfo($redirectParsedUrl);
@@ -809,6 +843,30 @@ final class Handler
             } else {
                 $this->info['filetime'] = -1;
             }
+        }
+
+        if ($this->cookieJar && $this->cookieJar !== '') {
+            if ($this->cookieJar === '-') {
+                foreach ((array) $client->set_cookie_headers as $cookie) {
+                    echo $cookie . PHP_EOL;
+                }
+            } else {
+                $cookies = '';
+                foreach ((array) $client->set_cookie_headers as $cookie) {
+                    $cookies .= "{$cookie};";
+                }
+                file_put_contents($this->cookieJar, $cookies);
+            }
+        }
+
+        if ($this->writeFunction) {
+            if (!is_callable($this->writeFunction)) {
+                trigger_error('curl_exec(): Could not call the CURLOPT_WRITEFUNCTION', E_USER_WARNING);
+                $this->setError(CURLE_WRITE_ERROR, 'Failure writing output to destination');
+                return false;
+            }
+            call_user_func($this->writeFunction, $this, $transfer);
+            return true;
         }
 
         if ($this->returnTransfer) {

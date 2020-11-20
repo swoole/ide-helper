@@ -2,7 +2,7 @@
 
 namespace Swoole\Connection;
 
-class Iterator implements \Iterator, \ArrayAccess
+class Iterator implements \Iterator, \ArrayAccess, \Countable
 {
 
     public function __construct()

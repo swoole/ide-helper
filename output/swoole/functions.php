@@ -88,6 +88,13 @@ function swoole_strerror($errno, $error_type = null){}
 function swoole_errno(){}
 
 /**
+ * @param $level[required]
+ * @param $msg[required]
+ * @return mixed
+ */
+function swoole_error_log($level, $msg){}
+
+/**
  * @param $data[required]
  * @param $type[optional]
  * @return mixed

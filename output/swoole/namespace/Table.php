@@ -2,7 +2,7 @@
 
 namespace Swoole;
 
-class Table implements \Iterator, \ArrayAccess
+class Table implements \Iterator, \ArrayAccess, \Countable
 {
 
     public const TYPE_INT = 1;
