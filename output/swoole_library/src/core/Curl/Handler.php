@@ -600,7 +600,7 @@ final class Handler
                 }
                 break;
             case CURLOPT_USERPWD:
-                $this->setHeader('Cookie', 'Basic ' . base64_encode($value));
+                $this->setHeader('Authorization', 'Basic ' . base64_encode($value));
                 break;
             case CURLOPT_FOLLOWLOCATION:
                 $this->followLocation = $value;
