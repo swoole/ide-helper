@@ -7,6 +7,8 @@ class Task
 
     public $data;
 
+    public $dispatch_time = 0;
+
     public $id = -1;
 
     public $worker_id = -1;

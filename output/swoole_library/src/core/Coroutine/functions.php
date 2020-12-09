@@ -53,3 +53,31 @@ function map(array $list, callable $fn, float $timeout = -1): array
     $wg->wait($timeout);
     return $list;
 }
+
+function deadlock_check()
+{
+    $all_coroutines = Coroutine::listCoroutines();
+    $count = Coroutine::stats()['coroutine_num'];
+    echo
+    "\n===================================================================",
+    "\n [FATAL ERROR]: all coroutines (count: {$count}) are asleep - deadlock!",
+    "\n===================================================================\n";
+
+    $options = Coroutine::getOptions();
+    if (empty($options['deadlock_check_disable_trace'])) {
+        $index = 0;
+        $limit = empty($options['deadlock_check_limit']) ? 32 : intval($options['deadlock_check_limit']);
+        $depth = empty($options['deadlock_check_depth']) ? 32 : intval($options['deadlock_check_depth']);
+        foreach ($all_coroutines as $cid) {
+            echo "\n [Coroutine-{$cid}]";
+            echo "\n--------------------------------------------------------------------\n";
+            echo Coroutine::printBackTrace($cid, DEBUG_BACKTRACE_IGNORE_ARGS, $depth);
+            echo "\n";
+
+            //limit the number of maximum outputs
+            if ($index > $limit) {
+                break;
+            }
+        }
+    }
+}

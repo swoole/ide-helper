@@ -42,6 +42,14 @@ function swoole_coroutine_create($func, $params = null){}
 function swoole_coroutine_defer($callback){}
 
 /**
+ * @param $domain[required]
+ * @param $type[required]
+ * @param $protocol[required]
+ * @return mixed
+ */
+function swoole_coroutine_socketpair(&$domain, &$type, &$protocol){}
+
+/**
  * @param $read_array[required]
  * @param $write_array[required]
  * @param $error_array[required]
@@ -86,6 +94,11 @@ function swoole_strerror($errno, $error_type = null){}
  * @return mixed
  */
 function swoole_errno(){}
+
+/**
+ * @return mixed
+ */
+function swoole_clear_error(){}
 
 /**
  * @param $level[required]

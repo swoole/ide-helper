@@ -29,6 +29,13 @@ class Coroutine
     /**
      * @return mixed
      */
+    public static function getOptions()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public static function exists($cid)
     {
     }
@@ -93,6 +100,13 @@ class Coroutine
      * @return mixed
      */
     public static function getBackTrace($cid = null, $options = null, $limit = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function printBackTrace($cid = null, $options = null, $limit = null)
     {
     }
 

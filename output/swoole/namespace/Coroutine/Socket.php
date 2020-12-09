@@ -7,6 +7,12 @@ class Socket
 
     public $fd = -1;
 
+    public $domain = 0;
+
+    public $type = 0;
+
+    public $protocol = 0;
+
     public $errCode = 0;
 
     public $errMsg = '';

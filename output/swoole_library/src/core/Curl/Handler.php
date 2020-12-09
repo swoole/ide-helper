@@ -138,11 +138,7 @@ final class Handler
 
     public function __toString()
     {
-        if (PHP_VERSION_ID < 70200) {
-            $id = spl_object_hash($this);
-        } else {
-            $id = spl_object_id($this);
-        }
+        $id = spl_object_id($this);
         return "Object({$id}) of type (curl)";
     }
 

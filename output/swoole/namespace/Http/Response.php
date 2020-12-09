@@ -60,14 +60,14 @@ class Response
     /**
      * @return mixed
      */
-    public function header($key, $value, $ucwords = null)
+    public function header($key, $value, $format = null)
     {
     }
 
     /**
      * @return mixed
      */
-    public function setHeader($key, $value, $ucwords = null)
+    public function setHeader($key, $value, $format = null)
     {
     }
 

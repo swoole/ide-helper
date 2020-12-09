@@ -73,6 +73,20 @@ class Process
     /**
      * @return mixed
      */
+    public function setPriority($which, $priority)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPriority($which)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function set(array $settings)
     {
     }

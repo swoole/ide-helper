@@ -29,6 +29,13 @@ class Scheduler
     /**
      * @return mixed
      */
+    public function getOptions()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function start()
     {
     }
