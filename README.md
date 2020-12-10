@@ -1,6 +1,6 @@
 # Swoole IDE Helper
 
-[![Build Status](https://travis-ci.org/swoole/ide-helper.svg?branch=master)](https://travis-ci.org/swoole/ide-helper)
+[![Build Status](https://github.com/swoole/ide-helper/workflows/Tests/badge.svg)](https://github.com/swoole/ide-helper/actions)
 [![Latest Stable Version](https://poser.pugx.org/swoole/ide-helper/v/stable.svg)](https://packagist.org/packages/swoole/ide-helper)
 [![License](https://poser.pugx.org/swoole/ide-helper/license)](LICENSE)
 
