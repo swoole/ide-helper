@@ -23,7 +23,6 @@ class SwooleLib extends AbstractStubGenerator
         "src/ext",
         "src/std",
         "src/constants.php",
-        "src/functions.php",
     ];
 
     /**
