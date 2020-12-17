@@ -59,9 +59,9 @@ class PDOStatementProxy extends ObjectProxy
                 }
                 /* no more chances or non-IO failures or in transaction */
                 if (
-                    !in_array($this->__object->errorInfo()[1], $this->parent::IO_ERRORS, true) ||
-                    $n === 0 ||
-                    $this->parent->inTransaction()
+                    !in_array($this->__object->errorInfo()[1], $this->parent::IO_ERRORS, true)
+                    || $n === 0
+                    || $this->parent->inTransaction()
                 ) {
                     $errorInfo = $this->__object->errorInfo();
 

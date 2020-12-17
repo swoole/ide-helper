@@ -47,7 +47,14 @@ function swoole_coroutine_defer($callback){}
  * @param $protocol[required]
  * @return mixed
  */
-function swoole_coroutine_socketpair(&$domain, &$type, &$protocol){}
+function swoole_coroutine_socketpair($domain, $type, $protocol){}
+
+/**
+ * @param $count[optional]
+ * @param $sleep_time[optional]
+ * @return mixed
+ */
+function swoole_test_kernel_coroutine($count = null, $sleep_time = null){}
 
 /**
  * @param $read_array[required]

@@ -57,10 +57,7 @@ class MysqliProxy extends ObjectProxy
                     break;
                 }
                 /* no more chances or non-IO failures */
-                if (
-                    !in_array($this->__object->errno, static::IO_ERRORS, true) ||
-                    $n === 0
-                ) {
+                if (!in_array($this->__object->errno, static::IO_ERRORS, true) || ($n === 0)) {
                     throw new MysqliException($this->__object->error, $this->__object->errno);
                 }
                 $this->reconnect();

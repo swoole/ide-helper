@@ -88,6 +88,14 @@ class Constant
 
     public const OPTION_SOCKET_TIMEOUT = 'socket_timeout';
 
+    public const OPTION_AIO_CORE_WORKER_NUM = 'aio_core_worker_num';
+
+    public const OPTION_AIO_WORKER_NUM = 'aio_worker_num';
+
+    public const OPTION_AIO_MAX_WAIT_TIME = 'aio_max_wait_time';
+
+    public const OPTION_AIO_MAX_IDLE_TIME = 'aio_max_idle_time';
+
     public const OPTION_ENABLE_SIGNALFD = 'enable_signalfd';
 
     public const OPTION_WAIT_SIGNAL = 'wait_signal';
@@ -188,7 +196,11 @@ class Constant
 
     public const OPTION_SSL_DISABLE_COMPRESSION = 'ssl_disable_compression';
 
+    public const OPTION_MAX_CORO_NUM = 'max_coro_num';
+
     public const OPTION_MAX_COROUTINE = 'max_coroutine';
+
+    public const OPTION_ENABLE_DEADLOCK_CHECK = 'enable_deadlock_check';
 
     public const OPTION_HOOK_FLAGS = 'hook_flags';
 
@@ -201,14 +213,6 @@ class Constant
     public const OPTION_DNS_CACHE_EXPIRE = 'dns_cache_expire';
 
     public const OPTION_DNS_CACHE_CAPACITY = 'dns_cache_capacity';
-
-    public const OPTION_AIO_CORE_WORKER_NUM = 'aio_core_worker_num';
-
-    public const OPTION_AIO_WORKER_NUM = 'aio_worker_num';
-
-    public const OPTION_AIO_MAX_WAIT_TIME = 'aio_max_wait_time';
-
-    public const OPTION_AIO_MAX_IDLE_TIME = 'aio_max_idle_time';
 
     public const OPTION_RECONNECT = 'reconnect';
 
@@ -276,8 +280,6 @@ class Constant
 
     public const OPTION_MAX_QUEUED_BYTES = 'max_queued_bytes';
 
-    public const OPTION_MAX_CORO_NUM = 'max_coro_num';
-
     public const OPTION_SEND_TIMEOUT = 'send_timeout';
 
     public const OPTION_DISPATCH_MODE = 'dispatch_mode';
@@ -296,6 +298,10 @@ class Constant
 
     public const OPTION_TASK_USE_OBJECT = 'task_use_object';
 
+    public const OPTION_TASK_OBJECT = 'task_object';
+
+    public const OPTION_EVENT_OBJECT = 'event_object';
+
     public const OPTION_TASK_ENABLE_COROUTINE = 'task_enable_coroutine';
 
     public const OPTION_TASK_WORKER_NUM = 'task_worker_num';
@@ -311,6 +317,8 @@ class Constant
     public const OPTION_MAX_CONNECTION = 'max_connection';
 
     public const OPTION_MAX_CONN = 'max_conn';
+
+    public const OPTION_START_SESSION_ID = 'start_session_id';
 
     public const OPTION_HEARTBEAT_CHECK_INTERVAL = 'heartbeat_check_interval';
 
@@ -395,6 +403,8 @@ class Constant
     public const OPTION_SSL_ECDH_CURVE = 'ssl_ecdh_curve';
 
     public const OPTION_SSL_DHPARAM = 'ssl_dhparam';
+
+    public const OPTION_SSL_SNI_CERTS = 'ssl_sni_certs';
 
     public const OPTION_OPEN_SSL = 'open_ssl';
 

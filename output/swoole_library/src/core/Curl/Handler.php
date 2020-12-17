@@ -279,11 +279,7 @@ final class Handler
         $port = $urlInfo['port'];
         if ($this->client) {
             $oldUrlInfo = $this->urlInfo;
-            if (
-                $host !== $oldUrlInfo['host'] or
-                $port !== $oldUrlInfo['port'] or
-                $scheme !== $oldUrlInfo['scheme']
-            ) {
+            if (($host !== $oldUrlInfo['host']) || ($port !== $oldUrlInfo['port']) || ($scheme !== $oldUrlInfo['scheme'])) {
                 /* target changed */
                 $this->create($urlInfo);
             }
@@ -915,9 +911,11 @@ final class Handler
                 }
                 $redirectUri['path'] = $path . $location;
             }
-            foreach ($uri as $k => $v) {
-                if (!in_array($k, ['path', 'query'])) {
-                    $redirectUri[$k] = $v;
+            if (is_array($uri)) {
+                foreach ($uri as $k => $v) {
+                    if (!in_array($k, ['path', 'query'])) {
+                        $redirectUri[$k] = $v;
+                    }
                 }
             }
         }
