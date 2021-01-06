@@ -25,6 +25,13 @@ class Response
     /**
      * @return mixed
      */
+    public function isWritable()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function cookie($name, $value = null, $expires = null, $path = null, $domain = null, $secure = null, $httponly = null, $samesite = null, $priority = null)
     {
     }
