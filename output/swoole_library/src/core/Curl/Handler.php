@@ -348,7 +348,7 @@ final class Handler
             case CURLOPT_FILE:
             case CURLOPT_INFILE:
                 if (!is_resource($value)) {
-                    trigger_error(E_USER_WARNING, 'swoole_curl_setopt(): supplied argument is not a valid File-Handle resource');
+                    trigger_error('swoole_curl_setopt(): supplied argument is not a valid File-Handle resource', E_USER_WARNING);
                     return false;
                 }
                 break;
@@ -434,7 +434,7 @@ final class Handler
              * Ignore options
              */
             case CURLOPT_VERBOSE:
-                // trigger_error(E_USER_WARNING, 'swoole_curl_setopt(): CURLOPT_VERBOSE is not supported');
+                // trigger_error('swoole_curl_setopt(): CURLOPT_VERBOSE is not supported', E_USER_WARNING);
             case CURLOPT_SSLVERSION:
             case CURLOPT_NOSIGNAL:
             case CURLOPT_FRESH_CONNECT:
@@ -653,9 +653,20 @@ final class Handler
              * Http Proxy
              */
             if ($this->proxy) {
-                $proxy = explode(':', $this->proxy);
-                $proxyPort = $proxy[1] ?? $this->proxyPort;
-                $proxy = $proxy[0];
+                $parse = parse_url($this->proxy);
+                $proxy = $parse['host'] ?? $parse['path'];
+                $proxyPort = $parse['port'] ?? $this->proxyPort;
+                $proxyUsername = $parse['user'] ?? $this->proxyUsername;
+                $proxyPassword = $parse['pass'] ?? $this->proxyPassword;
+                $proxyType = $parse['scheme'] ?? $this->proxyType;
+                if (is_string($proxyType)) {
+                    if ($proxyType === 'socks5') {
+                        $proxyType = CURLPROXY_SOCKS5;
+                    } else {
+                        $proxyType = CURLPROXY_HTTP;
+                    }
+                }
+
                 if (!filter_var($proxy, FILTER_VALIDATE_IP)) {
                     $ip = Swoole\Coroutine::gethostbyname($proxy, AF_INET, $this->clientOptions['connect_timeout'] ?? -1);
                     if (!$ip) {
@@ -664,25 +675,25 @@ final class Handler
                     }
                     $this->proxy = $proxy = $ip;
                 }
-                switch ($this->proxyType) {
+                switch ($proxyType) {
                     case CURLPROXY_HTTP:
                         $proxyOptions = [
                             'http_proxy_host' => $proxy,
                             'http_proxy_port' => $proxyPort,
-                            'http_proxy_username' => $this->proxyUsername,
-                            'http_proxy_password' => $this->proxyPassword,
+                            'http_proxy_username' => $proxyUsername,
+                            'http_proxy_password' => $proxyPassword,
                         ];
                         break;
                     case CURLPROXY_SOCKS5:
                         $proxyOptions = [
                             'socks5_host' => $proxy,
                             'socks5_port' => $proxyPort,
-                            'socks5_username' => $this->proxyUsername,
-                            'socks5_password' => $this->proxyPassword,
+                            'socks5_username' => $proxyUsername,
+                            'socks5_password' => $proxyPassword,
                         ];
                         break;
                     default:
-                        throw new CurlException("Unexpected proxy type [{$this->proxyType}]");
+                        throw new CurlException("Unexpected proxy type [{$proxyType}]");
                 }
             }
             /*
@@ -919,9 +930,11 @@ final class Handler
                 }
                 $redirectUri['path'] = $path . $location;
             }
-            foreach ($uri as $k => $v) {
-                if (!in_array($k, ['path', 'query'])) {
-                    $redirectUri[$k] = $v;
+            if (is_array($uri)) {
+                foreach ($uri as $k => $v) {
+                    if (!in_array($k, ['path', 'query'])) {
+                        $redirectUri[$k] = $v;
+                    }
                 }
             }
         }
