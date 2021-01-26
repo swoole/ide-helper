@@ -65,6 +65,13 @@ class Request
     {
     }
 
+    /**
+     * @return mixed
+     */
+    public function getMethod()
+    {
+    }
+
     public function __destruct()
     {
     }

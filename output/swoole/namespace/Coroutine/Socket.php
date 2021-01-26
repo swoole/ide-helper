@@ -73,6 +73,27 @@ class Socket
     /**
      * @return mixed
      */
+    public function recvAll($length = null, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function recvLine($length = null, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function recvWithBuffer($length = null, $timeout = null)
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function recvPacket($timeout = null)
     {
     }
@@ -116,13 +137,6 @@ class Socket
      * @return mixed
      */
     public function sendFile($filename, $offset = null, $length = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function recvAll($length = null, $timeout = null)
     {
     }
 
