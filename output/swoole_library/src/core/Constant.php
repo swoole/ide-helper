@@ -238,6 +238,8 @@ class Constant
 
     public const OPTION_HTTP_GZIP_LEVEL = 'http_gzip_level';
 
+    public const OPTION_COMPRESSION_MIN_LENGTH = 'compression_min_length';
+
     public const OPTION_UPLOAD_TMP_DIR = 'upload_tmp_dir';
 
     public const OPTION_HOST = 'host';

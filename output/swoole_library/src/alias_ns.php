@@ -9,26 +9,23 @@
 
 declare(strict_types=1);
 
-namespace Swoole\Coroutine {
-    use Swoole\Coroutine;
+namespace Co;
 
+use Swoole\Coroutine;
+
+if (SWOOLE_USE_SHORTNAME) {
     function run(callable $fn, ...$args)
     {
-        $s = new Scheduler();
-        $options = Coroutine::getOptions();
-        if (!isset($options['hook_flags'])) {
-            $s->set(['hook_flags' => SWOOLE_HOOK_ALL]);
-        }
-        $s->add($fn, ...$args);
-        return $s->start();
+        return \Swoole\Coroutine\run($fn, ...$args);
     }
-}
 
-namespace Co {
-    if (SWOOLE_USE_SHORTNAME) {
-        function run(callable $fn, ...$args)
-        {
-            return \Swoole\Coroutine\run($fn, ...$args);
-        }
+    function go(callable $fn, ...$args)
+    {
+        return Coroutine::create($fn, ...$args);
+    }
+
+    function defer(callable $fn)
+    {
+        Coroutine::defer($fn);
     }
 }

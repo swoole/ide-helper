@@ -13,6 +13,27 @@ namespace Swoole\Coroutine;
 
 use Swoole\Coroutine;
 
+function run(callable $fn, ...$args)
+{
+    $s = new Scheduler();
+    $options = Coroutine::getOptions();
+    if (!isset($options['hook_flags'])) {
+        $s->set(['hook_flags' => SWOOLE_HOOK_ALL]);
+    }
+    $s->add($fn, ...$args);
+    return $s->start();
+}
+
+function go(callable $fn, ...$args)
+{
+    Coroutine::create($fn, ...$args);
+}
+
+function defer(callable $fn)
+{
+    Coroutine::defer($fn);
+}
+
 function batch(array $tasks, float $timeout = -1): array
 {
     $wg = new WaitGroup(count($tasks));

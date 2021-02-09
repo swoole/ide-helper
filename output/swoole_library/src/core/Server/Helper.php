@@ -85,6 +85,7 @@ class Helper
         'http_parse_files' => true,
         'http_compression' => true,
         'http_compression_level' => true,
+        'compression_min_length' => true,
         'http_gzip_level' => true,
         'websocket_compression' => true,
         'upload_tmp_dir' => true,
