@@ -22,13 +22,6 @@ class Server extends \Swoole\Server
     /**
      * @return mixed
      */
-    public function start()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
     public function setHandler($command, callable $callback)
     {
     }

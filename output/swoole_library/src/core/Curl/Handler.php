@@ -291,7 +291,7 @@ final class Handler
     private function setPort(int $port): void
     {
         $this->info['primary_port'] = $port;
-        if ($this->urlInfo['port'] !== $port) {
+        if (!isset($this->urlInfo['port']) || $this->urlInfo['port'] !== $port) {
             $this->urlInfo['port'] = $port;
             if ($this->client) {
                 /* target changed */
