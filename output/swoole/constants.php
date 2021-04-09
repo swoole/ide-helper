@@ -1,10 +1,10 @@
 <?php
 
-define('SWOOLE_VERSION', '4.4.24');
-define('SWOOLE_VERSION_ID', 40424);
+define('SWOOLE_VERSION', '4.4.25');
+define('SWOOLE_VERSION_ID', 40425);
 define('SWOOLE_MAJOR_VERSION', 4);
 define('SWOOLE_MINOR_VERSION', 4);
-define('SWOOLE_RELEASE_VERSION', 24);
+define('SWOOLE_RELEASE_VERSION', 25);
 define('SWOOLE_EXTRA_VERSION', '');
 define('SWOOLE_DEBUG', '');
 define('SWOOLE_HAVE_COMPRESSION', '1');
