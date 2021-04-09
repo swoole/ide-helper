@@ -36,10 +36,10 @@ function request(string $url, string $method, $data = null, array $options = nul
         $client->set($options);
     }
     if (is_array($headers)) {
-        $client->setHeaders($options);
+        $client->setHeaders($headers);
     }
     if (is_array($cookies)) {
-        $client->setCookies($options);
+        $client->setCookies($cookies);
     }
     $request_url = swoole_array_default_value($info, 'path', '/');
     if (!empty($info['query'])) {

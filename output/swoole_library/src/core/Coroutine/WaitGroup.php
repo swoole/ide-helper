@@ -67,4 +67,9 @@ class WaitGroup
         }
         return true;
     }
+
+    public function count(): int
+    {
+        return $this->count;
+    }
 }
