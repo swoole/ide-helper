@@ -42,7 +42,6 @@ class_alias(Swoole\Server::class, swoole_server::class);
 class_alias(Swoole\Server\Port::class, swoole_server_port::class);
 class_alias(Swoole\Server\Task::class, swoole_server_task::class);
 class_alias(Swoole\Table::class, swoole_table::class);
-class_alias(Swoole\Table\Row::class, swoole_table_row::class);
 class_alias(Swoole\Timer::class, swoole_timer::class);
 class_alias(Swoole\Timer\Iterator::class, swoole_timer_iterator::class);
 class_alias(Swoole\Websocket\Closeframe::class, swoole_websocket_closeframe::class);

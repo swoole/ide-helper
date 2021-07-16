@@ -123,13 +123,10 @@ class PDOStatementProxy extends ObjectProxy
         return $this->__object->setAttribute($attribute, $value);
     }
 
-    public function setFetchMode(int $mode, $classNameObject = null, array $ctorarfg = []): bool
+    public function setFetchMode(int $mode, ...$args): bool
     {
-        $this->setFetchModeContext = [$mode, $classNameObject, $ctorarfg];
-        if (!isset($classNameObject)) {
-            return $this->__object->setFetchMode($mode);
-        }
-        return $this->__object->setFetchMode($mode, $classNameObject, $ctorarfg);
+        $this->setFetchModeContext = func_get_args();
+        return $this->__object->setFetchMode(...$this->setFetchModeContext);
     }
 
     public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR, $length = null, $driver_options = null): bool

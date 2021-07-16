@@ -55,7 +55,21 @@ class Pool
     /**
      * @return mixed
      */
+    public function detach()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
     public function start()
+    {
+    }
+
+    /**
+     * @return mixed
+     */
+    public function stop()
     {
     }
 

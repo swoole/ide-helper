@@ -176,7 +176,7 @@ abstract class Status
         self::UNSUPPORTED_MEDIA_TYPE => 'Unsupported Media Type',
         self::REQUESTED_RANGE_NOT_SATISFIABLE => 'Requested range not satisfiable',
         self::EXPECTATION_FAILED => 'Expectation Failed',
-        self::MISDIRECTED_REQUEST => 'Unprocessable Entity',
+        self::MISDIRECTED_REQUEST => 'Misdirected Request',
         self::UNPROCESSABLE_ENTITY => 'Unprocessable Entity',
         self::LOCKED => 'Locked',
         self::FAILED_DEPENDENCY => 'Failed Dependency',

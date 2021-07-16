@@ -15,7 +15,7 @@ class System
     /**
      * @return mixed
      */
-    public static function dnsLookup($domain_name, $timeout = null)
+    public static function dnsLookup($domain_name, $timeout = null, $type = null)
     {
     }
 

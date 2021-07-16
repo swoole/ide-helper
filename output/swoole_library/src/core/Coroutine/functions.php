@@ -26,7 +26,7 @@ function run(callable $fn, ...$args)
 
 function go(callable $fn, ...$args)
 {
-    Coroutine::create($fn, ...$args);
+    return Coroutine::create($fn, ...$args);
 }
 
 function defer(callable $fn)

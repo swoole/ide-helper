@@ -59,6 +59,7 @@ final class Handler
         'protocol' => 0,
         'ssl_verifyresult' => 0,
         'scheme' => '',
+        'private' => '',
     ];
 
     private $withHeaderOut = false;
@@ -128,6 +129,8 @@ final class Handler
     private $closed = false;
 
     private $cookieJar = '';
+
+    private $resolve = [];
 
     public function __construct(string $url = '')
     {
@@ -215,7 +218,15 @@ final class Handler
         if ($urlInfo === null) {
             $urlInfo = $this->urlInfo;
         }
-        $this->client = new Client($urlInfo['host'], $urlInfo['port'], $urlInfo['scheme'] === 'https');
+        $host = $urlInfo['host'];
+        $port = $urlInfo['port'];
+        if (isset($this->resolve[$host])) {
+            if (!$this->hasHeader('Host')) {
+                $this->setHeader('Host', $host);
+            }
+            $this->urlInfo['host'] = $host = $this->resolve[$host][$port] ?? null ?: $host;
+        }
+        $this->client = new Client($host, $port, $urlInfo['scheme'] === 'https');
     }
 
     private function getUrl(): string
@@ -303,7 +314,7 @@ final class Handler
     private function setError($code, $msg = ''): void
     {
         $this->errCode = $code;
-        $this->errMsg = $msg ? $msg : curl_strerror($code);
+        $this->errMsg = $msg ?: curl_strerror($code);
     }
 
     private function hasHeader(string $headerName): bool
@@ -412,6 +423,25 @@ final class Handler
                 $this->nobody = boolval($value);
                 $this->method = 'HEAD';
                 break;
+            case CURLOPT_RESOLVE:
+                foreach ((array) $value as $resolve) {
+                    $flag = substr($resolve, 0, 1);
+                    if ($flag === '+' || $flag === '-') {
+                        // TODO: [+]HOST:PORT:ADDRESS
+                        $resolve = substr($resolve, 1);
+                    }
+                    $tmpResolve = explode(':', $resolve, 3);
+                    $host = $tmpResolve[0] ?? '';
+                    $port = $tmpResolve[1] ?? 0;
+                    $ip = $tmpResolve[2] ?? '';
+                    if ($flag === '-') {
+                        unset($this->resolve[$host][$port]);
+                    } else {
+                        // TODO: HOST:PORT:ADDRESS[,ADDRESS]...
+                        $this->resolve[$host][$port] = explode(',', $ip)[0];
+                    }
+                }
+                break;
             case CURLOPT_IPRESOLVE:
                 if ($value !== CURL_IPRESOLVE_WHATEVER and $value !== CURL_IPRESOLVE_V4) {
                     throw new Swoole\Curl\Exception(
@@ -421,6 +451,9 @@ final class Handler
                 break;
             case CURLOPT_TCP_NODELAY:
                 $this->clientOptions[Constant::OPTION_OPEN_TCP_NODELAY] = boolval($value);
+                break;
+            case CURLOPT_PRIVATE:
+                $this->info['private'] = $value;
                 break;
             /*
              * Ignore options
@@ -797,6 +830,10 @@ final class Handler
         $this->info['speed_download'] = 1 / $this->info['total_time'] * $this->info['size_download'];
         if (isset($redirectBeginTime)) {
             $this->info['redirect_time'] = microtime(true) - $redirectBeginTime;
+        }
+
+        if (filter_var($this->urlInfo['host'], FILTER_VALIDATE_IP)) {
+            $this->info['primary_ip'] = $this->urlInfo['host'];
         }
 
         $headerContent = '';

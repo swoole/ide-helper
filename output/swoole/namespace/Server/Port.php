@@ -25,6 +25,8 @@ class Port
 
     private $onMessage;
 
+    private $onDisconnect;
+
     public $host;
 
     public $port = 0;

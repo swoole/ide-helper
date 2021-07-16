@@ -18,9 +18,10 @@ function swoole_last_error(){}
 /**
  * @param $domain_name[required]
  * @param $timeout[optional]
+ * @param $type[optional]
  * @return mixed
  */
-function swoole_async_dns_lookup_coro($domain_name, $timeout = null){}
+function swoole_async_dns_lookup_coro($domain_name, $timeout = null, $type = null){}
 
 /**
  * @param $settings[required]

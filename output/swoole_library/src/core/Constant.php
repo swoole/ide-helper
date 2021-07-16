@@ -13,43 +13,56 @@ namespace Swoole;
 
 class Constant
 {
-    public const EVENT_RECEIVE = 'receive';
-
-    public const EVENT_CONNECT = 'connect';
-
-    public const EVENT_CLOSE = 'close';
-
-    public const EVENT_PACKET = 'packet';
-
-    public const EVENT_REQUEST = 'request';
-
-    public const EVENT_MESSAGE = 'message';
-
-    public const EVENT_OPEN = 'open';
-
-    public const EVENT_HANDSHAKE = 'handshake';
-
-    public const EVENT_TASK = 'task';
-
-    public const EVENT_FINISH = 'finish';
-
+    /* {{{ EVENT */
     public const EVENT_START = 'start';
 
     public const EVENT_SHUTDOWN = 'shutdown';
 
     public const EVENT_WORKER_START = 'workerStart';
 
+    public const EVENT_WORKER_STOP = 'workerStop';
+
+    public const EVENT_BEFORE_RELOAD = 'beforeReload';
+
+    public const EVENT_AFTER_RELOAD = 'afterReload';
+
+    public const EVENT_TASK = 'task';
+
+    public const EVENT_FINISH = 'finish';
+
     public const EVENT_WORKER_EXIT = 'workerExit';
 
     public const EVENT_WORKER_ERROR = 'workerError';
 
-    public const EVENT_WORKER_STOP = 'workerStop';
-
-    public const EVENT_PIPE_MESSAGE = 'pipeMessage';
-
     public const EVENT_MANAGER_START = 'managerStart';
 
     public const EVENT_MANAGER_STOP = 'managerStop';
+
+    public const EVENT_PIPE_MESSAGE = 'pipeMessage';
+
+    public const EVENT_CONNECT = 'connect';
+
+    public const EVENT_RECEIVE = 'receive';
+
+    public const EVENT_CLOSE = 'close';
+
+    public const EVENT_PACKET = 'packet';
+
+    public const EVENT_BUFFER_FULL = 'bufferFull';
+
+    public const EVENT_BUFFER_EMPTY = 'bufferEmpty';
+
+    public const EVENT_REQUEST = 'request';
+
+    public const EVENT_HANDSHAKE = 'handshake';
+
+    public const EVENT_OPEN = 'open';
+
+    public const EVENT_MESSAGE = 'message';
+
+    public const EVENT_DISCONNECT = 'disconnect';
+
+    /* }}} EVENT */
 
     public const EVENT_ERROR = 'error';
 
@@ -224,6 +237,10 @@ class Constant
 
     public const OPTION_WEBSOCKET_MASK = 'websocket_mask';
 
+    public const OPTION_HTTP_COMPRESSION = 'http_compression';
+
+    public const OPTION_BODY_DECOMPRESSION = 'body_decompression';
+
     public const OPTION_WEBSOCKET_COMPRESSION = 'websocket_compression';
 
     public const OPTION_HTTP_PARSE_COOKIE = 'http_parse_cookie';
@@ -231,8 +248,6 @@ class Constant
     public const OPTION_HTTP_PARSE_POST = 'http_parse_post';
 
     public const OPTION_HTTP_PARSE_FILES = 'http_parse_files';
-
-    public const OPTION_HTTP_COMPRESSION = 'http_compression';
 
     public const OPTION_HTTP_COMPRESSION_LEVEL = 'http_compression_level';
 
