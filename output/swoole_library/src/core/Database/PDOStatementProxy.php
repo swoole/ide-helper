@@ -129,7 +129,7 @@ class PDOStatementProxy extends ObjectProxy
         return $this->__object->setFetchMode(...$this->setFetchModeContext);
     }
 
-    public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR, $length = null, $driver_options = null): bool
+    public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR, $length = 0, $driver_options = null): bool
     {
         $this->bindParamContext[$parameter] = [$variable, $data_type, $length, $driver_options];
         return $this->__object->bindParam($parameter, $variable, $data_type, $length, $driver_options);

@@ -107,6 +107,8 @@ final class Handler
     /** @var callable */
     private $writeFunction;
 
+    private $noProgress = true;
+
     /** @var callable */
     private $progressFunction;
 
@@ -614,6 +616,9 @@ final class Handler
                 break;
             case CURLOPT_WRITEFUNCTION:
                 $this->writeFunction = $value;
+                break;
+            case CURLOPT_NOPROGRESS:
+                $this->noProgress = $value;
                 break;
             case CURLOPT_PROGRESSFUNCTION:
                 $this->progressFunction = $value;
