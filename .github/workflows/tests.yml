@@ -1,27 +1,15 @@
-name: Tests
+name: Coding Style Checks
 
 on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
-  tests:
+  coding-style-checks:
     runs-on: ubuntu-latest
+    name: Coding Style Checks
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          tools: composer:v2
-          coverage: none
-
-      - name: Install dependencies
-        uses: nick-invision/retry@v1
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer install --prefer-dist --no-interaction --no-progress
-
       - name: Run Coding Style Checks
-        run: ./vendor/bin/phpcs -v --standard=PSR12 bin src
+        run: docker run --rm -v "$(pwd):/var/www" -w /var/www -i jakzal/phpqa:php7.4 phpcs -v --standard=PSR12 bin src
