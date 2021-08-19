@@ -291,9 +291,7 @@ abstract class AbstractStubGenerator
                 $method->setDocBlock(
                     DocBlockGenerator::fromArray(
                         [
-                            'shortDescription' => null,
-                            'longDescription'  => null,
-                            'tags'             => [
+                            'tags' => [
                                 new ReturnTag(
                                     [
                                         'datatype' => 'mixed',

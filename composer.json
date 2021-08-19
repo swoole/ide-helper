@@ -10,10 +10,9 @@
         }
     ],
     "require-dev": {
-        "guzzlehttp/guzzle": "~6.5.0",
-        "laminas/laminas-code": "~3.4.0",
-        "squizlabs/php_codesniffer": "~3.5.0",
-        "symfony/filesystem": "~4.0"
+        "guzzlehttp/guzzle": "~7.3.0",
+        "laminas/laminas-code": "~4.4.0",
+        "symfony/filesystem": "~5.3.0"
     },
     "autoload-dev": {
         "psr-4": {
