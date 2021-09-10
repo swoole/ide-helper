@@ -4,7 +4,6 @@ namespace Swoole;
 
 class Table implements \Iterator, \ArrayAccess, \Countable
 {
-
     public const TYPE_INT = 1;
 
     public const TYPE_STRING = 3;
@@ -152,5 +151,56 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     {
     }
 
+    /**
+     * Whether or not an offset exists.
+     *
+     * @param mixed $offset An offset to check for.
+     * @return bool Returns true on success or false on failure.
+     * @inheritDoc
+     * @see \ArrayAccess
+     * @see https://www.php.net/manual/en/class.arrayaccess.php
+     */
+    public function offsetExists($offset)
+    {
+    }
 
+    /**
+     * Returns the value at specified offset.
+     *
+     * @param mixed $offset The offset to retrieve.
+     * @return mixed Can return all value types.
+     * @inheritDoc
+     * @see \ArrayAccess
+     * @see https://www.php.net/manual/en/class.arrayaccess.php
+     */
+    public function offsetGet($offset)
+    {
+    }
+
+    /**
+     * Assigns a value to the specified offset.
+     *
+     * @param mixed $offset The offset to assign the value to.
+     * @param mixed $value The value to set.
+     * @return void
+     * @inheritDoc
+     * @see \ArrayAccess
+     * @see https://www.php.net/manual/en/class.arrayaccess.php
+     */
+    public function offsetSet($offset, $value)
+    {
+    }
+
+    /**
+     * Unsets an offset.
+     *
+     * @param mixed $offset The offset to unset.
+     * @return void
+     * @inheritDoc
+     * @see \ArrayAccess
+     * @see https://www.php.net/manual/en/class.arrayaccess.php
+     */
+    public function offsetUnset($offset)
+    {
+    }
 }
