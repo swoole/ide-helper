@@ -8,15 +8,5 @@
             "name": "Team Swoole",
             "email": "team@swoole.com"
         }
-    ],
-    "require-dev": {
-        "guzzlehttp/guzzle": "~7.3.0",
-        "laminas/laminas-code": "~4.4.0",
-        "symfony/filesystem": "~5.3.0"
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Swoole\\IDEHelper\\": "src/"
-        }
-    }
+    ]
 }
