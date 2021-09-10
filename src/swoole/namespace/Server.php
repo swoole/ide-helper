@@ -352,5 +352,41 @@ class Server
     {
     }
 
+    /**
+     * This method is an alias of method \Swoole\Timer::after().
+     *
+     * @param int $ms
+     * @param callable $callback
+     * @return int
+     * @see \Swoole\Timer::after()
+     * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L622
+     */
+    public function after(int $ms, callable $callback, ...$params)
+    {
+    }
 
+    /**
+     * This method is an alias of method \Swoole\Timer::tick().
+     *
+     * @param int $ms
+     * @param callable $callback
+     * @return int
+     * @see \Swoole\Timer::tick()
+     * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L623
+     */
+    public function tick(int $ms, callable $callback, ...$params)
+    {
+    }
+
+    /**
+     * This method is an alias of method \Swoole\Timer::clear().
+     *
+     * @param int $timer_id
+     * @return bool
+     * @see \Swoole\Timer::clear()
+     * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L624
+     */
+    public function clearTimer(int $timer_id)
+    {
+    }
 }

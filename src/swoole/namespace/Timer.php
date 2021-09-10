@@ -4,69 +4,74 @@ namespace Swoole;
 
 class Timer
 {
-
     /**
-     * @return mixed
+     * @param array $settings
+     * @return void
      */
     public static function set(array $settings)
     {
     }
 
     /**
-     * @return mixed
+     * @param int $ms
+     * @param callable $callback
+     * @return int
      */
-    public static function tick($ms, callable $callback, ... $params)
+    public static function tick(int $ms, callable $callback, ...$params)
     {
     }
 
     /**
-     * @return mixed
+     * @param int $ms
+     * @param callable $callback
+     * @return int
      */
-    public static function after($ms, callable $callback, ... $params)
+    public static function after(int $ms, callable $callback, ...$params)
     {
     }
 
     /**
-     * @return mixed
+     * @param int $timer_id
+     * @return bool
      */
-    public static function exists($timer_id)
+    public static function exists(int $timer_id)
     {
     }
 
     /**
-     * @return mixed
+     * @param int $timer_id
+     * @return array
      */
-    public static function info($timer_id)
+    public static function info(int $timer_id)
     {
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public static function stats()
     {
     }
 
     /**
-     * @return mixed
+     * @return \Swoole\timer\Iterator
      */
     public static function list()
     {
     }
 
     /**
-     * @return mixed
+     * @param int $timer_id
+     * @return bool
      */
-    public static function clear($timer_id)
+    public static function clear(int $timer_id)
     {
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public static function clearAll()
     {
     }
-
-
 }

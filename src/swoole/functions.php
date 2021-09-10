@@ -274,55 +274,91 @@ function swoole_event_wait(){}
 function swoole_event_exit(){}
 
 /**
- * @param $settings[required]
- * @return mixed
+ * This function is an alias of method \Swoole\Timer::set().
+ *
+ * @param array $settings
+ * @return void
+ * @see \Swoole\Timer::set()
+ * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_timer.cc#L105
  */
-function swoole_timer_set($settings){}
+function swoole_timer_set(array $settings){}
 
 /**
- * @param $ms[required]
- * @param $callback[required]
- * @return mixed
+ * This function is an alias of method \Swoole\Timer::after().
+ *
+ * @param int $ms
+ * @param callable $callback
+ * @return int
+ * @see \Swoole\Timer::after()
+ * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_timer.cc#L106
  */
-function swoole_timer_after($ms, $callback){}
+function swoole_timer_after(int $ms, callable $callback, ...$params){}
 
 /**
- * @param $ms[required]
- * @param $callback[required]
- * @return mixed
+ * This function is an alias of method \Swoole\Timer::tick().
+ *
+ * @param int $ms
+ * @param callable $callback
+ * @return int
+ * @see \Swoole\Timer::tick()
+ * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_timer.cc#L107
  */
-function swoole_timer_tick($ms, $callback){}
+function swoole_timer_tick(int $ms, callable $callback, ...$params){}
 
 /**
- * @param $timer_id[required]
- * @return mixed
+ * This function is an alias of method \Swoole\Timer::exists().
+ *
+ * @param int $timer_id
+ * @return bool
+ * @see \Swoole\Timer::exists()
+ * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_timer.cc#L108
  */
-function swoole_timer_exists($timer_id){}
+function swoole_timer_exists(int $timer_id){}
 
 /**
- * @param $timer_id[required]
- * @return mixed
+ * This function is an alias of method \Swoole\Timer::info().
+ *
+ * @param int $timer_id
+ * @return array
+ * @see \Swoole\Timer::info()
+ * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_timer.cc#L109
  */
-function swoole_timer_info($timer_id){}
+function swoole_timer_info(int $timer_id){}
 
 /**
- * @return mixed
+ * This function is an alias of method \Swoole\Timer::stats().
+ *
+ * @return array
+ * @see \Swoole\Timer::stats()
+ * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_timer.cc#L110
  */
 function swoole_timer_stats(){}
 
 /**
- * @return mixed
+ * This function is an alias of method \Swoole\Timer::list().
+ *
+ * @return \Swoole\timer\Iterator
+ * @see \Swoole\Timer::list()
+ * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_timer.cc#L111
  */
 function swoole_timer_list(){}
 
 /**
- * @param $timer_id[required]
- * @return mixed
+ * This function is an alias of method \Swoole\Timer::clear().
+ *
+ * @param int $timer_id
+ * @return bool
+ * @see \Swoole\Timer::clear()
+ * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_timer.cc#L112
  */
-function swoole_timer_clear($timer_id){}
+function swoole_timer_clear(int $timer_id){}
 
 /**
- * @return mixed
+ * This function is an alias of method \Swoole\Timer::clearAll().
+ *
+ * @return bool
+ * @see \Swoole\Timer::clearAll()
+ * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_timer.cc#L113
  */
 function swoole_timer_clear_all(){}
 
