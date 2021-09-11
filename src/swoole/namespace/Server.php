@@ -408,7 +408,7 @@ class Server
     }
 
     /**
-     * This method is an alias of method \Swoole\Timer::after().
+     * Alias of method \Swoole\Timer::after().
      *
      * @return int
      * @see \Swoole\Timer::after()
@@ -419,7 +419,7 @@ class Server
     }
 
     /**
-     * This method is an alias of method \Swoole\Timer::tick().
+     * Alias of method \Swoole\Timer::tick().
      *
      * @return int
      * @see \Swoole\Timer::tick()
@@ -430,7 +430,7 @@ class Server
     }
 
     /**
-     * This method is an alias of method \Swoole\Timer::clear().
+     * Alias of method \Swoole\Timer::clear().
      *
      * @return bool
      * @see \Swoole\Timer::clear()
@@ -441,7 +441,7 @@ class Server
     }
 
     /**
-     * This method is an alias of method \Swoole\Event::defer().
+     * Alias of method \Swoole\Event::defer().
      *
      * @see \Swoole\Event::defer()
      * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L626
