@@ -389,4 +389,16 @@ class Server
     public function clearTimer(int $timer_id)
     {
     }
+
+    /**
+     * This method is an alias of method \Swoole\Event::defer().
+     *
+     * @param callable $callback
+     * @return void
+     * @see \Swoole\Event::defer()
+     * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L626
+     */
+    public function defer(callable $callback)
+    {
+    }
 }
