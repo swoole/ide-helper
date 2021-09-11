@@ -174,9 +174,9 @@ class Table implements \Iterator, \ArrayAccess, \Countable
      *
      * @param mixed $offset an offset to check for
      * @return bool returns true on success or false on failure
-     *              {@inheritDoc}
      * @see \ArrayAccess
      * @see https://www.php.net/manual/en/class.arrayaccess.php
+     * {@inheritDoc}
      */
     public function offsetExists($offset)
     {
@@ -187,9 +187,9 @@ class Table implements \Iterator, \ArrayAccess, \Countable
      *
      * @param mixed $offset the offset to retrieve
      * @return mixed can return all value types
-     *               {@inheritDoc}
      * @see \ArrayAccess
      * @see https://www.php.net/manual/en/class.arrayaccess.php
+     * {@inheritDoc}
      */
     public function offsetGet($offset)
     {
@@ -200,9 +200,9 @@ class Table implements \Iterator, \ArrayAccess, \Countable
      *
      * @param mixed $offset the offset to assign the value to
      * @param mixed $value the value to set
-     *                     {@inheritDoc}
      * @see \ArrayAccess
      * @see https://www.php.net/manual/en/class.arrayaccess.php
+     * {@inheritDoc}
      */
     public function offsetSet($offset, $value)
     {
@@ -212,9 +212,9 @@ class Table implements \Iterator, \ArrayAccess, \Countable
      * Unsets an offset.
      *
      * @param mixed $offset the offset to unset
-     *                      {@inheritDoc}
      * @see \ArrayAccess
      * @see https://www.php.net/manual/en/class.arrayaccess.php
+     * {@inheritDoc}
      */
     public function offsetUnset($offset)
     {
