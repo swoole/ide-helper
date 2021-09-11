@@ -6,63 +6,53 @@ namespace Swoole;
 
 class Atomic
 {
-    public function __construct($value = null)
+    public function __construct(int $value = 0)
     {
     }
 
     /**
-     * @param mixed|null $add_value
-     * @return mixed
+     * @return int
      */
-    public function add($add_value = null)
+    public function add(int $add_value = 1)
     {
     }
 
     /**
-     * @param mixed|null $sub_value
-     * @return mixed
+     * @return int
      */
-    public function sub($sub_value = null)
+    public function sub(int $sub_value = 1)
     {
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function get()
     {
     }
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    public function set($value)
+    public function set(int $value)
     {
     }
 
     /**
-     * @param mixed|null $timeout
-     * @return mixed
+     * @return bool
      */
-    public function wait($timeout = null)
+    public function wait(float $timeout = 1.0)
     {
     }
 
     /**
-     * @param mixed|null $count
-     * @return mixed
+     * @return bool
      */
-    public function wakeup($count = null)
+    public function wakeup(int $count = 1)
     {
     }
 
     /**
-     * @param mixed $cmp_value
-     * @param mixed $new_value
-     * @return mixed
+     * @return bool
      */
-    public function cmpset($cmp_value, $new_value)
+    public function cmpset(int $cmp_value, int $new_value)
     {
     }
 }
