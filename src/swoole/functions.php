@@ -1,12 +1,16 @@
 <?php
 
 /**
- * @return mixed
+ * Gets the current Swoole version. This information is also available in the predefined constant SWOOLE_VERSION.
+ *
+ * @return string Returns a string containing the version of Swoole.
  */
 function swoole_version(){}
 
 /**
- * @return mixed
+ * Gets the number of CPU cores.
+ *
+ * @return int Returns the number of CPU cores.
  */
 function swoole_cpu_num(){}
 
