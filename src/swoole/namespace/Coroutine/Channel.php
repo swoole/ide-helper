@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Coroutine;
 
 class Channel
 {
-
     public $capacity = 0;
 
     public $errCode = 0;
@@ -14,6 +15,8 @@ class Channel
     }
 
     /**
+     * @param mixed $data
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function push($data, $timeout = null)
@@ -21,6 +24,7 @@ class Channel
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function pop($timeout = null)
@@ -61,6 +65,4 @@ class Channel
     public function length()
     {
     }
-
-
 }

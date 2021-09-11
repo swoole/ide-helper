@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Server;
 
 class Task
 {
-
     public $data;
 
     public $dispatch_time = 0;
@@ -16,6 +17,7 @@ class Task
     public $flags = 0;
 
     /**
+     * @param mixed $data
      * @return mixed
      */
     public function finish($data)
@@ -23,11 +25,10 @@ class Task
     }
 
     /**
+     * @param mixed $data
      * @return mixed
      */
     public static function pack($data)
     {
     }
-
-
 }

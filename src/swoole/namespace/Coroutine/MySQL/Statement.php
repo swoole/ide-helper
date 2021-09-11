@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Coroutine\MySQL;
 
 class Statement
 {
-
     public $id = 0;
 
     public $affected_rows = 0;
@@ -16,6 +17,8 @@ class Statement
     public $errno = 0;
 
     /**
+     * @param mixed|null $params
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function execute($params = null, $timeout = null)
@@ -23,6 +26,7 @@ class Statement
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function fetch($timeout = null)
@@ -30,6 +34,7 @@ class Statement
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function fetchAll($timeout = null)
@@ -37,6 +42,7 @@ class Statement
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function nextResult($timeout = null)
@@ -44,6 +50,7 @@ class Statement
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function recv($timeout = null)
@@ -56,6 +63,4 @@ class Statement
     public function close()
     {
     }
-
-
 }

@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole;
 
 class Process
 {
-
     public const IPC_NOWAIT = 256;
 
     public const PIPE_MASTER = 1;
@@ -36,6 +37,7 @@ class Process
     }
 
     /**
+     * @param mixed|null $blocking
      * @return mixed
      */
     public static function wait($blocking = null)
@@ -43,6 +45,8 @@ class Process
     }
 
     /**
+     * @param mixed $signal_no
+     * @param mixed $callback
      * @return mixed
      */
     public static function signal($signal_no, $callback)
@@ -50,6 +54,8 @@ class Process
     }
 
     /**
+     * @param mixed $usec
+     * @param mixed|null $type
      * @return mixed
      */
     public static function alarm($usec, $type = null)
@@ -57,6 +63,8 @@ class Process
     }
 
     /**
+     * @param mixed $pid
+     * @param mixed|null $signal_no
      * @return mixed
      */
     public static function kill($pid, $signal_no = null)
@@ -64,6 +72,9 @@ class Process
     }
 
     /**
+     * @param mixed|null $nochdir
+     * @param mixed|null $noclose
+     * @param mixed|null $pipes
      * @return mixed
      */
     public static function daemon($nochdir = null, $noclose = null, $pipes = null)
@@ -71,6 +82,8 @@ class Process
     }
 
     /**
+     * @param mixed $which
+     * @param mixed $priority
      * @return mixed
      */
     public function setPriority($which, $priority)
@@ -78,6 +91,7 @@ class Process
     }
 
     /**
+     * @param mixed $which
      * @return mixed
      */
     public function getPriority($which)
@@ -92,6 +106,7 @@ class Process
     }
 
     /**
+     * @param mixed $seconds
      * @return mixed
      */
     public function setTimeout($seconds)
@@ -99,6 +114,7 @@ class Process
     }
 
     /**
+     * @param mixed $blocking
      * @return mixed
      */
     public function setBlocking($blocking)
@@ -106,6 +122,9 @@ class Process
     }
 
     /**
+     * @param mixed|null $key
+     * @param mixed|null $mode
+     * @param mixed|null $capacity
      * @return mixed
      */
     public function useQueue($key = null, $mode = null, $capacity = null)
@@ -134,6 +153,7 @@ class Process
     }
 
     /**
+     * @param mixed $data
      * @return mixed
      */
     public function write($data)
@@ -148,6 +168,7 @@ class Process
     }
 
     /**
+     * @param mixed|null $size
      * @return mixed
      */
     public function read($size = null)
@@ -155,6 +176,7 @@ class Process
     }
 
     /**
+     * @param mixed $data
      * @return mixed
      */
     public function push($data)
@@ -162,6 +184,7 @@ class Process
     }
 
     /**
+     * @param mixed|null $size
      * @return mixed
      */
     public function pop($size = null)
@@ -169,6 +192,7 @@ class Process
     }
 
     /**
+     * @param mixed|null $exit_code
      * @return mixed
      */
     public function exit($exit_code = null)
@@ -176,6 +200,8 @@ class Process
     }
 
     /**
+     * @param mixed $exec_file
+     * @param mixed $args
      * @return mixed
      */
     public function exec($exec_file, $args)
@@ -190,11 +216,10 @@ class Process
     }
 
     /**
+     * @param mixed $process_name
      * @return mixed
      */
     public function name($process_name)
     {
     }
-
-
 }

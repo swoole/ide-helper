@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole;
 
 class Lock
 {
-
     public const FILELOCK = 2;
 
     public const MUTEX = 3;
@@ -33,6 +34,7 @@ class Lock
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function lockwait($timeout = null)
@@ -73,6 +75,4 @@ class Lock
     public function destroy()
     {
     }
-
-
 }

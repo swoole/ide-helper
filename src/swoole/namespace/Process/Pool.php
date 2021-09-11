@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Process;
 
 class Pool
 {
-
     public $master_pid = -1;
 
     public $workers;
@@ -25,6 +26,7 @@ class Pool
     }
 
     /**
+     * @param mixed $event_name
      * @return mixed
      */
     public function on($event_name, callable $callback)
@@ -32,6 +34,7 @@ class Pool
     }
 
     /**
+     * @param mixed|null $worker_id
      * @return mixed
      */
     public function getProcess($worker_id = null)
@@ -39,6 +42,9 @@ class Pool
     }
 
     /**
+     * @param mixed $host
+     * @param mixed|null $port
+     * @param mixed|null $backlog
      * @return mixed
      */
     public function listen($host, $port = null, $backlog = null)
@@ -46,6 +52,7 @@ class Pool
     }
 
     /**
+     * @param mixed $data
      * @return mixed
      */
     public function write($data)
@@ -79,6 +86,4 @@ class Pool
     public function shutdown()
     {
     }
-
-
 }

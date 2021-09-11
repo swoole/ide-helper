@@ -1,9 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Server;
 
 class Port
 {
+    public $host;
+
+    public $port = 0;
+
+    public $type = 0;
+
+    public $sock = -1;
+
+    public $setting;
+
+    public $connections;
 
     private $onConnect;
 
@@ -27,18 +40,6 @@ class Port
 
     private $onDisconnect;
 
-    public $host;
-
-    public $port = 0;
-
-    public $type = 0;
-
-    public $sock = -1;
-
-    public $setting;
-
-    public $connections;
-
     private function __construct()
     {
     }
@@ -55,6 +56,7 @@ class Port
     }
 
     /**
+     * @param mixed $event_name
      * @return mixed
      */
     public function on($event_name, callable $callback)
@@ -62,6 +64,7 @@ class Port
     }
 
     /**
+     * @param mixed $event_name
      * @return mixed
      */
     public function getCallback($event_name)
@@ -74,6 +77,4 @@ class Port
     public function getSocket()
     {
     }
-
-
 }

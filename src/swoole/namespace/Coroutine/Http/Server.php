@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Coroutine\Http;
 
 class Server
 {
-
     public $fd = -1;
 
     public $host;
@@ -35,16 +36,10 @@ class Server
     }
 
     /**
+     * @param mixed $pattern
      * @return mixed
      */
     public function handle($pattern, callable $callback)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    private function onAccept()
     {
     }
 
@@ -62,5 +57,10 @@ class Server
     {
     }
 
-
+    /**
+     * @return mixed
+     */
+    private function onAccept()
+    {
+    }
 }

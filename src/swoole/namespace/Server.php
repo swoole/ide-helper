@@ -1,9 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole;
 
 class Server
 {
+    public $setting;
+
+    public $connections;
+
+    public $host = '';
+
+    public $port = 0;
+
+    public $type = 0;
+
+    public $mode = 0;
+
+    public $ports;
+
+    public $master_pid = 0;
+
+    public $manager_pid = 0;
+
+    public $worker_id = -1;
+
+    public $taskworker = false;
+
+    public $worker_pid = 0;
+
+    public $stats_timer;
 
     private $onStart;
 
@@ -31,32 +58,6 @@ class Server
 
     private $onPipeMessage;
 
-    public $setting;
-
-    public $connections;
-
-    public $host = '';
-
-    public $port = 0;
-
-    public $type = 0;
-
-    public $mode = 0;
-
-    public $ports;
-
-    public $master_pid = 0;
-
-    public $manager_pid = 0;
-
-    public $worker_id = -1;
-
-    public $taskworker = false;
-
-    public $worker_pid = 0;
-
-    public $stats_timer;
-
     public function __construct($host, $port = null, $mode = null, $sock_type = null)
     {
     }
@@ -66,6 +67,9 @@ class Server
     }
 
     /**
+     * @param mixed $host
+     * @param mixed $port
+     * @param mixed $sock_type
      * @return mixed
      */
     public function listen($host, $port, $sock_type)
@@ -73,6 +77,9 @@ class Server
     }
 
     /**
+     * @param mixed $host
+     * @param mixed $port
+     * @param mixed $sock_type
      * @return mixed
      */
     public function addlistener($host, $port, $sock_type)
@@ -80,6 +87,7 @@ class Server
     }
 
     /**
+     * @param mixed $event_name
      * @return mixed
      */
     public function on($event_name, callable $callback)
@@ -87,6 +95,7 @@ class Server
     }
 
     /**
+     * @param mixed $event_name
      * @return mixed
      */
     public function getCallback($event_name)
@@ -108,6 +117,9 @@ class Server
     }
 
     /**
+     * @param mixed $fd
+     * @param mixed $send_data
+     * @param mixed|null $server_socket
      * @return mixed
      */
     public function send($fd, $send_data, $server_socket = null)
@@ -115,6 +127,10 @@ class Server
     }
 
     /**
+     * @param mixed $ip
+     * @param mixed $port
+     * @param mixed $send_data
+     * @param mixed|null $server_socket
      * @return mixed
      */
     public function sendto($ip, $port, $send_data, $server_socket = null)
@@ -122,6 +138,8 @@ class Server
     }
 
     /**
+     * @param mixed $conn_fd
+     * @param mixed $send_data
      * @return mixed
      */
     public function sendwait($conn_fd, $send_data)
@@ -129,6 +147,7 @@ class Server
     }
 
     /**
+     * @param mixed $fd
      * @return mixed
      */
     public function exists($fd)
@@ -136,6 +155,7 @@ class Server
     }
 
     /**
+     * @param mixed $fd
      * @return mixed
      */
     public function exist($fd)
@@ -143,6 +163,8 @@ class Server
     }
 
     /**
+     * @param mixed $fd
+     * @param mixed|null $is_protected
      * @return mixed
      */
     public function protect($fd, $is_protected = null)
@@ -150,6 +172,10 @@ class Server
     }
 
     /**
+     * @param mixed $conn_fd
+     * @param mixed $filename
+     * @param mixed|null $offset
+     * @param mixed|null $length
      * @return mixed
      */
     public function sendfile($conn_fd, $filename, $offset = null, $length = null)
@@ -157,6 +183,8 @@ class Server
     }
 
     /**
+     * @param mixed $fd
+     * @param mixed|null $reset
      * @return mixed
      */
     public function close($fd, $reset = null)
@@ -164,6 +192,7 @@ class Server
     }
 
     /**
+     * @param mixed $fd
      * @return mixed
      */
     public function confirm($fd)
@@ -171,6 +200,7 @@ class Server
     }
 
     /**
+     * @param mixed $fd
      * @return mixed
      */
     public function pause($fd)
@@ -178,6 +208,7 @@ class Server
     }
 
     /**
+     * @param mixed $fd
      * @return mixed
      */
     public function resume($fd)
@@ -185,6 +216,8 @@ class Server
     }
 
     /**
+     * @param mixed $data
+     * @param mixed|null $worker_id
      * @return mixed
      */
     public function task($data, $worker_id = null, ?callable $finish_callback = null)
@@ -192,6 +225,9 @@ class Server
     }
 
     /**
+     * @param mixed $data
+     * @param mixed|null $timeout
+     * @param mixed|null $worker_id
      * @return mixed
      */
     public function taskwait($data, $timeout = null, $worker_id = null)
@@ -199,6 +235,7 @@ class Server
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function taskWaitMulti(array $tasks, $timeout = null)
@@ -206,6 +243,7 @@ class Server
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function taskCo(array $tasks, $timeout = null)
@@ -213,6 +251,7 @@ class Server
     }
 
     /**
+     * @param mixed $data
      * @return mixed
      */
     public function finish($data)
@@ -234,6 +273,7 @@ class Server
     }
 
     /**
+     * @param mixed|null $worker_id
      * @return mixed
      */
     public function stop($worker_id = null)
@@ -248,6 +288,7 @@ class Server
     }
 
     /**
+     * @param mixed $reactor_id
      * @return mixed
      */
     public function heartbeat($reactor_id)
@@ -255,6 +296,8 @@ class Server
     }
 
     /**
+     * @param mixed $fd
+     * @param mixed|null $reactor_id
      * @return mixed
      */
     public function getClientInfo($fd, $reactor_id = null)
@@ -262,6 +305,8 @@ class Server
     }
 
     /**
+     * @param mixed $start_fd
+     * @param mixed|null $find_count
      * @return mixed
      */
     public function getClientList($start_fd, $find_count = null)
@@ -283,6 +328,7 @@ class Server
     }
 
     /**
+     * @param mixed|null $worker_id
      * @return mixed
      */
     public function getWorkerStatus($worker_id = null)
@@ -304,6 +350,8 @@ class Server
     }
 
     /**
+     * @param mixed $fd
+     * @param mixed|null $reactor_id
      * @return mixed
      */
     public function connection_info($fd, $reactor_id = null)
@@ -311,6 +359,8 @@ class Server
     }
 
     /**
+     * @param mixed $start_fd
+     * @param mixed|null $find_count
      * @return mixed
      */
     public function connection_list($start_fd, $find_count = null)
@@ -318,6 +368,8 @@ class Server
     }
 
     /**
+     * @param mixed $message
+     * @param mixed $dst_worker_id
      * @return mixed
      */
     public function sendMessage($message, $dst_worker_id)
@@ -339,6 +391,7 @@ class Server
     }
 
     /**
+     * @param mixed|null $port
      * @return mixed
      */
     public function getSocket($port = null)
@@ -346,6 +399,8 @@ class Server
     }
 
     /**
+     * @param mixed $fd
+     * @param mixed $uid
      * @return mixed
      */
     public function bind($fd, $uid)
@@ -355,8 +410,6 @@ class Server
     /**
      * This method is an alias of method \Swoole\Timer::after().
      *
-     * @param int $ms
-     * @param callable $callback
      * @return int
      * @see \Swoole\Timer::after()
      * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L622
@@ -368,8 +421,6 @@ class Server
     /**
      * This method is an alias of method \Swoole\Timer::tick().
      *
-     * @param int $ms
-     * @param callable $callback
      * @return int
      * @see \Swoole\Timer::tick()
      * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L623
@@ -381,7 +432,6 @@ class Server
     /**
      * This method is an alias of method \Swoole\Timer::clear().
      *
-     * @param int $timer_id
      * @return bool
      * @see \Swoole\Timer::clear()
      * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L624
@@ -393,8 +443,6 @@ class Server
     /**
      * This method is an alias of method \Swoole\Event::defer().
      *
-     * @param callable $callback
-     * @return void
      * @see \Swoole\Event::defer()
      * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L626
      */

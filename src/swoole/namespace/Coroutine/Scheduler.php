@@ -1,21 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Coroutine;
 
 class Scheduler
 {
-
     /**
      * @return mixed
      */
-    public function add(callable $func, ... $params)
+    public function add(callable $func, ...$params)
     {
     }
 
     /**
+     * @param mixed $n
      * @return mixed
      */
-    public function parallel($n, callable $func = null, ... $params)
+    public function parallel($n, callable $func = null, ...$params)
     {
     }
 
@@ -39,6 +41,4 @@ class Scheduler
     public function start()
     {
     }
-
-
 }

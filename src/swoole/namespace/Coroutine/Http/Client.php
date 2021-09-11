@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Coroutine\Http;
 
 class Client
 {
-
     public $errCode = 0;
 
     public $errMsg = '';
@@ -64,6 +65,7 @@ class Client
     }
 
     /**
+     * @param mixed|null $defer
      * @return mixed
      */
     public function setDefer($defer = null)
@@ -71,6 +73,7 @@ class Client
     }
 
     /**
+     * @param mixed $method
      * @return mixed
      */
     public function setMethod($method)
@@ -85,6 +88,8 @@ class Client
     }
 
     /**
+     * @param mixed $username
+     * @param mixed $password
      * @return mixed
      */
     public function setBasicAuth($username, $password)
@@ -99,6 +104,7 @@ class Client
     }
 
     /**
+     * @param mixed $data
      * @return mixed
      */
     public function setData($data)
@@ -106,6 +112,12 @@ class Client
     }
 
     /**
+     * @param mixed $path
+     * @param mixed $name
+     * @param mixed|null $type
+     * @param mixed|null $filename
+     * @param mixed|null $offset
+     * @param mixed|null $length
      * @return mixed
      */
     public function addFile($path, $name, $type = null, $filename = null, $offset = null, $length = null)
@@ -113,6 +125,10 @@ class Client
     }
 
     /**
+     * @param mixed $path
+     * @param mixed $name
+     * @param mixed|null $type
+     * @param mixed|null $filename
      * @return mixed
      */
     public function addData($path, $name, $type = null, $filename = null)
@@ -120,6 +136,7 @@ class Client
     }
 
     /**
+     * @param mixed $path
      * @return mixed
      */
     public function execute($path)
@@ -141,6 +158,7 @@ class Client
     }
 
     /**
+     * @param mixed $path
      * @return mixed
      */
     public function get($path)
@@ -148,6 +166,8 @@ class Client
     }
 
     /**
+     * @param mixed $path
+     * @param mixed $data
      * @return mixed
      */
     public function post($path, $data)
@@ -155,6 +175,9 @@ class Client
     }
 
     /**
+     * @param mixed $path
+     * @param mixed $file
+     * @param mixed|null $offset
      * @return mixed
      */
     public function download($path, $file, $offset = null)
@@ -204,6 +227,7 @@ class Client
     }
 
     /**
+     * @param mixed $path
      * @return mixed
      */
     public function upgrade($path)
@@ -211,6 +235,9 @@ class Client
     }
 
     /**
+     * @param mixed $data
+     * @param mixed|null $opcode
+     * @param mixed|null $flags
      * @return mixed
      */
     public function push($data, $opcode = null, $flags = null)
@@ -218,6 +245,7 @@ class Client
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function recv($timeout = null)
@@ -230,6 +258,4 @@ class Client
     public function close()
     {
     }
-
-
 }

@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Server;
 
 class StatusInfo
 {
-
     public $worker_id = 0;
 
     public $worker_pid = 0;
@@ -14,6 +15,4 @@ class StatusInfo
     public $exit_code = 0;
 
     public $signal = 0;
-
-
 }

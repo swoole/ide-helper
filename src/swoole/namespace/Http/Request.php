@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Http;
 
 class Request
 {
-
     public $fd = 0;
 
     public $streamId = 0;
@@ -22,6 +23,10 @@ class Request
     public $post;
 
     public $tmpfiles;
+
+    public function __destruct()
+    {
+    }
 
     /**
      * @return mixed
@@ -45,6 +50,7 @@ class Request
     }
 
     /**
+     * @param mixed|null $options
      * @return mixed
      */
     public static function create($options = null)
@@ -52,6 +58,7 @@ class Request
     }
 
     /**
+     * @param mixed $data
      * @return mixed
      */
     public function parse($data)
@@ -71,10 +78,4 @@ class Request
     public function getMethod()
     {
     }
-
-    public function __destruct()
-    {
-    }
-
-
 }

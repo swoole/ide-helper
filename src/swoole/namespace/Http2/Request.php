@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Http2;
 
 class Request
 {
-
     public $path = '/';
 
     public $method = 'GET';
@@ -16,6 +17,4 @@ class Request
     public $data = '';
 
     public $pipeline = false;
-
-
 }

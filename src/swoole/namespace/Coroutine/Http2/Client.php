@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Coroutine\Http2;
 
 class Client
 {
-
     public $errCode = 0;
 
     public $errMsg = 0;
@@ -46,6 +47,7 @@ class Client
     }
 
     /**
+     * @param mixed|null $key
      * @return mixed
      */
     public function stats($key = null)
@@ -53,6 +55,7 @@ class Client
     }
 
     /**
+     * @param mixed $stream_id
      * @return mixed
      */
     public function isStreamExist($stream_id)
@@ -60,6 +63,7 @@ class Client
     }
 
     /**
+     * @param mixed $request
      * @return mixed
      */
     public function send($request)
@@ -67,6 +71,9 @@ class Client
     }
 
     /**
+     * @param mixed $stream_id
+     * @param mixed $data
+     * @param mixed|null $end_stream
      * @return mixed
      */
     public function write($stream_id, $data, $end_stream = null)
@@ -74,6 +81,7 @@ class Client
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function recv($timeout = null)
@@ -81,6 +89,7 @@ class Client
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function read($timeout = null)
@@ -88,6 +97,8 @@ class Client
     }
 
     /**
+     * @param mixed|null $error_code
+     * @param mixed|null $debug_data
      * @return mixed
      */
     public function goaway($error_code = null, $debug_data = null)
@@ -107,6 +118,4 @@ class Client
     public function close()
     {
     }
-
-
 }

@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Http2;
 
 class Response
 {
-
     public $streamId = 0;
 
     public $errCode = 0;
@@ -20,6 +21,4 @@ class Response
     public $cookies;
 
     public $data;
-
-
 }

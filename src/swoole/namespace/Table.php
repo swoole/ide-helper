@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole;
 
 class Table implements \Iterator, \ArrayAccess, \Countable
@@ -19,6 +21,9 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $name
+     * @param mixed $type
+     * @param mixed|null $size
      * @return mixed
      */
     public function column($name, $type, $size = null)
@@ -40,6 +45,7 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function set($key, array $value)
@@ -47,6 +53,8 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $key
+     * @param mixed|null $field
      * @return mixed
      */
     public function get($key, $field = null)
@@ -61,6 +69,7 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function del($key)
@@ -68,6 +77,7 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function delete($key)
@@ -75,6 +85,7 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function exists($key)
@@ -82,6 +93,7 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function exist($key)
@@ -89,6 +101,9 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $column
+     * @param mixed|null $incrby
      * @return mixed
      */
     public function incr($key, $column, $incrby = null)
@@ -96,6 +111,9 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $column
+     * @param mixed|null $decrby
      * @return mixed
      */
     public function decr($key, $column, $decrby = null)
@@ -154,9 +172,9 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     /**
      * Whether or not an offset exists.
      *
-     * @param mixed $offset An offset to check for.
-     * @return bool Returns true on success or false on failure.
-     * @inheritDoc
+     * @param mixed $offset an offset to check for
+     * @return bool returns true on success or false on failure
+     *              {@inheritDoc}
      * @see \ArrayAccess
      * @see https://www.php.net/manual/en/class.arrayaccess.php
      */
@@ -167,9 +185,9 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     /**
      * Returns the value at specified offset.
      *
-     * @param mixed $offset The offset to retrieve.
-     * @return mixed Can return all value types.
-     * @inheritDoc
+     * @param mixed $offset the offset to retrieve
+     * @return mixed can return all value types
+     *               {@inheritDoc}
      * @see \ArrayAccess
      * @see https://www.php.net/manual/en/class.arrayaccess.php
      */
@@ -180,10 +198,9 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     /**
      * Assigns a value to the specified offset.
      *
-     * @param mixed $offset The offset to assign the value to.
-     * @param mixed $value The value to set.
-     * @return void
-     * @inheritDoc
+     * @param mixed $offset the offset to assign the value to
+     * @param mixed $value the value to set
+     *                     {@inheritDoc}
      * @see \ArrayAccess
      * @see https://www.php.net/manual/en/class.arrayaccess.php
      */
@@ -194,9 +211,8 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     /**
      * Unsets an offset.
      *
-     * @param mixed $offset The offset to unset.
-     * @return void
-     * @inheritDoc
+     * @param mixed $offset the offset to unset
+     *                      {@inheritDoc}
      * @see \ArrayAccess
      * @see https://www.php.net/manual/en/class.arrayaccess.php
      */

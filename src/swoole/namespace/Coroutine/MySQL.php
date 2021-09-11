@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Coroutine;
 
 class MySQL
 {
-
     public $serverInfo;
 
     public $sock = -1;
@@ -39,6 +40,7 @@ class MySQL
     }
 
     /**
+     * @param mixed|null $defer
      * @return mixed
      */
     public function setDefer($defer = null)
@@ -53,6 +55,8 @@ class MySQL
     }
 
     /**
+     * @param mixed $sql
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function query($sql, $timeout = null)
@@ -81,6 +85,8 @@ class MySQL
     }
 
     /**
+     * @param mixed $query
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function prepare($query, $timeout = null)
@@ -95,6 +101,7 @@ class MySQL
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function begin($timeout = null)
@@ -102,6 +109,7 @@ class MySQL
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function commit($timeout = null)
@@ -109,6 +117,7 @@ class MySQL
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function rollback($timeout = null)
@@ -116,6 +125,8 @@ class MySQL
     }
 
     /**
+     * @param mixed $string
+     * @param mixed|null $flags
      * @return mixed
      */
     public function escape($string, $flags = null)
@@ -128,6 +139,4 @@ class MySQL
     public function close()
     {
     }
-
-
 }

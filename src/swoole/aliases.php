@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 class_alias(Swoole\Coroutine\Channel::class, Co\Channel::class);
 class_alias(Swoole\Coroutine\Client::class, Co\Client::class);
 class_alias(Swoole\Coroutine\Context::class, Co\Context::class);

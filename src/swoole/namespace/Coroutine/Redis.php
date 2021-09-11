@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Coroutine;
 
 class Redis
 {
-
     public $host = '';
 
     public $port = 0;
@@ -30,6 +31,9 @@ class Redis
     }
 
     /**
+     * @param mixed $host
+     * @param mixed|null $port
+     * @param mixed|null $serialize
      * @return mixed
      */
     public function connect($host, $port = null, $serialize = null)
@@ -58,6 +62,7 @@ class Redis
     }
 
     /**
+     * @param mixed $options
      * @return mixed
      */
     public function setOptions($options)
@@ -72,6 +77,7 @@ class Redis
     }
 
     /**
+     * @param mixed $defer
      * @return mixed
      */
     public function setDefer($defer)
@@ -100,6 +106,10 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
+     * @param mixed|null $timeout
+     * @param mixed|null $opt
      * @return mixed
      */
     public function set($key, $value, $timeout = null, $opt = null)
@@ -107,6 +117,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $offset
+     * @param mixed $value
      * @return mixed
      */
     public function setBit($key, $offset, $value)
@@ -114,6 +127,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $expire
+     * @param mixed $value
      * @return mixed
      */
     public function setEx($key, $expire, $value)
@@ -121,6 +137,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $expire
+     * @param mixed $value
      * @return mixed
      */
     public function psetEx($key, $expire, $value)
@@ -128,6 +147,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $index
+     * @param mixed $value
      * @return mixed
      */
     public function lSet($key, $index, $value)
@@ -135,6 +157,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function get($key)
@@ -142,6 +165,7 @@ class Redis
     }
 
     /**
+     * @param mixed $keys
      * @return mixed
      */
     public function mGet($keys)
@@ -149,6 +173,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed|null $other_keys
      * @return mixed
      */
     public function del($key, $other_keys = null)
@@ -156,6 +182,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
+     * @param mixed|null $other_members
      * @return mixed
      */
     public function hDel($key, $member, $other_members = null)
@@ -163,6 +192,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
+     * @param mixed $value
      * @return mixed
      */
     public function hSet($key, $member, $value)
@@ -170,6 +202,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $pairs
      * @return mixed
      */
     public function hMSet($key, $pairs)
@@ -177,6 +211,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
+     * @param mixed $value
      * @return mixed
      */
     public function hSetNx($key, $member, $value)
@@ -184,6 +221,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed|null $other_keys
      * @return mixed
      */
     public function delete($key, $other_keys = null)
@@ -191,6 +230,7 @@ class Redis
     }
 
     /**
+     * @param mixed $pairs
      * @return mixed
      */
     public function mSet($pairs)
@@ -198,6 +238,7 @@ class Redis
     }
 
     /**
+     * @param mixed $pairs
      * @return mixed
      */
     public function mSetNx($pairs)
@@ -205,6 +246,7 @@ class Redis
     }
 
     /**
+     * @param mixed $pattern
      * @return mixed
      */
     public function getKeys($pattern)
@@ -212,6 +254,7 @@ class Redis
     }
 
     /**
+     * @param mixed $pattern
      * @return mixed
      */
     public function keys($pattern)
@@ -219,6 +262,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed|null $other_keys
      * @return mixed
      */
     public function exists($key, $other_keys = null)
@@ -226,6 +271,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function type($key)
@@ -233,6 +279,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function strLen($key)
@@ -240,6 +287,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function lPop($key)
@@ -247,6 +295,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $timeout_or_key
+     * @param mixed|null $extra_args
      * @return mixed
      */
     public function blPop($key, $timeout_or_key, $extra_args = null)
@@ -254,6 +305,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function rPop($key)
@@ -261,6 +313,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $timeout_or_key
+     * @param mixed|null $extra_args
      * @return mixed
      */
     public function brPop($key, $timeout_or_key, $extra_args = null)
@@ -268,6 +323,9 @@ class Redis
     }
 
     /**
+     * @param mixed $src
+     * @param mixed $dst
+     * @param mixed $timeout
      * @return mixed
      */
     public function bRPopLPush($src, $dst, $timeout)
@@ -275,6 +333,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function lSize($key)
@@ -282,6 +341,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function lLen($key)
@@ -289,6 +349,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function sSize($key)
@@ -296,6 +357,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function scard($key)
@@ -303,6 +365,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function sPop($key)
@@ -310,6 +373,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function sMembers($key)
@@ -317,6 +381,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function sGetMembers($key)
@@ -324,6 +389,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed|null $count
      * @return mixed
      */
     public function sRandMember($key, $count = null)
@@ -331,6 +398,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function persist($key)
@@ -338,6 +406,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function ttl($key)
@@ -345,6 +414,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function pttl($key)
@@ -352,6 +422,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function zCard($key)
@@ -359,6 +430,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function zSize($key)
@@ -366,6 +438,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function hLen($key)
@@ -373,6 +446,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function hKeys($key)
@@ -380,6 +454,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function hVals($key)
@@ -387,6 +462,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function hGetAll($key)
@@ -394,6 +470,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function debug($key)
@@ -401,6 +478,9 @@ class Redis
     }
 
     /**
+     * @param mixed $ttl
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function restore($ttl, $key, $value)
@@ -408,6 +488,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function dump($key)
@@ -415,6 +496,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $newkey
      * @return mixed
      */
     public function renameKey($key, $newkey)
@@ -422,6 +505,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $newkey
      * @return mixed
      */
     public function rename($key, $newkey)
@@ -429,6 +514,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $newkey
      * @return mixed
      */
     public function renameNx($key, $newkey)
@@ -436,6 +523,8 @@ class Redis
     }
 
     /**
+     * @param mixed $src
+     * @param mixed $dst
      * @return mixed
      */
     public function rpoplpush($src, $dst)
@@ -450,6 +539,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $elements
      * @return mixed
      */
     public function pfadd($key, $elements)
@@ -457,6 +548,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function pfcount($key)
@@ -464,6 +556,8 @@ class Redis
     }
 
     /**
+     * @param mixed $dstkey
+     * @param mixed $keys
      * @return mixed
      */
     public function pfmerge($dstkey, $keys)
@@ -478,6 +572,7 @@ class Redis
     }
 
     /**
+     * @param mixed $password
      * @return mixed
      */
     public function auth($password)
@@ -492,6 +587,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed|null $other_keys
      * @return mixed
      */
     public function watch($key, $other_keys = null)
@@ -562,6 +659,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $offset
+     * @param mixed $value
      * @return mixed
      */
     public function setRange($key, $offset, $value)
@@ -569,6 +669,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function setNx($key, $value)
@@ -576,6 +678,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function getSet($key, $value)
@@ -583,6 +687,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function append($key, $value)
@@ -590,6 +696,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function lPushx($key, $value)
@@ -597,6 +705,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function lPush($key, $value)
@@ -604,6 +714,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function rPush($key, $value)
@@ -611,6 +723,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function rPushx($key, $value)
@@ -618,6 +732,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function sContains($key, $value)
@@ -625,6 +741,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function sismember($key, $value)
@@ -632,6 +750,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
      * @return mixed
      */
     public function zScore($key, $member)
@@ -639,6 +759,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
      * @return mixed
      */
     public function zRank($key, $member)
@@ -646,6 +768,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
      * @return mixed
      */
     public function zRevRank($key, $member)
@@ -653,6 +777,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
      * @return mixed
      */
     public function hGet($key, $member)
@@ -660,6 +786,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $keys
      * @return mixed
      */
     public function hMGet($key, $keys)
@@ -667,6 +795,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
      * @return mixed
      */
     public function hExists($key, $member)
@@ -674,6 +804,8 @@ class Redis
     }
 
     /**
+     * @param mixed $channel
+     * @param mixed $message
      * @return mixed
      */
     public function publish($channel, $message)
@@ -681,6 +813,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
+     * @param mixed $member
      * @return mixed
      */
     public function zIncrBy($key, $value, $member)
@@ -688,6 +823,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $score
+     * @param mixed $value
      * @return mixed
      */
     public function zAdd($key, $score, $value)
@@ -695,6 +833,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $count
      * @return mixed
      */
     public function zPopMin($key, $count)
@@ -702,6 +842,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $count
      * @return mixed
      */
     public function zPopMax($key, $count)
@@ -709,6 +851,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $timeout_or_key
+     * @param mixed|null $extra_args
      * @return mixed
      */
     public function bzPopMin($key, $timeout_or_key, $extra_args = null)
@@ -716,6 +861,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $timeout_or_key
+     * @param mixed|null $extra_args
      * @return mixed
      */
     public function bzPopMax($key, $timeout_or_key, $extra_args = null)
@@ -723,6 +871,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $min
+     * @param mixed $max
      * @return mixed
      */
     public function zDeleteRangeByScore($key, $min, $max)
@@ -730,6 +881,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $min
+     * @param mixed $max
      * @return mixed
      */
     public function zRemRangeByScore($key, $min, $max)
@@ -737,6 +891,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $min
+     * @param mixed $max
      * @return mixed
      */
     public function zCount($key, $min, $max)
@@ -744,6 +901,10 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $end
+     * @param mixed|null $scores
      * @return mixed
      */
     public function zRange($key, $start, $end, $scores = null)
@@ -751,6 +912,10 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $end
+     * @param mixed|null $scores
      * @return mixed
      */
     public function zRevRange($key, $start, $end, $scores = null)
@@ -758,6 +923,10 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $end
+     * @param mixed|null $options
      * @return mixed
      */
     public function zRangeByScore($key, $start, $end, $options = null)
@@ -765,6 +934,10 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $end
+     * @param mixed|null $options
      * @return mixed
      */
     public function zRevRangeByScore($key, $start, $end, $options = null)
@@ -772,6 +945,11 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $min
+     * @param mixed $max
+     * @param mixed|null $offset
+     * @param mixed|null $limit
      * @return mixed
      */
     public function zRangeByLex($key, $min, $max, $offset = null, $limit = null)
@@ -779,6 +957,11 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $min
+     * @param mixed $max
+     * @param mixed|null $offset
+     * @param mixed|null $limit
      * @return mixed
      */
     public function zRevRangeByLex($key, $min, $max, $offset = null, $limit = null)
@@ -786,6 +969,10 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $keys
+     * @param mixed|null $weights
+     * @param mixed|null $aggregate
      * @return mixed
      */
     public function zInter($key, $keys, $weights = null, $aggregate = null)
@@ -793,6 +980,10 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $keys
+     * @param mixed|null $weights
+     * @param mixed|null $aggregate
      * @return mixed
      */
     public function zinterstore($key, $keys, $weights = null, $aggregate = null)
@@ -800,6 +991,10 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $keys
+     * @param mixed|null $weights
+     * @param mixed|null $aggregate
      * @return mixed
      */
     public function zUnion($key, $keys, $weights = null, $aggregate = null)
@@ -807,6 +1002,10 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $keys
+     * @param mixed|null $weights
+     * @param mixed|null $aggregate
      * @return mixed
      */
     public function zunionstore($key, $keys, $weights = null, $aggregate = null)
@@ -814,6 +1013,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function incrBy($key, $value)
@@ -821,6 +1022,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
+     * @param mixed $value
      * @return mixed
      */
     public function hIncrBy($key, $member, $value)
@@ -828,6 +1032,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function incr($key)
@@ -835,6 +1040,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function decrBy($key, $value)
@@ -842,6 +1049,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function decr($key)
@@ -849,6 +1057,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $offset
      * @return mixed
      */
     public function getBit($key, $offset)
@@ -856,6 +1066,10 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $position
+     * @param mixed $pivot
+     * @param mixed $value
      * @return mixed
      */
     public function lInsert($key, $position, $pivot, $value)
@@ -863,6 +1077,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $index
      * @return mixed
      */
     public function lGet($key, $index)
@@ -870,6 +1086,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $integer
      * @return mixed
      */
     public function lIndex($key, $integer)
@@ -877,6 +1095,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $timeout
      * @return mixed
      */
     public function setTimeout($key, $timeout)
@@ -884,6 +1104,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $integer
      * @return mixed
      */
     public function expire($key, $integer)
@@ -891,6 +1113,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $timestamp
      * @return mixed
      */
     public function pexpire($key, $timestamp)
@@ -898,6 +1122,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $timestamp
      * @return mixed
      */
     public function expireAt($key, $timestamp)
@@ -905,6 +1131,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $timestamp
      * @return mixed
      */
     public function pexpireAt($key, $timestamp)
@@ -912,6 +1140,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $dbindex
      * @return mixed
      */
     public function move($key, $dbindex)
@@ -919,6 +1149,7 @@ class Redis
     }
 
     /**
+     * @param mixed $dbindex
      * @return mixed
      */
     public function select($dbindex)
@@ -926,6 +1157,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $end
      * @return mixed
      */
     public function getRange($key, $start, $end)
@@ -933,6 +1167,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $stop
      * @return mixed
      */
     public function listTrim($key, $start, $stop)
@@ -940,6 +1177,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $stop
      * @return mixed
      */
     public function ltrim($key, $start, $stop)
@@ -947,6 +1187,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $end
      * @return mixed
      */
     public function lGetRange($key, $start, $end)
@@ -954,6 +1197,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $end
      * @return mixed
      */
     public function lRange($key, $start, $end)
@@ -961,6 +1207,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
+     * @param mixed $count
      * @return mixed
      */
     public function lRem($key, $value, $count)
@@ -968,6 +1217,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
+     * @param mixed $count
      * @return mixed
      */
     public function lRemove($key, $value, $count)
@@ -975,6 +1227,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $end
      * @return mixed
      */
     public function zDeleteRangeByRank($key, $start, $end)
@@ -982,6 +1237,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $min
+     * @param mixed $max
      * @return mixed
      */
     public function zRemRangeByRank($key, $min, $max)
@@ -989,6 +1247,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function incrByFloat($key, $value)
@@ -996,6 +1256,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
+     * @param mixed $value
      * @return mixed
      */
     public function hIncrByFloat($key, $member, $value)
@@ -1003,6 +1266,7 @@ class Redis
     }
 
     /**
+     * @param mixed $key
      * @return mixed
      */
     public function bitCount($key)
@@ -1010,6 +1274,10 @@ class Redis
     }
 
     /**
+     * @param mixed $operation
+     * @param mixed $ret_key
+     * @param mixed $key
+     * @param mixed|null $other_keys
      * @return mixed
      */
     public function bitOp($operation, $ret_key, $key, $other_keys = null)
@@ -1017,6 +1285,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function sAdd($key, $value)
@@ -1024,6 +1294,9 @@ class Redis
     }
 
     /**
+     * @param mixed $src
+     * @param mixed $dst
+     * @param mixed $value
      * @return mixed
      */
     public function sMove($src, $dst, $value)
@@ -1031,6 +1304,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed|null $other_keys
      * @return mixed
      */
     public function sDiff($key, $other_keys = null)
@@ -1038,6 +1313,9 @@ class Redis
     }
 
     /**
+     * @param mixed $dst
+     * @param mixed $key
+     * @param mixed|null $other_keys
      * @return mixed
      */
     public function sDiffStore($dst, $key, $other_keys = null)
@@ -1045,6 +1323,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed|null $other_keys
      * @return mixed
      */
     public function sUnion($key, $other_keys = null)
@@ -1052,6 +1332,9 @@ class Redis
     }
 
     /**
+     * @param mixed $dst
+     * @param mixed $key
+     * @param mixed|null $other_keys
      * @return mixed
      */
     public function sUnionStore($dst, $key, $other_keys = null)
@@ -1059,6 +1342,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed|null $other_keys
      * @return mixed
      */
     public function sInter($key, $other_keys = null)
@@ -1066,6 +1351,9 @@ class Redis
     }
 
     /**
+     * @param mixed $dst
+     * @param mixed $key
+     * @param mixed|null $other_keys
      * @return mixed
      */
     public function sInterStore($dst, $key, $other_keys = null)
@@ -1073,6 +1361,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function sRemove($key, $value)
@@ -1080,6 +1370,8 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $value
      * @return mixed
      */
     public function srem($key, $value)
@@ -1087,6 +1379,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
+     * @param mixed|null $other_members
      * @return mixed
      */
     public function zDelete($key, $member, $other_members = null)
@@ -1094,6 +1389,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
+     * @param mixed|null $other_members
      * @return mixed
      */
     public function zRemove($key, $member, $other_members = null)
@@ -1101,6 +1399,9 @@ class Redis
     }
 
     /**
+     * @param mixed $key
+     * @param mixed $member
+     * @param mixed|null $other_members
      * @return mixed
      */
     public function zRem($key, $member, $other_members = null)
@@ -1108,6 +1409,7 @@ class Redis
     }
 
     /**
+     * @param mixed $patterns
      * @return mixed
      */
     public function pSubscribe($patterns)
@@ -1115,6 +1417,7 @@ class Redis
     }
 
     /**
+     * @param mixed $channels
      * @return mixed
      */
     public function subscribe($channels)
@@ -1122,6 +1425,7 @@ class Redis
     }
 
     /**
+     * @param mixed $channels
      * @return mixed
      */
     public function unsubscribe($channels)
@@ -1129,6 +1433,7 @@ class Redis
     }
 
     /**
+     * @param mixed $patterns
      * @return mixed
      */
     public function pUnSubscribe($patterns)
@@ -1150,6 +1455,9 @@ class Redis
     }
 
     /**
+     * @param mixed $script
+     * @param mixed|null $args
+     * @param mixed|null $num_keys
      * @return mixed
      */
     public function eval($script, $args = null, $num_keys = null)
@@ -1157,6 +1465,9 @@ class Redis
     }
 
     /**
+     * @param mixed $script_sha
+     * @param mixed|null $args
+     * @param mixed|null $num_keys
      * @return mixed
      */
     public function evalSha($script_sha, $args = null, $num_keys = null)
@@ -1164,11 +1475,11 @@ class Redis
     }
 
     /**
+     * @param mixed $cmd
+     * @param mixed|null $args
      * @return mixed
      */
     public function script($cmd, $args = null)
     {
     }
-
-
 }

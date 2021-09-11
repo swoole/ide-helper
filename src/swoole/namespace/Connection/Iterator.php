@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Connection;
 
 class Iterator implements \Iterator, \ArrayAccess, \Countable
 {
-
     public function __construct()
     {
     }
@@ -56,6 +57,7 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $fd
      * @return mixed
      */
     public function offsetExists($fd)
@@ -63,6 +65,7 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $fd
      * @return mixed
      */
     public function offsetGet($fd)
@@ -70,6 +73,8 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $fd
+     * @param mixed $value
      * @return mixed
      */
     public function offsetSet($fd, $value)
@@ -77,11 +82,10 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @param mixed $fd
      * @return mixed
      */
     public function offsetUnset($fd)
     {
     }
-
-
 }

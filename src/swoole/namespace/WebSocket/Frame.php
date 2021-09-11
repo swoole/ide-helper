@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\WebSocket;
 
 class Frame
 {
-
     public $fd = 0;
 
     public $data = '';
@@ -23,6 +24,9 @@ class Frame
     }
 
     /**
+     * @param mixed $data
+     * @param mixed|null $opcode
+     * @param mixed|null $flags
      * @return mixed
      */
     public static function pack($data, $opcode = null, $flags = null)
@@ -30,11 +34,10 @@ class Frame
     }
 
     /**
+     * @param mixed $data
      * @return mixed
      */
     public static function unpack($data)
     {
     }
-
-
 }

@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Redis;
 
 class Server extends \Swoole\Server
 {
-
     public const NIL = 1;
 
     public const ERROR = 0;
@@ -20,6 +21,7 @@ class Server extends \Swoole\Server
     public const MAP = 6;
 
     /**
+     * @param mixed $command
      * @return mixed
      */
     public function setHandler($command, callable $callback)
@@ -27,6 +29,7 @@ class Server extends \Swoole\Server
     }
 
     /**
+     * @param mixed $command
      * @return mixed
      */
     public function getHandler($command)
@@ -34,11 +37,11 @@ class Server extends \Swoole\Server
     }
 
     /**
+     * @param mixed $type
+     * @param mixed|null $value
      * @return mixed
      */
     public static function format($type, $value = null)
     {
     }
-
-
 }

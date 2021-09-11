@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole;
 
 class Event
 {
-
     /**
+     * @param mixed $fd
+     * @param mixed|null $events
      * @return mixed
      */
     public static function add($fd, ?callable $read_callback, ?callable $write_callback = null, $events = null)
@@ -13,6 +16,7 @@ class Event
     }
 
     /**
+     * @param mixed $fd
      * @return mixed
      */
     public static function del($fd)
@@ -20,6 +24,8 @@ class Event
     }
 
     /**
+     * @param mixed $fd
+     * @param mixed|null $events
      * @return mixed
      */
     public static function set($fd, ?callable $read_callback = null, ?callable $write_callback = null, $events = null)
@@ -27,6 +33,8 @@ class Event
     }
 
     /**
+     * @param mixed $fd
+     * @param mixed|null $events
      * @return mixed
      */
     public static function isset($fd, $events = null)
@@ -48,6 +56,7 @@ class Event
     }
 
     /**
+     * @param mixed|null $before
      * @return mixed
      */
     public static function cycle(?callable $callback, $before = null)
@@ -55,6 +64,8 @@ class Event
     }
 
     /**
+     * @param mixed $fd
+     * @param mixed $data
      * @return mixed
      */
     public static function write($fd, $data)
@@ -81,6 +92,4 @@ class Event
     public static function exit()
     {
     }
-
-
 }

@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole\Coroutine;
 
 class Client
 {
-
     public const MSG_OOB = 1;
 
     public const MSG_PEEK = 2;
@@ -19,13 +20,13 @@ class Client
 
     public $fd = -1;
 
-    private $socket;
-
     public $type = 1;
 
     public $setting;
 
     public $connected = false;
+
+    private $socket;
 
     public function __construct($type)
     {
@@ -43,6 +44,10 @@ class Client
     }
 
     /**
+     * @param mixed $host
+     * @param mixed|null $port
+     * @param mixed|null $timeout
+     * @param mixed|null $sock_flag
      * @return mixed
      */
     public function connect($host, $port = null, $timeout = null, $sock_flag = null)
@@ -50,6 +55,7 @@ class Client
     }
 
     /**
+     * @param mixed|null $timeout
      * @return mixed
      */
     public function recv($timeout = null)
@@ -57,6 +63,7 @@ class Client
     }
 
     /**
+     * @param mixed|null $length
      * @return mixed
      */
     public function peek($length = null)
@@ -64,6 +71,7 @@ class Client
     }
 
     /**
+     * @param mixed $data
      * @return mixed
      */
     public function send($data)
@@ -71,6 +79,9 @@ class Client
     }
 
     /**
+     * @param mixed $filename
+     * @param mixed|null $offset
+     * @param mixed|null $length
      * @return mixed
      */
     public function sendfile($filename, $offset = null, $length = null)
@@ -78,6 +89,9 @@ class Client
     }
 
     /**
+     * @param mixed $address
+     * @param mixed $port
+     * @param mixed $data
      * @return mixed
      */
     public function sendto($address, $port, $data)
@@ -85,6 +99,9 @@ class Client
     }
 
     /**
+     * @param mixed $length
+     * @param mixed $address
+     * @param mixed|null $port
      * @return mixed
      */
     public function recvfrom($length, &$address, &$port = null)
@@ -146,6 +163,4 @@ class Client
     public function exportSocket()
     {
     }
-
-
 }

@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Swoole;
 
 class Client
 {
-
     public const MSG_OOB = 1;
 
     public const MSG_PEEK = 2;
@@ -49,6 +50,10 @@ class Client
     }
 
     /**
+     * @param mixed $host
+     * @param mixed|null $port
+     * @param mixed|null $timeout
+     * @param mixed|null $sock_flag
      * @return mixed
      */
     public function connect($host, $port = null, $timeout = null, $sock_flag = null)
@@ -56,6 +61,8 @@ class Client
     }
 
     /**
+     * @param mixed|null $size
+     * @param mixed|null $flag
      * @return mixed
      */
     public function recv($size = null, $flag = null)
@@ -63,6 +70,8 @@ class Client
     }
 
     /**
+     * @param mixed $data
+     * @param mixed|null $flag
      * @return mixed
      */
     public function send($data, $flag = null)
@@ -70,6 +79,9 @@ class Client
     }
 
     /**
+     * @param mixed $filename
+     * @param mixed|null $offset
+     * @param mixed|null $length
      * @return mixed
      */
     public function sendfile($filename, $offset = null, $length = null)
@@ -77,6 +89,9 @@ class Client
     }
 
     /**
+     * @param mixed $ip
+     * @param mixed $port
+     * @param mixed $data
      * @return mixed
      */
     public function sendto($ip, $port, $data)
@@ -84,6 +99,7 @@ class Client
     }
 
     /**
+     * @param mixed $how
      * @return mixed
      */
     public function shutdown($how)
@@ -133,6 +149,7 @@ class Client
     }
 
     /**
+     * @param mixed|null $force
      * @return mixed
      */
     public function close($force = null)
@@ -145,6 +162,4 @@ class Client
     public function getSocket()
     {
     }
-
-
 }
