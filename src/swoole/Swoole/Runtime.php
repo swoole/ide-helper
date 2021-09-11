@@ -7,26 +7,24 @@ namespace Swoole;
 class Runtime
 {
     /**
-     * @param mixed|null $enable
-     * @param mixed|null $flags
-     * @return mixed
+     * @param int|bool $enable
+     * @return bool true on success or false on failure
      */
-    public static function enableCoroutine($enable = null, $flags = null)
+    public static function enableCoroutine($enable = true, int $flags = SWOOLE_HOOK_ALL)
     {
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public static function getHookFlags()
     {
     }
 
     /**
-     * @param mixed $flags
-     * @return mixed
+     * @return bool true on success or false on failure
      */
-    public static function setHookFlags($flags)
+    public static function setHookFlags(int $flags)
     {
     }
 }

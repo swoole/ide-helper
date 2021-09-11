@@ -18,60 +18,52 @@ class Lock
 
     public $errCode = 0;
 
-    public function __construct($type = null, $filename = null)
-    {
-    }
-
-    public function __destruct()
+    public function __construct(int $type = self::MUTEX, string $filename = '')
     {
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function lock()
     {
     }
 
     /**
-     * @param mixed|null $timeout
-     * @return mixed
+     * @return bool
      */
-    public function lockwait($timeout = null)
+    public function lockwait(float $timeout = 1.0)
     {
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function trylock()
     {
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function lock_read()
     {
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function trylock_read()
     {
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function unlock()
     {
     }
 
-    /**
-     * @return mixed
-     */
     public function destroy()
     {
     }
