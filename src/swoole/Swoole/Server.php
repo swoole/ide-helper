@@ -412,7 +412,6 @@ class Server
      *
      * @return int
      * @see \Swoole\Timer::after()
-     * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L622
      */
     public function after(int $ms, callable $callback, ...$params)
     {
@@ -423,7 +422,6 @@ class Server
      *
      * @return int
      * @see \Swoole\Timer::tick()
-     * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L623
      */
     public function tick(int $ms, callable $callback, ...$params)
     {
@@ -434,7 +432,6 @@ class Server
      *
      * @return bool
      * @see \Swoole\Timer::clear()
-     * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L624
      */
     public function clearTimer(int $timer_id)
     {
@@ -444,7 +441,6 @@ class Server
      * Alias of method \Swoole\Event::defer().
      *
      * @see \Swoole\Event::defer()
-     * @see https://github.com/swoole/swoole-src/blob/v4.7.1/ext-src/swoole_server.cc#L626
      */
     public function defer(callable $callback)
     {
