@@ -314,16 +314,24 @@ class Server
     }
 
     /**
-     * @return mixed
+     * Get the ID of current worker (either a coroutine worker or a task worker).
+     *
+     * @return int|false Returns the ID of current worker. Returns false if not called within a worker process (either a
+     *                   coroutine worker process or a task worker process).
      */
     public function getWorkerId()
     {
     }
 
     /**
-     * @return mixed
+     * Get the process ID of a given worker process (specified by a worker ID).
+     *
+     * @return int|false Returns the process ID of a given worker process (specified by a worker ID). If the worker ID
+     *                   is a negative integer or not passed in, returns the process ID of current worker process.
+     *                   Returns false if something wrong happens (e.g., the worker process doesn't exist, or an invalid
+     *                   worker ID specified.).
      */
-    public function getWorkerPid()
+    public function getWorkerPid(int $worker_id = -1)
     {
     }
 

@@ -7,11 +7,11 @@ This package contains IDE help files for [Swoole](https://github.com/swoole/swoo
 
 ## Install
 
-You may add this package to your project using [Composer](https://getcomposer.org):
+You can add this package to your project using [Composer](https://getcomposer.org):
 
 ```bash
 composer require swoole/ide-helper:@dev
-# or you may install a specific version, like:
+# or you can install a specific version, like:
 composer require swoole/ide-helper:~4.4.7
 ```
 
@@ -19,17 +19,15 @@ It's better to install this package on only development systems by adding the `-
 
 ```bash
 composer require --dev swoole/ide-helper:@dev
-# or you may install a specific version, like:
+# or you can install a specific version, like:
 composer require --dev swoole/ide-helper:~4.4.7
 ```
 
-## Alternatives
+## Notes
 
-The stubs are created by reverse-engineering the Swoole extensions directly; thus there is no documentation included,
-and type hinting is missing in many places. The Swoole team has tried its best to keep the stubs up to date, and we do
-want to add inline documentation and type hinting in the future; however, due to limited resources we don't know when it
-will be ready.
- 
-Here are some alternatives you can consider:
+There are two types of worker processes in use when starting a Swoole server:
 
-* [eaglewu/swoole-ide-helper](https://github.com/wudi/swoole-ide-helper)
+1. `worker`. All requests (HTTP, WebSocket, TCP, UDP, etc.) are handled by this type of processes. It supports coroutine by default; we can have I/O operations running asynchronously in it.
+2. `task worker`. This type of processes was introduced to handle blocking I/O operations in PHP. Ideally, it should always work synchronously, although it also supports coroutine and allows asynchronous processing (since Swoole v4.2.12+).
+
+To avoid any confusion, in this repository, we call the first type of worker processes `coroutine worker`, and the second type `task worker`.
