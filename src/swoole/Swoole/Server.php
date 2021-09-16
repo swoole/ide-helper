@@ -314,10 +314,10 @@ class Server
     }
 
     /**
-     * Get the ID of current worker (either a coroutine worker or a task worker).
+     * Get the ID of current worker (either an event worker or a task worker).
      *
-     * @return int|false Returns the ID of current worker. Returns false if not called within a worker process (either a
-     *                   coroutine worker process or a task worker process).
+     * @return int|false Returns the ID of current worker. Returns false if not called within a worker process (either
+     *                   an event worker process or a task worker process).
      */
     public function getWorkerId()
     {

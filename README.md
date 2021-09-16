@@ -27,7 +27,5 @@ composer require --dev swoole/ide-helper:~4.4.7
 
 There are two types of worker processes in use when starting a Swoole server:
 
-1. `worker`. All requests (HTTP, WebSocket, TCP, UDP, etc.) are handled by this type of processes. It supports coroutine by default; we can have I/O operations running asynchronously in it.
+1. `event worker`. All requests (HTTP, WebSocket, TCP, UDP, etc.) are handled by this type of processes. It supports coroutine by default; many I/O operations can run asynchronously in it.
 2. `task worker`. This type of processes was introduced to handle blocking I/O operations in PHP. Ideally, it should always work synchronously, although it also supports coroutine and allows asynchronous processing (since Swoole v4.2.12+).
-
-To avoid any confusion, in this repository, we call the first type of worker processes `coroutine worker`, and the second type `task worker`.
