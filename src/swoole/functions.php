@@ -46,19 +46,27 @@ function swoole_async_set($settings)
 }
 
 /**
- * @param $func[required]
- * @param $params[optional]
- * @return mixed
+ * @return ing|false
  */
-function swoole_coroutine_create($func, $params = null)
+function swoole_coroutine_create(callback $func, ...$params)
 {
 }
 
 /**
- * @param $callback[required]
- * @return mixed
+ * Defers the execution of a callback function until the surrounding function of a coroutine returns.
+ *
+ * @example
+ * <pre>
+ * swoole_coroutine_create(function () {  // The surrounding function of a coroutine.
+ *   echo '1';
+ *   swoole_coroutine_defer(function () { // The callback function to be deferred.
+ *     echo '3';
+ *   });
+ *   echo '2';
+ * });
+ * <pre>
  */
-function swoole_coroutine_defer($callback)
+function swoole_coroutine_defer(callback $callback)
 {
 }
 
@@ -262,18 +270,36 @@ function swoole_internal_call_user_shutdown_begin()
 }
 
 /**
- * @param $func[required]
- * @return mixed
+ * This function is an alias of function swoole_coroutine_create(); it's available only when directive
+ * "swoole.use_shortname" is not explicitly turned off.
+ *
+ * @return ing|false
+ * @see swoole_coroutine_create()
  */
-function go($func)
+function go(callback $func, ...$params)
 {
 }
 
 /**
- * @param $callback[required]
- * @return mixed
+ * Defers the execution of a callback function until the surrounding function of a coroutine returns.
+ *
+ * This function is an alias of function swoole_coroutine_defer(); it's available only when directive
+ * "swoole.use_shortname" is not explicitly turned off.
+ *
+ * @see swoole_coroutine_defer()
+ *
+ * @example
+ * <pre>
+ * swoole_coroutine_create(function () {  // The surrounding function of a coroutine.
+ *   echo '1';
+ *   swoole_coroutine_defer(function () { // The callback function to be deferred.
+ *     echo '3';
+ *   });
+ *   echo '2';
+ * });
+ * <pre>
  */
-function defer($callback)
+function defer(callback $callback)
 {
 }
 
