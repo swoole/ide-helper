@@ -290,9 +290,9 @@ function go(callback $func, ...$params)
  *
  * @example
  * <pre>
- * swoole_coroutine_create(function () {  // The surrounding function of a coroutine.
+ * go(function () {      // The surrounding function of a coroutine.
  *   echo '1';
- *   swoole_coroutine_defer(function () { // The callback function to be deferred.
+ *   defer(function () { // The callback function to be deferred.
  *     echo '3';
  *   });
  *   echo '2';
