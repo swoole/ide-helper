@@ -448,6 +448,7 @@ class Server
     /**
      * Alias of method \Swoole\Event::defer().
      *
+     * @return true
      * @see \Swoole\Event::defer()
      */
     public function defer(callable $callback)

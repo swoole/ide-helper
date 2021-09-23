@@ -46,7 +46,7 @@ function swoole_async_set($settings)
 }
 
 /**
- * @return ing|false
+ * @return int|false
  */
 function swoole_coroutine_create(callback $func, ...$params)
 {
@@ -55,6 +55,7 @@ function swoole_coroutine_create(callback $func, ...$params)
 /**
  * Defers the execution of a callback function until the surrounding function of a coroutine returns.
  *
+ * @return void
  * @example
  * <pre>
  * swoole_coroutine_create(function () {  // The surrounding function of a coroutine.
@@ -273,7 +274,7 @@ function swoole_internal_call_user_shutdown_begin()
  * This function is an alias of function swoole_coroutine_create(); it's available only when directive
  * "swoole.use_shortname" is not explicitly turned off.
  *
- * @return ing|false
+ * @return int|false
  * @see swoole_coroutine_create()
  */
 function go(callback $func, ...$params)
@@ -286,6 +287,7 @@ function go(callback $func, ...$params)
  * This function is an alias of function swoole_coroutine_defer(); it's available only when directive
  * "swoole.use_shortname" is not explicitly turned off.
  *
+ * @return void
  * @see swoole_coroutine_defer()
  *
  * @example
@@ -350,10 +352,12 @@ function swoole_event_dispatch()
 }
 
 /**
- * @param $callback[required]
- * @return mixed
+ * This function is an alias of method \Swoole\Event::defer().
+ *
+ * @return true
+ * @see \Swoole\Event::defer()
  */
-function swoole_event_defer($callback)
+function swoole_event_defer(callable $callback)
 {
 }
 
@@ -392,6 +396,7 @@ function swoole_event_exit()
 /**
  * This function is an alias of method \Swoole\Timer::set().
  *
+ * @return void
  * @see \Swoole\Timer::set()
  */
 function swoole_timer_set(array $settings)

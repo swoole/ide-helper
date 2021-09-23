@@ -49,7 +49,7 @@ class Event
     }
 
     /**
-     * @return mixed
+     * @return true
      */
     public static function defer(callable $callback)
     {

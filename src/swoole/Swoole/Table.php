@@ -152,6 +152,7 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @return void
      * @see \Iterator::next()
      * @see https://www.php.net/manual/en/iterator.next.php
      * {@inheritDoc}
@@ -161,6 +162,7 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @return void
      * @see \Iterator::rewind()
      * @see https://www.php.net/manual/en/iterator.rewind.php
      * {@inheritDoc}
@@ -210,6 +212,7 @@ class Table implements \Iterator, \ArrayAccess, \Countable
      *
      * @param mixed $offset the offset to assign the value to
      * @param mixed $value the value to set
+     * @return void
      * @see \ArrayAccess::offsetSet()
      * @see https://www.php.net/manual/en/arrayaccess.offsetset.php
      * {@inheritDoc}
@@ -222,6 +225,7 @@ class Table implements \Iterator, \ArrayAccess, \Countable
      * Unsets an offset.
      *
      * @param mixed $offset the offset to unset
+     * @return void
      * @see \ArrayAccess::offsetUnset()
      * @see https://www.php.net/manual/en/arrayaccess.offsetunset.php
      * {@inheritDoc}

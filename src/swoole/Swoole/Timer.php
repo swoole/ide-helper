@@ -6,6 +6,9 @@ namespace Swoole;
 
 class Timer
 {
+    /**
+     * @return void
+     */
     public static function set(array $settings)
     {
     }
