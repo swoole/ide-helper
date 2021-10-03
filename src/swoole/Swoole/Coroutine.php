@@ -22,15 +22,18 @@ class Coroutine
     }
 
     /**
-     * @param mixed $options
-     * @return mixed
+     * To set runtime configurations of coroutines.
+     *
+     * @return void
      */
-    public static function set($options)
+    public static function set(array $options)
     {
     }
 
     /**
-     * @return mixed
+     * To get runtime configurations of coroutines.
+     *
+     * @return array|null
      */
     public static function getOptions()
     {
