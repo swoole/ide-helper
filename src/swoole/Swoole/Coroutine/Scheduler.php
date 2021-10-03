@@ -45,14 +45,14 @@ class Scheduler
      *
      * @return array|null
      * @see \Swoole\Coroutine::getOptions()
-     * @since Swoole 4.6.0+
+     * @since Swoole 4.6.0
      */
     public function getOptions()
     {
     }
 
     /**
-     * Start running the list of tasks (callbacks) add through method add() and parallel().
+     * Start running the list of tasks (callbacks) added through method add() and parallel().
      *
      * @return bool
      * @see \Swoole\Coroutine\Scheduler::add()
