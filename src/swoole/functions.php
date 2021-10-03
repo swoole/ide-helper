@@ -48,7 +48,7 @@ function swoole_async_set($settings)
 /**
  * @return int|false
  */
-function swoole_coroutine_create(callback $func, ...$params)
+function swoole_coroutine_create(callable $func, ...$params)
 {
 }
 
@@ -67,7 +67,7 @@ function swoole_coroutine_create(callback $func, ...$params)
  * });
  * <pre>
  */
-function swoole_coroutine_defer(callback $callback)
+function swoole_coroutine_defer(callable $callback)
 {
 }
 
@@ -277,7 +277,7 @@ function swoole_internal_call_user_shutdown_begin()
  * @return int|false
  * @see swoole_coroutine_create()
  */
-function go(callback $func, ...$params)
+function go(callable $func, ...$params)
 {
 }
 
@@ -301,7 +301,7 @@ function go(callback $func, ...$params)
  * });
  * <pre>
  */
-function defer(callback $callback)
+function defer(callable $callback)
 {
 }
 
