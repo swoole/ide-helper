@@ -22,7 +22,7 @@ class Scheduler
      * @return false|void return false if the scheduler has already been started; otherwise nothing returns
      * @see \Swoole\Coroutine\Scheduler::start()
      */
-    public function parallel(int $n, callable $func = null, ...$params)
+    public function parallel(int $n, callable $func, ...$params)
     {
     }
 

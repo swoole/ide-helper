@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\Timer;
 
+/**
+ * @see https://www.php.net/ArrayIterator
+ */
 class Iterator extends \ArrayIterator
 {
-    public const STD_PROP_LIST = 1;
-
-    public const ARRAY_AS_PROPS = 2;
 }
