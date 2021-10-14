@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-define('SWOOLE_VERSION', '4.7.1');
-define('SWOOLE_VERSION_ID', 40701);
+define('SWOOLE_VERSION', '4.8.0');
+define('SWOOLE_VERSION_ID', 40800);
 define('SWOOLE_MAJOR_VERSION', 4);
-define('SWOOLE_MINOR_VERSION', 7);
-define('SWOOLE_RELEASE_VERSION', 1);
+define('SWOOLE_MINOR_VERSION', 8);
+define('SWOOLE_RELEASE_VERSION', 0);
 define('SWOOLE_EXTRA_VERSION', '');
 define('SWOOLE_DEBUG', '');
 define('SWOOLE_HAVE_COMPRESSION', '1');
 define('SWOOLE_HAVE_ZLIB', '1');
+define('SWOOLE_HAVE_BROTLI', '1');
 define('SWOOLE_USE_HTTP2', '1');
 define('SWOOLE_USE_SHORTNAME', '1');
 define('SWOOLE_SOCK_TCP', 1);
