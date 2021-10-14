@@ -55,6 +55,14 @@ class Table implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * @return array|false return an array of stats information; Return FALSE when error happens
+     * @since 4.8.0
+     */
+    public function stats()
+    {
+    }
+
+    /**
      * @return mixed
      */
     public function get(string $key, string $field = null)

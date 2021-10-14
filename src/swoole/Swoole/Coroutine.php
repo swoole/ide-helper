@@ -63,6 +63,23 @@ class Coroutine
     }
 
     /**
+     * Waits for a list of coroutines to finish.
+     *
+     * This method is similar to class \Swoole\Coroutine\WaitGroup and \Swoole\Coroutine\Barrier. They are different
+     * implementations of the same functionality.
+     *
+     * @since 4.8.0
+     * @param array $cid_array an array of coroutines
+     * @param int $timeout
+     * @return bool TRUE if succeeds; otherwise FALSE
+     * @see \Swoole\Coroutine\WaitGroup
+     * @see \Swoole\Coroutine\Barrier
+     */
+    public static function join($cid_array, $timeout = -1)
+    {
+    }
+
+    /**
      * @return mixed
      */
     public static function isCanceled()
