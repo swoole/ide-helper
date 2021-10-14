@@ -1482,4 +1482,205 @@ class Redis
     public function script($cmd, $args = null)
     {
     }
+
+    /**
+     * @since 4.8.0
+     * @param mixed $key
+     * @return mixed
+     */
+    public function xLen($key)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $id
+     * @param mixed $pairs
+     * @param mixed|null $options
+     * @return mixed
+     */
+    public function xAdd($key, $id, $pairs, $options = null)
+    {
+    }
+
+    /**
+     * @param mixed $streams
+     * @param mixed|null $options
+     * @return mixed
+     */
+    public function xRead($streams, $options = null)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $id
+     * @return mixed
+     */
+    public function xDel($key, $id)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $end
+     * @param mixed|null $count
+     * @return mixed
+     */
+    public function xRange($key, $start, $end, $count = null)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $start
+     * @param mixed $end
+     * @param mixed|null $count
+     * @return mixed
+     */
+    public function xRevRange($key, $start, $end, $count = null)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed|null $options
+     * @return mixed
+     */
+    public function xTrim($key, $options = null)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $group_name
+     * @param mixed $id
+     * @param mixed|null $mkstream
+     * @return mixed
+     */
+    public function xGroupCreate($key, $group_name, $id, $mkstream = null)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $group_name
+     * @param mixed $id
+     * @return mixed
+     */
+    public function xGroupSetId($key, $group_name, $id)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $group_name
+     * @return mixed
+     */
+    public function xGroupDestroy($key, $group_name)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $group_name
+     * @param mixed $consumer_name
+     * @return mixed
+     */
+    public function xGroupCreateConsumer($key, $group_name, $consumer_name)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $group_name
+     * @param mixed $consumer_name
+     * @return mixed
+     */
+    public function xGroupDelConsumer($key, $group_name, $consumer_name)
+    {
+    }
+
+    /**
+     * @param mixed $group_name
+     * @param mixed $consumer_name
+     * @param mixed $streams
+     * @param mixed|null $options
+     * @return mixed
+     */
+    public function xReadGroup($group_name, $consumer_name, $streams, $options = null)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $group_name
+     * @param mixed|null $options
+     * @return mixed
+     */
+    public function xPending($key, $group_name, $options = null)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $group_name
+     * @param mixed $id
+     * @return mixed
+     */
+    public function xAck($key, $group_name, $id)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $group_name
+     * @param mixed $consumer_name
+     * @param mixed $min_idle_time
+     * @param mixed $id
+     * @param mixed|null $options
+     * @return mixed
+     */
+    public function xClaim($key, $group_name, $consumer_name, $min_idle_time, $id, $options = null)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $group_name
+     * @param mixed $consumer_name
+     * @param mixed $min_idle_time
+     * @param mixed $start
+     * @param mixed|null $options
+     * @return mixed
+     */
+    public function xAutoClaim($key, $group_name, $consumer_name, $min_idle_time, $start, $options = null)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @param mixed $group_name
+     * @return mixed
+     */
+    public function xInfoConsumers($key, $group_name)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @return mixed
+     */
+    public function xInfoGroups($key)
+    {
+    }
+
+    /**
+     * @param mixed $key
+     * @return mixed
+     */
+    public function xInfoStream($key)
+    {
+    }
 }

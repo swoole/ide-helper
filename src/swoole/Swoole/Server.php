@@ -32,30 +32,81 @@ class Server
 
     public $stats_timer;
 
+    /**
+     * @var \Swoole\Coroutine\Http\Server
+     * @since 4.8.0
+     */
+    public $admin_server;
+
+    /**
+     * @var callable
+     */
     private $onStart;
 
+    /**
+     * @var callable
+     * @since 4.8.0
+     */
+    private $onBeforeShutdown;
+
+    /**
+     * @var callable
+     */
     private $onShutdown;
 
+    /**
+     * @var callable
+     */
     private $onWorkerStart;
 
+    /**
+     * @var callable
+     */
     private $onWorkerStop;
 
+    /**
+     * @var callable
+     */
     private $onBeforeReload;
 
+    /**
+     * @var callable
+     */
     private $onAfterReload;
 
+    /**
+     * @var callable
+     */
     private $onWorkerExit;
 
+    /**
+     * @var callable
+     */
     private $onWorkerError;
 
+    /**
+     * @var callable
+     */
     private $onTask;
 
+    /**
+     * @var callable
+     */
     private $onFinish;
 
+    /**
+     * @var callable
+     */
     private $onManagerStart;
 
+    /**
+     * @var callable
+     */
     private $onManagerStop;
 
+    /**
+     * @var callable
+     */
     private $onPipeMessage;
 
     public function __construct($host, $port = null, $mode = null, $sock_type = null)
@@ -340,6 +391,39 @@ class Server
      * @return mixed
      */
     public function getWorkerStatus($worker_id = null)
+    {
+    }
+
+    /**
+     * Run a customized command in a specified process of Swoole.
+     *
+     * @since 4.8.0
+     * @param mixed $data
+     * @param bool $json_encode if the callback function of the command returns a JSON encoded string back, it can be decoded automatically by setting this parameter to TRUE
+     * @return mixed|false
+     * @see \Swoole\Server::addCommand()
+     */
+    public function command(string $name, int $process_id, int $process_type, $data, bool $json_decode = true)
+    {
+    }
+
+    /**
+     * Add a customized command.
+     *
+     * Commands can be added to the master process, the manager process, or worker processes. Commands can only be added
+     * before the server is started.
+     *
+     * @param int $accepted_process_types One or multiple types of processes. e.g., "SWOOLE_SERVER_COMMAND_EVENT_WORKER | SWOOLE_SERVER_COMMAND_TASK_WORKER".
+     * @param callable $callback the callback function should return a (serialized) string back
+     * @since 4.8.0
+     * @return bool TRUE if succeeds, otherwise FALSE
+     * @see \Swoole\Server::command()
+     * @see SWOOLE_SERVER_COMMAND_MASTER
+     * @see SWOOLE_SERVER_COMMAND_MANAGER
+     * @see SWOOLE_SERVER_COMMAND_EVENT_WORKER
+     * @see SWOOLE_SERVER_COMMAND_TASK_WORKER
+     */
+    public function addCommand(string $name, int $accepted_process_types, callable $callback)
     {
     }
 

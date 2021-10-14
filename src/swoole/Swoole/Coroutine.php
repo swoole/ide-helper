@@ -167,6 +167,17 @@ class Coroutine
     }
 
     /**
+     * Get memory usage of a coroutine.
+     *
+     * @since 4.8.0
+     * @param int $cid if this parameter is not passed in, current coroutine ID will be used
+     * @return int|false Memory usage of the coroutine. FALSE is the specified coroutine doesn't exist.
+     */
+    public static function getStackUsage(int $cid = null)
+    {
+    }
+
+    /**
      * @return mixed
      */
     public static function list()
