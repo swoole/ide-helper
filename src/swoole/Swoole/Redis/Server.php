@@ -73,7 +73,7 @@ class Server extends \Swoole\Server
     /**
      * Set a handler (a callback function) to process a given Redis command.
      *
-     * @return bool true on success or false on failure
+     * @return bool TRUE on success, or FALSE on failure.
      */
     public function setHandler(string $command, callable $callback)
     {
@@ -81,7 +81,7 @@ class Server extends \Swoole\Server
 
     /**
      * @param string $command
-     * @return callable|null returns the callback function if defined, otherwise NULL
+     * @return callable|null Returns the callback function if defined, otherwise NULL.
      */
     public function getHandler($command)
     {

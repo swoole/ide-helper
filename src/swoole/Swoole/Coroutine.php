@@ -69,9 +69,9 @@ class Coroutine
      * implementations of the same functionality.
      *
      * @since 4.8.0
-     * @param array $cid_array an array of coroutines
+     * @param array $cid_array An array of coroutines.
      * @param int $timeout
-     * @return bool TRUE if succeeds; otherwise FALSE
+     * @return bool TRUE if succeeds; otherwise FALSE.
      * @see \Swoole\Coroutine\WaitGroup
      * @see \Swoole\Coroutine\Barrier
      */
@@ -170,8 +170,8 @@ class Coroutine
      * Get memory usage of a coroutine.
      *
      * @since 4.8.0
-     * @param int $cid if this parameter is not passed in, current coroutine ID will be used
-     * @return int|false Memory usage of the coroutine. FALSE is the specified coroutine doesn't exist.
+     * @param int $cid If this parameter is not passed in, current coroutine ID will be used.
+     * @return int|false Memory usage of the coroutine; FALSE if the specified coroutine doesn't exist.
      */
     public static function getStackUsage(int $cid = null)
     {

@@ -9,7 +9,7 @@ class Scheduler
     /**
      * Add a task (implemented in a callback).
      *
-     * @return false|void return false if the scheduler has already been started; otherwise nothing returns
+     * @return false|void Returns FALSE if the scheduler has already been started; otherwise nothing returns.
      * @see \Swoole\Coroutine\Scheduler::start()
      */
     public function add(callable $func, ...$params)
@@ -19,7 +19,7 @@ class Scheduler
     /**
      * Add a list of tasks (implemented in callbacks).
      *
-     * @return false|void return false if the scheduler has already been started; otherwise nothing returns
+     * @return false|void Returns FALSE if the scheduler has already been started; otherwise nothing returns.
      * @see \Swoole\Coroutine\Scheduler::start()
      */
     public function parallel(int $n, callable $func, ...$params)
