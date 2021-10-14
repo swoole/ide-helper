@@ -1485,202 +1485,169 @@ class Redis
 
     /**
      * @since 4.8.0
-     * @param mixed $key
-     * @return mixed
+     * @return int
+     * @see https://redis.io/commands/xlen
      */
-    public function xLen($key)
+    public function xLen(string $key)
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $id
-     * @param mixed $pairs
-     * @param mixed|null $options
-     * @return mixed
+     * @param array $options Accepted options: "nomkstream", "maxlen", "minid", and "limit".
+     * @return void|false Returns FALSE if parameter $pairs is empty; otherwise nothing returns.
+     * @see https://redis.io/commands/xadd
      */
-    public function xAdd($key, $id, $pairs, $options = null)
+    public function xAdd(string $key, string $id, array $pairs, array $options = [])
     {
     }
 
     /**
-     * @param mixed $streams
-     * @param mixed|null $options
-     * @return mixed
+     * @param array $options Accepted options: "count" and "block".
+     * @return array|false Returns FALSE if error happens or parameter $streams is empty; otherwise, an array is returned.
+     * @see https://redis.io/commands/xread
      */
-    public function xRead($streams, $options = null)
+    public function xRead(array $streams, array $options = [])
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $id
-     * @return mixed
+     * @return int The number of entries actually deleted.
+     * @see https://redis.io/commands/xdel
      */
-    public function xDel($key, $id)
+    public function xDel(string $key, string $id)
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $start
-     * @param mixed $end
-     * @param mixed|null $count
-     * @return mixed
+     * @return array
+     * @see https://redis.io/commands/xrange
      */
-    public function xRange($key, $start, $end, $count = null)
+    public function xRange(string $key, string $start, string $end, int $count = 0)
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $start
-     * @param mixed $end
-     * @param mixed|null $count
-     * @return mixed
+     * @return array
+     * @see https://redis.io/commands/xrevrange
      */
-    public function xRevRange($key, $start, $end, $count = null)
+    public function xRevRange(string $key, string $start, string $end, int $count = 0)
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed|null $options
-     * @return mixed
+     * @param array $options Accepted options: "maxlen", "minid", and "limit".
+     * @return array|false Returns FALSE if error happens; otherwise, an array is returned.
+     * @see https://redis.io/commands/xtrim
      */
-    public function xTrim($key, $options = null)
+    public function xTrim(string $key, array $options = [])
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $group_name
-     * @param mixed $id
-     * @param mixed|null $mkstream
-     * @return mixed
+     * @return string
+     * @see https://redis.io/commands/xgroup
      */
-    public function xGroupCreate($key, $group_name, $id, $mkstream = null)
+    public function xGroupCreate(string $key, string $group_name, string $id, bool $mkstream = false)
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $group_name
-     * @param mixed $id
-     * @return mixed
+     * @return string
+     * @see https://redis.io/commands/xgroup
      */
-    public function xGroupSetId($key, $group_name, $id)
+    public function xGroupSetId(string $key, string $group_name, string $id)
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $group_name
-     * @return mixed
+     * @return int The number of destroyed consumer groups (0 or 1).
+     * @see https://redis.io/commands/xgroup
      */
-    public function xGroupDestroy($key, $group_name)
+    public function xGroupDestroy(string $key, string $group_name)
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $group_name
-     * @param mixed $consumer_name
-     * @return mixed
+     * @return int The number of created consumers (0 or 1).
+     * @see https://redis.io/commands/xgroup
      */
-    public function xGroupCreateConsumer($key, $group_name, $consumer_name)
+    public function xGroupCreateConsumer(string $key, string $group_name, string $consumer_name)
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $group_name
-     * @param mixed $consumer_name
-     * @return mixed
+     * @return int The number of pending messages that the consumer had before it was deleted.
+     * @see https://redis.io/commands/xgroup
      */
-    public function xGroupDelConsumer($key, $group_name, $consumer_name)
+    public function xGroupDelConsumer(string $key, string $group_name, string $consumer_name)
     {
     }
 
     /**
-     * @param mixed $group_name
-     * @param mixed $consumer_name
-     * @param mixed $streams
-     * @param mixed|null $options
-     * @return mixed
+     * @param array $options Accepted options: "count", "block", and "noack".
+     * @return array|false Returns FALSE if error happens; otherwise, an array is returned.
+     * @see https://redis.io/commands/xreadgroup
      */
-    public function xReadGroup($group_name, $consumer_name, $streams, $options = null)
+    public function xReadGroup(string $group_name, string $consumer_name, array $streams, array $options = [])
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $group_name
-     * @param mixed|null $options
-     * @return mixed
+     * @param array $options Accepted options: "idle", "start", "end", "count", and "consumer".
+     * @return array|false Returns FALSE if error happens; otherwise, an array is returned.
+     * @see https://redis.io/commands/xpending
      */
-    public function xPending($key, $group_name, $options = null)
+    public function xPending(string $key, string $group_name, array $options = [])
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $group_name
-     * @param mixed $id
-     * @return mixed
+     * @return array|false Returns FALSE if error happens or parameter $id is empty; otherwise, an array is returned.
+     * @see https://redis.io/commands/xack
      */
-    public function xAck($key, $group_name, $id)
+    public function xAck(string $key, string $group_name, array $id)
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $group_name
-     * @param mixed $consumer_name
-     * @param mixed $min_idle_time
-     * @param mixed $id
-     * @param mixed|null $options
-     * @return mixed
+     * @param array $options Accepted options: "idle", "time", "retrycount", "force", and "justid".
+     * @return array|false Returns FALSE if error happens; otherwise, an array is returned.
+     * @see https://redis.io/commands/xclaim
      */
-    public function xClaim($key, $group_name, $consumer_name, $min_idle_time, $id, $options = null)
+    public function xClaim(string $key, string $group_name, string $consumer_name, int $min_idle_time, array $id, array $options = [])
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $group_name
-     * @param mixed $consumer_name
-     * @param mixed $min_idle_time
-     * @param mixed $start
-     * @param mixed|null $options
-     * @return mixed
+     * @param array $options Accepted options: "count" and "justid".
+     * @return array|false Returns FALSE if error happens; otherwise, an array is returned.
+     * @see https://redis.io/commands/xautoclaim
      */
-    public function xAutoClaim($key, $group_name, $consumer_name, $min_idle_time, $start, $options = null)
+    public function xAutoClaim(string $key, string $group_name, string $consumer_name, int $min_idle_time, string $start, array $options = [])
     {
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $group_name
-     * @return mixed
+     * @return array
+     * @see https://redis.io/commands/xinfo
      */
-    public function xInfoConsumers($key, $group_name)
+    public function xInfoConsumers(string $key, string $group_name)
     {
     }
 
     /**
-     * @param mixed $key
-     * @return mixed
+     * @return array
+     * @see https://redis.io/commands/xinfo
      */
-    public function xInfoGroups($key)
+    public function xInfoGroups(string $key)
     {
     }
 
     /**
-     * @param mixed $key
-     * @return mixed
+     * @return array
+     * @see https://redis.io/commands/xinfo
      */
-    public function xInfoStream($key)
+    public function xInfoStream(string $key)
     {
     }
 }
