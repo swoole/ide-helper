@@ -68,8 +68,8 @@ class Params extends Record
             [$nameLength, $valueLength] = array_values(unpack($format, $data));
 
             // Clear top bit for long record
-            $nameLength &= ($isLongName ? 0x7fffffff : 0x7f);
-            $valueLength &= ($isLongValue ? 0x7fffffff : 0x7f);
+            $nameLength &= ($isLongName ? 0x7FFFFFFF : 0x7F);
+            $valueLength &= ($isLongValue ? 0x7FFFFFFF : 0x7F);
 
             [$nameData, $valueData] = array_values(
                 unpack(

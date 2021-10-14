@@ -13,12 +13,13 @@ namespace Swoole\Server;
 
 use Swoole\Server;
 use Swoole\Timer;
+use function Swoole\Coroutine\go;
 
 class Helper
 {
-    const STATS_TIMER_INTERVAL_TIME = 1000;
+    public const STATS_TIMER_INTERVAL_TIME = 1000;
 
-    const GLOBAL_OPTIONS = [
+    public const GLOBAL_OPTIONS = [
         'debug_mode' => true,
         'trace_flags' => true,
         'log_file' => true,
@@ -38,7 +39,7 @@ class Helper
         'socket_timeout' => true,
     ];
 
-    const SERVER_OPTIONS = [
+    public const SERVER_OPTIONS = [
         'chroot' => true,
         'user' => true,
         'group' => true,
@@ -101,7 +102,7 @@ class Helper
         'message_queue_key' => true,
     ];
 
-    const PORT_OPTIONS = [
+    public const PORT_OPTIONS = [
         'ssl_cert_file' => true,
         'ssl_key_file' => true,
         'backlog' => true,
@@ -151,8 +152,10 @@ class Helper
         'ssl_sni_certs' => true,
     ];
 
-    const HELPER_OPTIONS = [
+    public const HELPER_OPTIONS = [
         'stats_file' => true,
+        'stats_timer_interval' => true,
+        'admin_server' => true,
     ];
 
     public static function checkOptions(array $input_options)
@@ -168,16 +171,40 @@ class Helper
         }
     }
 
+    public static function onBeforeStart(Server $server)
+    {
+        if (!empty($server->setting['admin_server'])) {
+            Admin::init($server);
+        }
+    }
+
+    public static function onBeforeShutdown(Server $server)
+    {
+        if ($server->admin_server) {
+            $server->admin_server->shutdown();
+            $server->admin_server = null;
+        }
+    }
+
     public static function onWorkerStart(Server $server, int $workerId)
     {
         if (!empty($server->setting['stats_file']) and $workerId == 0) {
-            $server->stats_timer = Timer::tick(self::STATS_TIMER_INTERVAL_TIME, function () use ($server) {
+            $interval_ms = empty($server->setting['stats_timer_interval']) ? self::STATS_TIMER_INTERVAL_TIME : intval($server->setting['stats_timer_interval']);
+
+            $server->stats_timer = Timer::tick($interval_ms, function () use ($server) {
                 $stats = $server->stats();
-                $lines = [];
-                foreach ($stats as $k => $v) {
-                    $lines[] = "{$k}: {$v}";
+                $stats_file = swoole_string($server->setting['stats_file']);
+                if ($stats_file->endsWith('.json')) {
+                    $out = json_encode($stats);
+                } elseif ($stats_file->endsWith('.php')) {
+                    $out = "<?php\nreturn " . var_export($stats, true) . ";\n";
+                } else {
+                    $lines = [];
+                    foreach ($stats as $k => $v) {
+                        $lines[] = "{$k}: {$v}";
+                    }
+                    $out = implode("\n", $lines);
                 }
-                $out = implode("\n", $lines);
                 file_put_contents($server->setting['stats_file'], $out);
             });
         }
@@ -192,6 +219,39 @@ class Helper
     }
 
     public static function onWorkerStop(Server $server, int $workerId)
+    {
+    }
+
+    public static function onStart(Server $server)
+    {
+        if (!empty($server->setting['admin_server'])) {
+            go(function () use ($server) {
+                Admin::start($server);
+            });
+        }
+    }
+
+    public static function onShutdown(Server $server)
+    {
+    }
+
+    public static function onBeforeReload(Server $server)
+    {
+    }
+
+    public static function onAfterReload(Server $server)
+    {
+    }
+
+    public static function onManagerStart(Server $server)
+    {
+    }
+
+    public static function onManagerStop(Server $server)
+    {
+    }
+
+    public static function onWorkerError(Server $server)
     {
     }
 }

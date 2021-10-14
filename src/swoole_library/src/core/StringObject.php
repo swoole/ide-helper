@@ -93,10 +93,14 @@ class StringObject
     }
 
     /**
+     * @param mixed $characters
      * @return static
      */
-    public function trim(): self
+    public function trim($characters = ''): self
     {
+        if ($characters) {
+            return new static(trim($this->string, $characters));
+        }
         return new static(trim($this->string));
     }
 

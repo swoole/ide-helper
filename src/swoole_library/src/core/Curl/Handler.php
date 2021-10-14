@@ -134,6 +134,8 @@ final class Handler
 
     private $resolve = [];
 
+    private $unix_socket_path = '';
+
     public function __construct(string $url = '')
     {
         if ($url) {
@@ -228,6 +230,13 @@ final class Handler
             }
             $this->urlInfo['host'] = $host = $this->resolve[$host][$port] ?? null ?: $host;
         }
+        if ($this->unix_socket_path) {
+            $host = $this->unix_socket_path;
+            $port = 0;
+            if (stripos($host, 'unix:/') !== 0) {
+                $host = "unix:/{$host}";
+            }
+        }
         $this->client = new Client($host, $port, $urlInfo['scheme'] === 'https');
     }
 
@@ -253,11 +262,19 @@ final class Handler
             $this->setError(CURLE_URL_MALFORMAT, 'No URL set!');
             return false;
         }
-        if (strpos($url, '://') === false) {
+        if (strpos($url, '://') === false && $this->unix_socket_path === '') {
             $url = 'http://' . $url;
         }
         if ($setInfo) {
             $urlInfo = parse_url($url);
+            if ($this->unix_socket_path) {
+                if (empty($urlInfo['host']) && !empty($urlInfo['path'])) {
+                    $urlInfo['host'] = explode('/', $urlInfo['path'])[1] ?? null;
+                }
+                if (!$this->hasHeader('Host') && !empty($urlInfo['host'])) {
+                    $this->setHeader('Host', $urlInfo['host']);
+                }
+            }
             if (!is_array($urlInfo)) {
                 $this->setError(CURLE_URL_MALFORMAT, "URL[{$url}] using bad/illegal format");
                 return false;
@@ -420,6 +437,14 @@ final class Handler
                 break;
             case CURLOPT_PROXYAUTH:
                 /* ignored temporarily */
+                break;
+            case CURLOPT_UNIX_SOCKET_PATH:
+                $realpath = realpath((string) $value);
+                if ($realpath) {
+                    $this->unix_socket_path = $realpath;
+                } else {
+                    $this->setError(CURLE_COULDNT_CONNECT);
+                }
                 break;
             case CURLOPT_NOBODY:
                 $this->nobody = boolval($value);
@@ -677,7 +702,7 @@ final class Handler
         if (!$this->client) {
             $this->create();
         }
-        do {
+        while (true) {
             $client = $this->client;
             /*
              * Http Proxy
@@ -827,7 +852,7 @@ final class Handler
             } else {
                 break;
             }
-        } while (true);
+        }
         $this->info['total_time'] = microtime(true) - $timeBegin;
         $this->info['http_code'] = $client->statusCode;
         $this->info['content_type'] = $client->headers['content-type'] ?? '';
@@ -839,6 +864,11 @@ final class Handler
 
         if (filter_var($this->urlInfo['host'], FILTER_VALIDATE_IP)) {
             $this->info['primary_ip'] = $this->urlInfo['host'];
+        }
+
+        if ($this->unix_socket_path) {
+            $this->info['primary_ip'] = $this->unix_socket_path;
+            $this->info['primary_port'] = $this->urlInfo['port'];
         }
 
         $headerContent = '';
