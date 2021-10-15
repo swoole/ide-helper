@@ -68,12 +68,12 @@ class Coroutine
      * This method is similar to class \Swoole\Coroutine\WaitGroup and \Swoole\Coroutine\Barrier. They are different
      * implementations of the same functionality.
      *
-     * @since 4.8.0
      * @param array $cid_array An array of coroutines.
      * @param int $timeout
      * @return bool TRUE if succeeds; otherwise FALSE.
      * @see \Swoole\Coroutine\WaitGroup
      * @see \Swoole\Coroutine\Barrier
+     * @since 4.8.0
      */
     public static function join($cid_array, $timeout = -1)
     {
@@ -169,9 +169,9 @@ class Coroutine
     /**
      * Get memory usage of a coroutine.
      *
-     * @since 4.8.0
      * @param int $cid If this parameter is not passed in, current coroutine ID will be used.
      * @return int|false Memory usage of the coroutine; FALSE if the specified coroutine doesn't exist.
+     * @since 4.8.0
      */
     public static function getStackUsage(int $cid = null)
     {

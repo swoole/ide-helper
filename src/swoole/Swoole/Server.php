@@ -397,11 +397,11 @@ class Server
     /**
      * Run a customized command in a specified process of Swoole.
      *
-     * @since 4.8.0
      * @param mixed $data
      * @param bool $json_encode If the callback function of the command returns a JSON encoded string back, it can be decoded automatically by setting this parameter to TRUE.
      * @return mixed|false
      * @see \Swoole\Server::addCommand()
+     * @since 4.8.0
      */
     public function command(string $name, int $process_id, int $process_type, $data, bool $json_decode = true)
     {
@@ -415,13 +415,13 @@ class Server
      *
      * @param int $accepted_process_types One or multiple types of processes. e.g., "SWOOLE_SERVER_COMMAND_EVENT_WORKER | SWOOLE_SERVER_COMMAND_TASK_WORKER".
      * @param callable $callback The callback function should return a (serialized) string back.
-     * @since 4.8.0
      * @return bool TRUE if succeeds, otherwise FALSE.
      * @see \Swoole\Server::command()
      * @see SWOOLE_SERVER_COMMAND_MASTER
      * @see SWOOLE_SERVER_COMMAND_MANAGER
      * @see SWOOLE_SERVER_COMMAND_EVENT_WORKER
      * @see SWOOLE_SERVER_COMMAND_TASK_WORKER
+     * @since 4.8.0
      */
     public function addCommand(string $name, int $accepted_process_types, callable $callback)
     {

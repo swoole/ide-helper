@@ -1484,9 +1484,9 @@ class Redis
     }
 
     /**
-     * @since 4.8.0
      * @return int
      * @see https://redis.io/commands/xlen
+     * @since 4.8.0
      */
     public function xLen(string $key)
     {
@@ -1496,6 +1496,7 @@ class Redis
      * @param array $options Accepted options: "nomkstream", "maxlen", "minid", and "limit".
      * @return void|false Returns FALSE if parameter $pairs is empty; otherwise nothing returns.
      * @see https://redis.io/commands/xadd
+     * @since 4.8.0
      */
     public function xAdd(string $key, string $id, array $pairs, array $options = [])
     {
@@ -1505,6 +1506,7 @@ class Redis
      * @param array $options Accepted options: "count" and "block".
      * @return array|false Returns FALSE if error happens or parameter $streams is empty; otherwise, an array is returned.
      * @see https://redis.io/commands/xread
+     * @since 4.8.0
      */
     public function xRead(array $streams, array $options = [])
     {
@@ -1513,6 +1515,7 @@ class Redis
     /**
      * @return int The number of entries actually deleted.
      * @see https://redis.io/commands/xdel
+     * @since 4.8.0
      */
     public function xDel(string $key, string $id)
     {
@@ -1521,6 +1524,7 @@ class Redis
     /**
      * @return array
      * @see https://redis.io/commands/xrange
+     * @since 4.8.0
      */
     public function xRange(string $key, string $start, string $end, int $count = 0)
     {
@@ -1529,6 +1533,7 @@ class Redis
     /**
      * @return array
      * @see https://redis.io/commands/xrevrange
+     * @since 4.8.0
      */
     public function xRevRange(string $key, string $start, string $end, int $count = 0)
     {
@@ -1538,6 +1543,7 @@ class Redis
      * @param array $options Accepted options: "maxlen", "minid", and "limit".
      * @return array|false Returns FALSE if error happens; otherwise, an array is returned.
      * @see https://redis.io/commands/xtrim
+     * @since 4.8.0
      */
     public function xTrim(string $key, array $options = [])
     {
@@ -1546,6 +1552,7 @@ class Redis
     /**
      * @return string
      * @see https://redis.io/commands/xgroup
+     * @since 4.8.0
      */
     public function xGroupCreate(string $key, string $group_name, string $id, bool $mkstream = false)
     {
@@ -1554,6 +1561,7 @@ class Redis
     /**
      * @return string
      * @see https://redis.io/commands/xgroup
+     * @since 4.8.0
      */
     public function xGroupSetId(string $key, string $group_name, string $id)
     {
@@ -1562,6 +1570,7 @@ class Redis
     /**
      * @return int The number of destroyed consumer groups (0 or 1).
      * @see https://redis.io/commands/xgroup
+     * @since 4.8.0
      */
     public function xGroupDestroy(string $key, string $group_name)
     {
@@ -1570,6 +1579,7 @@ class Redis
     /**
      * @return int The number of created consumers (0 or 1).
      * @see https://redis.io/commands/xgroup
+     * @since 4.8.0
      */
     public function xGroupCreateConsumer(string $key, string $group_name, string $consumer_name)
     {
@@ -1578,6 +1588,7 @@ class Redis
     /**
      * @return int The number of pending messages that the consumer had before it was deleted.
      * @see https://redis.io/commands/xgroup
+     * @since 4.8.0
      */
     public function xGroupDelConsumer(string $key, string $group_name, string $consumer_name)
     {
@@ -1587,6 +1598,7 @@ class Redis
      * @param array $options Accepted options: "count", "block", and "noack".
      * @return array|false Returns FALSE if error happens; otherwise, an array is returned.
      * @see https://redis.io/commands/xreadgroup
+     * @since 4.8.0
      */
     public function xReadGroup(string $group_name, string $consumer_name, array $streams, array $options = [])
     {
@@ -1596,6 +1608,7 @@ class Redis
      * @param array $options Accepted options: "idle", "start", "end", "count", and "consumer".
      * @return array|false Returns FALSE if error happens; otherwise, an array is returned.
      * @see https://redis.io/commands/xpending
+     * @since 4.8.0
      */
     public function xPending(string $key, string $group_name, array $options = [])
     {
@@ -1604,6 +1617,7 @@ class Redis
     /**
      * @return array|false Returns FALSE if error happens or parameter $id is empty; otherwise, an array is returned.
      * @see https://redis.io/commands/xack
+     * @since 4.8.0
      */
     public function xAck(string $key, string $group_name, array $id)
     {
@@ -1613,6 +1627,7 @@ class Redis
      * @param array $options Accepted options: "idle", "time", "retrycount", "force", and "justid".
      * @return array|false Returns FALSE if error happens; otherwise, an array is returned.
      * @see https://redis.io/commands/xclaim
+     * @since 4.8.0
      */
     public function xClaim(string $key, string $group_name, string $consumer_name, int $min_idle_time, array $id, array $options = [])
     {
@@ -1622,6 +1637,7 @@ class Redis
      * @param array $options Accepted options: "count" and "justid".
      * @return array|false Returns FALSE if error happens; otherwise, an array is returned.
      * @see https://redis.io/commands/xautoclaim
+     * @since 4.8.0
      */
     public function xAutoClaim(string $key, string $group_name, string $consumer_name, int $min_idle_time, string $start, array $options = [])
     {
@@ -1630,6 +1646,7 @@ class Redis
     /**
      * @return array
      * @see https://redis.io/commands/xinfo
+     * @since 4.8.0
      */
     public function xInfoConsumers(string $key, string $group_name)
     {
@@ -1638,6 +1655,7 @@ class Redis
     /**
      * @return array
      * @see https://redis.io/commands/xinfo
+     * @since 4.8.0
      */
     public function xInfoGroups(string $key)
     {
@@ -1646,6 +1664,7 @@ class Redis
     /**
      * @return array
      * @see https://redis.io/commands/xinfo
+     * @since 4.8.0
      */
     public function xInfoStream(string $key)
     {
