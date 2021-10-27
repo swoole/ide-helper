@@ -16,6 +16,8 @@ class Constant
     /* {{{ EVENT */
     public const EVENT_START = 'start';
 
+    public const EVENT_BEFORE_SHUTDOWN = 'beforeShutdown';
+
     public const EVENT_SHUTDOWN = 'shutdown';
 
     public const EVENT_WORKER_START = 'workerStart';
@@ -153,6 +155,8 @@ class Constant
 
     public const OPTION_SSL_VERIFY_DEPTH = 'ssl_verify_depth';
 
+    public const OPTION_SSL_CIPHERS = 'ssl_ciphers';
+
     public const OPTION_OPEN_EOF_CHECK = 'open_eof_check';
 
     public const OPTION_OPEN_EOF_SPLIT = 'open_eof_split';
@@ -210,6 +214,10 @@ class Constant
     public const OPTION_WRITE_TIMEOUT = 'write_timeout';
 
     public const OPTION_SSL_DISABLE_COMPRESSION = 'ssl_disable_compression';
+
+    public const OPTION_SSL_ECDH_CURVE = 'ssl_ecdh_curve';
+
+    public const OPTION_SSL_GREASE = 'ssl_grease';
 
     public const OPTION_MAX_CORO_NUM = 'max_coro_num';
 
@@ -417,10 +425,6 @@ class Constant
 
     public const OPTION_SSL_PREFER_SERVER_CIPHERS = 'ssl_prefer_server_ciphers';
 
-    public const OPTION_SSL_CIPHERS = 'ssl_ciphers';
-
-    public const OPTION_SSL_ECDH_CURVE = 'ssl_ecdh_curve';
-
     public const OPTION_SSL_DHPARAM = 'ssl_dhparam';
 
     public const OPTION_SSL_SNI_CERTS = 'ssl_sni_certs';
@@ -428,6 +432,20 @@ class Constant
     public const OPTION_OPEN_SSL = 'open_ssl';
 
     public const OPTION_OPEN_FASTCGI_PROTOCOL = 'open_fastcgi_protocol';
+
+    public const OPTION_EXIT_CONDITION = 'exit_condition';
+
+    public const OPTION_DEADLOCK_CHECK_DISABLE_TRACE = 'deadlock_check_disable_trace';
+
+    public const OPTION_DEADLOCK_CHECK_LIMIT = 'deadlock_check_limit';
+
+    public const OPTION_DEADLOCK_CHECK_DEPTH = 'deadlock_check_depth';
+
+    public const OPTION_STATS_FILE = 'stats_file';
+
+    public const OPTION_STATS_TIMER_INTERVAL = 'stats_timer_interval';
+
+    public const OPTION_ADMIN_SERVER = 'admin_server';
 
     /* }}} OPTION */
 }
