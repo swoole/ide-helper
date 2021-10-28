@@ -294,20 +294,26 @@ function swoole_internal_call_user_shutdown_begin()
  * @since 4.8.1
  * @return mixed
  */
-function swoole_get_objects(){}
+function swoole_get_objects()
+{
+}
 
 /**
  * @since 4.8.1
  * @return mixed
  */
-function swoole_get_vm_status(){}
+function swoole_get_vm_status()
+{
+}
 
 /**
  * @param $handle[required]
  * @since 4.8.1
  * @return mixed
  */
-function swoole_get_object_by_handle($handle){}
+function swoole_get_object_by_handle($handle)
+{
+}
 
 /**
  * This function is an alias of function swoole_coroutine_create(); it's available only when directive
