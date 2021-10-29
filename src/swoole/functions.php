@@ -285,7 +285,7 @@ function swoole_internal_call_user_shutdown_begin()
 }
 
 /**
- * Get all PHP objects.
+ * Get all PHP objects of current call stack.
  *
  * @return array|false Return an array of objects back; return FALSE when no objects exist or when error happens.
  * @since 4.8.1
