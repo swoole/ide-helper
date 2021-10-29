@@ -158,8 +158,6 @@ function swoole_clear_error()
 }
 
 /**
- * @param $level[required]
- * @param $msg[required]
  * @return void
  */
 function swoole_error_log(int $level, string $msg)
@@ -167,9 +165,6 @@ function swoole_error_log(int $level, string $msg)
 }
 
 /**
- * @param $level[required]
- * @param $error[required]
- * @param $msg[required]
  * @return void
  * @since 4.8.1
  */
@@ -178,7 +173,6 @@ function swoole_error_log_ex(int $level, int $error, string $msg)
 }
 
 /**
- * @param $error[required]
  * @return void
  * @since 4.8.1
  */
@@ -291,27 +285,30 @@ function swoole_internal_call_user_shutdown_begin()
 }
 
 /**
+ * Get all PHP objects.
+ *
+ * @return array|false Return an array of objects back; return FALSE when no objects exist or when error happens.
  * @since 4.8.1
- * @return mixed
  */
 function swoole_get_objects()
 {
 }
 
 /**
+ * Get status information of current call stack.
+ *
+ * @return array The array contains two fields: "object_num" (# of objects) and "resource_num" (# of resources).
  * @since 4.8.1
- * @return mixed
  */
 function swoole_get_vm_status()
 {
 }
 
 /**
- * @param $handle[required]
+ * @return array|false Return the specified object back; return FALSE when no object found or when error happens.
  * @since 4.8.1
- * @return mixed
  */
-function swoole_get_object_by_handle($handle)
+function swoole_get_object_by_handle(int $handle)
 {
 }
 

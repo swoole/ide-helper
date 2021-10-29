@@ -29,14 +29,25 @@ class Request
     }
 
     /**
-     * @return mixed
+     * Get the request content, kind of like function call fopen('php://input').
+     *
+     * This method has an alias of \Swoole\Http\Request::rawContent().
+     *
+     * @return string|false Return the request content back; return FALSE when error happens.
+     * @see \Swoole\Http\Request::rawContent()
+     * @since 4.5.0
      */
     public function getContent()
     {
     }
 
     /**
-     * @return mixed
+     * Get the request content, kind of like function call fopen('php://input').
+     *
+     * Alias of method \Swoole\Http\Request::getContent().
+     *
+     * @return string|false Return the request content back; return FALSE when error happens.
+     * @see \Swoole\Http\Request::getContent()
      */
     public function rawContent()
     {
