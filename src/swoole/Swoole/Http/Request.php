@@ -31,14 +31,14 @@ class Request
     /**
      * @return mixed
      */
-    public function rawContent()
+    public function getContent()
     {
     }
 
     /**
      * @return mixed
      */
-    public function getContent()
+    public function rawContent()
     {
     }
 

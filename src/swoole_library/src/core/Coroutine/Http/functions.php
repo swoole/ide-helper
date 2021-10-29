@@ -21,6 +21,9 @@ use Swoole\Coroutine\Http\Client\Exception;
 function request(string $url, string $method, $data = null, array $options = null, array $headers = null, array $cookies = null)
 {
     $info = parse_url($url);
+    if (empty($info['scheme'])) {
+        throw new Exception('The URL given is illegal [no scheme]');
+    }
     if ($info['scheme'] == 'http') {
         $client = new Client($info['host'], swoole_array_default_value($info, 'port', 80), false);
     } elseif ($info['scheme'] == 'https') {

@@ -160,9 +160,29 @@ function swoole_clear_error()
 /**
  * @param $level[required]
  * @param $msg[required]
- * @return mixed
+ * @return void
  */
-function swoole_error_log($level, $msg)
+function swoole_error_log(int $level, string $msg)
+{
+}
+
+/**
+ * @param $level[required]
+ * @param $error[required]
+ * @param $msg[required]
+ * @return void
+ * @since 4.8.1
+ */
+function swoole_error_log_ex(int $level, int $error, string $msg)
+{
+}
+
+/**
+ * @param $error[required]
+ * @return void
+ * @since 4.8.1
+ */
+function swoole_ignore_error(int $error)
 {
 }
 
@@ -267,6 +287,31 @@ function swoole_substr_json_decode($json, $offset, $length = null, $associative 
  * @return mixed
  */
 function swoole_internal_call_user_shutdown_begin()
+{
+}
+
+/**
+ * @since 4.8.1
+ * @return mixed
+ */
+function swoole_get_objects()
+{
+}
+
+/**
+ * @since 4.8.1
+ * @return mixed
+ */
+function swoole_get_vm_status()
+{
+}
+
+/**
+ * @param $handle[required]
+ * @since 4.8.1
+ * @return mixed
+ */
+function swoole_get_object_by_handle($handle)
 {
 }
 

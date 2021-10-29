@@ -505,6 +505,7 @@ final class Handler
             case CURLOPT_CERTINFO:
             case CURLOPT_HEADEROPT:
             case CURLOPT_PROXYHEADER:
+            case CURLOPT_HTTPPROXYTUNNEL:
                 break;
             /*
              * SSL
