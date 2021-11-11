@@ -1,5 +1,6 @@
 # Swoole IDE Helper
 
+[![Twitter](https://badgen.net/badge/icon/twitter?icon=twitter&label)](https://twitter.com/phpswoole)
 [![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.swoole.dev)
 [![Latest Stable Version](https://poser.pugx.org/swoole/ide-helper/v/stable.svg)](https://packagist.org/packages/swoole/ide-helper)
 [![License](https://poser.pugx.org/swoole/ide-helper/license)](LICENSE)
