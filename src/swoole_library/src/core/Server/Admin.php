@@ -70,6 +70,8 @@ class Admin
         'close_session',
     ];
 
+    private static $accessToken = '';
+
     public static function init(Server $server)
     {
         $accepted_process_types = SWOOLE_SERVER_COMMAND_MASTER |
@@ -407,13 +409,26 @@ class Admin
         );
     }
 
+    public static function getAccessToken(): string
+    {
+        return self::$accessToken;
+    }
+
     public static function start(Server $server)
     {
         $admin_server_uri = swoole_string($server->setting['admin_server']);
         if ($admin_server_uri->startsWith('unix:/')) {
             return swoole_error_log(SWOOLE_LOG_ERROR, "admin_server[{$server->setting['admin_server']}] is not supported");
         }
-        [$host, $port] = $admin_server_uri->split(':', 2)->toArray();
+
+        if ($admin_server_uri->contains('@')) {
+            [$access_name, $access_secret] = $admin_server_uri->split('@', 2)->get(0)->split(':', 2)->toArray();
+            self::$accessToken = sha1($access_name . $access_secret);
+            [$host, $port] = $admin_server_uri->split('@', 2)->get(1)->split(':', 2)->toArray();
+        } else {
+            [$host, $port] = $admin_server_uri->split(':', 2)->toArray();
+        }
+
         $admin_server = new Coroutine\Http\Server($host, intval($port));
 
         $admin_server->handle('/api', function (Request $req, Response $resp) use ($server) {
@@ -424,11 +439,26 @@ class Admin
                 return;
             }
 
+            $resp->header('Server', 'swoole-admin-server');
             $resp->header('Access-Control-Allow-Origin', '*');
             $resp->header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-            $resp->header('Access-Control-Allow-Headers', 'X-ACCESS-TOKEN');
+            $resp->header('Access-Control-Allow-Headers', 'X-ACCESS-TOKEN, X-ADMIN-SERVER-ACCESS-TOKEN');
 
             $method = $req->getMethod();
+
+            if ($method === 'OPTIONS') {
+                return $resp->end();
+            }
+
+            $token = self::getAccessToken();
+            if (!empty($token)) {
+                $token_header = $req->header['x-admin-server-access-token'] ?? '';
+                if ($token_header !== $token) {
+                    $resp->status(403);
+                    $resp->end(self::json('Bad access token', 4003));
+                    return;
+                }
+            }
 
             $cmd = $path_array->get(1)->toString();
 
@@ -956,10 +986,15 @@ class Admin
     {
         $total = 0;
 
-        $result['master'] = self::getProcessMemoryRealUsage($server->master_pid);
+        $result['master'] = $result['manager'] = 0;
+        if (self::haveMasterProcess($server)) {
+            $result['master'] = self::getProcessMemoryRealUsage($server->master_pid);
+        }
         $total += $result['master'];
 
-        $result['manager'] = self::getProcessMemoryRealUsage($server->manager_pid);
+        if (self::haveManagerProcess($server)) {
+            $result['manager'] = self::getProcessMemoryRealUsage($server->manager_pid);
+        }
         $total += $result['manager'];
 
         $n = $server->setting['worker_num'] + $server->setting['task_worker_num'];
@@ -985,10 +1020,17 @@ class Admin
     {
         $total = 0;
 
-        $result['master'] = self::getProcessCpuUsage($server->master_pid);
+        $result['master'] = $result['manager'] = 0;
+        if (self::haveMasterProcess($server)) {
+            $result['master'] = self::getProcessCpuUsage($server->master_pid);
+        }
+
         $total += $result['master'][1] ?? 0;
 
-        $result['manager'] = self::getProcessCpuUsage($server->manager_pid);
+        if (self::haveManagerProcess($server)) {
+            $result['manager'] = self::getProcessCpuUsage($server->manager_pid);
+        }
+
         $total += $result['manager'][1] ?? 0;
 
         $n = $server->setting['worker_num'] + $server->setting['task_worker_num'];
@@ -1144,12 +1186,7 @@ class Admin
         }
         $process_type = SWOOLE_SERVER_COMMAND_REACTOR_THREAD;
         if (empty($server->setting['reactor_num'])) {
-            if (empty($server->setting['worker_num'])) {
-                $cpu_num = swoole_cpu_num();
-                $reactor_num = $cpu_num >= 8 ? 8 : $cpu_num;
-            } else {
-                $reactor_num = $server->setting['worker_num'];
-            }
+            $reactor_num = $server->setting['worker_num'];
         } else {
             $reactor_num = $server->setting['reactor_num'];
         }
@@ -1162,7 +1199,7 @@ class Admin
     private static function handlerGetAllWorker($cmd, $data, Server $server, bool $json_decode = false)
     {
         $process_type = SWOOLE_SERVER_COMMAND_EVENT_WORKER;
-        $worker_num = empty($server->setting['worker_num']) ? swoole_cpu_num() : $server->setting['worker_num'];
+        $worker_num = $server->setting['worker_num'];
         $list = [];
         for ($process_id = 0; $process_id < $worker_num; $process_id++) {
             $list["worker-{$process_id}"] = $server->command($cmd, $process_id, $process_type, $data, $json_decode);
@@ -1187,7 +1224,7 @@ class Admin
     private static function getProcessCpuUsage($pid)
     {
         // TODO: Support other OS
-        if (PHP_OS_FAMILY !== 'Linux') {
+        if (PHP_OS_FAMILY !== 'Linux' || !file_exists("/proc/{$pid}/stat")) {
             return [0];
         }
 
@@ -1220,10 +1257,10 @@ class Admin
     {
         $array = [];
         // TODO: Support other OS
-        if (PHP_OS_FAMILY !== 'Linux') {
+        if (PHP_OS_FAMILY !== 'Linux' || !file_exists("/proc/{$pid}/status")) {
             return $array;
         }
-        $status = swoole_string(trim(file_get_contents('/proc/' . $pid . '/status')));
+        $status = swoole_string(trim(file_get_contents("/proc/{$pid}/status")));
         $lines = $status->split("\n");
         foreach ($lines as $l) {
             if (empty($l)) {
@@ -1276,6 +1313,24 @@ class Admin
         }
 
         return $size;
+    }
+
+    private static function haveMasterProcess(Server $server): bool
+    {
+        if ($server->mode === SWOOLE_BASE) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static function haveManagerProcess(Server $server): bool
+    {
+        if ($server->mode === SWOOLE_BASE && $server->getManagerPid() === 0) {
+            return false;
+        }
+
+        return true;
     }
 
     private static function json($data, $code = 0)

@@ -50,10 +50,9 @@ class Helper
         'worker_num' => true,
         'max_wait_time' => true,
         'max_queued_bytes' => true,
+        'max_concurrency' => true,
+        'worker_max_concurrency' => true,
         'enable_coroutine' => true,
-        'max_coro_num' => true,
-        'max_coroutine' => true,
-        'hook_flags' => true,
         'send_timeout' => true,
         'dispatch_mode' => true,
         'send_yield' => true,
@@ -86,8 +85,8 @@ class Helper
         'http_parse_files' => true,
         'http_compression' => true,
         'http_compression_level' => true,
-        'compression_min_length' => true,
         'http_gzip_level' => true,
+        'compression_min_length' => true,
         'websocket_compression' => true,
         'upload_tmp_dir' => true,
         'enable_static_handler' => true,
@@ -109,6 +108,7 @@ class Helper
         'socket_buffer_size' => true,
         'kernel_socket_recv_buffer_size' => true,
         'kernel_socket_send_buffer_size' => true,
+        'heartbeat_idle_time' => true,
         'buffer_high_watermark' => true,
         'buffer_low_watermark' => true,
         'open_tcp_nodelay' => true,
@@ -152,6 +152,37 @@ class Helper
         'ssl_sni_certs' => true,
     ];
 
+    public const AIO_OPTIONS = [
+        'aio_core_worker_num' => true,
+        'aio_worker_num' => true,
+        'aio_max_wait_time' => true,
+        'aio_max_idle_time' => true,
+        'enable_signalfd' => true,
+        'wait_signal' => true,
+        'dns_cache_refresh_time' => true,
+        'thread_num' => true,
+        'min_thread_num' => true,
+        'max_thread_num' => true,
+        'socket_dontwait' => true,
+        'dns_lookup_random' => true,
+        'use_async_resolver' => true,
+        'enable_coroutine' => true,
+    ];
+
+    public const COROUTINE_OPTIONS = [
+        'max_coro_num' => true,
+        'max_coroutine' => true,
+        'enable_deadlock_check' => true,
+        'hook_flags' => true,
+        'enable_preemptive_scheduler' => true,
+        'c_stack_size' => true,
+        'stack_size' => true,
+        'name_resolver' => true,
+        'dns_cache_expire' => true,
+        'dns_cache_capacity' => true,
+        'max_concurrency' => true,
+    ];
+
     public const HELPER_OPTIONS = [
         'stats_file' => true,
         'stats_timer_interval' => true,
@@ -160,7 +191,8 @@ class Helper
 
     public static function checkOptions(array $input_options)
     {
-        $const_options = self::GLOBAL_OPTIONS + self::SERVER_OPTIONS + self::PORT_OPTIONS + self::HELPER_OPTIONS;
+        $const_options = self::GLOBAL_OPTIONS + self::SERVER_OPTIONS + self::PORT_OPTIONS
+            + self::AIO_OPTIONS + self::COROUTINE_OPTIONS + self::HELPER_OPTIONS;
 
         foreach ($input_options as $k => $v) {
             if (!array_key_exists(strtolower($k), $const_options)) {
