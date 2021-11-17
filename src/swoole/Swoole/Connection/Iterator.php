@@ -14,17 +14,11 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function rewind()
+    public function rewind(): void
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function next()
+    public function next(): void
     {
     }
 
@@ -42,25 +36,15 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function valid()
+    public function valid(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function count()
+    public function count(): int
     {
     }
 
-    /**
-     * @param mixed $fd
-     * @return mixed
-     */
-    public function offsetExists($fd)
+    public function offsetExists($fd): bool
     {
     }
 
@@ -72,20 +56,11 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     {
     }
 
-    /**
-     * @param mixed $fd
-     * @param mixed $value
-     * @return mixed
-     */
-    public function offsetSet($fd, $value)
+    public function offsetSet($fd, $value): void
     {
     }
 
-    /**
-     * @param mixed $fd
-     * @return mixed
-     */
-    public function offsetUnset($fd)
+    public function offsetUnset($fd): void
     {
     }
 }

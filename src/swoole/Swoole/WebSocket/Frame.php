@@ -16,10 +16,7 @@ class Frame
 
     public $finish;
 
-    /**
-     * @return mixed
-     */
-    public function __toString()
+    public function __toString(): string
     {
     }
 
