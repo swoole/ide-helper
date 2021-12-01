@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine;
 
+use Swoole\Client;
+
 class Socket
 {
     public $fd = -1;
@@ -209,9 +211,9 @@ class Socket
     }
 
     /**
-     * @return mixed
+     * @return bool Returns TRUE if succeed; otherwise FALSE.
      */
-    public function setProtocol(array $settings)
+    public function setProtocol(array $settings): bool
     {
     }
 
@@ -225,45 +227,37 @@ class Socket
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function sslHandshake()
+    public function sslHandshake(): bool
     {
     }
 
     /**
-     * @param mixed|null $how
-     * @return mixed
+     * @param int $how A Client::SHUT_* constant.
      */
-    public function shutdown($how = null)
+    public function shutdown(int $how = Client::SHUT_RDWR): bool
     {
     }
 
     /**
-     * @param mixed|null $event
-     * @return mixed
+     * @param int $event Must be constant SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE.
      */
-    public function cancel($event = null)
+    public function cancel(int $event = SWOOLE_EVENT_READ): bool
+    {
+    }
+
+    public function close(): bool
     {
     }
 
     /**
-     * @return mixed
-     */
-    public function close()
-    {
-    }
-
-    /**
-     * @return mixed
+     * @return array|false If succeeds, return an array with two fields in it: "address" and "port"; otherwise, return FALSE.
      */
     public function getpeername()
     {
     }
 
     /**
-     * @return mixed
+     * @return array|false If succeeds, return an array with two fields in it: "address" and "port"; otherwise, return FALSE.
      */
     public function getsockname()
     {
