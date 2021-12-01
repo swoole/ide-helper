@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-define('SWOOLE_VERSION', '4.8.2');
-define('SWOOLE_VERSION_ID', 40802);
+define('SWOOLE_VERSION', '4.8.3');
+define('SWOOLE_VERSION_ID', 40803);
 define('SWOOLE_MAJOR_VERSION', 4);
 define('SWOOLE_MINOR_VERSION', 8);
-define('SWOOLE_RELEASE_VERSION', 2);
+define('SWOOLE_RELEASE_VERSION', 3);
 define('SWOOLE_EXTRA_VERSION', '');
 define('SWOOLE_DEBUG', '');
 define('SWOOLE_HAVE_COMPRESSION', '1');

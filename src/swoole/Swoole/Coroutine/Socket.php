@@ -262,4 +262,11 @@ class Socket
     public function getsockname()
     {
     }
+
+    /**
+     * @since 4.8.3
+     */
+    public function isClosed(): bool
+    {
+    }
 }
