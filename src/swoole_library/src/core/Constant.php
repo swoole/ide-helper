@@ -231,8 +231,6 @@ class Constant
 
     public const OPTION_STACK_SIZE = 'stack_size';
 
-    public const OPTION_NAME_RESOLVER = 'name_resolver';
-
     public const OPTION_DNS_CACHE_EXPIRE = 'dns_cache_expire';
 
     public const OPTION_DNS_CACHE_CAPACITY = 'dns_cache_capacity';
@@ -240,8 +238,6 @@ class Constant
     public const OPTION_MAX_CONCURRENCY = 'max_concurrency';
 
     public const OPTION_RECONNECT = 'reconnect';
-
-    public const OPTION_MAX_RETRIES = 'max_retries';
 
     public const OPTION_DEFER = 'defer';
 
@@ -310,8 +306,6 @@ class Constant
     public const OPTION_MAX_WAIT_TIME = 'max_wait_time';
 
     public const OPTION_MAX_QUEUED_BYTES = 'max_queued_bytes';
-
-    public const OPTION_WORKER_MAX_CONCURRENCY = 'worker_max_concurrency';
 
     public const OPTION_SEND_TIMEOUT = 'send_timeout';
 
