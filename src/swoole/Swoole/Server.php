@@ -467,9 +467,11 @@ class Server
     public function sendMessage($message, $dst_worker_id)
     {
     }
+
     /**
      * @param \Swoole\Process $process
-     * @return int
+     * @return int|false Return the ID of the process (\Swoole\Process::$id) back if succeeds; otherwise return FALSE.
+     * @see \Swoole\Process::$id
      */
     public function addProcess(Process $process)
     {
