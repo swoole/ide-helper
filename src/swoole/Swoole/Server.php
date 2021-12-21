@@ -467,11 +467,11 @@ class Server
     public function sendMessage($message, $dst_worker_id)
     {
     }
-
     /**
+     * @param \Swoole\Process $process
      * @return int
      */
-    public function addProcess(\Swoole\Process $process): int
+    public function addProcess(Process $process)
     {
     }
 
