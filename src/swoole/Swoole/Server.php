@@ -469,9 +469,9 @@ class Server
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function addProcess(\swoole_process $process)
+    public function addProcess(\Swoole\Process $process): int
     {
     }
 
