@@ -63,20 +63,12 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
         return count($this->array);
     }
 
-    /**
-     * @return mixed
-     */
-    #[\ReturnTypeWillChange]
-    public function current()
+    public function current(): mixed
     {
         return current($this->array);
     }
 
-    /**
-     * @return mixed
-     */
-    #[\ReturnTypeWillChange]
-    public function key()
+    public function key(): string|int|null
     {
         return key($this->array);
     }
@@ -86,20 +78,12 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
         return array_key_exists($this->key(), $this->array);
     }
 
-    /**
-     * @return mixed
-     */
-    #[\ReturnTypeWillChange]
-    public function rewind()
+    public function rewind(): mixed
     {
         return reset($this->array);
     }
 
-    /**
-     * @return mixed
-     */
-    #[\ReturnTypeWillChange]
-    public function next()
+    public function next(): mixed
     {
         return next($this->array);
     }
@@ -218,10 +202,8 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
 
     /**
      * @param mixed $key
-     * @return null|mixed
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         if (!array_key_exists($key, $this->array)) {
             return null;
@@ -248,10 +230,8 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
 
     /**
      * @param mixed $key
-     * @return bool
      */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return isset($this->array[$key]);
     }
