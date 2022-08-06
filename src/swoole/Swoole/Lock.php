@@ -22,49 +22,35 @@ class Lock
     {
     }
 
-    /**
-     * @return bool
-     */
-    public function lock()
+    public function __destruct()
     {
     }
 
-    /**
-     * @return bool
-     */
-    public function lockwait(float $timeout = 1.0)
+    public function lock(): bool
     {
     }
 
-    /**
-     * @return bool
-     */
-    public function trylock()
+    public function lockwait(float $timeout = 1): bool
     {
     }
 
-    /**
-     * @return bool
-     */
-    public function lock_read()
+    public function trylock(): bool
     {
     }
 
-    /**
-     * @return bool
-     */
-    public function trylock_read()
+    public function lock_read(): bool
     {
     }
 
-    /**
-     * @return bool
-     */
-    public function unlock()
+    public function trylock_read(): bool
     {
     }
 
-    public function destroy()
+    public function unlock(): bool
+    {
+    }
+
+    public function destroy(): void
     {
     }
 }

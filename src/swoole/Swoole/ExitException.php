@@ -10,17 +10,11 @@ class ExitException extends Exception
 
     private $status = 0;
 
-    /**
-     * @return mixed
-     */
-    public function getFlags()
+    public function getFlags(): int
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getStatus()
+    public function getStatus(): int
     {
     }
 }

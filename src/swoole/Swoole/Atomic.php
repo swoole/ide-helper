@@ -10,49 +10,31 @@ class Atomic
     {
     }
 
-    /**
-     * @return int
-     */
-    public function add(int $add_value = 1)
+    public function add(int $add_value = 1): int
     {
     }
 
-    /**
-     * @return int
-     */
-    public function sub(int $sub_value = 1)
+    public function sub(int $sub_value = 1): int
     {
     }
 
-    /**
-     * @return int
-     */
-    public function get()
+    public function get(): int
     {
     }
 
-    public function set(int $value)
+    public function set(int $value): void
     {
     }
 
-    /**
-     * @return bool
-     */
-    public function wait(float $timeout = 1.0)
+    public function wait(float $timeout = 1): bool
     {
     }
 
-    /**
-     * @return bool
-     */
-    public function wakeup(int $count = 1)
+    public function wakeup(int $count = 1): bool
     {
     }
 
-    /**
-     * @return bool
-     */
-    public function cmpset(int $cmp_value, int $new_value)
+    public function cmpset(int $cmp_value, int $new_value): bool
     {
     }
 }

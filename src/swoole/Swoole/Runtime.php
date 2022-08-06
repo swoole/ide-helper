@@ -19,17 +19,13 @@ class Runtime
      *   Swoole\Runtime::enableCoroutine(true, 0); // #3
      *   Swoole\Runtime::enableCoroutine(false);   // #4
      *
-     * @param int|bool $enable
      * @return bool TRUE on success, or FALSE on failure.
      */
-    public static function enableCoroutine($enable = true, int $flags = SWOOLE_HOOK_ALL)
+    public static function enableCoroutine(bool|int $enable = SWOOLE_HOOK_ALL, int $flags = SWOOLE_HOOK_ALL)
     {
     }
 
-    /**
-     * @return int
-     */
-    public static function getHookFlags()
+    public static function getHookFlags(): int
     {
     }
 
