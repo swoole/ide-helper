@@ -16,8 +16,6 @@ use PDOException;
 
 class PDOProxy extends ObjectProxy
 {
-    public const IO_METHOD_REGEX = '/^query|prepare|exec|beginTransaction|commit|rollback$/i';
-
     public const IO_ERRORS = [
         2002, // MYSQLND_CR_CONNECTION_ERROR
         2006, // MYSQLND_CR_SERVER_GONE_ERROR
@@ -48,11 +46,10 @@ class PDOProxy extends ObjectProxy
         for ($n = 3; $n--;) {
             $ret = @$this->__object->{$name}(...$arguments);
             if ($ret === false) {
-                /* non-IO method */
-                if (!preg_match(static::IO_METHOD_REGEX, $name)) {
+                $errorInfo = $this->__object->errorInfo();
+                if (empty($errorInfo)) {
                     break;
                 }
-                $errorInfo = $this->__object->errorInfo();
                 /* no more chances or non-IO failures */
                 if (
                     !in_array($errorInfo[1], static::IO_ERRORS, true)

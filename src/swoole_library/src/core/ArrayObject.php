@@ -48,6 +48,11 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
         $this->array = $data;
     }
 
+    public static function from(array $array = []): self
+    {
+        return new static($array);
+    }
+
     public function toArray(): array
     {
         return $this->array;

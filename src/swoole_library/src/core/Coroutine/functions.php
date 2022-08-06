@@ -94,7 +94,7 @@ function deadlock_check()
             echo Coroutine::printBackTrace($cid, DEBUG_BACKTRACE_IGNORE_ARGS, $depth);
             echo "\n";
             $index++;
-            //limit the number of maximum outputs
+            // limit the number of maximum outputs
             if ($index >= $limit) {
                 break;
             }

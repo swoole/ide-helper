@@ -50,6 +50,8 @@ class Helper
         'worker_num' => true,
         'max_wait_time' => true,
         'max_queued_bytes' => true,
+        'max_concurrency' => true,
+        'worker_max_concurrency' => true,
         'enable_coroutine' => true,
         'send_timeout' => true,
         'dispatch_mode' => true,
@@ -83,14 +85,19 @@ class Helper
         'http_parse_files' => true,
         'http_compression' => true,
         'http_compression_level' => true,
+        'compression_level' => true,
         'http_gzip_level' => true,
+        'http_compression_min_length' => true,
         'compression_min_length' => true,
         'websocket_compression' => true,
         'upload_tmp_dir' => true,
+        'upload_max_filesize' => true,
         'enable_static_handler' => true,
         'document_root' => true,
         'http_autoindex' => true,
         'http_index_files' => true,
+        'http_compression_types' => true,
+        'compression_types' => true,
         'static_handler_locations' => true,
         'input_buffer_size' => true,
         'buffer_input_size' => true,
@@ -175,6 +182,7 @@ class Helper
         'enable_preemptive_scheduler' => true,
         'c_stack_size' => true,
         'stack_size' => true,
+        'name_resolver' => true,
         'dns_cache_expire' => true,
         'dns_cache_capacity' => true,
         'max_concurrency' => true,
@@ -193,7 +201,7 @@ class Helper
 
         foreach ($input_options as $k => $v) {
             if (!array_key_exists(strtolower($k), $const_options)) {
-                //TODO throw exception
+                // TODO throw exception
                 trigger_error("unsupported option [{$k}]", E_USER_WARNING);
                 debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             }

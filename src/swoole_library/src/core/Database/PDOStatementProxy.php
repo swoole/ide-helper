@@ -53,18 +53,16 @@ class PDOStatementProxy extends ObjectProxy
         for ($n = 3; $n--;) {
             $ret = @$this->__object->{$name}(...$arguments);
             if ($ret === false) {
-                /* no IO */
-                if (strtolower($name) !== 'execute') {
+                $errorInfo = $this->__object->errorInfo();
+                if (empty($errorInfo)) {
                     break;
                 }
                 /* no more chances or non-IO failures or in transaction */
                 if (
-                    !in_array($this->__object->errorInfo()[1], $this->parent::IO_ERRORS, true)
+                    !in_array($errorInfo[1], $this->parent::IO_ERRORS, true)
                     || $n === 0
                     || $this->parent->inTransaction()
                 ) {
-                    $errorInfo = $this->__object->errorInfo();
-
                     /* '00000' means “no error.”, as specified by ANSI SQL and ODBC. */
                     if (!empty($errorInfo) && $errorInfo[0] !== '00000') {
                         $exception = new PDOException($errorInfo[2], $errorInfo[1]);

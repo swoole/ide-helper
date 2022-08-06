@@ -31,6 +31,11 @@ class StringObject
         return $this->string;
     }
 
+    public static function from(string $string = ''): self
+    {
+        return new static($string);
+    }
+
     public function length(): int
     {
         return strlen($this->string);
