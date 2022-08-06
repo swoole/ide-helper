@@ -22,17 +22,11 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function current()
+    public function current(): mixed
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function key()
+    public function key(): mixed
     {
     }
 

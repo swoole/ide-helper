@@ -10,35 +10,23 @@ class Long
     {
     }
 
-    /**
-     * @return int
-     */
-    public function add(int $add_value = 1)
+    public function add(int $add_value = 1): int
     {
     }
 
-    /**
-     * @return int
-     */
-    public function sub(int $sub_value = 1)
+    public function sub(int $sub_value = 1): int
     {
     }
 
-    /**
-     * @return int
-     */
-    public function get()
+    public function get(): int
     {
     }
 
-    public function set(int $value)
+    public function set(int $value): void
     {
     }
 
-    /**
-     * @return bool
-     */
-    public function cmpset(int $cmp_value, int $new_value)
+    public function cmpset(int $cmp_value, int $new_value): bool
     {
     }
 }

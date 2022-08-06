@@ -10,59 +10,35 @@ class Channel
 
     public $errCode = 0;
 
-    public function __construct($size = null)
+    public function __construct(int $size = 1)
     {
     }
 
-    /**
-     * @param mixed $data
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function push($data, $timeout = null)
+    public function push(mixed $data, float $timeout = -1): bool
     {
     }
 
-    /**
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function pop($timeout = null)
+    public function pop(float $timeout = -1): mixed
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function isFull()
+    public function isFull(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function close()
+    public function close(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function stats()
+    public function stats(): array
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function length()
+    public function length(): int
     {
     }
 }

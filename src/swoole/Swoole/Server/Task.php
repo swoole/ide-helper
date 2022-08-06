@@ -16,19 +16,11 @@ class Task
 
     public $flags = 0;
 
-    /**
-     * @param mixed $data
-     * @return mixed
-     */
-    public function finish($data)
+    public function finish(mixed $data): bool
     {
     }
 
-    /**
-     * @param mixed $data
-     * @return mixed
-     */
-    public static function pack($data)
+    public static function pack(mixed $data): string|false
     {
     }
 }

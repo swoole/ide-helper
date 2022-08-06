@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\Server;
 
+use Closure;
+use Socket;
+
 class Port
 {
     public $host;
@@ -13,6 +16,8 @@ class Port
     public $type = 0;
 
     public $sock = -1;
+
+    public $ssl = false;
 
     public $setting;
 
@@ -48,33 +53,19 @@ class Port
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function set(array $settings)
+    public function set(array $settings): void
     {
     }
 
-    /**
-     * @param mixed $event_name
-     * @return mixed
-     */
-    public function on($event_name, callable $callback)
+    public function on(string $event_name, callable $callback): bool
     {
     }
 
-    /**
-     * @param mixed $event_name
-     * @return mixed
-     */
-    public function getCallback($event_name)
+    public function getCallback(string $event_name): ?Closure
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSocket()
+    public function getSocket(): Socket|false
     {
     }
 }

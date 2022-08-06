@@ -31,10 +31,9 @@ class Scheduler
      *
      * This method is an alias of method \Swoole\Coroutine::set().
      *
-     * @return void
      * @see \Swoole\Coroutine::set()
      */
-    public function set(array $settings)
+    public function set(array $settings): void
     {
     }
 
@@ -43,22 +42,20 @@ class Scheduler
      *
      * This method is an alias of method \Swoole\Coroutine::getOptions().
      *
-     * @return array|null
      * @see \Swoole\Coroutine::getOptions()
      * @since Swoole 4.6.0
      */
-    public function getOptions()
+    public function getOptions(): ?array
     {
     }
 
     /**
      * Start running the list of tasks (callbacks) added through method add() and parallel().
      *
-     * @return bool
      * @see \Swoole\Coroutine\Scheduler::add()
      * @see \Swoole\Coroutine\Scheduler::parallel()
      */
-    public function start()
+    public function start(): bool
     {
     }
 }
