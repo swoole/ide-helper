@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 define('SWOOLE_VERSION', '5.0.0');
 define('SWOOLE_VERSION_ID', 50000);
 define('SWOOLE_MAJOR_VERSION', 5);
