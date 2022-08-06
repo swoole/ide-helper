@@ -20,7 +20,7 @@ class Server
 
     public $errMsg = '';
 
-    public function __construct($host, $port = null, $ssl = null, $reuse_port = null)
+    public function __construct(string $host, int $port = 0, bool $ssl = false, bool $reuse_port = false)
     {
     }
 
@@ -28,39 +28,23 @@ class Server
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function set(array $settings)
+    public function set(array $settings): bool
     {
     }
 
-    /**
-     * @param mixed $pattern
-     * @return mixed
-     */
-    public function handle($pattern, callable $callback)
+    public function handle(string $pattern, callable $callback): void
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function start()
+    public function start(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function shutdown()
+    public function shutdown(): void
     {
     }
 
-    /**
-     * @return mixed
-     */
-    private function onAccept()
+    private function onAccept(): void
     {
     }
 }

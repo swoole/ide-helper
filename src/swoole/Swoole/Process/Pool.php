@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Swoole\Process;
 
+use Swoole\Process;
+
 class Pool
 {
     public $master_pid = -1;
 
     public $workers;
 
-    public function __construct($worker_num, $ipc_type = null, $msgqueue_key = null, $enable_coroutine = null)
+    public function __construct(int $worker_num, int $ipc_type = SWOOLE_IPC_NONE, int $msgqueue_key = 0, bool $enable_coroutine = false)
     {
     }
 
@@ -18,72 +20,42 @@ class Pool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function set(array $settings)
+    public function set(array $settings): void
+    {
+    }
+
+    public function on(string $name, callable $callback): bool
+    {
+    }
+
+    public function getProcess(int $work_id = -1): Process|false
+    {
+    }
+
+    public function listen(string $host, int $port = 0, int $backlog = 2048): bool
+    {
+    }
+
+    public function write(string $data): bool
+    {
+    }
+
+    public function detach(): bool
     {
     }
 
     /**
-     * @param mixed $event_name
-     * @return mixed
-     */
-    public function on($event_name, callable $callback)
-    {
-    }
-
-    /**
-     * @param mixed|null $worker_id
-     * @return mixed
-     */
-    public function getProcess($worker_id = null)
-    {
-    }
-
-    /**
-     * @param mixed $host
-     * @param mixed|null $port
-     * @param mixed|null $backlog
-     * @return mixed
-     */
-    public function listen($host, $port = null, $backlog = null)
-    {
-    }
-
-    /**
-     * @param mixed $data
-     * @return mixed
-     */
-    public function write($data)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function detach()
-    {
-    }
-
-    /**
-     * @return mixed
+     * @return false|null
      */
     public function start()
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function stop()
+    public function stop(): void
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function shutdown()
+    public function shutdown(): bool
     {
     }
 }

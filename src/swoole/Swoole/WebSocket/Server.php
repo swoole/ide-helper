@@ -6,50 +6,23 @@ namespace Swoole\WebSocket;
 
 class Server extends \Swoole\Http\Server
 {
-    /**
-     * @param mixed $fd
-     * @param mixed $data
-     * @param mixed|null $opcode
-     * @param mixed|null $flags
-     * @return mixed
-     */
-    public function push($fd, $data, $opcode = null, $flags = null)
+    public function push(int $fd, Frame|string $data, int $opcode = SWOOLE_WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN): bool
     {
     }
 
-    /**
-     * @param mixed $fd
-     * @param mixed|null $code
-     * @param mixed|null $reason
-     * @return mixed
-     */
-    public function disconnect($fd, $code = null, $reason = null)
+    public function disconnect(int $fd, int $code = SWOOLE_WEBSOCKET_CLOSE_NORMAL, string $reason = ''): bool
     {
     }
 
-    /**
-     * @param mixed $fd
-     * @return mixed
-     */
-    public function isEstablished($fd)
+    public function isEstablished(int $fd): bool
     {
     }
 
-    /**
-     * @param mixed $data
-     * @param mixed|null $opcode
-     * @param mixed|null $flags
-     * @return mixed
-     */
-    public static function pack($data, $opcode = null, $flags = null)
+    public static function pack(Frame|string $data, int $opcode = SWOOLE_WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN): string
     {
     }
 
-    /**
-     * @param mixed $data
-     * @return mixed
-     */
-    public static function unpack($data)
+    public static function unpack(string $data): Frame
     {
     }
 }

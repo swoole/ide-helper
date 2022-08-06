@@ -75,7 +75,7 @@ class Server extends \Swoole\Server
      *
      * @return bool TRUE on success, or FALSE on failure.
      */
-    public function setHandler(string $command, callable $callback)
+    public function setHandler(string $command, callable $callback): bool
     {
     }
 

@@ -37,7 +37,7 @@ class Request
      * @see \Swoole\Http\Request::rawContent()
      * @since 4.5.0
      */
-    public function getContent()
+    public function getContent(): string|false
     {
     }
 
@@ -49,44 +49,27 @@ class Request
      * @return string|false Return the request content back; return FALSE when error happens.
      * @see \Swoole\Http\Request::getContent()
      */
-    public function rawContent()
+    public function rawContent(): string|false
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getData()
+    public function getData(): string|false
     {
     }
 
-    /**
-     * @param mixed|null $options
-     * @return mixed
-     */
-    public static function create($options = null)
+    public static function create(array $options = []): Request
     {
     }
 
-    /**
-     * @param mixed $data
-     * @return mixed
-     */
-    public function parse($data)
+    public function parse(string $data): int|false
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function isCompleted()
+    public function isCompleted(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getMethod()
+    public function getMethod(): string|false
     {
     }
 }

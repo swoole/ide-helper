@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\WebSocket;
 
-class Frame
+use Stringable;
+
+class Frame implements Stringable
 {
     public $fd = 0;
 
@@ -20,21 +22,11 @@ class Frame
     {
     }
 
-    /**
-     * @param mixed $data
-     * @param mixed|null $opcode
-     * @param mixed|null $flags
-     * @return mixed
-     */
-    public static function pack($data, $opcode = null, $flags = null)
+    public static function pack(Frame|string $data, int $opcode = SWOOLE_WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN): string
     {
     }
 
-    /**
-     * @param mixed $data
-     * @return mixed
-     */
-    public static function unpack($data)
+    public static function unpack(string $data): Frame
     {
     }
 }
