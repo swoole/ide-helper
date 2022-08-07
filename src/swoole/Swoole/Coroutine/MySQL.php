@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine;
 
+/**
+ * @deprecated 5.0.0 Use PDO_MySQL or mysqli on top of the mysqlnd library, with runtime hook SWOOLE_HOOK_TCP or SWOOLE_HOOK_ALL turned on.
+ */
 class MySQL
 {
     public $serverInfo;

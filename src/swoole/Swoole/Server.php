@@ -15,6 +15,7 @@ use Swoole\Server\Port;
  *    * \Swoole\Server::clearTimer() => \Swoole\Timer::clearTimer().
  *    * \Swoole\Server::tick()       => \Swoole\Timer::tick().
  *    * \Swoole\Server::defer()      => \Swoole\Event::defer().
+ * 2. Starting from Swoole 5.0.0, default server mode has been changed from SWOOLE_PROCESS to SWOOLE_BASE.
  */
 class Server
 {
@@ -127,7 +128,8 @@ class Server
     private $onPipeMessage;
 
     /**
-     * @param int $mode Either SWOOLE_BASE or SWOOLE_PROCESS.
+     * @param int $mode Either SWOOLE_BASE or SWOOLE_PROCESS. Starting from Swoole 5.0.0, default server mode has been
+     *                  changed from SWOOLE_PROCESS to SWOOLE_BASE.
      */
     public function __construct(string $host = '0.0.0.0', int $port = 0, int $mode = SWOOLE_BASE, int $sock_type = SWOOLE_SOCK_TCP)
     {

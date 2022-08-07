@@ -50,7 +50,6 @@ class Coroutine
      * implementations of the same functionality.
      *
      * @param array $cid_array An array of coroutines.
-     * @param int $timeout
      * @return bool TRUE if succeeds; otherwise FALSE.
      * @see \Swoole\Coroutine\WaitGroup
      * @see \Swoole\Coroutine\Barrier

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine;
 
+/**
+ * @deprecated 5.0.0 Use phpredis (the PHP extension for Redis) instead, with runtime hook SWOOLE_HOOK_TCP or SWOOLE_HOOK_ALL turned on.
+ */
 class Redis
 {
     public $host = '';
