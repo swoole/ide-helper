@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine\Http;
 
+use Swoole\WebSocket\Frame;
+
 class Client
 {
     public $errCode = 0;
@@ -42,7 +44,7 @@ class Client
 
     public $body = '';
 
-    public function __construct($host, $port = null, $ssl = null)
+    public function __construct(string $host, int $port = 0, bool $ssl = false)
     {
     }
 
@@ -50,212 +52,107 @@ class Client
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function set(array $settings)
+    public function set(array $settings): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDefer()
+    public function getDefer(): bool
     {
     }
 
-    /**
-     * @param mixed|null $defer
-     * @return mixed
-     */
-    public function setDefer($defer = null)
+    public function setDefer(bool $defer = true): bool
     {
     }
 
-    /**
-     * @param mixed $method
-     * @return mixed
-     */
-    public function setMethod($method)
+    public function setMethod(string $method): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function setHeaders(array $headers)
+    public function setHeaders(array $headers): bool
     {
     }
 
-    /**
-     * @param mixed $username
-     * @param mixed $password
-     * @return mixed
-     */
-    public function setBasicAuth($username, $password)
+    public function setBasicAuth(string $username, string $password): void
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function setCookies(array $cookies)
+    public function setCookies(array $cookies): bool
     {
     }
 
-    /**
-     * @param mixed $data
-     * @return mixed
-     */
-    public function setData($data)
+    public function setData(string|array $data): bool
     {
     }
 
-    /**
-     * @param mixed $path
-     * @param mixed $name
-     * @param mixed|null $type
-     * @param mixed|null $filename
-     * @param mixed|null $offset
-     * @param mixed|null $length
-     * @return mixed
-     */
-    public function addFile($path, $name, $type = null, $filename = null, $offset = null, $length = null)
+    public function addFile(string $path, string $name, ?string $type = null, ?string $filename = null, int $offset = 0, int $length = 0): bool
     {
     }
 
-    /**
-     * @param mixed $path
-     * @param mixed $name
-     * @param mixed|null $type
-     * @param mixed|null $filename
-     * @return mixed
-     */
-    public function addData($path, $name, $type = null, $filename = null)
+    public function addData(string $path, string $name, ?string $type = null, ?string $filename = null): bool
     {
     }
 
-    /**
-     * @param mixed $path
-     * @return mixed
-     */
-    public function execute($path)
+    public function execute(string $path): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getpeername()
+    public function getpeername(): array|false
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getsockname()
+    public function getsockname(): array|false
     {
     }
 
-    /**
-     * @param mixed $path
-     * @return mixed
-     */
-    public function get($path)
+    public function get(string $path): bool
     {
     }
 
-    /**
-     * @param mixed $path
-     * @param mixed $data
-     * @return mixed
-     */
-    public function post($path, $data)
+    public function post(string $path, mixed $data): bool
     {
     }
 
-    /**
-     * @param mixed $path
-     * @param mixed $file
-     * @param mixed|null $offset
-     * @return mixed
-     */
-    public function download($path, $file, $offset = null)
+    public function download(string $path, string $file, int $offset = 0): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getBody()
+    public function getBody(): string|false
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getHeaders()
+    public function getHeaders(): array|false|null
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCookies()
+    public function getCookies(): array|false|null
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getStatusCode()
+    public function getStatusCode(): int|false
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getHeaderOut()
+    public function getHeaderOut(): string|false
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPeerCert()
+    public function getPeerCert(): string|false
     {
     }
 
-    /**
-     * @param mixed $path
-     * @return mixed
-     */
-    public function upgrade($path)
+    public function upgrade(string $path): bool
     {
     }
 
-    /**
-     * @param mixed $data
-     * @param mixed|null $opcode
-     * @param mixed|null $flags
-     * @return mixed
-     */
-    public function push($data, $opcode = null, $flags = null)
+    public function push(mixed $data, int $opcode = SWOOLE_WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN): bool
     {
     }
 
-    /**
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function recv($timeout = null)
+    public function recv(float $timeout = 0): Frame|bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function close()
+    public function close(): bool
     {
     }
 }

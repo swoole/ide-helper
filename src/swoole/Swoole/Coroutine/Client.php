@@ -28,7 +28,7 @@ class Client
 
     private $socket;
 
-    public function __construct($type)
+    public function __construct(int $type)
     {
     }
 
@@ -36,131 +36,70 @@ class Client
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function set(array $settings)
+    public function set(array $settings): bool
+    {
+    }
+
+    public function connect(string $host, int $port = 0, float $timeout = 0, int $sock_flag = 0): bool
+    {
+    }
+
+    public function recv(float $timeout = 0): string|false
     {
     }
 
     /**
-     * @param mixed $host
-     * @param mixed|null $port
-     * @param mixed|null $timeout
-     * @param mixed|null $sock_flag
-     * @return mixed
+     * @param int $length The default value (65535) is hardcoded as constant SW_PHP_CLIENT_BUFFER_SIZE in Swoole.
      */
-    public function connect($host, $port = null, $timeout = null, $sock_flag = null)
+    public function peek(int $length = 65535): string|false
     {
     }
 
-    /**
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function recv($timeout = null)
+    public function send(string $data, float $timeout = 0): int|false
     {
     }
 
-    /**
-     * @param mixed|null $length
-     * @return mixed
-     */
-    public function peek($length = null)
+    public function sendfile(string $filename, int $offset = 0, int $length = 0): bool
     {
     }
 
-    /**
-     * @param mixed $data
-     * @return mixed
-     */
-    public function send($data)
+    public function sendto(string $address, int $port, string $data): bool
     {
     }
 
-    /**
-     * @param mixed $filename
-     * @param mixed|null $offset
-     * @param mixed|null $length
-     * @return mixed
-     */
-    public function sendfile($filename, $offset = null, $length = null)
+    public function recvfrom(int $length, mixed &$address, mixed &$port = 0): string|false
     {
     }
 
-    /**
-     * @param mixed $address
-     * @param mixed $port
-     * @param mixed $data
-     * @return mixed
-     */
-    public function sendto($address, $port, $data)
+    public function enableSSL(): bool
     {
     }
 
-    /**
-     * @param mixed $length
-     * @param mixed $address
-     * @param mixed|null $port
-     * @return mixed
-     */
-    public function recvfrom($length, &$address, &$port = null)
+    public function getPeerCert(): string|false
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function enableSSL()
+    public function verifyPeerCert(bool $allow_self_signed = false): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPeerCert()
+    public function isConnected(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function verifyPeerCert()
+    public function getsockname(): array|false
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function isConnected()
+    public function getpeername(): array|false
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getsockname()
+    public function close(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getpeername()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function close()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function exportSocket()
+    public function exportSocket(): Socket|false
     {
     }
 }

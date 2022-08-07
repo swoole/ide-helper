@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine\Http2;
 
+use Swoole\Http2\Request;
+use Swoole\Http2\Response;
+
 class Client
 {
     public $errCode = 0;
@@ -24,7 +27,7 @@ class Client
 
     public $ssl = false;
 
-    public function __construct($host, $port = null, $open_ssl = null)
+    public function __construct(string $host, int $port = 80, bool $open_ssl = false)
     {
     }
 
@@ -32,90 +35,47 @@ class Client
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function set(array $settings)
+    public function set(array $settings): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function connect()
+    public function connect(): bool
     {
     }
 
-    /**
-     * @param mixed|null $key
-     * @return mixed
-     */
-    public function stats($key = null)
+    public function stats(string $key = ''): int|array
     {
     }
 
-    /**
-     * @param mixed $stream_id
-     * @return mixed
-     */
-    public function isStreamExist($stream_id)
+    public function isStreamExist(int $stream_id): bool
     {
     }
 
-    /**
-     * @param mixed $request
-     * @return mixed
-     */
-    public function send($request)
+    public function send(Request $request): int|false
     {
     }
 
-    /**
-     * @param mixed $stream_id
-     * @param mixed $data
-     * @param mixed|null $end_stream
-     * @return mixed
-     */
-    public function write($stream_id, $data, $end_stream = null)
+    public function write(int $stream_id, mixed $data, bool $end_stream = false): bool
     {
     }
 
-    /**
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function recv($timeout = null)
+    public function recv(float $timeout = 0): Response|false
     {
     }
 
-    /**
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function read($timeout = null)
+    public function read(float $timeout = 0): Response|false
     {
     }
 
-    /**
-     * @param mixed|null $error_code
-     * @param mixed|null $debug_data
-     * @return mixed
-     */
-    public function goaway($error_code = null, $debug_data = null)
+    public function goaway(int $error_code = 0, string $debug_data = ''): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function ping()
+    public function ping(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function close()
+    public function close(): bool
     {
     }
 }

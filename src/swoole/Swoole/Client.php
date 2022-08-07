@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Swoole;
 
+use Socket;
+
 class Client
 {
     public const MSG_OOB = 1;
@@ -34,7 +36,7 @@ class Client
 
     public $setting;
 
-    public function __construct($type, $async = null, $id = null)
+    public function __construct(int $type, bool $async = false, string $id = '')
     {
     }
 
@@ -42,124 +44,66 @@ class Client
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function set(array $settings)
+    public function set(array $settings): bool
+    {
+    }
+
+    public function connect(string $host, int $port = 0, float $timeout = 0.5, int $sock_flag = 0): bool
     {
     }
 
     /**
-     * @param mixed $host
-     * @param mixed|null $port
-     * @param mixed|null $timeout
-     * @param mixed|null $sock_flag
-     * @return mixed
+     * @param int $size The default value (65536) is hardcoded as constant SW_PHP_CLIENT_BUFFER_SIZE in Swoole.
      */
-    public function connect($host, $port = null, $timeout = null, $sock_flag = null)
+    public function recv(int $size = 65536, int $flag = 0): string|false
     {
     }
 
-    /**
-     * @param mixed|null $size
-     * @param mixed|null $flag
-     * @return mixed
-     */
-    public function recv($size = null, $flag = null)
+    public function send(string $data, int $flag = 0): int|false
     {
     }
 
-    /**
-     * @param mixed $data
-     * @param mixed|null $flag
-     * @return mixed
-     */
-    public function send($data, $flag = null)
+    public function sendfile(string $filename, int $offset = 0, int $length = 0): bool
     {
     }
 
-    /**
-     * @param mixed $filename
-     * @param mixed|null $offset
-     * @param mixed|null $length
-     * @return mixed
-     */
-    public function sendfile($filename, $offset = null, $length = null)
+    public function sendto(string $ip, int $port, string $data): bool
     {
     }
 
-    /**
-     * @param mixed $ip
-     * @param mixed $port
-     * @param mixed $data
-     * @return mixed
-     */
-    public function sendto($ip, $port, $data)
+    public function shutdown(int $how): bool
     {
     }
 
-    /**
-     * @param mixed $how
-     * @return mixed
-     */
-    public function shutdown($how)
+    public function enableSSL(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function enableSSL()
+    public function getPeerCert(): bool|string
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPeerCert()
+    public function verifyPeerCert(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function verifyPeerCert()
+    public function isConnected(): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function isConnected()
+    public function getsockname(): array|false
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getsockname()
+    public function getpeername(): array|false
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getpeername()
+    public function close(bool $force = false): bool
     {
     }
 
-    /**
-     * @param mixed|null $force
-     * @return mixed
-     */
-    public function close($force = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSocket()
+    public function getSocket(): Socket|false
     {
     }
 }

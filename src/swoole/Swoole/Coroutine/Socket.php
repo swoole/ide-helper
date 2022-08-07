@@ -20,210 +20,120 @@ class Socket
 
     public $errMsg = '';
 
-    public function __construct($domain, $type, $protocol = null)
+    public function __construct(int $domain, int $type, int $protocol = 0)
+    {
+    }
+
+    public function bind(string $address, int $port = 0): bool
     {
     }
 
     /**
-     * @param mixed $address
-     * @param mixed|null $port
-     * @return mixed
+     * @param int $backlog The default value (512) is hardcoded as constant SW_BACKLOG in Swoole.
      */
-    public function bind($address, $port = null)
+    public function listen(int $backlog = 512): bool
+    {
+    }
+
+    public function accept(float $timeout = 0): Socket|false
+    {
+    }
+
+    public function connect(string $host, int $port = 0, float $timeout = 0): bool
+    {
+    }
+
+    public function checkLiveness(): bool
     {
     }
 
     /**
-     * @param mixed|null $backlog
-     * @return mixed
+     * @param int $length The default value (65536) is hardcoded as constant SW_BUFFER_SIZE_BIG in Swoole.
      */
-    public function listen($backlog = null)
+    public function peek(int $length = 65536): string|false
     {
     }
 
     /**
-     * @param mixed|null $timeout
-     * @return mixed
+     * @param int $length The default value (65536) is hardcoded as constant SW_BUFFER_SIZE_BIG in Swoole.
      */
-    public function accept($timeout = null)
+    public function recv(int $length = 65536, float $timeout = 0): string|false
     {
     }
 
     /**
-     * @param mixed $host
-     * @param mixed|null $port
-     * @param mixed|null $timeout
-     * @return mixed
+     * @param int $length The default value (65536) is hardcoded as constant SW_BUFFER_SIZE_BIG in Swoole.
      */
-    public function connect($host, $port = null, $timeout = null)
+    public function recvAll(int $length = 65536, float $timeout = 0): string|false
     {
     }
 
     /**
-     * @return mixed
+     * @param int $length The default value (65536) is hardcoded as constant SW_BUFFER_SIZE_BIG in Swoole.
      */
-    public function checkLiveness()
+    public function recvLine(int $length = 65535, float $timeout = 0): string|false
     {
     }
 
     /**
-     * @param mixed|null $length
-     * @return mixed
+     * @param int $length The default value (65536) is hardcoded as constant SW_BUFFER_SIZE_BIG in Swoole.
      */
-    public function peek($length = null)
+    public function recvWithBuffer(int $length = 65535, float $timeout = 0): string|false
+    {
+    }
+
+    public function recvPacket(float $timeout = 0): string|false
+    {
+    }
+
+    public function send(string $data, float $timeout = 0): int|false
+    {
+    }
+
+    public function readVector(array $io_vector, float $timeout = 0): array|false
+    {
+    }
+
+    public function readVectorAll(array $io_vector, float $timeout = 0): array|false
+    {
+    }
+
+    public function writeVector(array $io_vector, float $timeout = 0): int|false
+    {
+    }
+
+    public function writeVectorAll(array $io_vector, float $timeout = 0): int|false
+    {
+    }
+
+    public function sendFile(string $file, int $offset = 0, int $length = 0): bool
+    {
+    }
+
+    public function sendAll(string $data, float $timeout = 0): int|false
+    {
+    }
+
+    public function recvfrom(mixed &$peername, float $timeout = 0): string|false
+    {
+    }
+
+    public function sendto(string $addr, int $port, string $data): int|false
+    {
+    }
+
+    public function getOption(int $level, int $opt_name): mixed
     {
     }
 
     /**
-     * @param mixed|null $length
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function recv($length = null, $timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed|null $length
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function recvAll($length = null, $timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed|null $length
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function recvLine($length = null, $timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed|null $length
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function recvWithBuffer($length = null, $timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function recvPacket($timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed $data
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function send($data, $timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed $io_vector
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function readVector($io_vector, $timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed $io_vector
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function readVectorAll($io_vector, $timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed $io_vector
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function writeVector($io_vector, $timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed $io_vector
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function writeVectorAll($io_vector, $timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed $filename
-     * @param mixed|null $offset
-     * @param mixed|null $length
-     * @return mixed
-     */
-    public function sendFile($filename, $offset = null, $length = null)
-    {
-    }
-
-    /**
-     * @param mixed $data
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function sendAll($data, $timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed $peername
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public function recvfrom(&$peername, $timeout = null)
-    {
-    }
-
-    /**
-     * @param mixed $addr
-     * @param mixed $port
-     * @param mixed $data
-     * @return mixed
-     */
-    public function sendto($addr, $port, $data)
-    {
-    }
-
-    /**
-     * @param mixed $level
-     * @param mixed $opt_name
-     * @return mixed
-     */
-    public function getOption($level, $opt_name)
-    {
-    }
-
-    /**
-     * @return bool Returns TRUE if succeed; otherwise FALSE.
+     * @return bool Returns TRUE if succeeds; otherwise FALSE.
      */
     public function setProtocol(array $settings): bool
     {
     }
 
-    /**
-     * @param mixed $level
-     * @param mixed $opt_name
-     * @param mixed $opt_value
-     * @return mixed
-     */
-    public function setOption($level, $opt_name, $opt_value)
+    public function setOption(int $level, int $opt_name, mixed $opt_value): bool
     {
     }
 
@@ -252,14 +162,14 @@ class Socket
     /**
      * @return array|false If succeeds, return an array with two fields in it: "address" and "port"; otherwise, return FALSE.
      */
-    public function getpeername()
+    public function getpeername(): array|false
     {
     }
 
     /**
      * @return array|false If succeeds, return an array with two fields in it: "address" and "port"; otherwise, return FALSE.
      */
-    public function getsockname()
+    public function getsockname(): array|false
     {
     }
 
@@ -267,6 +177,14 @@ class Socket
      * @since 4.8.3
      */
     public function isClosed(): bool
+    {
+    }
+
+    /**
+     * @since 5.0.0
+     * @param mixed $stream
+     */
+    public static function import($stream): Socket|false
     {
     }
 }

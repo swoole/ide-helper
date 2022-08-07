@@ -6,45 +6,23 @@ namespace Swoole;
 
 class Event
 {
-    /**
-     * @param mixed $fd
-     * @param mixed|null $events
-     * @return mixed
-     */
-    public static function add($fd, ?callable $read_callback, ?callable $write_callback = null, $events = null)
+    public static function add(mixed $fd, ?callable $read_callback = null, ?callable $write_callback = null, int $events = SWOOLE_EVENT_READ): int|false
     {
     }
 
-    /**
-     * @param mixed $fd
-     * @return mixed
-     */
-    public static function del($fd)
+    public static function del(mixed $fd): bool
     {
     }
 
-    /**
-     * @param mixed $fd
-     * @param mixed|null $events
-     * @return mixed
-     */
-    public static function set($fd, ?callable $read_callback = null, ?callable $write_callback = null, $events = null)
+    public static function set(mixed $fd, ?callable $read_callback = null, ?callable $write_callback = null, int $events = 0): bool
     {
     }
 
-    /**
-     * @param mixed $fd
-     * @param mixed|null $events
-     * @return mixed
-     */
-    public static function isset($fd, $events = null)
+    public static function isset(mixed $fd, int $events = SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public static function dispatch()
+    public static function dispatch(): bool
     {
     }
 
@@ -55,41 +33,23 @@ class Event
     {
     }
 
-    /**
-     * @param mixed|null $before
-     * @return mixed
-     */
-    public static function cycle(?callable $callback, $before = null)
+    public static function cycle(?callable $callback, bool $before = false): bool
     {
     }
 
-    /**
-     * @param mixed $fd
-     * @param mixed $data
-     * @return mixed
-     */
-    public static function write($fd, $data)
+    public static function write(mixed $fd, string $data): bool
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public static function wait()
+    public static function wait(): void
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public static function rshutdown()
+    public static function rshutdown(): void
     {
     }
 
-    /**
-     * @return mixed
-     */
-    public static function exit()
+    public static function exit(): void
     {
     }
 }

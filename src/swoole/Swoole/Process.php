@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Swoole;
 
+use Swoole\Coroutine\Socket;
+
 class Process
 {
     public const IPC_NOWAIT = 256;
@@ -42,7 +44,7 @@ class Process
 
     private $callback;
 
-    public function __construct(callable $callback, $redirect_stdin_and_stdout = null, $pipe_type = null, $enable_coroutine = null)
+    public function __construct(callable $callback, bool $redirect_stdin_and_stdout = false, int $pipe_type = 2, bool $enable_coroutine = false)
     {
     }
 
@@ -50,190 +52,101 @@ class Process
     {
     }
 
-    /**
-     * @param mixed|null $blocking
-     * @return mixed
-     */
-    public static function wait($blocking = null)
+    public static function wait(bool $blocking = true): array|false
+    {
+    }
+
+    public static function signal(int $signal_no, ?callable $callback = null): bool
+    {
+    }
+
+    public static function alarm(int $usec, int $type = 0): bool
+    {
+    }
+
+    public static function kill(int $pid, int $signal_no = 15): bool
+    {
+    }
+
+    public static function daemon(bool $nochdir = true, bool $noclose = true, array $pipes = []): bool
+    {
+    }
+
+    public function setPriority(int $which, int $priority): bool
+    {
+    }
+
+    public function getPriority(int $which): int
+    {
+    }
+
+    public function set(array $settings): void
+    {
+    }
+
+    public function setTimeout(float $seconds): bool
+    {
+    }
+
+    public function setBlocking(bool $blocking): void
+    {
+    }
+
+    public function useQueue(int $key = 0, int $mode = 2, int $capacity = -1): bool
+    {
+    }
+
+    public function statQueue(): array|false
+    {
+    }
+
+    public function freeQueue(): bool
+    {
+    }
+
+    public function start(): bool|int
+    {
+    }
+
+    public function write(string $data): int|false
+    {
+    }
+
+    public function close(int $which = 0): bool
     {
     }
 
     /**
-     * @param mixed $signal_no
-     * @param mixed $callback
-     * @return mixed
+     * @param int $size The default value (8192) is hardcoded in Swoole.
      */
-    public static function signal($signal_no, $callback)
+    public function read(int $size = 8192): string|false
+    {
+    }
+
+    public function push(string $data): bool
     {
     }
 
     /**
-     * @param mixed $usec
-     * @param mixed|null $type
-     * @return mixed
+     * @param int $size The default value (65536) is hardcoded as constant SW_MSGMAX in Swoole.
      */
-    public static function alarm($usec, $type = null)
+    public function pop(int $size = 65536): string|false
     {
     }
 
-    /**
-     * @param mixed $pid
-     * @param mixed|null $signal_no
-     * @return mixed
-     */
-    public static function kill($pid, $signal_no = null)
+    public function exit(int $exit_code = 0): void
     {
     }
 
-    /**
-     * @param mixed|null $nochdir
-     * @param mixed|null $noclose
-     * @param mixed|null $pipes
-     * @return mixed
-     */
-    public static function daemon($nochdir = null, $noclose = null, $pipes = null)
+    public function exec(string $exec_file, array $args): bool
     {
     }
 
-    /**
-     * @param mixed $which
-     * @param mixed $priority
-     * @return mixed
-     */
-    public function setPriority($which, $priority)
+    public function exportSocket(): Socket|false
     {
     }
 
-    /**
-     * @param mixed $which
-     * @return mixed
-     */
-    public function getPriority($which)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function set(array $settings)
-    {
-    }
-
-    /**
-     * @param mixed $seconds
-     * @return mixed
-     */
-    public function setTimeout($seconds)
-    {
-    }
-
-    /**
-     * @param mixed $blocking
-     * @return mixed
-     */
-    public function setBlocking($blocking)
-    {
-    }
-
-    /**
-     * @param mixed|null $key
-     * @param mixed|null $mode
-     * @param mixed|null $capacity
-     * @return mixed
-     */
-    public function useQueue($key = null, $mode = null, $capacity = null)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function statQueue()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function freeQueue()
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function start()
-    {
-    }
-
-    /**
-     * @param mixed $data
-     * @return mixed
-     */
-    public function write($data)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function close()
-    {
-    }
-
-    /**
-     * @param mixed|null $size
-     * @return mixed
-     */
-    public function read($size = null)
-    {
-    }
-
-    /**
-     * @param mixed $data
-     * @return mixed
-     */
-    public function push($data)
-    {
-    }
-
-    /**
-     * @param mixed|null $size
-     * @return mixed
-     */
-    public function pop($size = null)
-    {
-    }
-
-    /**
-     * @param mixed|null $exit_code
-     * @return mixed
-     */
-    public function exit($exit_code = null)
-    {
-    }
-
-    /**
-     * @param mixed $exec_file
-     * @param mixed $args
-     * @return mixed
-     */
-    public function exec($exec_file, $args)
-    {
-    }
-
-    /**
-     * @return mixed
-     */
-    public function exportSocket()
-    {
-    }
-
-    /**
-     * @param mixed $process_name
-     * @return mixed
-     */
-    public function name($process_name)
+    public function name(string $process_name): bool
     {
     }
 }

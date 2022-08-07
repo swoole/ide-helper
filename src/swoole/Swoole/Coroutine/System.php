@@ -6,142 +6,66 @@ namespace Swoole\Coroutine;
 
 class System
 {
-    /**
-     * @param mixed $domain_name
-     * @param mixed|null $family
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public static function gethostbyname($domain_name, $family = null, $timeout = null)
+    public static function gethostbyname(string $domain_name, int $type = AF_INET, float $timeout = -1): string|false
     {
     }
 
     /**
-     * @param mixed $domain_name
-     * @param mixed|null $timeout
-     * @param mixed|null $type
-     * @return mixed
+     * @param float $timeout The default value (60) is hardcoded as constant SW_SOCKET_DEFAULT_DNS_TIMEOUT in Swoole.
      */
-    public static function dnsLookup($domain_name, $timeout = null, $type = null)
+    public static function dnsLookup(string $domain_name, float $timeout = 60, int $type = AF_INET): string|false
     {
     }
 
-    /**
-     * @param mixed $command
-     * @param mixed|null $get_error_stream
-     * @return mixed
-     */
-    public static function exec($command, $get_error_stream = null)
+    public static function exec(string $command, bool $get_error_stream = false): array|false
     {
     }
 
-    /**
-     * @param mixed $seconds
-     * @return mixed
-     */
-    public static function sleep($seconds)
+    public static function sleep(float $seconds): bool
     {
     }
 
-    /**
-     * @param mixed $hostname
-     * @param mixed|null $family
-     * @param mixed|null $socktype
-     * @param mixed|null $protocol
-     * @param mixed|null $service
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public static function getaddrinfo($hostname, $family = null, $socktype = null, $protocol = null, $service = null, $timeout = null)
+    public static function getaddrinfo(string $domain, int $family = AF_INET, int $socktype = SOCK_STREAM, int $protocol = STREAM_IPPROTO_TCP, ?string $service = null, float $timeout = -1): bool|array
     {
     }
 
-    /**
-     * @param mixed $path
-     * @return mixed
-     */
-    public static function statvfs($path)
+    public static function statvfs(string $path): array
     {
     }
 
-    /**
-     * @param mixed $filename
-     * @return mixed
-     */
-    public static function readFile($filename)
+    public static function readFile(string $filename, int $flag = 0): string|false
     {
     }
 
-    /**
-     * @param mixed $filename
-     * @param mixed $data
-     * @param mixed|null $flags
-     * @return mixed
-     */
-    public static function writeFile($filename, $data, $flags = null)
+    public static function writeFile(string $filename, string $fileContent, int $flags = 0): int|false
     {
     }
 
-    /**
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public static function wait($timeout = null)
+    public static function wait(float $timeout = -1): array|false
     {
     }
 
-    /**
-     * @param mixed $pid
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public static function waitPid($pid, $timeout = null)
+    public static function waitPid(int $pid, float $timeout = -1): array|false
     {
     }
 
-    /**
-     * @param mixed $signo
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public static function waitSignal($signo, $timeout = null)
+    public static function waitSignal(int $signo, float $timeout = -1): bool
     {
     }
 
-    /**
-     * @param mixed $fd
-     * @param mixed|null $events
-     * @param mixed|null $timeout
-     * @return mixed
-     */
-    public static function waitEvent($fd, $events = null, $timeout = null)
+    public static function waitEvent(mixed $socket, int $events = SWOOLE_EVENT_READ, float $timeout = -1): int|false
     {
     }
 
-    /**
-     * @param mixed $handle
-     * @param mixed|null $length
-     * @return mixed
-     */
-    public static function fread($handle, $length = null)
+    public static function fread($handle, int $length = 0): string|false
     {
     }
 
-    /**
-     * @param mixed $handle
-     * @param mixed $string
-     * @param mixed|null $length
-     * @return mixed
-     */
-    public static function fwrite($handle, $string, $length = null)
+    public static function fwrite($handle, string $data, int $length = 0): int|false
     {
     }
 
-    /**
-     * @param mixed $handle
-     * @return mixed
-     */
-    public static function fgets($handle)
+    public static function fgets($handle): string|false
     {
     }
 }

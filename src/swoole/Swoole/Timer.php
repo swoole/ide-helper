@@ -4,68 +4,43 @@ declare(strict_types=1);
 
 namespace Swoole;
 
+use Swoole\Timer\Iterator;
+
 class Timer
 {
-    /**
-     * @return void
-     */
-    public static function set(array $settings)
+    public static function set(array $settings): void
     {
     }
 
-    /**
-     * @return int
-     */
-    public static function tick(int $ms, callable $callback, ...$params)
+    public static function tick(int $ms, callable $callback, ...$params): int|false
     {
     }
 
-    /**
-     * @return int
-     */
-    public static function after(int $ms, callable $callback, ...$params)
+    public static function after(int $ms, callable $callback, ...$params): int|false
     {
     }
 
-    /**
-     * @return bool
-     */
-    public static function exists(int $timer_id)
+    public static function exists(int $timer_id): bool
     {
     }
 
-    /**
-     * @return array
-     */
-    public static function info(int $timer_id)
+    public static function info(int $timer_id): ?array
     {
     }
 
-    /**
-     * @return array
-     */
-    public static function stats()
+    public static function stats(): array
     {
     }
 
-    /**
-     * @return \Swoole\timer\Iterator
-     */
-    public static function list()
+    public static function list(): Iterator
     {
     }
 
-    /**
-     * @return bool
-     */
-    public static function clear(int $timer_id)
+    public static function clear(int $timer_id): bool
     {
     }
 
-    /**
-     * @return bool
-     */
-    public static function clearAll()
+    public static function clearAll(): bool
     {
     }
 }
