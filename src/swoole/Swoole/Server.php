@@ -9,12 +9,12 @@ use Socket;
 use Swoole\Server\Port;
 
 /**
- * Changes in Swoole 5.0.0:
- * Following alias methods have been removed from Swoole 5.0.0. Please use the original methods instead.
- *   1. \Swoole\Server::after()      => \Swoole\Timer::after().
- *   2. \Swoole\Server::clearTimer() => \Swoole\Timer::clearTimer().
- *   3. \Swoole\Server::tick()       => \Swoole\Timer::tick().
- *   4. \Swoole\Server::defer()      => \Swoole\Event::defer().
+ * History Changes:
+ * 1. Following alias methods have been removed from Swoole 5.0.0. Please use the original methods instead.
+ *    * \Swoole\Server::after()      => \Swoole\Timer::after().
+ *    * \Swoole\Server::clearTimer() => \Swoole\Timer::clearTimer().
+ *    * \Swoole\Server::tick()       => \Swoole\Timer::tick().
+ *    * \Swoole\Server::defer()      => \Swoole\Event::defer().
  */
 class Server
 {

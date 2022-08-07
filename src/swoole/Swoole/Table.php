@@ -4,6 +4,16 @@ declare(strict_types=1);
 
 namespace Swoole;
 
+/**
+ * History Changes:
+ *
+ * 1. In Swoole 5.0.0, class \Swoole\Table no longer implements interface \ArrayAccess. Following methods
+ *    have been removed from Swoole 5.0.0:
+ *    * \Swoole\Table::offsetExists()
+ *    * \Swoole\Table::offsetGet()
+ *    * \Swoole\Table::offsetSet()
+ *    * \Swoole\Table::offsetUnset()
+ */
 class Table implements \Iterator, \Countable
 {
     public const TYPE_INT = 1;
