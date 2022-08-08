@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Swoole\NameResolver;
 use Swoole\NameResolver\Context;
+use Swoole\timer\Iterator;
 
 /**
  * Gets the current Swoole version. This information is also available in the predefined constant SWOOLE_VERSION.
@@ -45,17 +46,13 @@ function swoole_async_set(array $settings)
 {
 }
 
-/**
- * @return int|false
- */
-function swoole_coroutine_create(callable $func, ...$params)
+function swoole_coroutine_create(callable $func, ...$params): int|false
 {
 }
 
 /**
  * Defers the execution of a callback function until the surrounding function of a coroutine returns.
  *
- * @return void
  * @example
  * <pre>
  * swoole_coroutine_create(function () {  // The surrounding function of a coroutine.
@@ -67,7 +64,7 @@ function swoole_coroutine_create(callable $func, ...$params)
  * });
  * <pre>
  */
-function swoole_coroutine_defer(callable $callback)
+function swoole_coroutine_defer(callable $callback): void
 {
 }
 
@@ -302,10 +299,9 @@ function swoole_name_resolver_remove(NameResolver $ns): bool
  * This function is an alias of function swoole_coroutine_create(); it's available only when directive
  * "swoole.use_shortname" is not explicitly turned off.
  *
- * @return int|false
  * @see swoole_coroutine_create()
  */
-function go(callable $func, ...$params)
+function go(callable $func, ...$params): int|false
 {
 }
 
@@ -315,7 +311,6 @@ function go(callable $func, ...$params)
  * This function is an alias of function swoole_coroutine_defer(); it's available only when directive
  * "swoole.use_shortname" is not explicitly turned off.
  *
- * @return void
  * @see swoole_coroutine_defer()
  *
  * @example
@@ -329,120 +324,143 @@ function go(callable $func, ...$params)
  * });
  * <pre>
  */
-function defer(callable $callback)
+function defer(callable $callback): void
 {
 }
 
 /**
- * @param $fd[required]
+ * This function is an alias of method \Swoole\Event::add().
+ *
+ * @see \Swoole\Event::add()
  */
-function swoole_event_add($fd, ?callable $read_callback = null, ?callable $write_callback = null, int $events = SWOOLE_EVENT_READ): bool
+function swoole_event_add(mixed $fd, ?callable $read_callback = null, ?callable $write_callback = null, int $events = SWOOLE_EVENT_READ): bool
 {
 }
 
 /**
- * @param $fd[required]
+ * This function is an alias of method \Swoole\Event::del().
+ *
+ * @see \Swoole\Event::del()
  */
-function swoole_event_del($fd): bool
+function swoole_event_del(mixed $fd): bool
 {
 }
 
 /**
- * @param $fd[required]
+ * This function is an alias of method \Swoole\Event::set().
+ *
+ * @see \Swoole\Event::set()
  */
-function swoole_event_set($fd, ?callable $read_callback = null, ?callable $write_callback = null, int $events = 0): bool
+function swoole_event_set(mixed $fd, ?callable $read_callback = null, ?callable $write_callback = null, int $events = 0): bool
 {
 }
 
 /**
- * @param $fd[required]
+ * This function is an alias of method \Swoole\Event::isset().
+ *
+ * @see \Swoole\Event::isset()
  */
-function swoole_event_isset($fd, int $events = SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE): bool
+function swoole_event_isset(mixed $fd, int $events = SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE): bool
 {
 }
 
+/**
+ * This function is an alias of method \Swoole\Event::dispatch().
+ *
+ * @see \Swoole\Event::dispatch()
+ */
 function swoole_event_dispatch(): bool
 {
 }
 
-function swoole_event_defer(callable $callback): bool
+/**
+ * This function is an alias of method \Swoole\Event::defer().
+ *
+ * @return true
+ * @see \Swoole\Event::defer()
+ */
+function swoole_event_defer(callable $callback)
 {
 }
 
+/**
+ * This function is an alias of method \Swoole\Event::cycle().
+ *
+ * @see \Swoole\Event::cycle()
+ */
 function swoole_event_cycle(?callable $callback, bool $before = false): bool
 {
 }
 
 /**
- * @param $fd[required]
- * @param $data[required]
- * @return mixed
+ * This function is an alias of method \Swoole\Event::write().
+ *
+ * @see \Swoole\Event::write()
  */
-function swoole_event_write($fd, $data)
+function swoole_event_write(mixed $fd, string $data): bool
 {
 }
 
 /**
- * @return mixed
+ * This function is an alias of method \Swoole\Event::wait().
+ *
+ * @see \Swoole\Event::wait()
  */
-function swoole_event_wait()
+function swoole_event_wait(): void
 {
 }
 
 /**
- * @return mixed
+ * This function is an alias of method \Swoole\Event::exit().
+ *
+ * @see \Swoole\Event::exit()
  */
-function swoole_event_exit()
+function swoole_event_exit(): void
 {
 }
 
 /**
  * This function is an alias of method \Swoole\Timer::set().
  *
- * @return void
  * @see \Swoole\Timer::set()
  */
-function swoole_timer_set(array $settings)
+function swoole_timer_set(array $settings): void
 {
 }
 
 /**
  * This function is an alias of method \Swoole\Timer::after().
  *
- * @return int
  * @see \Swoole\Timer::after()
  */
-function swoole_timer_after(int $ms, callable $callback, ...$params)
+function swoole_timer_after(int $ms, callable $callback, ...$params): int|false
 {
 }
 
 /**
  * This function is an alias of method \Swoole\Timer::tick().
  *
- * @return int
  * @see \Swoole\Timer::tick()
  */
-function swoole_timer_tick(int $ms, callable $callback, ...$params)
+function swoole_timer_tick(int $ms, callable $callback, ...$params): int|false
 {
 }
 
 /**
  * This function is an alias of method \Swoole\Timer::exists().
  *
- * @return bool
  * @see \Swoole\Timer::exists()
  */
-function swoole_timer_exists(int $timer_id)
+function swoole_timer_exists(int $timer_id): bool
 {
 }
 
 /**
  * This function is an alias of method \Swoole\Timer::info().
  *
- * @return array
  * @see \Swoole\Timer::info()
  */
-function swoole_timer_info(int $timer_id)
+function swoole_timer_info(int $timer_id): ?array
 {
 }
 
@@ -452,37 +470,34 @@ function swoole_timer_info(int $timer_id)
  * @return array
  * @see \Swoole\Timer::stats()
  */
-function swoole_timer_stats()
+function swoole_timer_stats(): array
 {
 }
 
 /**
  * This function is an alias of method \Swoole\Timer::list().
  *
- * @return \Swoole\timer\Iterator
  * @see \Swoole\Timer::list()
  */
-function swoole_timer_list()
+function swoole_timer_list(): Iterator
 {
 }
 
 /**
  * This function is an alias of method \Swoole\Timer::clear().
  *
- * @return bool
  * @see \Swoole\Timer::clear()
  */
-function swoole_timer_clear(int $timer_id)
+function swoole_timer_clear(int $timer_id): bool
 {
 }
 
 /**
  * This function is an alias of method \Swoole\Timer::clearAll().
  *
- * @return bool
  * @see \Swoole\Timer::clearAll()
  */
-function swoole_timer_clear_all()
+function swoole_timer_clear_all(): bool
 {
 }
 
