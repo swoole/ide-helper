@@ -24,25 +24,15 @@ function swoole_cpu_num(): int
 {
 }
 
-/**
- * @return mixed
- */
-function swoole_last_error()
+function swoole_last_error(): int
 {
 }
 
-/**
- * @param $domain_name[required]
- * @return mixed
- */
-function swoole_async_dns_lookup_coro($domain_name, float $timeout = 60, int $type = AF_INET)
+function swoole_async_dns_lookup_coro(mixed $domain_name, float $timeout = 60, int $type = AF_INET): string|false
 {
 }
 
-/**
- * @return mixed
- */
-function swoole_async_set(array $settings)
+function swoole_async_set(array $settings): void
 {
 }
 
@@ -68,190 +58,109 @@ function swoole_coroutine_defer(callable $callback): void
 {
 }
 
-/**
- * @return mixed
- */
-function swoole_coroutine_socketpair(int $domain, int $type, int $protocol)
+function swoole_coroutine_socketpair(int $domain, int $type, int $protocol): array|false
+{
+}
+
+function swoole_test_kernel_coroutine(int $count = 100, float $sleep_time = 1.0): void
+{
+}
+
+function swoole_client_select(array &$read_array, array &$write_array, array &$error_array, float $timeout = 0.5): int|false
+{
+}
+
+function swoole_select(array &$read_array, array &$write_array, array &$error_array, float $timeout = 0.5): int|false
+{
+}
+
+function swoole_set_process_name(string $process_name): bool
+{
+}
+
+function swoole_get_local_ip(): array
+{
+}
+
+function swoole_get_local_mac(): array
+{
+}
+
+function swoole_strerror(int $errno, int $error_type = SWOOLE_STRERROR_SYSTEM): string
+{
+}
+
+function swoole_errno(): int
+{
+}
+
+function swoole_clear_error(): void
+{
+}
+
+function swoole_error_log(int $level, string $msg): void
 {
 }
 
 /**
- * @return mixed
- */
-function swoole_test_kernel_coroutine(int $count = 100, float $sleep_time = 1.0)
-{
-}
-
-/**
- * @return mixed
- */
-function swoole_client_select(array &$read_array, array &$write_array, array &$error_array, float $timeout = 0.5)
-{
-}
-
-/**
- * @return mixed
- */
-function swoole_select(array &$read_array, array &$write_array, array &$error_array, float $timeout = 0.5)
-{
-}
-
-/**
- * @return mixed
- */
-function swoole_set_process_name(string $process_name)
-{
-}
-
-/**
- * @return mixed
- */
-function swoole_get_local_ip()
-{
-}
-
-/**
- * @return mixed
- */
-function swoole_get_local_mac()
-{
-}
-
-/**
- * @param $errno[required]
- * @param $error_type[optional]
- * @return mixed
- */
-function swoole_strerror(int $errno, int $error_type = SWOOLE_STRERROR_SYSTEM)
-{
-}
-
-/**
- * @return mixed
- */
-function swoole_errno()
-{
-}
-
-/**
- * @return mixed
- */
-function swoole_clear_error()
-{
-}
-
-/**
- * @return void
- */
-function swoole_error_log(int $level, string $msg)
-{
-}
-
-/**
- * @return void
  * @since 4.8.1
  */
-function swoole_error_log_ex(int $level, int $error, string $msg)
+function swoole_error_log_ex(int $level, int $error, string $msg): void
 {
 }
 
 /**
- * @return void
  * @since 4.8.1
  */
-function swoole_ignore_error(int $error)
+function swoole_ignore_error(int $error): void
 {
 }
 
-/**
- * @return mixed
- */
-function swoole_hashcode(string $data, int $type = 0)
+function swoole_hashcode(string $data, int $type = 0): int|false
 {
 }
 
-/**
- * @param $suffix[required]
- * @param $mime_type[required]
- * @return mixed
- */
-function swoole_mime_type_add($suffix, $mime_type)
+function swoole_mime_type_add(string $suffix, string $mime_type): bool
 {
 }
 
-/**
- * @param $suffix[required]
- * @param $mime_type[required]
- * @return mixed
- */
-function swoole_mime_type_set($suffix, $mime_type)
+function swoole_mime_type_set(string $suffix, string $mime_type): void
 {
 }
 
-/**
- * @param $suffix[required]
- * @return mixed
- */
-function swoole_mime_type_delete($suffix)
+function swoole_mime_type_delete(string $suffix): bool
 {
 }
 
-/**
- * @param $filename[required]
- * @return mixed
- */
-function swoole_mime_type_get($filename)
+function swoole_mime_type_get(string $filename): string
 {
 }
 
-/**
- * @param $filename[required]
- * @return mixed
- */
-function swoole_get_mime_type($filename)
+function swoole_get_mime_type(string $filename): string
 {
 }
 
-/**
- * @param $filename[required]
- * @return mixed
- */
-function swoole_mime_type_exists($filename)
+function swoole_mime_type_exists(string $filename): bool
 {
 }
 
-/**
- * @return mixed
- */
-function swoole_mime_type_list()
+function swoole_mime_type_list(): array
 {
 }
 
-/**
- * @return mixed
- */
-function swoole_clear_dns_cache()
+function swoole_clear_dns_cache(): void
 {
 }
 
-/**
- * @return mixed
- */
-function swoole_substr_unserialize(string $str, int $offset, int $length, array $options = [])
+function swoole_substr_unserialize(string $str, int $offset, int $length, array $options = []): mixed
 {
 }
 
-/**
- * @return mixed
- */
-function swoole_substr_json_decode(string $str, int $offset, int $length, bool $associative = false, int $depth = 512, int $flags = 0)
+function swoole_substr_json_decode(string $str, int $offset, int $length, bool $associative = false, int $depth = 512, int $flags = 0): mixed
 {
 }
 
-/**
- * @return mixed
- */
-function swoole_internal_call_user_shutdown_begin()
+function swoole_internal_call_user_shutdown_begin(): bool
 {
 }
 
@@ -467,7 +376,6 @@ function swoole_timer_info(int $timer_id): ?array
 /**
  * This function is an alias of method \Swoole\Timer::stats().
  *
- * @return array
  * @see \Swoole\Timer::stats()
  */
 function swoole_timer_stats(): array
