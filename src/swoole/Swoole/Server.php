@@ -239,6 +239,11 @@ class Server
     {
     }
 
+    /**
+     * This method is an alias of function \swoole_last_error().
+     *
+     * @see \swoole_last_error()
+     */
     public function getLastError(): int
     {
     }

@@ -70,6 +70,11 @@ function swoole_client_select(array &$read_array, array &$write_array, array &$e
 {
 }
 
+/**
+ * This function is an alias of function swoole_client_select().
+ *
+ * @see swoole_client_select()
+ */
 function swoole_select(array &$read_array, array &$write_array, array &$error_array, float $timeout = 0.5): int|false
 {
 }
@@ -136,6 +141,11 @@ function swoole_mime_type_get(string $filename): string
 {
 }
 
+/**
+ * This function is an alias of function swoole_mime_type_get().
+ *
+ * @see swoole_mime_type_get()
+ */
 function swoole_get_mime_type(string $filename): string
 {
 }
