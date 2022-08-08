@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Swoole\NameResolver;
 use Swoole\NameResolver\Context;
-use Swoole\timer\Iterator;
+use Swoole\Timer\Iterator;
 
 /**
  * Gets the current Swoole version. This information is also available in the predefined constant SWOOLE_VERSION.

@@ -130,6 +130,20 @@ class Coroutine
     {
     }
 
+    /**
+     * Get execution time of current coroutine.
+     *
+     * This method is available only when Swoole is installed with option "--enable-swoole-coro-time" included.
+     *
+     * The official Docker images of Swoole (phpswoole/swoole) doesn't have "--enable-swoole-coro-time" included when
+     * installing Swoole. Thus, this method can not be used directly in the official Docker images of Swoole.
+     *
+     * @since 5.0.0
+     */
+    public static function getExecuteTime(): int
+    {
+    }
+
     public static function gethostbyname(string $domain_name, int $type = AF_INET, float $timeout = -1): string|false
     {
     }
