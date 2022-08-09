@@ -25,7 +25,7 @@ class PostgreSQLStatement
     {
     }
 
-    public function fetchAll(int $result_type = 1): array|false
+    public function fetchAll(int $result_type = SW_PGSQL_ASSOC): array|false
     {
     }
 
@@ -45,15 +45,15 @@ class PostgreSQLStatement
     {
     }
 
-    public function fetchAssoc(?int $row = 0, int $result_type = 1): array|false
+    public function fetchAssoc(?int $row = 0, int $result_type = SW_PGSQL_ASSOC): array|false
     {
     }
 
-    public function fetchArray(?int $row = 0, int $result_type = 3): array|false
+    public function fetchArray(?int $row = 0, int $result_type = SW_PGSQL_BOTH): array|false
     {
     }
 
-    public function fetchRow(?int $row = 0, int $result_type = 2): array|false
+    public function fetchRow(?int $row = 0, int $result_type = SW_PGSQL_NUM): array|false
     {
     }
 }
