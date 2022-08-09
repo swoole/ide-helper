@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine;
 
+/**
+ * This class is available when Swoole is installed with option "--enable-swoole-pgsql" included.
+ *
+ * @since 5.0.0
+ */
 class PostgreSQL
 {
     public $error;
