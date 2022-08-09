@@ -66,6 +66,11 @@ class Coroutine
     {
     }
 
+    /**
+     * This method has an alias of \Swoole\Coroutine::suspend().
+     *
+     * @see \Swoole\Coroutine::suspend()
+     */
     public static function yield(): bool
     {
     }
@@ -94,6 +99,11 @@ class Coroutine
     {
     }
 
+    /**
+     * Alias of method \Swoole\Coroutine::yield().
+     *
+     * @see \Swoole\Coroutine::yield()
+     */
     public static function suspend(): bool
     {
     }
@@ -106,10 +116,24 @@ class Coroutine
     {
     }
 
+    /**
+     * Get the ID of current coroutine. A coroutine ID is a unique positive integer within the same process.
+     *
+     * This method has an alias of \Swoole\Coroutine::getuid().
+     *
+     * @see \Swoole\Coroutine::getuid()
+     */
     public static function getCid(): int
     {
     }
 
+    /**
+     * Get the ID of current coroutine. A coroutine ID is a unique positive integer within the same process.
+     *
+     * Alias of method \Swoole\Coroutine::getCid().
+     *
+     * @see \Swoole\Coroutine::getCid()
+     */
     public static function getuid(): int
     {
     }
@@ -145,10 +169,20 @@ class Coroutine
     {
     }
 
+    /**
+     * This method has an alias of \Swoole\Coroutine::listCoroutines().
+     *
+     * @see \Swoole\Coroutine::listCoroutines()
+     */
     public static function list(): Iterator
     {
     }
 
+    /**
+     * Alias of method \Swoole\Coroutine::list().
+     *
+     * @see \Swoole\Coroutine::list()
+     */
     public static function listCoroutines(): Iterator
     {
     }

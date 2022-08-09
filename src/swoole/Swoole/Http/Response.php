@@ -30,10 +30,20 @@ class Response
     {
     }
 
+    /**
+     * This method has an alias of \Swoole\Http\Response::setCookie().
+     *
+     * @see \Swoole\Http\Response::setCookie()
+     */
     public function cookie(string $name, string $value = '', int $expire = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = ''): bool
     {
     }
 
+    /**
+     * Alias of method \Swoole\Http\Response::cookie().
+     *
+     * @see \Swoole\Http\Response::cookie()
+     */
     public function setCookie(string $name, string $value = '', int $expire = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = ''): bool
     {
     }
@@ -42,18 +52,38 @@ class Response
     {
     }
 
+    /**
+     * This method has an alias of \Swoole\Http\Response::setStatusCode().
+     *
+     * @see \Swoole\Http\Response::setStatusCode()
+     */
     public function status(int $http_code, string $reason = ''): bool
     {
     }
 
+    /**
+     * Alias of method \Swoole\Http\Response::status().
+     *
+     * @see \Swoole\Http\Response::status()
+     */
     public function setStatusCode(int $http_code, string $reason = ''): bool
     {
     }
 
+    /**
+     * This method has an alias of \Swoole\Http\Response::setHeader().
+     *
+     * @see \Swoole\Http\Response::setHeader()
+     */
     public function header(string $key, string|array $value, bool $format = true): bool
     {
     }
 
+    /**
+     * Alias of method \Swoole\Http\Response::header().
+     *
+     * @see \Swoole\Http\Response::header()
+     */
     public function setHeader(string $key, string|array $value, bool $format = true): bool
     {
     }
