@@ -24,6 +24,11 @@ function swoole_cpu_num(): int
 {
 }
 
+/**
+ * This function has an alias method \Swoole\Server::getLastError().
+ *
+ * @see \Swoole\Server::getLastError()
+ */
 function swoole_last_error(): int
 {
 }
@@ -36,12 +41,23 @@ function swoole_async_set(array $settings): void
 {
 }
 
+/**
+ * This function has an alias function \go() and an alias method \Swoole\Coroutine::create().
+ *
+ * @see \go()
+ * @see \Swoole\Coroutine::create()
+ */
 function swoole_coroutine_create(callable $func, ...$params): int|false
 {
 }
 
 /**
  * Defers the execution of a callback function until the surrounding function of a coroutine returns.
+ *
+ * This function has an alias function \defer() and an alias method \Swoole\Coroutine::defer().
+ *
+ * @see \defer()
+ * @see \Swoole\Coroutine::defer()
  *
  * @example
  * <pre>
@@ -66,6 +82,11 @@ function swoole_test_kernel_coroutine(int $count = 100, float $sleep_time = 1.0)
 {
 }
 
+/**
+ * This function has an alias function swoole_select().
+ *
+ * @see swoole_select()
+ */
 function swoole_client_select(array &$read_array, array &$write_array, array &$error_array, float $timeout = 0.5): int|false
 {
 }
@@ -79,6 +100,11 @@ function swoole_select(array &$read_array, array &$write_array, array &$error_ar
 {
 }
 
+/**
+ * This function has an alias method \Swoole\Process::name().
+ *
+ * @see \Swoole\Process::name()
+ */
 function swoole_set_process_name(string $process_name): bool
 {
 }
@@ -137,6 +163,11 @@ function swoole_mime_type_delete(string $suffix): bool
 {
 }
 
+/**
+ * This function has an alias function swoole_get_mime_type().
+ *
+ * @see swoole_get_mime_type()
+ */
 function swoole_mime_type_get(string $filename): string
 {
 }

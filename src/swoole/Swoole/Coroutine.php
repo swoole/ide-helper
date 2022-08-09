@@ -42,6 +42,10 @@ class Coroutine
 
     /**
      * To set runtime configurations of coroutines.
+     *
+     * This method has an alias method \Swoole\Coroutine\Scheduler::set().
+     *
+     * @see \Swoole\Coroutine\Scheduler::set()
      */
     public static function set(array $options): void
     {
@@ -49,6 +53,10 @@ class Coroutine
 
     /**
      * To get runtime configurations of coroutines.
+     *
+     * This method has an alias method \Swoole\Coroutine\Scheduler::getOptions().
+     *
+     * @see \Swoole\Coroutine\Scheduler::getOptions()
      */
     public static function getOptions(): ?array
     {
@@ -167,11 +175,19 @@ class Coroutine
     {
     }
 
+    /**
+     * This method has an alias method \Swoole\Coroutine\System::gethostbyname().
+     *
+     * @see \Swoole\Coroutine\System::gethostbyname()
+     */
     public static function gethostbyname(string $domain_name, int $type = AF_INET, float $timeout = -1): string|false
     {
     }
 
     /**
+     * This method has an alias method \Swoole\Coroutine\System::dnsLookup().
+     *
+     * @see \Swoole\Coroutine\System::dnsLookup()
      * @param float $timeout The default value (60) is hardcoded as constant SW_SOCKET_DEFAULT_DNS_TIMEOUT in Swoole.
      */
     public static function dnsLookup(string $domain_name, float $timeout = 60, int $type = AF_INET): string|false
