@@ -8,6 +8,9 @@ use Swoole\Timer\Iterator;
 
 class Timer
 {
+    /**
+     * @deprecated 4.6.0
+     */
     public static function set(array $settings): void
     {
     }

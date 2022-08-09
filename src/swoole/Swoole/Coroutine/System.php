@@ -65,14 +65,26 @@ class System
     {
     }
 
+    /**
+     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fread() directly.
+     * @param mixed $handle
+     */
     public static function fread($handle, int $length = 0): string|false
     {
     }
 
+    /**
+     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fwrite() directly.
+     * @param mixed $handle
+     */
     public static function fwrite($handle, string $data, int $length = 0): int|false
     {
     }
 
+    /**
+     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fgets() directly.
+     * @param mixed $handle
+     */
     public static function fgets($handle): string|false
     {
     }

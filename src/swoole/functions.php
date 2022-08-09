@@ -342,6 +342,7 @@ function swoole_event_exit(): void
  * This function is an alias of method \Swoole\Timer::set().
  *
  * @see \Swoole\Timer::set()
+ * @deprecated 4.6.0
  */
 function swoole_timer_set(array $settings): void
 {

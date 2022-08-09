@@ -218,14 +218,35 @@ class Coroutine
     {
     }
 
+    /**
+     * This method is an alias of method \Swoole\Coroutine\System::fread().
+     *
+     * @see \Swoole\Coroutine\System::fread()
+     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fread() directly.
+     * @param mixed $handle
+     */
     public static function fread($handle, int $length = 0): string|false
     {
     }
 
+    /**
+     * This method is an alias of method \Swoole\Coroutine\System::fgets().
+     *
+     * @see \Swoole\Coroutine\System::fgets()
+     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fgets() directly.
+     * @param mixed $handle
+     */
     public static function fgets($handle): string|false
     {
     }
 
+    /**
+     * This method is an alias of method \Swoole\Coroutine\System::fwrite().
+     *
+     * @see \Swoole\Coroutine\System::fwrite()
+     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fwrite() directly.
+     * @param mixed $handle
+     */
     public static function fwrite($handle, string $data, int $length = 0): int|false
     {
     }
