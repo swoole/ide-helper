@@ -6,12 +6,20 @@ namespace Swoole\Coroutine;
 
 class System
 {
+    /**
+     * This method is an alias of method \Swoole\Coroutine::gethostbyname().
+     *
+     * @see \Swoole\Coroutine::gethostbyname()
+     */
     public static function gethostbyname(string $domain_name, int $type = AF_INET, float $timeout = -1): string|false
     {
     }
 
     /**
+     * This method is an alias of method \Swoole\Coroutine::dnsLookup().
+     *
      * @param float $timeout The default value (60) is hardcoded as constant SW_SOCKET_DEFAULT_DNS_TIMEOUT in Swoole.
+     * @see \Swoole\Coroutine::dnsLookup()
      */
     public static function dnsLookup(string $domain_name, float $timeout = 60, int $type = AF_INET): string|false
     {

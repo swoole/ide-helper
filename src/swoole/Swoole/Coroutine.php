@@ -9,10 +9,33 @@ use Swoole\Coroutine\Iterator;
 
 class Coroutine
 {
+    /**
+     * This method is an alias of function swoole_coroutine_create().
+     *
+     * @see \swoole_coroutine_create()
+     */
     public static function create(callable $func, ...$param): int|false
     {
     }
 
+    /**
+     * Defers the execution of a callback function until the surrounding function of a coroutine returns.
+     *
+     * This method is an alias of function swoole_coroutine_defer().
+     *
+     * @see \swoole_coroutine_defer()
+     *
+     * @example
+     * <pre>
+     * \Swoole\Coroutine::create(function () {  // The surrounding function of a coroutine.
+     *   echo '1';
+     *   \Swoole\Coroutine::defer(function () { // The callback function to be deferred.
+     *     echo '3';
+     *   });
+     *   echo '2';
+     * });
+     * <pre>
+     */
     public static function defer(callable $callback): void
     {
     }
@@ -148,6 +171,9 @@ class Coroutine
     {
     }
 
+    /**
+     * @param float $timeout The default value (60) is hardcoded as constant SW_SOCKET_DEFAULT_DNS_TIMEOUT in Swoole.
+     */
     public static function dnsLookup(string $domain_name, float $timeout = 60, int $type = AF_INET): string|false
     {
     }
