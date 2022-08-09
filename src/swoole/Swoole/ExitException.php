@@ -28,7 +28,9 @@ class ExitException extends Exception
     private int $status = 0;
 
     /**
-     * This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
+     * Get the exit flags.
+     *
+     * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
     public function getFlags(): int
     {
@@ -36,7 +38,9 @@ class ExitException extends Exception
     }
 
     /**
-     * This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
+     * Get the exit status.
+     *
+     * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
     public function getStatus(): int
     {
