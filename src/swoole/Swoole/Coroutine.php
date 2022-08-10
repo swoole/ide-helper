@@ -216,42 +216,82 @@ class Coroutine
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\Coroutine\System::exec().
+     * @see \Swoole\Coroutine\System::exec()
+     */
     public static function exec(string $command, bool $get_error_stream = false): array|false
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\Coroutine\System::sleep().
+     * @see \Swoole\Coroutine\System::sleep()
+     */
     public static function sleep(float $seconds): bool
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\Coroutine\System::getaddrinfo().
+     * @see \Swoole\Coroutine\System::getaddrinfo()
+     */
     public static function getaddrinfo(string $domain, int $family = AF_INET, int $socktype = SOCK_STREAM, int $protocol = STREAM_IPPROTO_TCP, ?string $service = null, float $timeout = -1): bool|array
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\Coroutine\System::statvfs().
+     * @see \Swoole\Coroutine\System::statvfs()
+     */
     public static function statvfs(string $path): array
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\Coroutine\System::readFile().
+     * @see \Swoole\Coroutine\System::readFile()
+     */
     public static function readFile(string $filename, int $flag = 0): string|false
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\Coroutine\System::writeFile().
+     * @see \Swoole\Coroutine\System::writeFile()
+     */
     public static function writeFile(string $filename, string $fileContent, int $flags = 0): int|false
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\Coroutine\System::wait().
+     * @see \Swoole\Coroutine\System::wait()
+     */
     public static function wait(float $timeout = -1): array|false
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\Coroutine\System::waitPid().
+     * @see \Swoole\Coroutine\System::waitPid()
+     */
     public static function waitPid(int $pid, float $timeout = -1): array|false
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\Coroutine\System::waitSignal().
+     * @see \Swoole\Coroutine\System::waitSignal()
+     */
     public static function waitSignal(int $signo, float $timeout = -1): bool
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\Coroutine\System::waitEvent().
+     * @see \Swoole\Coroutine\System::waitEvent()
+     */
     public static function waitEvent(mixed $socket, int $events = SWOOLE_EVENT_READ, float $timeout = -1): int|false
     {
     }

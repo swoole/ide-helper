@@ -23,42 +23,82 @@ class System
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\Coroutine::exec().
+     * @see \Swoole\Coroutine::exec()
+     */
     public static function exec(string $command, bool $get_error_stream = false): array|false
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\Coroutine::sleep().
+     * @see \Swoole\Coroutine::sleep()
+     */
     public static function sleep(float $seconds): bool
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\Coroutine::getaddrinfo().
+     * @see \Swoole\Coroutine::getaddrinfo()
+     */
     public static function getaddrinfo(string $domain, int $family = AF_INET, int $socktype = SOCK_STREAM, int $protocol = STREAM_IPPROTO_TCP, ?string $service = null, float $timeout = -1): bool|array
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\Coroutine::statvfs().
+     * @see \Swoole\Coroutine::statvfs()
+     */
     public static function statvfs(string $path): array
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\Coroutine::readFile().
+     * @see \Swoole\Coroutine::readFile()
+     */
     public static function readFile(string $filename, int $flag = 0): string|false
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\Coroutine::writeFile().
+     * @see \Swoole\Coroutine::writeFile()
+     */
     public static function writeFile(string $filename, string $fileContent, int $flags = 0): int|false
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\Coroutine::wait().
+     * @see \Swoole\Coroutine::wait()
+     */
     public static function wait(float $timeout = -1): array|false
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\Coroutine::waitPid().
+     * @see \Swoole\Coroutine::waitPid()
+     */
     public static function waitPid(int $pid, float $timeout = -1): array|false
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\Coroutine::waitSignal().
+     * @see \Swoole\Coroutine::waitSignal()
+     */
     public static function waitSignal(int $signo, float $timeout = -1): bool
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\Coroutine::waitEvent().
+     * @see \Swoole\Coroutine::waitEvent()
+     */
     public static function waitEvent(mixed $socket, int $events = SWOOLE_EVENT_READ, float $timeout = -1): int|false
     {
     }
