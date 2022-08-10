@@ -63,8 +63,7 @@ class Table implements \Iterator, \Countable
     }
 
     /**
-     * This method has an alias of \Swoole\Table::delete().
-     *
+     * @alias This method has an alias of \Swoole\Table::delete().
      * @see \Swoole\Table::delete()
      */
     public function del(string $key): bool
@@ -72,8 +71,7 @@ class Table implements \Iterator, \Countable
     }
 
     /**
-     * Alias of method \Swoole\Table::del().
-     *
+     * @alias Alias of method \Swoole\Table::del().
      * @see \Swoole\Table::del()
      */
     public function delete(string $key): bool
@@ -81,8 +79,7 @@ class Table implements \Iterator, \Countable
     }
 
     /**
-     * This method has an alias of \Swoole\Table::exist().
-     *
+     * @alias This method has an alias of \Swoole\Table::exist().
      * @see \Swoole\Table::exist()
      */
     public function exists(string $key): bool
@@ -90,8 +87,7 @@ class Table implements \Iterator, \Countable
     }
 
     /**
-     * Alias of method \Swoole\Table::exists().
-     *
+     * @alias Alias of method \Swoole\Table::exists().
      * @see \Swoole\Table::exists()
      */
     public function exist(string $key): bool

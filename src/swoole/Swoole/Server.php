@@ -140,8 +140,7 @@ class Server
     }
 
     /**
-     * This method has an alias of \Swoole\Server::addlistener().
-     *
+     * @alias This method has an alias of \Swoole\Server::addlistener().
      * @see \Swoole\Server::addlistener()
      */
     public function listen(string $host, int $port, int $sock_type): Port|false
@@ -149,8 +148,7 @@ class Server
     }
 
     /**
-     * Alias of method \Swoole\Server::listen().
-     *
+     * @alias Alias of method \Swoole\Server::listen().
      * @see \Swoole\Server::listen()
      */
     public function addlistener(string $host, int $port, int $sock_type): Port|false
@@ -186,8 +184,7 @@ class Server
     }
 
     /**
-     * This method has an alias of \Swoole\Server::exist().
-     *
+     * @alias This method has an alias of \Swoole\Server::exist().
      * @see \Swoole\Server::exist()
      */
     public function exists(int $fd): bool
@@ -195,8 +192,7 @@ class Server
     }
 
     /**
-     * Alias of method \Swoole\Server::exists().
-     *
+     * @alias Alias of method \Swoole\Server::exists().
      * @see \Swoole\Server::exists()
      */
     public function exist(int $fd): bool
@@ -219,9 +215,8 @@ class Server
      * Confirm current client-side connection and start receiving client-side data. This method is to protect the
      * server from DDoS attacks.
      *
-     * Although this method and method \Swoole\Server::resume() are used for different purposes, they are implemented
-     * exactly the same in Swoole.
-     *
+     * @alias Although this method and method \Swoole\Server::resume() are used for different purposes, they are
+     *        implemented exactly the same in Swoole.
      * @see \Swoole\Server::resume()
      */
     public function confirm(int $fd): bool
@@ -279,8 +274,7 @@ class Server
     }
 
     /**
-     * This method is an alias of function \swoole_last_error().
-     *
+     * @alias This method is an alias of function \swoole_last_error().
      * @see \swoole_last_error()
      */
     public function getLastError(): int
@@ -292,8 +286,7 @@ class Server
     }
 
     /**
-     * This method has an alias of \Swoole\Server::connection_info().
-     *
+     * @alias This method has an alias of \Swoole\Server::connection_info().
      * @see \Swoole\Server::connection_info()
      */
     public function getClientInfo(int $fd, int $reactor_id = -1, bool $ignoreError = false): array|false
@@ -301,8 +294,7 @@ class Server
     }
 
     /**
-     * This method has an alias of \Swoole\Server::connection_list().
-     *
+     * @alias This method has an alias of \Swoole\Server::connection_list().
      * @see \Swoole\Server::connection_list()
      */
     public function getClientList(int $start_fd = 0, int $find_count = 10): array|false
@@ -344,8 +336,7 @@ class Server
     }
 
     /**
-     * Alias of method \Swoole\Server::getClientInfo().
-     *
+     * @alias Alias of method \Swoole\Server::getClientInfo().
      * @see \Swoole\Server::getClientInfo()
      */
     public function connection_info(int $fd, int $reactor_id = -1, bool $ignoreError = false): array|false
@@ -353,8 +344,7 @@ class Server
     }
 
     /**
-     * Alias of method \Swoole\Server::getClientList().
-     *
+     * @alias Alias of method \Swoole\Server::getClientList().
      * @see \Swoole\Server::getClientList()
      */
     public function connection_list(int $start_fd = 0, int $find_count = 10): array|false

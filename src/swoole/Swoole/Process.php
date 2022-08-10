@@ -147,8 +147,7 @@ class Process
     }
 
     /**
-     * This method is an alias of function \swoole_set_process_name().
-     *
+     * @alias This method is an alias of function \swoole_set_process_name().
      * @see \swoole_set_process_name()
      */
     public function name(string $process_name): bool

@@ -7,8 +7,7 @@ namespace Swoole\Coroutine;
 class System
 {
     /**
-     * This method is an alias of method \Swoole\Coroutine::gethostbyname().
-     *
+     * @alias This method is an alias of method \Swoole\Coroutine::gethostbyname().
      * @see \Swoole\Coroutine::gethostbyname()
      */
     public static function gethostbyname(string $domain_name, int $type = AF_INET, float $timeout = -1): string|false
@@ -16,8 +15,7 @@ class System
     }
 
     /**
-     * This method is an alias of method \Swoole\Coroutine::dnsLookup().
-     *
+     * @alias This method is an alias of method \Swoole\Coroutine::dnsLookup().
      * @param float $timeout The default value (60) is hardcoded as constant SW_SOCKET_DEFAULT_DNS_TIMEOUT in Swoole.
      * @see \Swoole\Coroutine::dnsLookup()
      */
@@ -66,8 +64,7 @@ class System
     }
 
     /**
-     * This method has an alias method \Swoole\Coroutine::fread().
-     *
+     * @alias This method has an alias method \Swoole\Coroutine::fread().
      * @see \Swoole\Coroutine::fread()
      * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fread() directly.
      * @param mixed $handle
@@ -77,8 +74,7 @@ class System
     }
 
     /**
-     * This method has an alias method \Swoole\Coroutine::fwrite().
-     *
+     * @alias This method has an alias method \Swoole\Coroutine::fwrite().
      * @see \Swoole\Coroutine::fwrite()
      * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fwrite() directly.
      * @param mixed $handle
@@ -88,8 +84,7 @@ class System
     }
 
     /**
-     * This method has an alias method \Swoole\Coroutine::fgets().
-     *
+     * @alias This method has an alias method \Swoole\Coroutine::fgets().
      * @see \Swoole\Coroutine::fgets()
      * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fgets() directly.
      * @param mixed $handle

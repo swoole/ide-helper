@@ -29,8 +29,7 @@ class Scheduler
     /**
      * To set runtime configurations of coroutines.
      *
-     * This method is an alias of method \Swoole\Coroutine::set().
-     *
+     * @alias This method is an alias of method \Swoole\Coroutine::set().
      * @see \Swoole\Coroutine::set()
      */
     public function set(array $settings): void
@@ -40,8 +39,7 @@ class Scheduler
     /**
      * To get runtime configurations of coroutines.
      *
-     * This method is an alias of method \Swoole\Coroutine::getOptions().
-     *
+     * @alias This method is an alias of method \Swoole\Coroutine::getOptions().
      * @see \Swoole\Coroutine::getOptions()
      * @since Swoole 4.6.0
      */

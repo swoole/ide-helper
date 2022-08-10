@@ -10,8 +10,7 @@ use Swoole\Coroutine\Iterator;
 class Coroutine
 {
     /**
-     * This method is an alias of function swoole_coroutine_create().
-     *
+     * @alias This method is an alias of function swoole_coroutine_create().
      * @see \swoole_coroutine_create()
      */
     public static function create(callable $func, ...$param): int|false
@@ -21,8 +20,7 @@ class Coroutine
     /**
      * Defers the execution of a callback function until the surrounding function of a coroutine returns.
      *
-     * This method is an alias of function swoole_coroutine_defer().
-     *
+     * @alias This method is an alias of function swoole_coroutine_defer().
      * @see \swoole_coroutine_defer()
      *
      * @example
@@ -43,8 +41,7 @@ class Coroutine
     /**
      * To set runtime configurations of coroutines.
      *
-     * This method has an alias method \Swoole\Coroutine\Scheduler::set().
-     *
+     * @alias This method has an alias method \Swoole\Coroutine\Scheduler::set().
      * @see \Swoole\Coroutine\Scheduler::set()
      */
     public static function set(array $options): void
@@ -54,8 +51,7 @@ class Coroutine
     /**
      * To get runtime configurations of coroutines.
      *
-     * This method has an alias method \Swoole\Coroutine\Scheduler::getOptions().
-     *
+     * @alias This method has an alias method \Swoole\Coroutine\Scheduler::getOptions().
      * @see \Swoole\Coroutine\Scheduler::getOptions()
      */
     public static function getOptions(): ?array
@@ -67,8 +63,7 @@ class Coroutine
     }
 
     /**
-     * This method has an alias of \Swoole\Coroutine::suspend().
-     *
+     * @alias This method has an alias of \Swoole\Coroutine::suspend().
      * @see \Swoole\Coroutine::suspend()
      */
     public static function yield(): bool
@@ -100,8 +95,7 @@ class Coroutine
     }
 
     /**
-     * Alias of method \Swoole\Coroutine::yield().
-     *
+     * @alias Alias of method \Swoole\Coroutine::yield().
      * @see \Swoole\Coroutine::yield()
      */
     public static function suspend(): bool
@@ -119,8 +113,7 @@ class Coroutine
     /**
      * Get the ID of current coroutine. A coroutine ID is a unique positive integer within the same process.
      *
-     * This method has an alias of \Swoole\Coroutine::getuid().
-     *
+     * @alias This method has an alias of \Swoole\Coroutine::getuid().
      * @see \Swoole\Coroutine::getuid()
      */
     public static function getCid(): int
@@ -130,8 +123,7 @@ class Coroutine
     /**
      * Get the ID of current coroutine. A coroutine ID is a unique positive integer within the same process.
      *
-     * Alias of method \Swoole\Coroutine::getCid().
-     *
+     * @alias Alias of method \Swoole\Coroutine::getCid().
      * @see \Swoole\Coroutine::getCid()
      */
     public static function getuid(): int
@@ -170,8 +162,7 @@ class Coroutine
     }
 
     /**
-     * This method has an alias of \Swoole\Coroutine::listCoroutines().
-     *
+     * @alias This method has an alias of \Swoole\Coroutine::listCoroutines().
      * @see \Swoole\Coroutine::listCoroutines()
      */
     public static function list(): Iterator
@@ -179,8 +170,7 @@ class Coroutine
     }
 
     /**
-     * Alias of method \Swoole\Coroutine::list().
-     *
+     * @alias Alias of method \Swoole\Coroutine::list().
      * @see \Swoole\Coroutine::list()
      */
     public static function listCoroutines(): Iterator
@@ -210,8 +200,7 @@ class Coroutine
     }
 
     /**
-     * This method has an alias method \Swoole\Coroutine\System::gethostbyname().
-     *
+     * @alias This method has an alias method \Swoole\Coroutine\System::gethostbyname().
      * @see \Swoole\Coroutine\System::gethostbyname()
      */
     public static function gethostbyname(string $domain_name, int $type = AF_INET, float $timeout = -1): string|false
@@ -219,8 +208,7 @@ class Coroutine
     }
 
     /**
-     * This method has an alias method \Swoole\Coroutine\System::dnsLookup().
-     *
+     * @alias This method has an alias method \Swoole\Coroutine\System::dnsLookup().
      * @see \Swoole\Coroutine\System::dnsLookup()
      * @param float $timeout The default value (60) is hardcoded as constant SW_SOCKET_DEFAULT_DNS_TIMEOUT in Swoole.
      */
@@ -269,8 +257,7 @@ class Coroutine
     }
 
     /**
-     * This method is an alias of method \Swoole\Coroutine\System::fread().
-     *
+     * @alias This method is an alias of method \Swoole\Coroutine\System::fread().
      * @see \Swoole\Coroutine\System::fread()
      * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fread() directly.
      * @param mixed $handle
@@ -280,8 +267,7 @@ class Coroutine
     }
 
     /**
-     * This method is an alias of method \Swoole\Coroutine\System::fgets().
-     *
+     * @alias This method is an alias of method \Swoole\Coroutine\System::fgets().
      * @see \Swoole\Coroutine\System::fgets()
      * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fgets() directly.
      * @param mixed $handle
@@ -291,8 +277,7 @@ class Coroutine
     }
 
     /**
-     * This method is an alias of method \Swoole\Coroutine\System::fwrite().
-     *
+     * @alias This method is an alias of method \Swoole\Coroutine\System::fwrite().
      * @see \Swoole\Coroutine\System::fwrite()
      * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fwrite() directly.
      * @param mixed $handle
