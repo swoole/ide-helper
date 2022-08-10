@@ -12,9 +12,9 @@ class Frame implements Stringable
 
     public $data = '';
 
-    public $opcode = 1;
+    public $opcode = SWOOLE_WEBSOCKET_OPCODE_TEXT;
 
-    public $flags = 1;
+    public $flags = SWOOLE_WEBSOCKET_FLAG_FIN;
 
     public $finish;
 
@@ -22,10 +22,18 @@ class Frame implements Stringable
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\WebSocket\Server::pack().
+     * @see \Swoole\WebSocket\Server::pack()
+     */
     public static function pack(Frame|string $data, int $opcode = SWOOLE_WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN): string
     {
     }
 
+    /**
+     * @alias Alias of method \Swoole\WebSocket\Server::unpack().
+     * @see \Swoole\WebSocket\Server::unpack()
+     */
     public static function unpack(string $data): Frame
     {
     }

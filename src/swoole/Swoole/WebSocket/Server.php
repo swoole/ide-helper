@@ -18,10 +18,18 @@ class Server extends \Swoole\Http\Server
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\WebSocket\Frame::pack().
+     * @see \Swoole\WebSocket\Frame::pack()
+     */
     public static function pack(Frame|string $data, int $opcode = SWOOLE_WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN): string
     {
     }
 
+    /**
+     * @alias This method has an alias of \Swoole\WebSocket\Frame::unpack().
+     * @see \Swoole\WebSocket\Frame::unpack()
+     */
     public static function unpack(string $data): Frame
     {
     }
