@@ -6,6 +6,9 @@ namespace Swoole;
 
 use Socket;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Client
 {
     public const MSG_OOB = 1;

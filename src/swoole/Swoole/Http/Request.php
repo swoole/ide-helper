@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\Http;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Request
 {
     public $fd = 0;

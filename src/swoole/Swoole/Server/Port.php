@@ -7,6 +7,9 @@ namespace Swoole\Server;
 use Closure;
 use Socket;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Port
 {
     public $host;

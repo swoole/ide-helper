@@ -13,6 +13,8 @@ namespace Swoole;
  *    * \Swoole\Table::offsetGet()
  *    * \Swoole\Table::offsetSet()
  *    * \Swoole\Table::offsetUnset()
+ *
+ * @not-serializable Objects of this class cannot be serialized.
  */
 class Table implements \Iterator, \Countable
 {

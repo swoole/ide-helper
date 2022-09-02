@@ -16,6 +16,8 @@ use Swoole\Server\Port;
  *    * \Swoole\Server::tick()       => \Swoole\Timer::tick().
  *    * \Swoole\Server::defer()      => \Swoole\Event::defer().
  * 2. Starting from Swoole 5.0.0, default server mode has been changed from SWOOLE_PROCESS to SWOOLE_BASE.
+ *
+ * @not-serializable Objects of this class cannot be serialized.
  */
 class Server
 {

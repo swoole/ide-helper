@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Channel
 {
     public $capacity = 0;

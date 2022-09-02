@@ -6,6 +6,9 @@ namespace Swoole\Process;
 
 use Swoole\Process;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Pool
 {
     public $master_pid = -1;

@@ -8,6 +8,7 @@ namespace Swoole\Coroutine;
  * This class is available when Swoole is installed with option "--enable-swoole-pgsql" included.
  *
  * @since 5.0.0
+ * @not-serializable Objects of this class cannot be serialized.
  */
 class PostgreSQLStatement
 {

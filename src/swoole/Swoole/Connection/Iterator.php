@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\Connection;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Iterator implements \Iterator, \ArrayAccess, \Countable
 {
     public function __construct()

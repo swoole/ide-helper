@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\WebSocket;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Server extends \Swoole\Http\Server
 {
     public function push(int $fd, Frame|string $data, int $opcode = SWOOLE_WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN): bool

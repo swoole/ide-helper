@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Lock
 {
     public const FILELOCK = 2;

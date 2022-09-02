@@ -7,6 +7,9 @@ namespace Swoole\Coroutine\Http2;
 use Swoole\Http2\Request;
 use Swoole\Http2\Response;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Client
 {
     public $errCode = 0;

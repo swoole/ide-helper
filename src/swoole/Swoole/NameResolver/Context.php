@@ -6,6 +6,7 @@ namespace Swoole\NameResolver;
 
 /**
  * @since 5.0.0
+ * @not-serializable Objects of this class cannot be serialized.
  */
 class Context
 {

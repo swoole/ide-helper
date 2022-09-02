@@ -6,6 +6,9 @@ namespace Swoole;
 
 use Swoole\Coroutine\Socket;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Process
 {
     public const IPC_NOWAIT = 256;

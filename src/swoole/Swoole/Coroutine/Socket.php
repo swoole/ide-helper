@@ -6,6 +6,9 @@ namespace Swoole\Coroutine;
 
 use Swoole\Client;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Socket
 {
     public $fd = -1;

@@ -6,6 +6,9 @@ namespace Swoole\Http;
 
 use Swoole\WebSocket\Frame;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Response
 {
     public $fd = 0;

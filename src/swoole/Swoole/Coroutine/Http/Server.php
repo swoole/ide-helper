@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine\Http;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Server
 {
     public $fd = -1;

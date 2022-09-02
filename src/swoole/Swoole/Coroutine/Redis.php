@@ -6,6 +6,7 @@ namespace Swoole\Coroutine;
 
 /**
  * @deprecated 5.0.0 Use phpredis (the PHP extension for Redis) instead, with runtime hook SWOOLE_HOOK_TCP or SWOOLE_HOOK_ALL turned on.
+ * @not-serializable Objects of this class cannot be serialized.
  */
 class Redis
 {

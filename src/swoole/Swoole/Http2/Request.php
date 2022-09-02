@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\Http2;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Request
 {
     public $path = '/';

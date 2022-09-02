@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Swoole\Atomic;
 
+/**
+ * @not-serializable Objects of this class cannot be serialized.
+ */
 class Long
 {
     public function __construct(int $value = 0)
