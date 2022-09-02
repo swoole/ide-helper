@@ -399,8 +399,17 @@ function swoole_timer_stats(): array
 }
 
 /**
+ * Get a list of timer IDs of all the timers set in current worker process.
+ *
  * @alias This function is an alias of method \Swoole\Timer::list().
  * @see \Swoole\Timer::list()
+ *
+ * @example
+ * <pre>
+ * foreach (swoole_timer_list() as $timerId) {
+ *   var_dump(swoole_timer_info($timerId));
+ * };
+ * <pre>
  */
 function swoole_timer_list(): Iterator
 {
