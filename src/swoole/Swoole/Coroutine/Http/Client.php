@@ -139,6 +139,10 @@ class Client
     {
     }
 
+    /**
+     * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
+     * option "--enable-openssl" included).
+     */
     public function getPeerCert(): string|false
     {
     }

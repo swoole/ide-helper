@@ -31,6 +31,11 @@ define('SWOOLE_SOCK_ASYNC', '1');
 define('SWOOLE_SYNC', 2048);
 define('SWOOLE_ASYNC', 1024);
 define('SWOOLE_KEEP', 4096);
+
+/*
+ * Constant SWOOLE_SSL is available only when OpenSSL support is enabled (i.e., when Swoole is installed with
+ * configuration option "--enable-openssl" included).
+ */
 define('SWOOLE_SSL', 512);
 define('SWOOLE_SSLv3_METHOD', 1);
 define('SWOOLE_SSLv3_SERVER_METHOD', 2);
