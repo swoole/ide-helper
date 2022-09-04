@@ -31,38 +31,6 @@ define('SWOOLE_SOCK_ASYNC', '1');
 define('SWOOLE_SYNC', 2048);
 define('SWOOLE_ASYNC', 1024);
 define('SWOOLE_KEEP', 4096);
-
-/*
- * Constant SWOOLE_SSL is available only when OpenSSL support is enabled (i.e., when Swoole is installed with
- * configuration option "--enable-openssl" included).
- */
-define('SWOOLE_SSL', 512);
-define('SWOOLE_SSLv3_METHOD', 1);
-define('SWOOLE_SSLv3_SERVER_METHOD', 2);
-define('SWOOLE_SSLv3_CLIENT_METHOD', 3);
-define('SWOOLE_TLSv1_METHOD', 6);
-define('SWOOLE_TLSv1_SERVER_METHOD', 7);
-define('SWOOLE_TLSv1_CLIENT_METHOD', 8);
-define('SWOOLE_TLSv1_1_METHOD', 9);
-define('SWOOLE_TLSv1_1_SERVER_METHOD', 10);
-define('SWOOLE_TLSv1_1_CLIENT_METHOD', 11);
-define('SWOOLE_TLSv1_2_METHOD', 12);
-define('SWOOLE_TLSv1_2_SERVER_METHOD', 13);
-define('SWOOLE_TLSv1_2_CLIENT_METHOD', 14);
-define('SWOOLE_DTLS_SERVER_METHOD', 16);
-define('SWOOLE_DTLS_CLIENT_METHOD', 15);
-define('SWOOLE_SSLv23_METHOD', 0);
-define('SWOOLE_SSLv23_SERVER_METHOD', 4);
-define('SWOOLE_SSLv23_CLIENT_METHOD', 5);
-define('SWOOLE_TLS_METHOD', 0);
-define('SWOOLE_TLS_SERVER_METHOD', 4);
-define('SWOOLE_TLS_CLIENT_METHOD', 5);
-define('SWOOLE_SSL_TLSv1', 8);
-define('SWOOLE_SSL_TLSv1_1', 16);
-define('SWOOLE_SSL_TLSv1_2', 32);
-define('SWOOLE_SSL_TLSv1_3', 64);
-define('SWOOLE_SSL_DTLS', 128);
-define('SWOOLE_SSL_SSLv2', 2);
 define('SWOOLE_EVENT_READ', 512);
 define('SWOOLE_EVENT_WRITE', 1024);
 define('SWOOLE_STRERROR_SYSTEM', 0);
@@ -442,3 +410,65 @@ define('WEBSOCKET_CLOSE_TLS', 1015);
 define('SW_PGSQL_ASSOC', 1);
 define('SW_PGSQL_NUM', 2);
 define('SW_PGSQL_BOTH', 3);
+
+/*
+ * Constants in this section are available only when OpenSSL support is enabled (i.e., when Swoole is installed with
+ * configuration option "--enable-openssl" included).
+ */
+#ifdef SW_USE_OPENSSL
+define('SWOOLE_SSL', 512);
+define('SWOOLE_SSLv3_METHOD', 1);
+define('SWOOLE_SSLv3_SERVER_METHOD', 2);
+define('SWOOLE_SSLv3_CLIENT_METHOD', 3);
+define('SWOOLE_TLSv1_METHOD', 6);
+define('SWOOLE_TLSv1_SERVER_METHOD', 7);
+define('SWOOLE_TLSv1_CLIENT_METHOD', 8);
+
+#ifdef TLS1_1_VERSION
+define('SWOOLE_TLSv1_1_METHOD', 9);
+define('SWOOLE_TLSv1_1_SERVER_METHOD', 10);
+define('SWOOLE_TLSv1_1_CLIENT_METHOD', 11);
+#endif
+
+#ifdef TLS1_2_VERSION
+define('SWOOLE_TLSv1_2_METHOD', 12);
+define('SWOOLE_TLSv1_2_SERVER_METHOD', 13);
+define('SWOOLE_TLSv1_2_CLIENT_METHOD', 14);
+#endif
+
+#ifdef SW_SUPPORT_DTLS
+define('SWOOLE_DTLS_SERVER_METHOD', 16);
+define('SWOOLE_DTLS_CLIENT_METHOD', 15);
+#endif
+
+define('SWOOLE_SSLv23_METHOD', 0);
+define('SWOOLE_SSLv23_SERVER_METHOD', 4);
+define('SWOOLE_SSLv23_CLIENT_METHOD', 5);
+define('SWOOLE_TLS_METHOD', 0);
+define('SWOOLE_TLS_SERVER_METHOD', 4);
+define('SWOOLE_TLS_CLIENT_METHOD', 5);
+
+define('SWOOLE_SSL_SSLv2', 2);
+
+#ifdef HAVE_SSL3
+define('SWOOLE_SSL_SSLv3', 4);
+#endif
+
+define('SWOOLE_SSL_TLSv1', 8);
+
+#ifdef TLS1_1_VERSION
+define('SWOOLE_SSL_TLSv1_1', 16);
+#endif
+
+#ifdef TLS1_2_VERSION
+define('SWOOLE_SSL_TLSv1_2', 32);
+#endif
+
+#ifdef TLS1_3_VERSION
+define('SWOOLE_SSL_TLSv1_3', 64);
+#endif
+
+#ifdef SW_SUPPORT_DTLS
+define('SWOOLE_SSL_DTLS', 128);
+#endif
+#endif /* SW_USE_OPENSSL */
