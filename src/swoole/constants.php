@@ -407,8 +407,21 @@ define('WEBSOCKET_CLOSE_MESSAGE_TOO_BIG', 1009);
 define('WEBSOCKET_CLOSE_EXTENSION_MISSING', 1010);
 define('WEBSOCKET_CLOSE_SERVER_ERROR', 1011);
 define('WEBSOCKET_CLOSE_TLS', 1015);
+
+/*
+ * Constants in this section are available only when Swoole is installed with option "--enable-swoole-pgsql" included.
+ */
+/*
+ * @since 5.0.0
+ */
 define('SW_PGSQL_ASSOC', 1);
+/*
+ * @since 5.0.0
+ */
 define('SW_PGSQL_NUM', 2);
+/*
+ * @since 5.0.0
+ */
 define('SW_PGSQL_BOTH', 3);
 
 /*
