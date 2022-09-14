@@ -12,11 +12,11 @@ namespace Swoole\Coroutine;
  */
 class PostgreSQLStatement
 {
-    public $error;
+    public string $error;
 
-    public $errCode = 0;
+    public int $errCode = 0;
 
-    public $resultStatus = 0;
+    public int $resultStatus = 0;
 
     public $resultDiag;
 
@@ -30,15 +30,30 @@ class PostgreSQLStatement
     {
     }
 
-    public function affectedRows(): int
+    /**
+     * Returns the number of rows affected by the last SQL statement.
+     *
+     * @return int|false Returns the number of rows, or FALSE when error happens.
+     */
+    public function affectedRows(): int|false
     {
     }
 
-    public function numRows(): int
+    /**
+     * Returns the number of rows (tuples) in the query result.
+     *
+     * @return int|false Returns the number of rows (tuples) in the query result, or FALSE when error happens.
+     */
+    public function numRows(): int|false
     {
     }
 
-    public function fieldCount(): int
+    /**
+     * Returns the number of columns (fields) in each row of the query result.
+     *
+     * @return int|false Returns the number of columns (fields) in each row of the query result, or FALSE when error happens.
+     */
+    public function fieldCount(): int|false
     {
     }
 
