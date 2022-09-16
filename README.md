@@ -32,17 +32,9 @@ composer require --dev swoole/ide-helper:@dev
 * `swoole.enable_library`: Boolean. Default `On`. Load the source code from [Swoole Library](https://github.com/swoole/library) or not.
 * `swoole.enable_preemptive_scheduler`: Boolean. Default `Off`. Enable preemptive scheduler or not. To understand how it works, please check examples under section "CPU-intensive job scheduling" of repository [deminy/swoole-by-examples](https://github.com/deminy/swoole-by-examples).
 * `swoole.unixsock_buffer_size`: Integer (in bytes). By default, it's 256 KiB on Macintosh or FreeBSD, otherwise 8 MiB. The total buffer sizes for the socket connections between the master process and the worker processes in Swoole.
-* `swoole.use_shortname`: Boolean. Default `On`. Support short names or not. Short names are listed in the next section.
+* `swoole.use_shortname`: Boolean. Default `On`. Support short names or not. Short names are all the aliases listed in file [src/swoole/shortnames.php](src/swoole/shortnames.php).
 
-All the directives can be set anywhere except `swoole.use_shortname`, which can only be set in `php.ini`.
-
-### Short Names
-
-Short names are all the class aliases listed inside file [src/swoole/aliases.php](src/swoole/aliases.php), plus the following
-two functions:
-
-* `go()` => `swoole_coroutine_create()`
-* `defer()` => `swoole_coroutine_defer()`
+All the directives can be set anywhere except `swoole.use_shortname`, which can only be set in `php.ini` files.
 
 ## Notes
 

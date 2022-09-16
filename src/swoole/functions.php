@@ -238,37 +238,6 @@ function swoole_name_resolver_remove(NameResolver $ns): bool
 }
 
 /**
- * @alias This function is an alias of function swoole_coroutine_create(); it's available only when directive
- *        "swoole.use_shortname" is not explicitly turned off.
- * @see swoole_coroutine_create()
- */
-function go(callable $func, ...$params): int|false
-{
-}
-
-/**
- * Defers the execution of a callback function until the surrounding function of a coroutine returns.
- *
- * @alias This function is an alias of function swoole_coroutine_defer(); it's available only when directive
- *        "swoole.use_shortname" is not explicitly turned off.
- * @see swoole_coroutine_defer()
- *
- * @example
- * <pre>
- * go(function () {      // The surrounding function of a coroutine.
- *   echo '1';
- *   defer(function () { // The callback function to be deferred.
- *     echo '3';
- *   });
- *   echo '2';
- * });
- * <pre>
- */
-function defer(callable $callback): void
-{
-}
-
-/**
  * @alias This function is an alias of method \Swoole\Event::add().
  * @see \Swoole\Event::add()
  */
