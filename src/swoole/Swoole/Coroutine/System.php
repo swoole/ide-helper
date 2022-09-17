@@ -16,7 +16,7 @@ class System
 
     /**
      * @alias This method is an alias of method \Swoole\Coroutine::dnsLookup().
-     * @param float $timeout The default value (60) is hardcoded as constant SW_SOCKET_DEFAULT_DNS_TIMEOUT in Swoole.
+     * @param float $timeout The default value (60) is hardcoded in Swoole.
      * @see \Swoole\Coroutine::dnsLookup()
      */
     public static function dnsLookup(string $domain_name, float $timeout = 60, int $type = AF_INET): string|false

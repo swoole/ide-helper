@@ -52,7 +52,7 @@ class Client
     }
 
     /**
-     * @param int $length The default value (65535) is hardcoded as constant SW_PHP_CLIENT_BUFFER_SIZE in Swoole.
+     * @param int $length The default value (65535) is hardcoded in Swoole.
      */
     public function peek(int $length = 65535): string|false
     {

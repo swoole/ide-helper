@@ -37,7 +37,7 @@ class Client
 
     public $id;
 
-    public $setting;
+    public array $setting;
 
     public function __construct(int $type, bool $async = false, string $id = '')
     {
@@ -47,8 +47,16 @@ class Client
     {
     }
 
+    /**
+     * Set options of the client object before connecting to a remote server.
+     *
+     * @return bool TRUE if succeeds; otherwise FALSE.
+     * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
+     */
     public function set(array $settings): bool
     {
+        $this->setting = array_merge($this->setting ?? [], $settings);
+        return true;
     }
 
     public function connect(string $host, int $port = 0, float $timeout = 0.5, int $sock_flag = 0): bool
@@ -56,7 +64,7 @@ class Client
     }
 
     /**
-     * @param int $size The default value (65536) is hardcoded as constant SW_PHP_CLIENT_BUFFER_SIZE in Swoole.
+     * @param int $size The default value (65536) is hardcoded in Swoole.
      */
     public function recv(int $size = 65536, int $flag = 0): string|false
     {

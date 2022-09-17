@@ -2,16 +2,33 @@
 
 declare(strict_types=1);
 
+/*
+ * Swoole version information.
+ */
 define('SWOOLE_VERSION', '5.0.0');
 define('SWOOLE_VERSION_ID', 50000);
 define('SWOOLE_MAJOR_VERSION', 5);
 define('SWOOLE_MINOR_VERSION', 0);
 define('SWOOLE_RELEASE_VERSION', 0);
 define('SWOOLE_EXTRA_VERSION', '');
-define('SWOOLE_DEBUG', '');
+
+/*
+ * If debug logging is enabled or not in Swoole.
+ *
+ * Debug logging is enabled when Swoole is installed with configuration option "--enable-debug-log" included.
+ */
+define('SWOOLE_DEBUG', 0);
+
+#ifdef SW_HAVE_COMPRESSION
 define('SWOOLE_HAVE_COMPRESSION', '1');
+#endif
+#ifdef SW_HAVE_ZLIB
 define('SWOOLE_HAVE_ZLIB', '1');
+#endif
+#ifdef SW_HAVE_BROTLI
 define('SWOOLE_HAVE_BROTLI', '1');
+#endif
+
 define('SWOOLE_USE_HTTP2', '1');
 define('SWOOLE_USE_SHORTNAME', '1');
 define('SWOOLE_SOCK_TCP', 1);
@@ -211,7 +228,9 @@ define('SIGUSR2', 12);
 define('SIGPIPE', 13);
 define('SIGALRM', 14);
 define('SIGTERM', 15);
+#ifdef SIGSTKFLT
 define('SIGSTKFLT', 16);
+#endif
 define('SIGCHLD', 17);
 define('SIGCONT', 18);
 define('SIGSTOP', 19);
@@ -225,8 +244,12 @@ define('SIGVTALRM', 26);
 define('SIGPROF', 27);
 define('SIGWINCH', 28);
 define('SIGIO', 29);
+#ifdef SIGPWR
 define('SIGPWR', 30);
+#endif
+#ifdef SIGSYS
 define('SIGSYS', 31);
+#endif
 define('SIG_IGN', 1);
 define('PRIO_PROCESS', 0);
 define('PRIO_PGRP', 1);

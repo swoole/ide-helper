@@ -131,7 +131,7 @@ class Process
     }
 
     /**
-     * @param int $size The default value (65536) is hardcoded as constant SW_MSGMAX in Swoole.
+     * @param int $size The default value (65536) is hardcoded in Swoole.
      */
     public function pop(int $size = 65536): string|false
     {

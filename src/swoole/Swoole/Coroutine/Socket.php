@@ -32,7 +32,7 @@ class Socket
     }
 
     /**
-     * @param int $backlog The default value (512) is hardcoded as constant SW_BACKLOG in Swoole.
+     * @param int $backlog The default value (512) is hardcoded in Swoole.
      */
     public function listen(int $backlog = 512): bool
     {
@@ -51,35 +51,35 @@ class Socket
     }
 
     /**
-     * @param int $length The default value (65536) is hardcoded as constant SW_BUFFER_SIZE_BIG in Swoole.
+     * @param int $length The default value (65536) is hardcoded in Swoole.
      */
     public function peek(int $length = 65536): string|false
     {
     }
 
     /**
-     * @param int $length The default value (65536) is hardcoded as constant SW_BUFFER_SIZE_BIG in Swoole.
+     * @param int $length The default value (65536) is hardcoded in Swoole.
      */
     public function recv(int $length = 65536, float $timeout = 0): string|false
     {
     }
 
     /**
-     * @param int $length The default value (65536) is hardcoded as constant SW_BUFFER_SIZE_BIG in Swoole.
+     * @param int $length The default value (65536) is hardcoded in Swoole.
      */
     public function recvAll(int $length = 65536, float $timeout = 0): string|false
     {
     }
 
     /**
-     * @param int $length The default value (65536) is hardcoded as constant SW_BUFFER_SIZE_BIG in Swoole.
+     * @param int $length The default value (65536) is hardcoded in Swoole.
      */
     public function recvLine(int $length = 65535, float $timeout = 0): string|false
     {
     }
 
     /**
-     * @param int $length The default value (65536) is hardcoded as constant SW_BUFFER_SIZE_BIG in Swoole.
+     * @param int $length The default value (65536) is hardcoded in Swoole.
      */
     public function recvWithBuffer(int $length = 65535, float $timeout = 0): string|false
     {
