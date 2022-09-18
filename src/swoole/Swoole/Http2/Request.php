@@ -9,15 +9,15 @@ namespace Swoole\Http2;
  */
 class Request
 {
-    public $path = '/';
+    public string $path = '/';
 
-    public $method = 'GET';
+    public string $method = 'GET';
 
-    public $headers;
+    public array $headers;
 
-    public $cookies;
+    public array $cookies;
 
-    public $data = '';
+    public string $data = '';
 
-    public $pipeline = false;
+    public bool $pipeline = false;
 }
