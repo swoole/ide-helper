@@ -21,7 +21,7 @@ class Runtime
      *
      * @return bool TRUE on success, or FALSE on failure.
      */
-    public static function enableCoroutine(bool|int $enable = SWOOLE_HOOK_ALL, int $flags = SWOOLE_HOOK_ALL)
+    public static function enableCoroutine(bool|int $enable = SWOOLE_HOOK_ALL, int $flags = SWOOLE_HOOK_ALL): bool
     {
     }
 
@@ -31,8 +31,15 @@ class Runtime
 
     /**
      * @return bool true on success or false on failure
+     * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
-    public static function setHookFlags(int $flags)
+    public static function setHookFlags(int $flags): bool
     {
+        if (PHP_SAPI !== 'cli') {
+            // An E_ERROR level error will be thrown out here.
+            return false;
+        }
+
+        return self::enableCoroutine(true, $flags);
     }
 }

@@ -254,10 +254,6 @@ define('SIG_IGN', 1);
 define('PRIO_PROCESS', 0);
 define('PRIO_PGRP', 1);
 define('PRIO_USER', 2);
-define('SWOOLE_TIMER_MIN_MS', 1);
-define('SWOOLE_TIMER_MIN_SEC', 0.001);
-define('SWOOLE_TIMER_MAX_MS', 9223372036854775807);
-define('SWOOLE_TIMER_MAX_SEC', 9.2233720368548E+15);
 define('SWOOLE_DEFAULT_MAX_CORO_NUM', 100000);
 define('SWOOLE_CORO_MAX_NUM_LIMIT', 9223372036854775807);
 define('SWOOLE_CORO_INIT', 0);
@@ -403,7 +399,29 @@ define('WEBSOCKET_CLOSE_SERVER_ERROR', 1011);
 define('WEBSOCKET_CLOSE_TLS', 1015);
 
 /*
- * Constants in this section are available only when Swoole is installed with option "--enable-swoole-pgsql" included.
+ * The minimum number of milliseconds that can be used for time-related operations (e.g., timeout, time intervals, etc)
+ * in Swoole.
+ */
+define('SWOOLE_TIMER_MIN_MS', 1);
+/*
+ * The minimum number of seconds that can be used for time-related operations (e.g., timeout, time intervals, etc) in
+ * Swoole.
+ */
+define('SWOOLE_TIMER_MIN_SEC', 0.001);
+/*
+ * The maximum number of milliseconds that can be used for time-related operations (e.g., timeout, time intervals, etc)
+ * in Swoole. It equals to the maximum signed long integer that the system can hold, and it varies among different systems.
+ */
+define('SWOOLE_TIMER_MAX_MS', 9223372036854775807);
+/*
+ * The maximum number of seconds that can be used for time-related operations (e.g., timeout, time intervals, etc) in
+ * Swoole. It equals to `(float) SWOOLE_TIMER_MAX_MS / 1000`.
+ */
+define('SWOOLE_TIMER_MAX_SEC', 9.2233720368548E+15);
+
+/*
+ * Constants in this section are used in class \Swoole\Coroutine\PostgreSQLStatement only. They are available only when
+ * Swoole is installed with option "--enable-swoole-pgsql" included.
  */
 /*
  * @since 5.0.0
