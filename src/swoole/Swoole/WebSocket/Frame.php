@@ -8,15 +8,15 @@ use Stringable;
 
 class Frame implements Stringable
 {
-    public $fd = 0;
+    public int $fd = 0;
 
-    public $data = '';
+    public string $data = '';
 
-    public $opcode = SWOOLE_WEBSOCKET_OPCODE_TEXT;
+    public int $opcode = SWOOLE_WEBSOCKET_OPCODE_TEXT;
 
-    public $flags = SWOOLE_WEBSOCKET_FLAG_FIN;
+    public int $flags = SWOOLE_WEBSOCKET_FLAG_FIN;
 
-    public $finish;
+    public bool $finish;
 
     public function __toString(): string
     {
