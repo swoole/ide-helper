@@ -262,10 +262,18 @@ define('SWOOLE_CORO_RUNNING', 2);
 define('SWOOLE_CORO_END', 3);
 define('SWOOLE_EXIT_IN_COROUTINE', 2);
 define('SWOOLE_EXIT_IN_SERVER', 4);
+
+/*
+ * Error codes of channels. They are used in method \Swoole\Coroutine\Channel::push() and \Swoole\Coroutine\Channel::pop() only.
+ *
+ * @see \Swoole\Coroutine\Channel::push()
+ * @see \Swoole\Coroutine\Channel::pop()
+ */
 define('SWOOLE_CHANNEL_OK', 0);
 define('SWOOLE_CHANNEL_TIMEOUT', -1);
 define('SWOOLE_CHANNEL_CLOSED', -2);
 define('SWOOLE_CHANNEL_CANCELED', -3);
+
 define('SWOOLE_HOOK_TCP', 2);
 define('SWOOLE_HOOK_UDP', 4);
 define('SWOOLE_HOOK_UNIX', 8);
