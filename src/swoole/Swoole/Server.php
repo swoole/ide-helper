@@ -243,10 +243,21 @@ class Server
     {
     }
 
+    /**
+     * @param int $taskWorkerIndex ID of the task worker to which the task is assigned. If it is -1, Swoole will randomly pick an idle task worker.
+     *                             Please note that task ID starts from 0; it ranges from 0 to $this->setting[\Swoole\Constant::OPTION_TASK_WORKER_NUM] - 1].
+     * @return int|false Returns the task ID on success, or false on failure.
+     */
     public function task(mixed $data, int $taskWorkerIndex = -1, ?callable $finishCallback = null): int|false
     {
     }
 
+    /**
+     * @param float $timeout The default value (0.5) is hardcoded in Swoole.
+     * @param int $taskWorkerIndex ID of the task worker to which the task is assigned. If it is -1, Swoole will randomly pick an idle task worker.
+     *                             Please note that task ID starts from 0; it ranges from 0 to $this->setting[\Swoole\Constant::OPTION_TASK_WORKER_NUM] - 1].
+     * @return string|false Return FALSE when error happens.
+     */
     public function taskwait(mixed $data, float $timeout = 0.5, int $taskWorkerIndex = -1): string|false
     {
     }
