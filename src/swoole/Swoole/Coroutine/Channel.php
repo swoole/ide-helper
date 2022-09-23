@@ -81,8 +81,8 @@ class Channel
      *
      * After the channel is closed,
      *   1. no more elements can be pushed into it, nor can elements be popped out of it.
-     *   2. coroutines that are waiting for elements to be pushed into the channel will be woken up and return FALSE.
-     *   3. coroutines that are waiting for elements to be popped out of the channel will be woken up and return FALSE.
+     *   2. coroutines that are waiting for elements to be pushed into the channel will be woken up; inside the coroutines, calls to method push() return FALSE.
+     *   3. coroutines that are waiting for elements to be popped out of the channel will be woken up; inside the coroutines, calls to method pop() return FALSE.
      *
      * @return bool Returns true on success or false on failure.
      */

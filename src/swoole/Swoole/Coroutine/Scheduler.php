@@ -10,23 +10,28 @@ namespace Swoole\Coroutine;
 class Scheduler
 {
     /**
-     * Add a task (implemented in a callback).
+     * Add a task (implemented in the callback).
      *
      * @return false|void Returns FALSE if the scheduler has already been started; otherwise nothing returns.
      * @see \Swoole\Coroutine\Scheduler::start()
+     * @see \Swoole\Coroutine\Scheduler::parallel()
      */
     public function add(callable $func, ...$params)
     {
     }
 
     /**
-     * Add a list of tasks (implemented in callbacks).
+     * Add multiple tasks (implemented in the callback).
      *
      * @return false|void Returns FALSE if the scheduler has already been started; otherwise nothing returns.
      * @see \Swoole\Coroutine\Scheduler::start()
+     * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
     public function parallel(int $n, callable $func, ...$params)
     {
+        for ($i = 0; $i < $n; $i++) {
+            $this->add($func, ...$params);
+        }
     }
 
     /**
@@ -51,8 +56,12 @@ class Scheduler
     }
 
     /**
-     * Start running the list of tasks (callbacks) added through method add() and parallel().
+     * Start running the list of tasks (callbacks) added through method self::add() and/or self::parallel().
      *
+     * For each task, Swoole creates a new coroutine to run its callback function. The scheduler will wait for all the
+     * coroutines to finish.
+     *
+     * @return bool Returns TRUE if all the coroutines have finished successfully; otherwise returns FALSE.
      * @see \Swoole\Coroutine\Scheduler::add()
      * @see \Swoole\Coroutine\Scheduler::parallel()
      */

@@ -8,8 +8,8 @@ declare(strict_types=1);
  *
  * PHP directive `swoole.use_shortname` can only be set in `php.ini` files.
  */
-class_alias(Swoole\Coroutine::class, Co::class);
-class_alias(Swoole\Coroutine\Channel::class, Chan::class);
+class_alias(Swoole\Coroutine::class, co::class);
+class_alias(Swoole\Coroutine\Channel::class, chan::class);
 
 class_alias(Swoole\Coroutine\Channel::class, Co\Channel::class);
 class_alias(Swoole\Coroutine\Client::class, Co\Client::class);
