@@ -134,6 +134,15 @@ class Coroutine
     {
     }
 
+    /**
+     * Get ID of the parent coroutine.
+     *
+     * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
+     * @return int|false There are three possible return values:
+     *                   - > 1: ID of the "parent" coroutine from which current coroutine was created.
+     *                   - -1: If current coroutine is created from a non-coroutine context.
+     *                   - FALSE: If the method is called from a non-coroutine context.
+     */
     public static function getPcid(int $cid = 0): int|false
     {
     }

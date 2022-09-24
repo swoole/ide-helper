@@ -29,10 +29,8 @@ class Process
 
     /**
      * Process ID. This is to uniquely identify the process in the OS.
-     *
-     * @var int
      */
-    public $pid;
+    public int $pid;
 
     /**
      * ID of the process.
@@ -40,10 +38,8 @@ class Process
      * In a Swoole program (e.g., a Swoole-based server), there are different types of processes, including event worker
      * processes, task worker processes, and user worker processes. This ID is to uniquely identify the process in the
      * running Swoole program.
-     *
-     * @var int
      */
-    public $id;
+    public int $id;
 
     private $callback;
 

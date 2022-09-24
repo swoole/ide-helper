@@ -13,8 +13,6 @@ namespace Swoole\Coroutine;
  *
  * The Context object will be automatically destroyed when the coroutine finishes execution and gets destroyed.
  *
- * This class works the same as PHP class \ArrayObject.
- *
  * @alias It's safe to assume that this class is an alias of PHP class \ArrayObject.
  * @see https://www.php.net/ArrayObject
  *

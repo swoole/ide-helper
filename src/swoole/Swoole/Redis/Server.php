@@ -83,20 +83,25 @@ class Server extends \Swoole\Server
     }
 
     /**
-     * @param string $command
      * @return callable|null Returns the callback function if defined, otherwise NULL.
      */
-    public function getHandler($command)
+    public function getHandler(string $command): callable|null
     {
     }
 
     /**
      * Format a reply.
      *
-     * @param mixed|null $value
-     * @return string|false
+     * @param int $type The type of the reply. It can be one of the following seven constants:
+     *                  1. \Swoole\Redis\Server::ERROR
+     *                  2. \Swoole\Redis\Server::NIL
+     *                  3. \Swoole\Redis\Server::STATUS
+     *                  4. \Swoole\Redis\Server::INT
+     *                  5. \Swoole\Redis\Server::STRING
+     *                  6. \Swoole\Redis\Server::SET
+     *                  7. \Swoole\Redis\Server::MAP
      */
-    public static function format(int $type, $value = null)
+    public static function format(int $type, mixed $value = null): string|false
     {
     }
 }

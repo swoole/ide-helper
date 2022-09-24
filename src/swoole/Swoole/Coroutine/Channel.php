@@ -22,7 +22,7 @@ class Channel
      *
      * When no errors occur during a call to method push() or pop(), the value is 0 (SWOOLE_CHANNEL_OK).
      * When some error occurs during a call to method push() or pop(), the call returns FALSE, and $this->errCode is set
-     * to one of the following values: SWOOLE_CHANNEL_TIMEOUT, SWOOLE_CHANNEL_CLOSED, and SWOOLE_CHANNEL_CANCELED.
+     * to one of the following values: SWOOLE_CHANNEL_TIMEOUT, SWOOLE_CHANNEL_CLOSED, or SWOOLE_CHANNEL_CANCELED.
      *
      * @see SWOOLE_CHANNEL_OK
      * @see SWOOLE_CHANNEL_TIMEOUT
