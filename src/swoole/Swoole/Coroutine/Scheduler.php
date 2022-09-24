@@ -6,6 +6,8 @@ namespace Swoole\Coroutine;
 
 /**
  * @not-serializable Objects of this class cannot be serialized.
+ * @alias This class has an alias of "\Co\Scheduler" when directive "swoole.use_shortname" is not explicitly turned off.
+ * @see \Co\Scheduler
  */
 class Scheduler
 {

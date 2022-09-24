@@ -7,6 +7,10 @@ namespace Swoole;
 use Swoole\Coroutine\Context;
 use Swoole\Coroutine\Iterator;
 
+/**
+ * @alias This class has an alias of "\co" when directive "swoole.use_shortname" is not explicitly turned off.
+ * @see \co
+ */
 class Coroutine
 {
     /**

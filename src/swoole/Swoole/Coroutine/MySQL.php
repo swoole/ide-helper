@@ -7,6 +7,8 @@ namespace Swoole\Coroutine;
 /**
  * @deprecated 5.0.0 Use PDO_MySQL or mysqli on top of the mysqlnd library, with runtime hook SWOOLE_HOOK_TCP or SWOOLE_HOOK_ALL turned on.
  * @not-serializable Objects of this class cannot be serialized.
+ * @alias This class has an alias of "\Co\MySQL" when directive "swoole.use_shortname" is not explicitly turned off.
+ * @see \Co\MySQL
  */
 class MySQL
 {

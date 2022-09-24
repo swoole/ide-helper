@@ -9,6 +9,8 @@ namespace Swoole\Coroutine;
  *
  * @since 5.0.0
  * @not-serializable Objects of this class cannot be serialized.
+ * @alias This class has an alias of "\Co\PostgreSQL" when directive "swoole.use_shortname" is not explicitly turned off.
+ * @see \Co\PostgreSQL
  */
 class PostgreSQL
 {

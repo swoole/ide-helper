@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine;
 
+/**
+ * @alias This class has an alias of "\Co\System" when directive "swoole.use_shortname" is not explicitly turned off.
+ * @see \Co\System
+ */
 class System
 {
     /**

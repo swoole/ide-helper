@@ -8,6 +8,8 @@ use Swoole\WebSocket\Frame;
 
 /**
  * @not-serializable Objects of this class cannot be serialized.
+ * @alias This class has an alias of "\Co\Http\Client" when directive "swoole.use_shortname" is not explicitly turned off.
+ * @see \Co\Http\Client
  */
 class Client
 {

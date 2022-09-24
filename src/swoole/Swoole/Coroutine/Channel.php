@@ -6,6 +6,9 @@ namespace Swoole\Coroutine;
 
 /**
  * @not-serializable Objects of this class cannot be serialized.
+ * @alias This class has two aliases: \chan and \Co\Channel (when directive "swoole.use_shortname" is not explicitly turned off).
+ * @see \chan
+ * @see \Co\Channel
  */
 class Channel
 {

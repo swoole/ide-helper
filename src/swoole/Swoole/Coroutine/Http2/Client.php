@@ -9,6 +9,8 @@ use Swoole\Http2\Response;
 
 /**
  * @not-serializable Objects of this class cannot be serialized.
+ * @alias This class has an alias of "\Co\Http2\Client" when directive "swoole.use_shortname" is not explicitly turned off.
+ * @see \Co\Http2\Client
  */
 class Client
 {
