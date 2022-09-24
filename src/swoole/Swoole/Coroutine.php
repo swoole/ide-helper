@@ -138,6 +138,13 @@ class Coroutine
     {
     }
 
+    /**
+     * Return the Context object of the specified coroutine.
+     *
+     * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
+     * @return Context|null Return the Context object of the specified coroutine. If the specified coroutine does not
+     *                      exist or the Context object of the coroutine has been destroyed, NULL will be returned.
+     */
     public static function getContext(int $cid = 0): ?Context
     {
     }
