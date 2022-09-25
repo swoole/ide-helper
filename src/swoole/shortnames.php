@@ -34,9 +34,11 @@ class_alias(Swoole\Coroutine\MySQL\Statement::class, Co\MySQL\Statement::class);
 class_alias(Swoole\Coroutine\Redis::class, Co\Redis::class);
 
 /**
- * @alias This function is an alias of function swoole_coroutine_create(); it's available only when directive
- *        "swoole.use_shortname" is not explicitly turned off.
+ * This function is available only when directive "swoole.use_shortname" is not explicitly turned off.
+ *
+ * @alias This function has an alias function swoole_coroutine_create() and an alias method \Swoole\Coroutine::create().
  * @see swoole_coroutine_create()
+ * @see \Swoole\Coroutine::create()
  */
 function go(callable $func, ...$params): int|false
 {
@@ -45,8 +47,9 @@ function go(callable $func, ...$params): int|false
 /**
  * Defers the execution of a callback function until the surrounding function of a coroutine returns.
  *
- * @alias This function is an alias of function swoole_coroutine_defer(); it's available only when directive
- *        "swoole.use_shortname" is not explicitly turned off.
+ * This function is available only when directive "swoole.use_shortname" is not explicitly turned off.
+ *
+ * @alias This function is an alias of function swoole_coroutine_defer().
  * @see swoole_coroutine_defer()
  *
  * @example

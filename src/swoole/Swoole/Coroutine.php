@@ -14,7 +14,8 @@ use Swoole\Coroutine\Iterator;
 class Coroutine
 {
     /**
-     * @alias This method is an alias of function swoole_coroutine_create().
+     * @alias This method has two alias functions: \go() and \swoole_coroutine_create().
+     * @see \go()
      * @see \swoole_coroutine_create()
      */
     public static function create(callable $func, ...$param): int|false

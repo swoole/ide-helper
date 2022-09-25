@@ -93,13 +93,13 @@ class Server extends \Swoole\Server
      * Format a reply.
      *
      * @param int $type The type of the reply. It can be one of the following seven constants:
-     *                  1. \Swoole\Redis\Server::ERROR
-     *                  2. \Swoole\Redis\Server::NIL
-     *                  3. \Swoole\Redis\Server::STATUS
-     *                  4. \Swoole\Redis\Server::INT
-     *                  5. \Swoole\Redis\Server::STRING
-     *                  6. \Swoole\Redis\Server::SET
-     *                  7. \Swoole\Redis\Server::MAP
+     *                  - \Swoole\Redis\Server::ERROR
+     *                  - \Swoole\Redis\Server::NIL
+     *                  - \Swoole\Redis\Server::STATUS
+     *                  - \Swoole\Redis\Server::INT
+     *                  - \Swoole\Redis\Server::STRING
+     *                  - \Swoole\Redis\Server::SET
+     *                  - \Swoole\Redis\Server::MAP
      */
     public static function format(int $type, mixed $value = null): string|false
     {

@@ -30,19 +30,28 @@ define('SWOOLE_HAVE_BROTLI', '1');
 #endif
 
 define('SWOOLE_USE_HTTP2', '1');
-define('SWOOLE_USE_SHORTNAME', '1');
+
+/*
+ * Support short names or not. Short names are all the aliases listed in file ./shortnames.php.
+ */
+define('SWOOLE_USE_SHORTNAME', ini_get('swoole.use_shortname'));
+
+// Socket types.
 define('SWOOLE_SOCK_TCP', 1);
-define('SWOOLE_SOCK_TCP6', 3);
 define('SWOOLE_SOCK_UDP', 2);
+define('SWOOLE_SOCK_TCP6', 3);
 define('SWOOLE_SOCK_UDP6', 4);
-define('SWOOLE_SOCK_UNIX_DGRAM', 6);
 define('SWOOLE_SOCK_UNIX_STREAM', 5);
-define('SWOOLE_TCP', 1);
-define('SWOOLE_TCP6', 3);
-define('SWOOLE_UDP', 2);
-define('SWOOLE_UDP6', 4);
-define('SWOOLE_UNIX_DGRAM', 6);
-define('SWOOLE_UNIX_STREAM', 5);
+define('SWOOLE_SOCK_UNIX_DGRAM', 6);
+
+// Simple aliases of socket types.
+define('SWOOLE_TCP', SWOOLE_SOCK_TCP);
+define('SWOOLE_UDP', SWOOLE_SOCK_UDP);
+define('SWOOLE_TCP6', SWOOLE_SOCK_TCP6);
+define('SWOOLE_UDP6', SWOOLE_SOCK_UDP6);
+define('SWOOLE_UNIX_STREAM', SWOOLE_SOCK_UNIX_STREAM);
+define('SWOOLE_UNIX_DGRAM', SWOOLE_SOCK_UNIX_DGRAM);
+
 define('SWOOLE_SOCK_SYNC', '');
 define('SWOOLE_SOCK_ASYNC', '1');
 define('SWOOLE_SYNC', 2048);
