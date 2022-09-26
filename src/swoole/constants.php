@@ -31,10 +31,8 @@ define('SWOOLE_HAVE_BROTLI', '1');
 
 define('SWOOLE_USE_HTTP2', '1');
 
-/*
- * Support short names or not. Short names are all the aliases listed in file ./shortnames.php.
- */
-define('SWOOLE_USE_SHORTNAME', ini_get('swoole.use_shortname'));
+// Support short names or not. Short names are all the aliases listed in file ./shortnames.php.
+define('SWOOLE_USE_SHORTNAME', (bool) ini_get('swoole.use_shortname'));
 
 // Socket types.
 define('SWOOLE_SOCK_TCP', 1);
@@ -52,13 +50,37 @@ define('SWOOLE_UDP6', SWOOLE_SOCK_UDP6);
 define('SWOOLE_UNIX_STREAM', SWOOLE_SOCK_UNIX_STREAM);
 define('SWOOLE_UNIX_DGRAM', SWOOLE_SOCK_UNIX_DGRAM);
 
-define('SWOOLE_SOCK_SYNC', '');
-define('SWOOLE_SOCK_ASYNC', '1');
-define('SWOOLE_SYNC', 2048);
-define('SWOOLE_ASYNC', 1024);
-define('SWOOLE_KEEP', 4096);
-define('SWOOLE_EVENT_READ', 512);
-define('SWOOLE_EVENT_WRITE', 1024);
+/*
+ * Next two constants define types of socket connections. They are used in method Swoole\Client::__construct().
+ *
+ * There are two types of socket connections: synchronous (blocking) and asynchronous (non-blocking).
+ *
+ * @see \Swoole\Client
+ */
+define('SWOOLE_SOCK_SYNC', false);
+define('SWOOLE_SOCK_ASYNC', true); // This constant is no longer used anywhere in Swoole.
+
+/*
+ * Socket flags.
+ *
+ * There are four flags in total for socket connections:
+ *   - SWOOLE_SSL   (2^9)
+ *   - SWOOLE_ASYNC (2^10)
+ *   - SWOOLE_SYNC  (2^11)
+ *   - SWOOLE_KEEP  (2^12)
+ *
+ * Socket flags are used in class Swoole\Client and Swoole\Coroutine\Client.
+ *
+ * @see \Swoole\Client
+ * @see \Swoole\Coroutine\Client
+ */
+define('SWOOLE_ASYNC', 1024); // 2^10
+define('SWOOLE_SYNC', 2048);  // 2^11
+define('SWOOLE_KEEP', 4096);  // 2^12
+
+define('SWOOLE_EVENT_READ', 512);   // 2^9
+define('SWOOLE_EVENT_WRITE', 1024); // 2^10
+
 define('SWOOLE_STRERROR_SYSTEM', 0);
 define('SWOOLE_STRERROR_GAI', 1);
 define('SWOOLE_STRERROR_DNS', 2);

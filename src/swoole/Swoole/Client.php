@@ -25,22 +25,55 @@ class Client
 
     public const SHUT_WR = 1;
 
-    public $errCode = 0;
+    public int $errCode = 0;
 
-    public $sock = -1;
+    public int $sock = -1;
 
-    public $reuse = false;
+    public bool $reuse = false;
 
-    public $reuseCount = 0;
+    public int $reuseCount = 0;
 
-    public $type = 0;
+    /**
+     * Socket type. It can be one of the following fix values:
+     *
+     * @see SWOOLE_SOCK_TCP
+     * @see SWOOLE_SOCK_UDP
+     * @see SWOOLE_SOCK_TCP6
+     * @see SWOOLE_SOCK_UDP6
+     * @see SWOOLE_SOCK_UNIX_STREAM
+     * @see SWOOLE_SOCK_UNIX_DGRAM
+     */
+    public int $type;
 
-    public $id;
+    public string $id;
 
     public array $setting;
 
-    public function __construct(int $type, bool $async = false, string $id = '')
+    /**
+     * @param int $type Socket type. It can be one of the following fix values:
+     *                  - SWOOLE_SOCK_TCP
+     *                  - SWOOLE_SOCK_UDP
+     *                  - SWOOLE_SOCK_TCP6
+     *                  - SWOOLE_SOCK_UDP6
+     *                  - SWOOLE_SOCK_UNIX_STREAM
+     *                  - SWOOLE_SOCK_UNIX_DGRAM
+     * @param bool $async Whether to enable asynchronous I/O or not. Since v4.4.8, this class supports synchronous I/O (in blocking mode) only.
+     * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
+     */
+    public function __construct(int $type, bool $async = SWOOLE_SOCK_SYNC, string $id = '')
     {
+        if ($async) {
+            throw new \Error('Please install the ext-async extension, and use class Swoole\Async\Client instead.');
+        }
+
+        if (($type < SWOOLE_SOCK_TCP) || ($type > SWOOLE_SOCK_UNIX_DGRAM)) {
+            throw new \TypeError(__METHOD__ . " expects parameter 1 to be client type, unknown type {$type} given");
+        }
+
+        $this->type = $type;
+        if (!empty($id)) {
+            $this->id = $id;
+        }
     }
 
     public function __destruct()
@@ -110,6 +143,11 @@ class Client
     {
     }
 
+    /**
+     * Check if the client is connected or not.
+     *
+     * @return bool TRUE if the client is connected; otherwise FALSE.
+     */
     public function isConnected(): bool
     {
     }
