@@ -34,14 +34,27 @@ class Client
     public int $reuseCount = 0;
 
     /**
-     * Socket type. It can be one of the following fix values:
+     * Socket type.
      *
-     * @see SWOOLE_SOCK_TCP
-     * @see SWOOLE_SOCK_UDP
-     * @see SWOOLE_SOCK_TCP6
-     * @see SWOOLE_SOCK_UDP6
-     * @see SWOOLE_SOCK_UNIX_STREAM
-     * @see SWOOLE_SOCK_UNIX_DGRAM
+     * It could be in one the following values:
+     *    - SWOOLE_SOCK_TCP
+     *    - SWOOLE_SOCK_UDP
+     *    - SWOOLE_SOCK_TCP6
+     *    - SWOOLE_SOCK_UDP6
+     *    - SWOOLE_SOCK_UNIX_STREAM
+     *    - SWOOLE_SOCK_UNIX_DGRAM
+     * In addition to specifying a socket type, it may include the bitwise OR of any of the following socket flags, to
+     * modify the behavior of the socket connection:
+     *   - SWOOLE_SSL
+     *   - SWOOLE_ASYNC
+     *   - SWOOLE_SYNC
+     *   - SWOOLE_KEEP
+     *
+     * Thus, the value of $type could be in the format of any of the following:
+     *   - SWOOLE_SOCK_TCP
+     *   - SWOOLE_SOCK_TCP | SWOOLE_SSL
+     *   - SWOOLE_SOCK_TCP | SWOOLE_SYNC | SWOOLE_SSL
+     *   - SWOOLE_SOCK_TCP | SWOOLE_KEEP | SWOOLE_SYNC | SWOOLE_SSL
      */
     public int $type;
 
@@ -50,13 +63,7 @@ class Client
     public array $setting;
 
     /**
-     * @param int $type Socket type. It can be one of the following fix values:
-     *                  - SWOOLE_SOCK_TCP
-     *                  - SWOOLE_SOCK_UDP
-     *                  - SWOOLE_SOCK_TCP6
-     *                  - SWOOLE_SOCK_UDP6
-     *                  - SWOOLE_SOCK_UNIX_STREAM
-     *                  - SWOOLE_SOCK_UNIX_DGRAM
+     * @param int $type Socket type. Please check comments on property $type for more details.
      * @param bool $async Whether to enable asynchronous I/O or not. Since v4.4.8, this class supports synchronous I/O (in blocking mode) only.
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */

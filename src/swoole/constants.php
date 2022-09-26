@@ -34,7 +34,15 @@ define('SWOOLE_USE_HTTP2', '1');
 // Support short names or not. Short names are all the aliases listed in file ./shortnames.php.
 define('SWOOLE_USE_SHORTNAME', (bool) ini_get('swoole.use_shortname'));
 
-// Socket types.
+/*
+ * Next two constants define types of socket connections. They are used in method Swoole\Client::__construct().
+ *
+ * There are two types of socket connections: synchronous (blocking) and asynchronous (non-blocking).
+ */
+define('SWOOLE_SOCK_SYNC', false);
+define('SWOOLE_SOCK_ASYNC', true); // This constant is no longer used anywhere in Swoole.
+
+// Socket types, which are to specify the communication semantics.
 define('SWOOLE_SOCK_TCP', 1);
 define('SWOOLE_SOCK_UDP', 2);
 define('SWOOLE_SOCK_TCP6', 3);
@@ -51,17 +59,7 @@ define('SWOOLE_UNIX_STREAM', SWOOLE_SOCK_UNIX_STREAM);
 define('SWOOLE_UNIX_DGRAM', SWOOLE_SOCK_UNIX_DGRAM);
 
 /*
- * Next two constants define types of socket connections. They are used in method Swoole\Client::__construct().
- *
- * There are two types of socket connections: synchronous (blocking) and asynchronous (non-blocking).
- *
- * @see \Swoole\Client
- */
-define('SWOOLE_SOCK_SYNC', false);
-define('SWOOLE_SOCK_ASYNC', true); // This constant is no longer used anywhere in Swoole.
-
-/*
- * Socket flags.
+ * Socket flags. They can be used in conjunction with socket types to modify the behavior of socket connections.
  *
  * There are four flags in total for socket connections:
  *   - SWOOLE_SSL   (2^9)
@@ -70,9 +68,6 @@ define('SWOOLE_SOCK_ASYNC', true); // This constant is no longer used anywhere i
  *   - SWOOLE_KEEP  (2^12)
  *
  * Socket flags are used in class Swoole\Client and Swoole\Coroutine\Client.
- *
- * @see \Swoole\Client
- * @see \Swoole\Coroutine\Client
  */
 define('SWOOLE_ASYNC', 1024); // 2^10
 define('SWOOLE_SYNC', 2048);  // 2^11
@@ -480,7 +475,7 @@ define('SW_PGSQL_BOTH', 3);
  * configuration option "--enable-openssl" included).
  */
 #ifdef SW_USE_OPENSSL
-define('SWOOLE_SSL', 512);
+define('SWOOLE_SSL', 512); // 2^9
 define('SWOOLE_SSLv3_METHOD', 1);
 define('SWOOLE_SSLv3_SERVER_METHOD', 2);
 define('SWOOLE_SSLv3_CLIENT_METHOD', 3);
