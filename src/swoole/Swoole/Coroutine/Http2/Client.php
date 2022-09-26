@@ -14,23 +14,23 @@ use Swoole\Http2\Response;
  */
 class Client
 {
-    public $errCode = 0;
+    public int $errCode = 0;
 
-    public $errMsg = '';
+    public string $errMsg = '';
 
-    public $sock = -1;
+    public int $sock = -1;
 
-    public $type = 0;
+    public int $type = 0;
 
     public $setting;
 
-    public $connected = false;
+    public bool $connected = false;
 
     public $host;
 
-    public $port = 0;
+    public int $port = 0;
 
-    public $ssl = false;
+    public bool $ssl = false;
 
     public function __construct(string $host, int $port = 80, bool $open_ssl = false)
     {

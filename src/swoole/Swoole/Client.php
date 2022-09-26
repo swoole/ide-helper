@@ -73,9 +73,7 @@ class Client
             throw new \Error('Please install the ext-async extension, and use class Swoole\Async\Client instead.');
         }
 
-        if (($type < SWOOLE_SOCK_TCP) || ($type > SWOOLE_SOCK_UNIX_DGRAM)) {
-            throw new \TypeError(__METHOD__ . " expects parameter 1 to be client type, unknown type {$type} given");
-        }
+        // Here are some statements to validate the $type.
 
         $this->type = $type;
         if (!empty($id)) {

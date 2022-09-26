@@ -13,17 +13,17 @@ use Swoole\WebSocket\Frame;
  */
 class Client
 {
-    public $errCode = 0;
+    public int $errCode = 0;
 
-    public $errMsg = '';
+    public string $errMsg = '';
 
-    public $connected = false;
+    public bool $connected = false;
 
-    public $host = '';
+    public string $host = '';
 
-    public $port = 0;
+    public int $port = 0;
 
-    public $ssl = false;
+    public bool $ssl = false;
 
     public $setting;
 
@@ -37,9 +37,9 @@ class Client
 
     public $downloadFile;
 
-    public $downloadOffset = 0;
+    public int $downloadOffset = 0;
 
-    public $statusCode = 0;
+    public int $statusCode = 0;
 
     public $headers;
 
@@ -47,7 +47,7 @@ class Client
 
     public $cookies;
 
-    public $body = '';
+    public string $body = '';
 
     public function __construct(string $host, int $port = 0, bool $ssl = false)
     {
