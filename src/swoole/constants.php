@@ -66,8 +66,6 @@ define('SWOOLE_UNIX_DGRAM', SWOOLE_SOCK_UNIX_DGRAM);
  *   - SWOOLE_ASYNC (2^10)
  *   - SWOOLE_SYNC  (2^11)
  *   - SWOOLE_KEEP  (2^12)
- *
- * Socket flags are used in class Swoole\Client and Swoole\Coroutine\Client.
  */
 define('SWOOLE_ASYNC', 1024); // 2^10
 define('SWOOLE_SYNC', 2048);  // 2^11
