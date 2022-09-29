@@ -310,6 +310,7 @@ class Coroutine
     }
 
     /**
+     * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
      * @alias Alias of method \Swoole\Coroutine\System::waitEvent().
      * @see \Swoole\Coroutine\System::waitEvent()
      */

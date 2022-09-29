@@ -238,6 +238,7 @@ function swoole_name_resolver_remove(NameResolver $ns): bool
 }
 
 /**
+ * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
  * @alias This function is an alias of method \Swoole\Event::add().
  * @see \Swoole\Event::add()
  */
@@ -254,6 +255,7 @@ function swoole_event_del(mixed $fd): bool
 }
 
 /**
+ * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
  * @alias This function is an alias of method \Swoole\Event::set().
  * @see \Swoole\Event::set()
  */
@@ -262,6 +264,7 @@ function swoole_event_set(mixed $fd, ?callable $read_callback = null, ?callable 
 }
 
 /**
+ * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
  * @alias This function is an alias of method \Swoole\Event::isset().
  * @see \Swoole\Event::isset()
  */

@@ -7,6 +7,7 @@ namespace Swoole;
 class Event
 {
     /**
+     * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
      * @alias This method has an alias function \swoole_event_add().
      * @see \swoole_event_add()
      */
@@ -23,6 +24,7 @@ class Event
     }
 
     /**
+     * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
      * @alias This method has an alias function \swoole_event_set().
      * @see \swoole_event_set()
      */
@@ -31,6 +33,7 @@ class Event
     }
 
     /**
+     * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
      * @alias This method has an alias function \swoole_event_isset().
      * @see \swoole_event_isset()
      */

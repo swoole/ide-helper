@@ -46,15 +46,14 @@ class Client
      * In addition to specifying a socket type, it may include the bitwise OR of any of the following socket flags, to
      * modify the behavior of the socket connection:
      *   - SWOOLE_SSL
-     *   - SWOOLE_ASYNC
-     *   - SWOOLE_SYNC
+     *   - SWOOLE_ASYNC (No longer used, but still kept for backward compatibility.)
+     *   - SWOOLE_SYNC  (No longer used, but still kept for backward compatibility.)
      *   - SWOOLE_KEEP
      *
      * Thus, the value of $type could be in the format of any of the following:
      *   - SWOOLE_SOCK_TCP
-     *   - SWOOLE_SOCK_TCP | SWOOLE_SSL
-     *   - SWOOLE_SOCK_TCP | SWOOLE_SYNC | SWOOLE_SSL
-     *   - SWOOLE_SOCK_TCP | SWOOLE_KEEP | SWOOLE_SYNC | SWOOLE_SSL
+     *   - SWOOLE_SOCK_TCP | SWOOLE_KEEP
+     *   - SWOOLE_SOCK_TCP | SWOOLE_KEEP | SWOOLE_SSL
      */
     public int $type;
 

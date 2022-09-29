@@ -40,7 +40,7 @@ define('SWOOLE_USE_SHORTNAME', (bool) ini_get('swoole.use_shortname'));
  * There are two types of socket connections: synchronous (blocking) and asynchronous (non-blocking).
  */
 define('SWOOLE_SOCK_SYNC', false);
-define('SWOOLE_SOCK_ASYNC', true); // This constant is no longer used anywhere in Swoole.
+define('SWOOLE_SOCK_ASYNC', true); // No longer used, but still kept for backward compatibility.
 
 // Socket types, which are to specify the communication semantics.
 define('SWOOLE_SOCK_TCP', 1);
@@ -61,16 +61,17 @@ define('SWOOLE_UNIX_DGRAM', SWOOLE_SOCK_UNIX_DGRAM);
 /*
  * Socket flags. They can be used in conjunction with socket types to modify the behavior of socket connections.
  *
- * There are four flags in total for socket connections:
+ * There are four flags for socket connections:
  *   - SWOOLE_SSL   (2^9)
- *   - SWOOLE_ASYNC (2^10)
- *   - SWOOLE_SYNC  (2^11)
+ *   - SWOOLE_ASYNC (2^10) (No longer used, but still kept for backward compatibility.)
+ *   - SWOOLE_SYNC  (2^11) (No longer used, but still kept for backward compatibility.)
  *   - SWOOLE_KEEP  (2^12)
  */
-define('SWOOLE_ASYNC', 1024); // 2^10
-define('SWOOLE_SYNC', 2048);  // 2^11
+define('SWOOLE_ASYNC', 1024); // 2^10 (No longer used, but still kept for backward compatibility.)
+define('SWOOLE_SYNC', 2048);  // 2^11 (No longer used, but still kept for backward compatibility.)
 define('SWOOLE_KEEP', 4096);  // 2^12
 
+// Read/Write events of sockets.
 define('SWOOLE_EVENT_READ', 512);   // 2^9
 define('SWOOLE_EVENT_WRITE', 1024); // 2^10
 

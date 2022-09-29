@@ -158,7 +158,7 @@ class Socket
     }
 
     /**
-     * @param int $event Must be constant SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE.
+     * @param int $event a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event.
      */
     public function cancel(int $event = SWOOLE_EVENT_READ): bool
     {
