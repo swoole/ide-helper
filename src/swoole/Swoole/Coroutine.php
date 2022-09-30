@@ -14,6 +14,10 @@ use Swoole\Coroutine\Iterator;
 class Coroutine
 {
     /**
+     * Create a coroutine.
+     *
+     * @return int|false Returns the coroutine ID on success, or false on failure. Note that this method won't return
+     *                   the coroutine ID back until the new coroutine yields its execution.
      * @alias This method has two alias functions: \go() and \swoole_coroutine_create().
      * @see \go()
      * @see \swoole_coroutine_create()
@@ -63,6 +67,12 @@ class Coroutine
     {
     }
 
+    /**
+     * Check if a coroutine exists or not.
+     *
+     * @param int $cid Coroutine ID. If specified as 0, ID of current coroutine will be used.
+     * @return bool Returns true if the coroutine exists, or false if not.
+     */
     public static function exists(int $cid): bool
     {
     }
@@ -75,6 +85,14 @@ class Coroutine
     {
     }
 
+    /**
+     * Cancel the execution of a coroutine.
+     *
+     * Please note that this method can not cancel the execution of current coroutine.
+     *
+     * @param int $cid Coroutine ID. If specified as 0, ID of current coroutine will be used.
+     * @return bool Returns true on success, or false on failure. Use function \swoole_last_error() to get the error code when failed.
+     */
     public static function cancel(int $cid): bool
     {
     }
@@ -95,6 +113,13 @@ class Coroutine
     {
     }
 
+    /**
+     * Check if the current coroutine has been cancelled or not.
+     *
+     * A coroutine can be cancelled by calling method \Swoole\Coroutine::cancel($cid) in another coroutine.
+     *
+     * @return bool TRUE if the current coroutine has been cancelled; otherwise FALSE.
+     */
     public static function isCanceled(): bool
     {
     }
@@ -159,10 +184,31 @@ class Coroutine
     {
     }
 
+    /**
+     * Generate a backtrace of the specified coroutine.
+     *
+     * This method is similar to function \debug_backtrace().
+     *
+     * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
+     * @param int $options A bitmask for the following options: DEBUG_BACKTRACE_PROVIDE_OBJECT, DEBUG_BACKTRACE_IGNORE_ARGS.
+     * @param int $limit To limit the number of stack frames returned. By default (limit=0) it returns all stack frames.
+     * @param array|false Returns an array of associative arrays, or FALSE if the specified coroutine does not exist.
+     * @see \debug_backtrace()
+     */
     public static function getBackTrace(int $cid = 0, int $options = DEBUG_BACKTRACE_PROVIDE_OBJECT, int $limit = 0): array|false
     {
     }
 
+    /**
+     * Print a PHP backtrace of the specified coroutine.
+     *
+     * This method is similar to function \debug_print_backtrace().
+     *
+     * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
+     * @param int $options A bitmask for the following option(s): DEBUG_BACKTRACE_IGNORE_ARGS.
+     * @param int $limit To limit the number of stack frames printed. By default (limit=0) it prints all stack frames.
+     * @see \debug_print_backtrace()
+     */
     public static function printBackTrace(int $cid = 0, int $options = DEBUG_BACKTRACE_PROVIDE_OBJECT, int $limit = 0): void
     {
     }
@@ -174,7 +220,7 @@ class Coroutine
     /**
      * Get memory usage of a coroutine.
      *
-     * @param int $cid If this parameter is not passed in, current coroutine ID will be used.
+     * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
      * @return int|false Memory usage of the coroutine; FALSE if the specified coroutine doesn't exist.
      * @since 4.8.0
      */
@@ -183,16 +229,34 @@ class Coroutine
     }
 
     /**
+     * Get a list of all running coroutines within the process.
+     *
      * @alias This method has an alias of \Swoole\Coroutine::listCoroutines().
      * @see \Swoole\Coroutine::listCoroutines()
+     *
+     * @example
+     * <pre>
+     * foreach (\Swoole\Coroutine::list() as $cid) {
+     *   var_dump(\Swoole\Coroutine::getBackTrace($cid));
+     * };
+     * <pre>
      */
     public static function list(): Iterator
     {
     }
 
     /**
+     * Get a list of all running coroutines within the process.
+     *
      * @alias Alias of method \Swoole\Coroutine::list().
      * @see \Swoole\Coroutine::list()
+     *
+     * @example
+     * <pre>
+     * foreach (\Swoole\Coroutine::listCoroutines() as $cid) {
+     *   var_dump(\Swoole\Coroutine::getBackTrace($cid));
+     * };
+     * <pre>
      */
     public static function listCoroutines(): Iterator
     {
@@ -209,11 +273,25 @@ class Coroutine
     /**
      * Get execution time of current coroutine.
      *
+     * The execution time of a coroutine is the time from the moment when the coroutine is created to the moment when
+     * this method is called, minus the time spent in the I/O wait state. Here we use the following code piece as an
+     * example:
+     *
+     *   \Swoole\Coroutine::create(function () { // Create a new coroutine.
+     *       // Here is some mathematical calculation that takes 3 seconds to finish.
+     *
+     *       \Swoole\Coroutine::sleep(5); // A sleep function call to sleep for 5 seconds.
+     *
+     *       // Next call returns an integer that is close to 3_000_000 (microseconds) but not 8_000_000 (microseconds).
+     *       \Swoole\Coroutine::getExecuteTime();
+     *   });
+     *
      * This method is available only when Swoole is installed with option "--enable-swoole-coro-time" included.
      *
      * The official Docker images of Swoole (phpswoole/swoole) doesn't have "--enable-swoole-coro-time" included when
      * installing Swoole. Thus, this method can not be used directly in the official Docker images of Swoole.
      *
+     * @return int Return the execution time of current coroutine in microseconds, or -1 if not executed within a coroutine.
      * @since 5.0.0
      */
     public static function getExecuteTime(): int

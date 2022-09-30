@@ -34,8 +34,12 @@ class_alias(Swoole\Coroutine\MySQL\Statement::class, Co\MySQL\Statement::class);
 class_alias(Swoole\Coroutine\Redis::class, Co\Redis::class);
 
 /**
+ * Create a coroutine.
+ *
  * This function is available only when directive "swoole.use_shortname" is not explicitly turned off.
  *
+ * @return int|false Returns the coroutine ID on success, or false on failure. Note that this method won't return
+ *                   the coroutine ID back until the new coroutine yields its execution.
  * @alias This function has an alias function swoole_coroutine_create() and an alias method \Swoole\Coroutine::create().
  * @see swoole_coroutine_create()
  * @see \Swoole\Coroutine::create()

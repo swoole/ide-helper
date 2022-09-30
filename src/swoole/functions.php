@@ -41,6 +41,10 @@ function swoole_async_set(array $settings): void
 }
 
 /**
+ * Create a coroutine.
+ *
+ * @return int|false Returns the coroutine ID on success, or false on failure. Note that this method won't return
+ *                   the coroutine ID back until the new coroutine yields its execution.
  * @alias This function has an alias function \go() and an alias method \Swoole\Coroutine::create().
  * @see \go()
  * @see \Swoole\Coroutine::create()

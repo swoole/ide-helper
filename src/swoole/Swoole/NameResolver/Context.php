@@ -10,7 +10,7 @@ namespace Swoole\NameResolver;
  */
 class Context
 {
-    public function __construct(int $family = 2, bool $withPort = false)
+    public function __construct(int $family = AF_INET, bool $withPort = false)
     {
     }
 }
