@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Swoole\Coroutine;
 
 /**
- * An iterator that can be used to iterate over the IDs of all the coroutines that are currently running within the process.
+ * An iterator that can be used to iterate over the IDs of all the running coroutines within the process.
  *
  * In Swoole, this class is only used for \Swoole\Coroutine::list() and \Swoole\Coroutine::listCoroutines(), where the
  * return value is an instance of this class.

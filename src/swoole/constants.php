@@ -75,6 +75,7 @@ define('SWOOLE_KEEP', 4096);  // 2^12
 define('SWOOLE_EVENT_READ', 512);   // 2^9
 define('SWOOLE_EVENT_WRITE', 1024); // 2^10
 
+// Error types. They are used as value of the second parameter of function swoole_strerror(int $errno, int $error_type).
 define('SWOOLE_STRERROR_SYSTEM', 0);
 define('SWOOLE_STRERROR_GAI', 1);
 define('SWOOLE_STRERROR_DNS', 2);
@@ -217,6 +218,8 @@ define('SWOOLE_TRACE_TABLE', 268435456);
 define('SWOOLE_TRACE_CO_CURL', 536870912);
 define('SWOOLE_TRACE_CARES', 1073741824);
 define('SWOOLE_TRACE_ALL', 9223372036854775807);
+
+// Log levels.
 define('SWOOLE_LOG_DEBUG', 0);
 define('SWOOLE_LOG_TRACE', 1);
 define('SWOOLE_LOG_INFO', 2);
@@ -224,6 +227,7 @@ define('SWOOLE_LOG_NOTICE', 3);
 define('SWOOLE_LOG_WARNING', 4);
 define('SWOOLE_LOG_ERROR', 5);
 define('SWOOLE_LOG_NONE', 6);
+
 define('SWOOLE_LOG_ROTATION_SINGLE', 0);
 define('SWOOLE_LOG_ROTATION_MONTHLY', 1);
 define('SWOOLE_LOG_ROTATION_DAILY', 2);

@@ -25,8 +25,14 @@ function swoole_cpu_num(): int
 }
 
 /**
+ * Get the error code of the latest failed operation.
+ *
+ * To translate the error code to an error message, use the following statement:
+ *     swoole_strerror(swoole_last_error(), SWOOLE_STRERROR_SWOOLE);
+ *
  * @alias This function has an alias method \Swoole\Server::getLastError().
  * @see \Swoole\Server::getLastError()
+ * @see swoole_strerror()
  */
 function swoole_last_error(): int
 {

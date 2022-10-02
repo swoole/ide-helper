@@ -213,6 +213,12 @@ class Coroutine
     {
     }
 
+    /**
+     * Get execution time (in milliseconds) of the specified coroutine.
+     *
+     * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
+     * @return int Return the execution time of the specified coroutine in milliseconds.
+     */
     public static function getElapsed(int $cid = 0): int
     {
     }

@@ -287,8 +287,14 @@ class Server
     }
 
     /**
+     * Get the error code of the latest failed operation.
+     *
+     * To translate the error code to an error message, use the following statement:
+     *     \swoole_strerror($server->getLastError(), SWOOLE_STRERROR_SWOOLE);
+     *
      * @alias This method is an alias of function \swoole_last_error().
      * @see \swoole_last_error()
+     * @see \swoole_strerror()
      */
     public function getLastError(): int
     {
