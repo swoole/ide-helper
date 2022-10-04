@@ -121,6 +121,19 @@ function swoole_get_local_mac(): array
 {
 }
 
+/**
+ * Get the error message corresponding to the given error code.
+ *
+ * @param int $errno Error code.
+ * @param int $error_type Error type. There are four types of error messages:
+ *                        - SWOOLE_STRERROR_SYSTEM: Generic system error message.
+ *                        - SWOOLE_STRERROR_GAI: Error message from function call getaddrinfo().
+ *                        - SWOOLE_STRERROR_DNS: Error message from network host-related functions.
+ *                        - SWOOLE_STRERROR_SWOOLE: Error message of Swoole.
+ * @return string Return the error message corresponding to the error code.
+ * @see swoole_last_error()
+ * @see \Swoole\Server::getLastError()
+ */
 function swoole_strerror(int $errno, int $error_type = SWOOLE_STRERROR_SYSTEM): string
 {
 }
