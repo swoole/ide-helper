@@ -32,10 +32,6 @@ class Redis
     {
     }
 
-    public function __destruct()
-    {
-    }
-
     /**
      * @param mixed $host
      * @param mixed|null $port

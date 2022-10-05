@@ -80,10 +80,6 @@ class Client
         }
     }
 
-    public function __destruct()
-    {
-    }
-
     /**
      * Set options of the client object before connecting to a remote server.
      *

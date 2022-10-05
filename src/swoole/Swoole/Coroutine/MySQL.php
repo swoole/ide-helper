@@ -30,14 +30,6 @@ class MySQL
 
     public $errno = 0;
 
-    public function __construct()
-    {
-    }
-
-    public function __destruct()
-    {
-    }
-
     /**
      * @return mixed
      */

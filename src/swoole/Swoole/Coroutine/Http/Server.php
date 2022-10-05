@@ -29,10 +29,6 @@ class Server
     {
     }
 
-    public function __destruct()
-    {
-    }
-
     public function set(array $settings): bool
     {
     }

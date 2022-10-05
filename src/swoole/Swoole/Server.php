@@ -137,10 +137,6 @@ class Server
     {
     }
 
-    public function __destruct()
-    {
-    }
-
     /**
      * @alias This method has an alias of \Swoole\Server::addlistener().
      * @see \Swoole\Server::addlistener()

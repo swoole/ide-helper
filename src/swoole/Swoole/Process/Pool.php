@@ -19,10 +19,6 @@ class Pool
     {
     }
 
-    public function __destruct()
-    {
-    }
-
     public function set(array $settings): void
     {
     }

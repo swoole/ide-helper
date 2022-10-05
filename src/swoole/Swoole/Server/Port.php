@@ -48,14 +48,6 @@ class Port
 
     private $onDisconnect;
 
-    private function __construct()
-    {
-    }
-
-    public function __destruct()
-    {
-    }
-
     public function set(array $settings): void
     {
     }

@@ -24,14 +24,6 @@ class PostgreSQL
 
     public $notices;
 
-    public function __construct()
-    {
-    }
-
-    public function __destruct()
-    {
-    }
-
     public function connect(string $conninfo, float $timeout = 2): bool
     {
     }

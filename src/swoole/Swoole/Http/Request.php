@@ -27,10 +27,6 @@ class Request
 
     public $tmpfiles;
 
-    public function __destruct()
-    {
-    }
-
     /**
      * Get the request content, kind of like function call fopen('php://input').
      *

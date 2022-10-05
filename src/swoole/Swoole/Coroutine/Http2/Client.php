@@ -36,10 +36,6 @@ class Client
     {
     }
 
-    public function __destruct()
-    {
-    }
-
     public function set(array $settings): bool
     {
     }

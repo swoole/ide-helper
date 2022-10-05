@@ -47,10 +47,6 @@ class Process
     {
     }
 
-    public function __destruct()
-    {
-    }
-
     public static function wait(bool $blocking = true): array|false
     {
     }
