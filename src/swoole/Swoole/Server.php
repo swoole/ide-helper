@@ -9,6 +9,8 @@ use Socket;
 use Swoole\Server\Port;
 
 /**
+ * The Swoole Server class.
+ *
  * History Changes:
  * 1. Following alias methods have been removed from Swoole 5.0.0. Please use the original methods instead.
  *    * \Swoole\Server::after()      => \Swoole\Timer::after().

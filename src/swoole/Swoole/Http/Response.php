@@ -7,23 +7,24 @@ namespace Swoole\Http;
 use Swoole\WebSocket\Frame;
 
 /**
+ * The HTTP Response class.
+ *
  * @not-serializable Objects of this class cannot be serialized.
  */
 class Response
 {
-    public $fd = 0;
+    /**
+     * File descriptor of the underlying socket connection.
+     */
+    public int $fd = 0;
 
     public $socket;
 
-    public $header;
+    public array $header;
 
-    public $cookie;
+    public array $cookie;
 
-    public $trailer;
-
-    public function __destruct()
-    {
-    }
+    public array $trailer;
 
     public function initHeader(): bool
     {
@@ -121,6 +122,11 @@ class Response
     {
     }
 
+    /**
+     * Upgrade the HTTP server connection to the WebSocket protocol by performing a handshake with the server.
+     *
+     * @return bool Returns true on success or false on failure.
+     */
     public function upgrade(): bool
     {
     }
@@ -133,6 +139,11 @@ class Response
     {
     }
 
+    /**
+     * Close a WebSocket connection.
+     *
+     * @return bool Returns true on success or false on failure.
+     */
     public function close(): bool
     {
     }
