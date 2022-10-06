@@ -48,12 +48,16 @@ class Socket
     {
     }
 
+    /**
+     * @since 4.5.0
+     */
     public function checkLiveness(): bool
     {
     }
 
     /**
      * @param int $length The default value (65536) is hardcoded in Swoole.
+     * @since 4.5.0
      */
     public function peek(int $length = 65536): string|false
     {

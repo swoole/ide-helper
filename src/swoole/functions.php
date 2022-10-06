@@ -168,14 +168,30 @@ function swoole_hashcode(string $data, int $type = 0): int|false
 {
 }
 
+/**
+ * @since 4.5.0
+ */
 function swoole_mime_type_add(string $suffix, string $mime_type): bool
 {
 }
 
+/**
+ * @since 4.5.0
+ */
 function swoole_mime_type_set(string $suffix, string $mime_type): void
 {
 }
 
+/**
+ * @since 4.5.0
+ */
+function swoole_mime_type_exists(string $filename): bool
+{
+}
+
+/**
+ * @since 4.5.0
+ */
 function swoole_mime_type_delete(string $suffix): bool
 {
 }
@@ -183,6 +199,7 @@ function swoole_mime_type_delete(string $suffix): bool
 /**
  * @alias This function has an alias function swoole_get_mime_type().
  * @see swoole_get_mime_type()
+ * @since 4.5.0
  */
 function swoole_mime_type_get(string $filename): string
 {
@@ -193,10 +210,6 @@ function swoole_mime_type_get(string $filename): string
  * @see swoole_mime_type_get()
  */
 function swoole_get_mime_type(string $filename): string
-{
-}
-
-function swoole_mime_type_exists(string $filename): bool
 {
 }
 

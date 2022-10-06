@@ -78,6 +78,7 @@ class System
     /**
      * @alias This method has an alias of \Swoole\Coroutine::wait().
      * @see \Swoole\Coroutine::wait()
+     * @since 4.5.0
      */
     public static function wait(float $timeout = -1): array|false
     {
@@ -86,6 +87,7 @@ class System
     /**
      * @alias This method has an alias of \Swoole\Coroutine::waitPid().
      * @see \Swoole\Coroutine::waitPid()
+     * @since 4.5.0
      */
     public static function waitPid(int $pid, float $timeout = -1): array|false
     {
@@ -94,6 +96,7 @@ class System
     /**
      * @alias This method has an alias of \Swoole\Coroutine::waitSignal().
      * @see \Swoole\Coroutine::waitSignal()
+     * @since 4.5.0
      */
     public static function waitSignal(int $signo, float $timeout = -1): bool
     {
@@ -102,6 +105,7 @@ class System
     /**
      * @alias This method has an alias of \Swoole\Coroutine::waitEvent().
      * @see \Swoole\Coroutine::waitEvent()
+     * @since 4.5.0
      */
     public static function waitEvent(mixed $socket, int $events = SWOOLE_EVENT_READ, float $timeout = -1): int|false
     {

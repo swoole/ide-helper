@@ -92,6 +92,7 @@ class Coroutine
      *
      * @param int $cid Coroutine ID. If specified as 0, ID of current coroutine will be used.
      * @return bool Returns true on success, or false on failure. Use function \swoole_last_error() to get the error code when failed.
+     * @since 4.7.0
      */
     public static function cancel(int $cid): bool
     {
@@ -372,6 +373,7 @@ class Coroutine
     /**
      * @alias Alias of method \Swoole\Coroutine\System::wait().
      * @see \Swoole\Coroutine\System::wait()
+     * @since 4.5.0
      */
     public static function wait(float $timeout = -1): array|false
     {
@@ -380,6 +382,7 @@ class Coroutine
     /**
      * @alias Alias of method \Swoole\Coroutine\System::waitPid().
      * @see \Swoole\Coroutine\System::waitPid()
+     * @since 4.5.0
      */
     public static function waitPid(int $pid, float $timeout = -1): array|false
     {
@@ -388,6 +391,7 @@ class Coroutine
     /**
      * @alias Alias of method \Swoole\Coroutine\System::waitSignal().
      * @see \Swoole\Coroutine\System::waitSignal()
+     * @since 4.5.0
      */
     public static function waitSignal(int $signo, float $timeout = -1): bool
     {
@@ -397,6 +401,7 @@ class Coroutine
      * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
      * @alias Alias of method \Swoole\Coroutine\System::waitEvent().
      * @see \Swoole\Coroutine\System::waitEvent()
+     * @since 4.5.0
      */
     public static function waitEvent(mixed $socket, int $events = SWOOLE_EVENT_READ, float $timeout = -1): int|false
     {

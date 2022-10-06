@@ -405,7 +405,6 @@ class Server
     }
 
     /**
-     * @param \Swoole\Process $process
      * @return int|false Return the ID of the process (\Swoole\Process::$id) back if succeeds; otherwise return FALSE.
      * @see \Swoole\Process::$id
      */
