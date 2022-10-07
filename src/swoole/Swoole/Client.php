@@ -96,9 +96,6 @@ class Client
     {
     }
 
-    /**
-     * @param int $size The default value (65536) is hardcoded in Swoole.
-     */
     public function recv(int $size = 65536, int $flag = 0): string|false
     {
     }

@@ -47,9 +47,11 @@ class Response
      * This method provides a way to access headers, cookies, and trailers of the HTTP response. When needed, call
      * this method first before accessing property $header, $cookie, and/or $trailer.
      *
-     * This method won't work after method Response::end() or Response::detach() is called.
+     * This method won't work if
+     *   - the server has finished processing the request and sending the response, or
+     *   - the underlying HTTP connection has been detached.
      *
-     * @return bool Return TRUE on success; return FALSE if the HTTP connection has been closed or detached.
+     * @return bool Return TRUE on success; return FALSE on failure.
      */
     public function initHeader(): bool
     {
@@ -106,6 +108,11 @@ class Response
     }
 
     /**
+     * Set an HTTP header.
+     *
+     * @param bool $format Format (capitalize) the header name or leave it as is.
+     *                     For example, HTTP header name "cOntent-tYpe" is converted to "Content-Type" by default.
+     * @return bool Return TRUE on success, or FALSE when failed.
      * @alias This method has an alias of \Swoole\Http\Response::setHeader().
      * @see \Swoole\Http\Response::setHeader()
      */
@@ -114,6 +121,11 @@ class Response
     }
 
     /**
+     * Set an HTTP header.
+     *
+     * @param bool $format Format (capitalize) the header name or leave it as is.
+     *                     For example, HTTP header name "cOntent-tYpe" is converted to "Content-Type" by default.
+     * @return bool Return TRUE on success, or FALSE when failed.
      * @alias Alias of method \Swoole\Http\Response::header().
      * @see \Swoole\Http\Response::header()
      */
@@ -127,8 +139,8 @@ class Response
      * @param string $key Name of the trailer field. It must be less than 128 bytes in length.
      * @return bool TRUE on success, or FALSE when failed. Typically, it fails because of one of the following reasons:
      *              - Name of the trailer field is too long.
-     *              - The HTTP connection has been closed.
-     *              - The HTTP connection has been detached.
+     *              - The server has finished processing the request and sending the response.
+     *              - The underlying HTTP connection has been detached.
      */
     public function trailer(string $key, string $value): bool
     {

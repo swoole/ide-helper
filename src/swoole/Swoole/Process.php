@@ -111,9 +111,6 @@ class Process
     {
     }
 
-    /**
-     * @param int $size The default value (8192) is hardcoded in Swoole.
-     */
     public function read(int $size = 8192): string|false
     {
     }
@@ -122,9 +119,6 @@ class Process
     {
     }
 
-    /**
-     * @param int $size The default value (65536) is hardcoded in Swoole.
-     */
     public function pop(int $size = 65536): string|false
     {
     }

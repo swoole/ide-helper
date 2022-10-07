@@ -60,10 +60,16 @@ class Request
     {
     }
 
+    /**
+     * @since 4.6.0
+     */
     public function parse(string $data): int|false
     {
     }
 
+    /**
+     * @since 4.6.0
+     */
     public function isCompleted(): bool
     {
     }

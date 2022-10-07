@@ -49,9 +49,6 @@ class Client
     {
     }
 
-    /**
-     * @param int $length The default value (65535) is hardcoded in Swoole.
-     */
     public function peek(int $length = 65535): string|false
     {
     }
