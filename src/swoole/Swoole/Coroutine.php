@@ -210,7 +210,7 @@ class Coroutine
      * @param int $limit To limit the number of stack frames printed. By default (limit=0) it prints all stack frames.
      * @see \debug_print_backtrace()
      */
-    public static function printBackTrace(int $cid = 0, int $options = DEBUG_BACKTRACE_PROVIDE_OBJECT, int $limit = 0): void
+    public static function printBackTrace(int $cid = 0, int $options = 0, int $limit = 0): void
     {
     }
 
