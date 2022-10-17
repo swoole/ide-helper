@@ -260,12 +260,100 @@ class Server
     {
     }
 
+    /**
+     * Dispatch tasks to task worker processes.
+     *
+     * This method can be used only when the server has task worker processes included/created. i.e., the server should
+     * have option \Swoole\Constant::OPTION_TASK_WORKER_NUM set to a value greater than 0.
+     *
+     * Before Swoole 4.8.12+ and 5.0.1+, this method doesn't support coroutine. If the server is running with option
+     * Swoole\Constant::OPTION_TASK_ENABLE_COROUTINE set to true, use method Server::taskCo() instead.
+     *
+     * Method \Swoole\Server::taskWaitMulti() works exactly the same as method \Swoole\Server::taskCo() when all the
+     * following conditions are met:
+     *   - used in Swoole 4.8.12+ or 5.0.1+.
+     *   - server option \Swoole\Constant::OPTION_TASK_ENABLE_COROUTINE is set to TRUE.
+     *
+     * @param mixed[] $tasks List of tasks to be dispatched. Maximum number of tasks: 1024.
+     * @param float $timeout The maximum waiting time (in seconds) for the task results. If the timeout is exceeded, results of unfinished tasks will be discarded.
+     * @return mixed[]|false Return an array of task results, or false on failure. For details, please check the pseudocode included in this method.
+     * @see \Swoole\Server::taskCo()
+     * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
+     */
     public function taskWaitMulti(array $tasks, float $timeout = 0.5): array|false
     {
+        if (!empty($this->setting[Constant::OPTION_TASK_ENABLE_COROUTINE])) { // Task worker processes have coroutine enabled.
+            if (SWOOLE_MAJOR_VERSION < 5) {
+                if (version_compare(SWOOLE_VERSION, '4.8.12', '>=')) { // If Swoole version is 4.8.12 or later, but less than 5.0.0.
+                    return $this->taskCo($tasks, $timeout);
+                }
+            } else {
+                if (version_compare(SWOOLE_VERSION, '5.0.1', '>=')) { // If Swoole version is 5.0.1 or later.
+                    return $this->taskCo($tasks, $timeout);
+                }
+            }
+        }
+
+        // Variable $tasks denotes an array of tasks to be dispatched, which may succeed, timeout, or fail.
+        $tasks = [
+            0 => 'a successfully finished task',
+            1 => 'a timeout task',
+            2 => 'a failed task',
+        ];
+
+        // When timeout is exceeded or all the tasks are completed, this method returns an array of task results (here we assume the return value is $results):
+        //   - The array of task results matches the order of the tasks in the $tasks parameter. e.g., $results[0] is the result of $tasks[0].
+        //   - If a task exceeds the timeout, it won't be included in the return value. e.g., $results[1] is not set (included) since $tasks[1] exceeds the timeout.
+        //   - If a task fails, the corresponding result will be false. e.g., $results[2] is false since $tasks[2] fails.
+        return [
+            0 => 'a successfully finished task',
+            2 => false,
+        ];
     }
 
+    /**
+     * To dispatch tasks to task worker processes, with the following constraints applied:
+     *   - The server should have option \Swoole\Constant::OPTION_TASK_WORKER_NUM set to a value greater than 0.
+     *   - The server should have option \Swoole\Constant::OPTION_TASK_ENABLE_COROUTINE set to true.
+     *
+     * Here is a piece of code to illustrate how to configure the server before using this method:
+     *   $server = new \Swoole\Server('0.0.0.0', 9501);
+     *   $server->set(
+     *     [
+     *       \Swoole\Constant::OPTION_TASK_WORKER_NUM       => 3,    // Have three task worker processes included/created.
+     *       \Swoole\Constant::OPTION_TASK_ENABLE_COROUTINE => true, // Support coroutine in task worker processes.
+     *       // ...
+     *     ]
+     *   );
+     *
+     * Method \Swoole\Server::taskCo() works exactly the same as method \Swoole\Server::taskWaitMulti() when all the
+     * following conditions are met:
+     *   - used in Swoole 4.8.12+ or 5.0.1+.
+     *   - server option \Swoole\Constant::OPTION_TASK_ENABLE_COROUTINE is set to TRUE.
+     *
+     * @param mixed[] $tasks List of tasks to be dispatched. Maximum number of tasks: 1024.
+     * @param float $timeout The maximum waiting time (in seconds) for the task results. If the timeout is exceeded, results of unfinished tasks will be discarded.
+     * @return mixed[]|false Return an array of task results, or false on failure. For details, please check the pseudocode included in this method.
+     * @see \Swoole\Server::taskWaitMulti()
+     * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
+     */
     public function taskCo(array $tasks, float $timeout = 0.5): array|false
     {
+        // Variable $tasks denotes an array of tasks to be dispatched, which may succeed, timeout, or fail.
+        $tasks = [
+            0 => 'a successfully finished task',
+            1 => 'a timeout task',
+            2 => 'a failed task',
+        ];
+
+        // When timeout is exceeded or all the tasks are completed, this method returns an array of task results (here we assume the return value is $results):
+        //   - The array of task results matches the order of the tasks in the $tasks parameter. e.g., $results[0] is the result of $tasks[0].
+        //   - If a task fails or exceeds the timeout, the corresponding result will be false. e.g., $results[1] is false since $tasks[1] exceeds the timeout.
+        return [
+            0 => 'result of $tasks[0]',
+            1 => false,
+            2 => false,
+        ];
     }
 
     public function finish(mixed $data): bool
