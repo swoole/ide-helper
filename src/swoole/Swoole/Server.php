@@ -294,6 +294,10 @@ class Server
             }
         }
 
+        // Now, the server dispatches tasks to task worker processes and waits for the results.
+
+        // Finally, let's see how the return value looks like.
+
         // Variable $tasks denotes an array of tasks to be dispatched, which may succeed, timeout, or fail.
         $tasks = [
             0 => 'a successfully finished task',
@@ -339,6 +343,8 @@ class Server
      */
     public function taskCo(array $tasks, float $timeout = 0.5): array|false
     {
+        // The pseudocode here shows how the return value looks like.
+
         // Variable $tasks denotes an array of tasks to be dispatched, which may succeed, timeout, or fail.
         $tasks = [
             0 => 'a successfully finished task',
