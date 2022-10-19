@@ -75,7 +75,11 @@ define('SWOOLE_KEEP', 4096);  // 2^12
 define('SWOOLE_EVENT_READ', 512);   // 2^9
 define('SWOOLE_EVENT_WRITE', 1024); // 2^10
 
-// Error types. They are used as value of the second parameter of function swoole_strerror(int $errno, int $error_type).
+/*
+ * Error types. They are used as value of the second parameter of function swoole_strerror(int $errno, int $error_type).
+ *
+ * @see swoole_strerror()
+ */
 define('SWOOLE_STRERROR_SYSTEM', 0);
 define('SWOOLE_STRERROR_GAI', 1);
 define('SWOOLE_STRERROR_DNS', 2);
@@ -240,9 +244,18 @@ define('SWOOLE_LOG_ROTATION_DAILY', 2);
 define('SWOOLE_LOG_ROTATION_HOURLY', 3);
 define('SWOOLE_LOG_ROTATION_EVERY_MINUTE', 4);
 
+/*
+ * Constants in this section are IPC modes.
+ */
 define('SWOOLE_IPC_NONE', 0);
-define('SWOOLE_IPC_UNIXSOCK', 1);
-define('SWOOLE_IPC_SOCKET', 3);
+define('SWOOLE_IPC_UNIXSOCK', 1); // IPC socket (aka Unix domain socket).
+define('SWOOLE_IPC_MSGQUEUE', 2);
+define('SWOOLE_IPC_SOCKET', 3); // Network socket.
+
+define('SWOOLE_IPC_UNSOCK', SWOOLE_IPC_UNIXSOCK);
+define('SWOOLE_IPC_PREEMPTIVE', 3);
+
+// limit
 define('SWOOLE_IOV_MAX', 1024);
 define('SWOOLE_FILELOCK', 2);
 define('SWOOLE_MUTEX', 3);
@@ -296,6 +309,7 @@ define('SWOOLE_CORO_INIT', 0);
 define('SWOOLE_CORO_WAITING', 1);
 define('SWOOLE_CORO_RUNNING', 2);
 define('SWOOLE_CORO_END', 3);
+
 define('SWOOLE_EXIT_IN_COROUTINE', 2);
 define('SWOOLE_EXIT_IN_SERVER', 4);
 
@@ -327,39 +341,16 @@ define('SWOOLE_HOOK_NATIVE_CURL', 4096);
 define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192);
 define('SWOOLE_HOOK_SOCKETS', 16384);
 define('SWOOLE_HOOK_ALL', 2147481599);
-define('SOCKET_ECANCELED', 125);
-define('SWOOLE_HTTP_CLIENT_ESTATUS_CONNECT_FAILED', -1);
-define('SWOOLE_HTTP_CLIENT_ESTATUS_REQUEST_TIMEOUT', -2);
-define('SWOOLE_HTTP_CLIENT_ESTATUS_SERVER_RESET', -3);
-define('SWOOLE_HTTP_CLIENT_ESTATUS_SEND_FAILED', -4);
-define('SWOOLE_HTTP2_TYPE_DATA', 0);
-define('SWOOLE_HTTP2_TYPE_HEADERS', 1);
-define('SWOOLE_HTTP2_TYPE_PRIORITY', 2);
-define('SWOOLE_HTTP2_TYPE_RST_STREAM', 3);
-define('SWOOLE_HTTP2_TYPE_SETTINGS', 4);
-define('SWOOLE_HTTP2_TYPE_PUSH_PROMISE', 5);
-define('SWOOLE_HTTP2_TYPE_PING', 6);
-define('SWOOLE_HTTP2_TYPE_GOAWAY', 7);
-define('SWOOLE_HTTP2_TYPE_WINDOW_UPDATE', 8);
-define('SWOOLE_HTTP2_TYPE_CONTINUATION', 9);
-define('SWOOLE_HTTP2_ERROR_NO_ERROR', 0);
-define('SWOOLE_HTTP2_ERROR_PROTOCOL_ERROR', 1);
-define('SWOOLE_HTTP2_ERROR_INTERNAL_ERROR', 2);
-define('SWOOLE_HTTP2_ERROR_FLOW_CONTROL_ERROR', 3);
-define('SWOOLE_HTTP2_ERROR_SETTINGS_TIMEOUT', 4);
-define('SWOOLE_HTTP2_ERROR_STREAM_CLOSED', 5);
-define('SWOOLE_HTTP2_ERROR_FRAME_SIZE_ERROR', 6);
-define('SWOOLE_HTTP2_ERROR_REFUSED_STREAM', 7);
-define('SWOOLE_HTTP2_ERROR_CANCEL', 8);
-define('SWOOLE_HTTP2_ERROR_COMPRESSION_ERROR', 9);
-define('SWOOLE_HTTP2_ERROR_CONNECT_ERROR', 10);
-define('SWOOLE_HTTP2_ERROR_ENHANCE_YOUR_CALM', 11);
-define('SWOOLE_HTTP2_ERROR_INADEQUATE_SECURITY', 12);
+
+define('SOCKET_ECANCELED', 125); // TODO:
+
+/*
+ * Constants in this section are used in Swoole servers.
+ */
+// Server modes.
 define('SWOOLE_BASE', 1);
 define('SWOOLE_PROCESS', 2);
-define('SWOOLE_IPC_UNSOCK', 1);
-define('SWOOLE_IPC_MSGQUEUE', 2);
-define('SWOOLE_IPC_PREEMPTIVE', 3);
+// Command types in Swoole server.
 define('SWOOLE_SERVER_COMMAND_MASTER', 2);
 define('SWOOLE_SERVER_COMMAND_MANAGER', 32);
 define('SWOOLE_SERVER_COMMAND_REACTOR_THREAD', 4);
@@ -390,6 +381,47 @@ define('SWOOLE_TASK_NOREPLY', 128);
 define('SWOOLE_WORKER_BUSY', 1);
 define('SWOOLE_WORKER_IDLE', 2);
 define('SWOOLE_WORKER_EXIT', 3);
+
+/*
+ * Status code of the last operation in class \Swoole\Coroutine\Http\Client.
+ *
+ * @see \Swoole\Coroutine\Http\Client
+ * @see \Swoole\Coroutine\Http\Client::$statusCode
+ */
+define('SWOOLE_HTTP_CLIENT_ESTATUS_CONNECT_FAILED', -1);
+define('SWOOLE_HTTP_CLIENT_ESTATUS_REQUEST_TIMEOUT', -2);
+define('SWOOLE_HTTP_CLIENT_ESTATUS_SERVER_RESET', -3);
+define('SWOOLE_HTTP_CLIENT_ESTATUS_SEND_FAILED', -4);
+
+// HTTP 2 frame types.
+// @see https://datatracker.ietf.org/doc/html/rfc7540#section-6 Frame Definitions
+define('SWOOLE_HTTP2_TYPE_DATA', 0);
+define('SWOOLE_HTTP2_TYPE_HEADERS', 1);
+define('SWOOLE_HTTP2_TYPE_PRIORITY', 2);
+define('SWOOLE_HTTP2_TYPE_RST_STREAM', 3);
+define('SWOOLE_HTTP2_TYPE_SETTINGS', 4);
+define('SWOOLE_HTTP2_TYPE_PUSH_PROMISE', 5);
+define('SWOOLE_HTTP2_TYPE_PING', 6);
+define('SWOOLE_HTTP2_TYPE_GOAWAY', 7);
+define('SWOOLE_HTTP2_TYPE_WINDOW_UPDATE', 8);
+define('SWOOLE_HTTP2_TYPE_CONTINUATION', 9);
+
+// HTTP 2 error codes.
+// @see https://datatracker.ietf.org/doc/html/rfc7540#section-7 Error Codes
+define('SWOOLE_HTTP2_ERROR_NO_ERROR', 0);
+define('SWOOLE_HTTP2_ERROR_PROTOCOL_ERROR', 1);
+define('SWOOLE_HTTP2_ERROR_INTERNAL_ERROR', 2);
+define('SWOOLE_HTTP2_ERROR_FLOW_CONTROL_ERROR', 3);
+define('SWOOLE_HTTP2_ERROR_SETTINGS_TIMEOUT', 4);
+define('SWOOLE_HTTP2_ERROR_STREAM_CLOSED', 5);
+define('SWOOLE_HTTP2_ERROR_FRAME_SIZE_ERROR', 6);
+define('SWOOLE_HTTP2_ERROR_REFUSED_STREAM', 7);
+define('SWOOLE_HTTP2_ERROR_CANCEL', 8);
+define('SWOOLE_HTTP2_ERROR_COMPRESSION_ERROR', 9);
+define('SWOOLE_HTTP2_ERROR_CONNECT_ERROR', 10);
+define('SWOOLE_HTTP2_ERROR_ENHANCE_YOUR_CALM', 11);
+define('SWOOLE_HTTP2_ERROR_INADEQUATE_SECURITY', 12);
+define('SWOOLE_HTTP2_ERROR_HTTP_1_1_REQUIRED', 13); // Added in Swoole 5.0.1.
 
 // WebSocket flags.
 define('SWOOLE_WEBSOCKET_FLAG_FIN', 1);
