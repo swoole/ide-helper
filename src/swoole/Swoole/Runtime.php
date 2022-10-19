@@ -25,11 +25,16 @@ class Runtime
     {
     }
 
+    /**
+     * Get current runtime hook flags.
+     */
     public static function getHookFlags(): int
     {
     }
 
     /**
+     * Set runtime hook flags.
+     *
      * @return bool true on success or false on failure
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */

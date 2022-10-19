@@ -39,6 +39,11 @@ class Client
 
     public int $downloadOffset = 0;
 
+    /**
+     * Status code of last operation. 0 means no error.
+     *
+     * For details, please check SWOOLE_HTTP_CLIENT_ESTATUS_* constants.
+     */
     public int $statusCode = 0;
 
     public $headers;

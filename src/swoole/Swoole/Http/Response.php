@@ -150,7 +150,17 @@ class Response
     {
     }
 
-    public function goaway(int $error_code = 0, string $debug_data = ''): bool
+    /**
+     * Send a GOAWAY frame to the remote peer.
+     *
+     * This method works only when the HTTP/2 protocol is used.
+     *
+     * @param int $error_code An HTTP2 error code that contains the reason for closing the connection. HTTP2 error codes are defined as SWOOLE_HTTP2_ERROR_* constants.
+     * @param string $debug_data Additional debug data to send to the remote peer.
+     * @return bool TRUE on success or FALSE on failure.
+     * @see \Swoole\Coroutine\Http2\Client::goaway()
+     */
+    public function goaway(int $error_code = SWOOLE_HTTP2_ERROR_NO_ERROR, string $debug_data = ''): bool
     {
     }
 
