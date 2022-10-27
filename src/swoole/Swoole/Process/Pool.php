@@ -11,7 +11,12 @@ use Swoole\Process;
  */
 class Pool
 {
-    public $master_pid = -1;
+    /**
+     * Process ID of the master process of the pool. The master process is the process where the Pool object is created.
+     *
+     * This property will be set to a positive integer when method \Swoole\Process\Pool::start() is called successfully.
+     */
+    public int $master_pid = -1;
 
     public $workers;
 
@@ -54,6 +59,14 @@ class Pool
     {
     }
 
+    /**
+     * Shutdown the process pool.
+     *
+     * All this method does is to send a SIGTERM signal to the master process of the pool. It will kill the master
+     * process and all worker processes.
+     *
+     * @return bool TRUE on success, FALSE on failure.
+     */
     public function shutdown(): bool
     {
     }
