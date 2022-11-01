@@ -20,14 +20,20 @@ class Table implements \Iterator, \Countable
 {
     public const TYPE_INT = 1;
 
-    public const TYPE_STRING = 3;
-
     public const TYPE_FLOAT = 2;
 
+    public const TYPE_STRING = 3;
+
+    /**
+     * Maximum number of rows in the table.
+     */
     public int $size;
 
     public int $memorySize;
 
+    /**
+     * @param int $table_size Maximum number of rows in the table.
+     */
     public function __construct(int $table_size, float $conflict_proportion = 0.2)
     {
     }
@@ -104,6 +110,11 @@ class Table implements \Iterator, \Countable
     {
     }
 
+    /**
+     * Get maximum number of rows in the table.
+     *
+     * @return int Returns maximum number of rows in the table.
+     */
     public function getSize(): int
     {
     }

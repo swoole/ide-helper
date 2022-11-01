@@ -238,6 +238,7 @@ define('SWOOLE_LOG_WARNING', 4);
 define('SWOOLE_LOG_ERROR', 5);
 define('SWOOLE_LOG_NONE', 6);
 
+// Log rotation intervals.
 define('SWOOLE_LOG_ROTATION_SINGLE', 0);
 define('SWOOLE_LOG_ROTATION_MONTHLY', 1);
 define('SWOOLE_LOG_ROTATION_DAILY', 2);
@@ -257,11 +258,31 @@ define('SWOOLE_IPC_PREEMPTIVE', 3);
 
 // limit
 define('SWOOLE_IOV_MAX', 1024);
+
+/*
+ * Types of supported locks in Swoole.
+ *
+ * @see \Swoole\Lock
+ */
+#ifdef HAVE_RWLOCK
+define('SWOOLE_RWLOCK', 1);
+#endif
 define('SWOOLE_FILELOCK', 2);
 define('SWOOLE_MUTEX', 3);
 define('SWOOLE_SEM', 4);
-define('SWOOLE_RWLOCK', 1);
+#ifdef HAVE_SPINLOCK
 define('SWOOLE_SPINLOCK', 5);
+#endif
+
+/*
+ * Following SIG_* and PRIO_* constants are set only when PHP extension pcntl (to support Process Control) is not installed.
+ *
+ * Most constants here are the same as those defined in PHP extension pcntl, as you can see from the following links:
+ *   - https://www.php.net/manual/en/pcntl.constants.php
+ *   - https://github.com/php/php-src/blob/php-8.1.12/ext/pcntl/pcntl.c#L106
+ */
+// SIG_* constants. Please see your systems signal(7) man page for details of the default behavior of these signals.
+define('SIG_IGN', 1);
 define('SIGHUP', 1);
 define('SIGINT', 2);
 define('SIGQUIT', 3);
@@ -299,10 +320,18 @@ define('SIGPWR', 30);
 #ifdef SIGSYS
 define('SIGSYS', 31);
 #endif
-define('SIG_IGN', 1);
+/*
+ * PRIO_* constants. They are used to get/set process priority.
+ *
+ * Please see your systems getpriority(2) or setpriority(2) man page for details of these constants.
+ *
+ * @see \Swoole\Process::getPriority()
+ * @see \Swoole\Process::setPriority()
+ */
 define('PRIO_PROCESS', 0);
 define('PRIO_PGRP', 1);
 define('PRIO_USER', 2);
+
 define('SWOOLE_DEFAULT_MAX_CORO_NUM', 100000);
 define('SWOOLE_CORO_MAX_NUM_LIMIT', 9223372036854775807);
 define('SWOOLE_CORO_INIT', 0);
@@ -310,8 +339,16 @@ define('SWOOLE_CORO_WAITING', 1);
 define('SWOOLE_CORO_RUNNING', 2);
 define('SWOOLE_CORO_END', 3);
 
-define('SWOOLE_EXIT_IN_COROUTINE', 2);
-define('SWOOLE_EXIT_IN_SERVER', 4);
+/*
+ * Exit flags.
+ *
+ * When exit() is called in Swoole illegally, Swoole throws out a \Swoole\ExitException exception, with exit flags set
+ * on property $flags.
+ *
+ * @see \Swoole\ExitException::$flags
+ */
+define('SWOOLE_EXIT_IN_COROUTINE', 2); // PHP function exit() is called inside a coroutine.
+define('SWOOLE_EXIT_IN_SERVER', 4); // PHP function exit() is called after Swoole server is started.
 
 /*
  * Error codes of channels. They are used in method \Swoole\Coroutine\Channel::push() and \Swoole\Coroutine\Channel::pop() only.
