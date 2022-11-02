@@ -8,6 +8,7 @@ namespace Swoole\Coroutine\Http;
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has an alias of "\Co\Http\Server" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Http\Server
+ * @since 4.4.0
  */
 class Server
 {

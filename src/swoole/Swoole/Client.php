@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Swoole;
 
-use Socket;
-
 /**
  * @not-serializable Objects of this class cannot be serialized.
  */
@@ -161,7 +159,7 @@ class Client
     {
     }
 
-    public function getSocket(): Socket|false
+    public function getSocket(): \Socket|false
     {
     }
 }

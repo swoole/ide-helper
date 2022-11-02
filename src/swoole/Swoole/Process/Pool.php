@@ -15,6 +15,8 @@ class Pool
      * Process ID of the master process of the pool. The master process is the process where the Pool object is created.
      *
      * This property will be set to a positive integer when method \Swoole\Process\Pool::start() is called successfully.
+     *
+     * @since 4.3.2
      */
     public int $master_pid = -1;
 
@@ -24,6 +26,9 @@ class Pool
     {
     }
 
+    /**
+     * @since 4.4.4
+     */
     public function set(array $settings): void
     {
     }
@@ -55,6 +60,9 @@ class Pool
     {
     }
 
+    /**
+     * @since 4.7.0
+     */
     public function stop(): void
     {
     }
@@ -66,6 +74,7 @@ class Pool
      * process and all worker processes.
      *
      * @return bool TRUE on success, FALSE on failure.
+     * @since 4.3.2
      */
     public function shutdown(): bool
     {

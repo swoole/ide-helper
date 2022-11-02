@@ -36,6 +36,7 @@ class Runtime
      * Set runtime hook flags.
      *
      * @return bool true on success or false on failure
+     * @since 4.5.0
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
     public static function setHookFlags(int $flags): bool

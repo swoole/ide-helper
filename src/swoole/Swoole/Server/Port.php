@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Swoole\Server;
 
-use Closure;
-use Socket;
-
 /**
  * @not-serializable Objects of this class cannot be serialized.
  */
@@ -26,26 +23,60 @@ class Port
 
     public $connections;
 
+    /**
+     * @var callable
+     */
     private $onConnect;
 
+    /**
+     * @var callable
+     */
     private $onReceive;
 
+    /**
+     * @var callable
+     */
     private $onClose;
 
+    /**
+     * @var callable
+     */
     private $onPacket;
 
+    /**
+     * @var callable
+     */
     private $onBufferFull;
 
+    /**
+     * @var callable
+     */
     private $onBufferEmpty;
 
+    /**
+     * @var callable
+     */
     private $onRequest;
 
+    /**
+     * @var callable
+     */
     private $onHandShake;
 
+    /**
+     * @var callable
+     */
     private $onOpen;
 
+    /**
+     * @var callable
+     */
     private $onMessage;
 
+    /**
+     * @var callable
+     * @since 4.7.0
+     */
     private $onDisconnect;
 
     public function set(array $settings): void
@@ -56,11 +87,11 @@ class Port
     {
     }
 
-    public function getCallback(string $event_name): ?Closure
+    public function getCallback(string $event_name): ?callable
     {
     }
 
-    public function getSocket(): Socket|false
+    public function getSocket(): \Socket|false
     {
     }
 }

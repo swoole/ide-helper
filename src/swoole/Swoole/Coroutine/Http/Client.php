@@ -78,6 +78,9 @@ class Client
     {
     }
 
+    /**
+     * @since 4.4.0
+     */
     public function setBasicAuth(string $username, string $password): void
     {
     }
@@ -102,10 +105,16 @@ class Client
     {
     }
 
+    /**
+     * @since 4.5.0
+     */
     public function getpeername(): array|false
     {
     }
 
+    /**
+     * @since 4.5.0
+     */
     public function getsockname(): array|false
     {
     }
@@ -145,6 +154,8 @@ class Client
     /**
      * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
      * option "--enable-openssl" included).
+     *
+     * @since 4.5.0
      */
     public function getPeerCert(): string|false
     {

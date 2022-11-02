@@ -30,6 +30,9 @@ class Client
 
     public int $port = 0;
 
+    /**
+     * @since 4.4.0
+     */
     public bool $ssl = false;
 
     public function __construct(string $host, int $port = 80, bool $open_ssl = false)
@@ -64,6 +67,9 @@ class Client
     {
     }
 
+    /**
+     * @since 4.5.0
+     */
     public function read(float $timeout = 0): Response|false
     {
     }

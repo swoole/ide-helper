@@ -44,6 +44,7 @@ class Timer
     /**
      * @alias This method has an alias function \swoole_timer_info().
      * @see \swoole_timer_info()
+     * @since 4.4.0
      */
     public static function info(int $timer_id): ?array
     {
@@ -52,6 +53,7 @@ class Timer
     /**
      * @alias This method has an alias function \swoole_timer_stats().
      * @see \swoole_timer_stats()
+     * @since 4.4.0
      */
     public static function stats(): array
     {
@@ -62,6 +64,7 @@ class Timer
      *
      * @alias This method has an alias function \swoole_timer_list().
      * @see \swoole_timer_list()
+     * @since 4.4.0
      *
      * @example
      * <pre>
@@ -85,6 +88,7 @@ class Timer
     /**
      * @alias This method has an alias function \swoole_timer_clear_all().
      * @see \swoole_timer_clear_all()
+     * @since 4.4.0
      */
     public static function clearAll(): bool
     {

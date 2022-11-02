@@ -75,6 +75,9 @@ class Socket
     {
     }
 
+    /**
+     * @since 4.4.0
+     */
     public function recvPacket(float $timeout = 0): string|false
     {
     }
@@ -99,6 +102,9 @@ class Socket
     {
     }
 
+    /**
+     * @since 4.4.0
+     */
     public function sendFile(string $file, int $offset = 0, int $length = 0): bool
     {
     }
@@ -121,6 +127,7 @@ class Socket
 
     /**
      * @return bool Returns TRUE if succeeds; otherwise FALSE.
+     * @since 4.4.0
      */
     public function setProtocol(array $settings): bool
     {
@@ -133,6 +140,8 @@ class Socket
     /**
      * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
      * option "--enable-openssl" included).
+     *
+     * @since 4.5.0
      */
     public function sslHandshake(): bool
     {
@@ -147,6 +156,7 @@ class Socket
 
     /**
      * @param int $event a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event.
+     * @since 4.4.0
      */
     public function cancel(int $event = SWOOLE_EVENT_READ): bool
     {

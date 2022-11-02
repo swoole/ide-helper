@@ -275,11 +275,15 @@ define('SWOOLE_SPINLOCK', 5);
 #endif
 
 /*
- * Following SIG_* and PRIO_* constants are set only when PHP extension pcntl (to support Process Control) is not installed.
+ * Following SIG_* and PRIO_* constants are set only when PHP extension pcntl (to support Process Control) is not
+ * installed.
  *
  * Most constants here are the same as those defined in PHP extension pcntl, as you can see from the following links:
  *   - https://www.php.net/manual/en/pcntl.constants.php
  *   - https://github.com/php/php-src/blob/php-8.1.12/ext/pcntl/pcntl.c#L106
+ *
+ * Note that values of these constants are not always the same in different operating systems. The values shown here
+ * is for Linux only.
  */
 // SIG_* constants. Please see your systems signal(7) man page for details of the default behavior of these signals.
 define('SIG_IGN', 1);
@@ -347,8 +351,8 @@ define('SWOOLE_CORO_END', 3);
  *
  * @see \Swoole\ExitException::$flags
  */
-define('SWOOLE_EXIT_IN_COROUTINE', 2); // PHP function exit() is called inside a coroutine.
-define('SWOOLE_EXIT_IN_SERVER', 4); // PHP function exit() is called after Swoole server is started.
+define('SWOOLE_EXIT_IN_COROUTINE', 2); // exit() is called inside a coroutine.
+define('SWOOLE_EXIT_IN_SERVER', 4); // exit() is called after Swoole server is started.
 
 /*
  * Error codes of channels. They are used in method \Swoole\Coroutine\Channel::push() and \Swoole\Coroutine\Channel::pop() only.
@@ -384,7 +388,7 @@ define('SOCKET_ECANCELED', 125); // TODO:
 /*
  * Constants in this section are used in Swoole servers.
  */
-// Server modes.
+// Server modes. For details, please check documentation on property \Swoole\Server::$mode.
 define('SWOOLE_BASE', 1);
 define('SWOOLE_PROCESS', 2);
 // Command types in Swoole server.

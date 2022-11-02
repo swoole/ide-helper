@@ -13,6 +13,7 @@ namespace Swoole\Timer;
  * @see https://www.php.net/ArrayIterator
  * @see \Swoole\Timer::list()
  * @see \swoole_timer_list()
+ * @since 4.4.0
  */
 class Iterator extends \ArrayIterator
 {

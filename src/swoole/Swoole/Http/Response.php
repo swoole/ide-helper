@@ -72,6 +72,7 @@ class Response
     /**
      * @alias Alias of method \Swoole\Http\Response::cookie().
      * @see \Swoole\Http\Response::cookie()
+     * @since 4.4.0
      */
     public function setCookie(string $name, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = ''): bool
     {
@@ -102,6 +103,7 @@ class Response
      * @return bool Return TRUE on success, or FALSE when failed (e.g., if the HTTP connection has been closed or detached).
      * @alias Alias of method \Swoole\Http\Response::status().
      * @see \Swoole\Http\Response::status()
+     * @since 4.4.0
      */
     public function setStatusCode(int $http_code, string $reason = ''): bool
     {
@@ -128,6 +130,7 @@ class Response
      * @return bool Return TRUE on success, or FALSE when failed.
      * @alias Alias of method \Swoole\Http\Response::header().
      * @see \Swoole\Http\Response::header()
+     * @since 4.4.0
      */
     public function setHeader(string $key, string|array $value, bool $format = true): bool
     {
@@ -192,6 +195,7 @@ class Response
      * Upgrade the HTTP server connection to the WebSocket protocol by performing a handshake with the server.
      *
      * @return bool Returns true on success or false on failure.
+     * @since 4.4.0
      */
     public function upgrade(): bool
     {

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Swoole\WebSocket;
 
-use Stringable;
-
-class Frame implements Stringable
+class Frame implements \Stringable
 {
     public int $fd = 0;
 

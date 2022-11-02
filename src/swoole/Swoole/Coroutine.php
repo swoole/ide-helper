@@ -120,6 +120,7 @@ class Coroutine
      * A coroutine can be cancelled by calling method \Swoole\Coroutine::cancel($cid) in another coroutine.
      *
      * @return bool TRUE if the current coroutine has been cancelled; otherwise FALSE.
+     * @since 4.7.0
      */
     public static function isCanceled(): bool
     {
@@ -188,7 +189,7 @@ class Coroutine
     /**
      * Generate a backtrace of the specified coroutine.
      *
-     * This method is similar to function \debug_backtrace().
+     * This method is similar to built-in function \debug_backtrace().
      *
      * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
      * @param int $options A bitmask for the following options: DEBUG_BACKTRACE_PROVIDE_OBJECT, DEBUG_BACKTRACE_IGNORE_ARGS.
@@ -203,7 +204,7 @@ class Coroutine
     /**
      * Print a PHP backtrace of the specified coroutine.
      *
-     * This method is similar to function \debug_print_backtrace().
+     * This method is similar to built-in function \debug_print_backtrace().
      *
      * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
      * @param int $options A bitmask for the following option(s): DEBUG_BACKTRACE_IGNORE_ARGS.
@@ -219,6 +220,7 @@ class Coroutine
      *
      * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
      * @return int Return the execution time of the specified coroutine in milliseconds.
+     * @since 4.5.0
      */
     public static function getElapsed(int $cid = 0): int
     {
@@ -240,6 +242,7 @@ class Coroutine
      *
      * @alias This method has an alias of \Swoole\Coroutine::listCoroutines().
      * @see \Swoole\Coroutine::listCoroutines()
+     * @since 4.4.0
      *
      * @example
      * <pre>
@@ -257,6 +260,7 @@ class Coroutine
      *
      * @alias Alias of method \Swoole\Coroutine::list().
      * @see \Swoole\Coroutine::list()
+     * @since 4.4.0
      *
      * @example
      * <pre>

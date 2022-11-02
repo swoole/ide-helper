@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Swoole;
 
-use Closure;
-use Socket;
+use Swoole\Connection\Iterator;
+use Swoole\Coroutine\Http\Server as AdminServer;
 use Swoole\Server\Port;
 
 /**
@@ -25,7 +25,7 @@ class Server
 {
     public $setting;
 
-    public $connections;
+    public Iterator $connections;
 
     public $host = '';
 
@@ -55,10 +55,9 @@ class Server
     public $stats_timer;
 
     /**
-     * @var \Swoole\Coroutine\Http\Server
      * @since 4.8.0
      */
-    public $admin_server;
+    public AdminServer $admin_server;
 
     /**
      * @var callable
@@ -88,11 +87,13 @@ class Server
 
     /**
      * @var callable
+     * @since 4.5.0
      */
     private $onBeforeReload;
 
     /**
      * @var callable
+     * @since 4.5.0
      */
     private $onAfterReload;
 
@@ -142,6 +143,7 @@ class Server
     /**
      * @alias This method has an alias of \Swoole\Server::addlistener().
      * @see \Swoole\Server::addlistener()
+     * @see \Swoole\Server::getClientInfo()
      */
     public function listen(string $host, int $port, int $sock_type): Port|false
     {
@@ -150,6 +152,7 @@ class Server
     /**
      * @alias Alias of method \Swoole\Server::listen().
      * @see \Swoole\Server::listen()
+     * @see \Swoole\Server::getClientInfo()
      */
     public function addlistener(string $host, int $port, int $sock_type): Port|false
     {
@@ -159,7 +162,7 @@ class Server
     {
     }
 
-    public function getCallback(string $event_name): Closure|string|array|null
+    public function getCallback(string $event_name): \Closure|string|array|null
     {
     }
 
@@ -417,6 +420,7 @@ class Server
      *
      * @return int|false Returns the ID of current worker. Returns false if not called within a worker process (either
      *                   an event worker process or a task worker process).
+     * @since 4.5.0
      */
     public function getWorkerId(): int|false
     {
@@ -429,19 +433,29 @@ class Server
      *                   is a negative integer or not passed in, returns the process ID of current worker process.
      *                   Returns false if something wrong happens (e.g., the worker process doesn't exist, or an invalid
      *                   worker ID specified.).
+     * @since 4.5.0
      */
     public function getWorkerPid(int $worker_id = -1): int|false
     {
     }
 
+    /**
+     * @since 4.5.0
+     */
     public function getWorkerStatus(int $worker_id = -1): int|false
     {
     }
 
+    /**
+     * @since 4.5.0
+     */
     public function getManagerPid(): int
     {
     }
 
+    /**
+     * @since 4.5.0
+     */
     public function getMasterPid(): int
     {
     }
@@ -510,7 +524,7 @@ class Server
     {
     }
 
-    public function getSocket(int $port = 0): Socket|false
+    public function getSocket(int $port = 0): \Socket|false
     {
     }
 
