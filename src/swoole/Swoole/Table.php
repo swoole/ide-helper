@@ -38,6 +38,10 @@ class Table implements \Iterator, \Countable
     {
     }
 
+    /**
+     * @param int $type Must be one of the following constants: Table::TYPE_INT, Table::TYPE_FLOAT, or Table::TYPE_STRING.
+     * @param int $size Length of the string. This parameter is ignored for other types.
+     */
     public function column(string $name, int $type, int $size = 0): bool
     {
     }

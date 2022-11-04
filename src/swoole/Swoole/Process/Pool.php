@@ -20,7 +20,13 @@ class Pool
      */
     public int $master_pid = -1;
 
-    public $workers;
+    /**
+     * List of the worker processes.
+     *
+     * @var Process[]
+     * @since 4.4.0
+     */
+    public array $workers;
 
     public function __construct(int $worker_num, int $ipc_type = SWOOLE_IPC_NONE, int $msgqueue_key = 0, bool $enable_coroutine = false)
     {

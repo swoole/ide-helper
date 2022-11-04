@@ -250,13 +250,19 @@ define('SWOOLE_LOG_ROTATION_EVERY_MINUTE', 4);
  */
 define('SWOOLE_IPC_NONE', 0);
 define('SWOOLE_IPC_UNIXSOCK', 1); // IPC socket (aka Unix domain socket).
-define('SWOOLE_IPC_MSGQUEUE', 2);
+define('SWOOLE_IPC_MSGQUEUE', 2); // IPC using message queues.
 define('SWOOLE_IPC_SOCKET', 3); // Network socket.
 
 define('SWOOLE_IPC_UNSOCK', SWOOLE_IPC_UNIXSOCK);
 define('SWOOLE_IPC_PREEMPTIVE', 3);
 
-// limit
+/*
+ * Maximum number of iovec structures that one process has available for use with readv() or writev().
+ *
+ * Note that value of this constant varies across different operating systems.
+ *
+ * @see https://www.gnu.org/software/libc/manual/html_node/Scatter_002dGather.html Fast Scatter-Gather I/O
+ */
 define('SWOOLE_IOV_MAX', 1024);
 
 /*
@@ -419,6 +425,7 @@ define('SWOOLE_TASK_WAITALL', 16);
 define('SWOOLE_TASK_COROUTINE', 32);
 define('SWOOLE_TASK_PEEK', 64);
 define('SWOOLE_TASK_NOREPLY', 128);
+// Statuses of worker processes in Swoole server.
 define('SWOOLE_WORKER_BUSY', 1);
 define('SWOOLE_WORKER_IDLE', 2);
 define('SWOOLE_WORKER_EXIT', 3);
@@ -553,7 +560,7 @@ define('SWOOLE_TIMER_MAX_MS', 9223372036854775807);
  * The maximum number of seconds that can be used for time-related operations (e.g., timeout, time intervals, etc) in
  * Swoole. It equals to `(float) SWOOLE_TIMER_MAX_MS / 1000`.
  */
-define('SWOOLE_TIMER_MAX_SEC', 9.2233720368548E+15);
+define('SWOOLE_TIMER_MAX_SEC', (float) (SWOOLE_TIMER_MAX_MS / 1000));
 
 /*
  * Constants in this section are used in class \Swoole\Coroutine\PostgreSQLStatement only. They are available only when
