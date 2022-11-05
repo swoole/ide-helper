@@ -10,12 +10,12 @@ namespace Swoole\Connection;
 class Iterator implements \Iterator, \ArrayAccess, \Countable
 {
     /**
-     * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
+     * Creating an object of this class directly is not allowed. It will always throw an error.
+     *
+     * @throws \Error
      */
     public function __construct()
     {
-        // NOTE: the actual error message won't be exactly the same as the one below.
-        throw new \Error('Please use property \Swoole\Server::$connections instead.');
     }
 
     /**

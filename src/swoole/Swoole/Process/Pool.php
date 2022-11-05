@@ -23,10 +23,16 @@ class Pool
     /**
      * List of the worker processes.
      *
-     * @var Process[]
+     * A worker process is added to this list only when the process is return from an explicit method call to \Swoole\Process\Pool::getProcess(). Thus, this property may not have all the running worker processes included.
+     *
+     * Use this property with caution. It's more reliable to use method \Swoole\Process\Pool::getProcess() to access
+     * worker processes.
+     *
+     * @var Process[]|null
+     * @see \Swoole\Process\Pool::getProcess()
      * @since 4.4.0
      */
-    public array $workers;
+    public ?array $workers;
 
     public function __construct(int $worker_num, int $ipc_type = SWOOLE_IPC_NONE, int $msgqueue_key = 0, bool $enable_coroutine = false)
     {
