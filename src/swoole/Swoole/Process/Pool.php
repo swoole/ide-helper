@@ -23,10 +23,7 @@ class Pool
     /**
      * List of the worker processes.
      *
-     * A worker process is added to this list only when the process is return from an explicit method call to \Swoole\Process\Pool::getProcess(). Thus, this property may not have all the running worker processes included.
-     *
-     * Use this property with caution. It's more reliable to use method \Swoole\Process\Pool::getProcess() to access
-     * worker processes.
+     * A worker process is added to this list only when the process is return from an explicit method call to \Swoole\Process\Pool::getProcess(). Thus, this property may not have all the worker processes included.
      *
      * @var Process[]|null
      * @see \Swoole\Process\Pool::getProcess()
@@ -49,6 +46,25 @@ class Pool
     {
     }
 
+    /**
+     * Return the worker process by its ID.
+     *
+     * The ID of a worker process is the index of the worker process in the pool. The ID of the first worker process is
+     * 0, and the ID of the last worker process is the number of worker processes minus 1.
+     *
+     * During the life cycle of a pool, new worker processes are created when the old ones are stopped. That way, there
+     * are always same amount of worker processes in the pool. The Process object returned by this method is always the
+     * same one as long as the ID is the same, even if the process is stopped and recreated.
+     *
+     * Worker processes are created when method \Swoole\Process\Pool::start() is called successfully. Thus, this method
+     * should only be called after method \Swoole\Process\Pool::start() has been called, and it should be called in the
+     * callback functions of worker processes, e.g., onWorkerStart.
+     *
+     * @param int $work_id ID of the work process to get.
+     *                     - It must be greater than or equal to 0 and less than the number of worker processes in the pool.
+     *                     - If it's not passed or a negative integer is passed, ID of the current worker process will be used.
+     * @return Process|false Returns a worker process object back; returns false if the worker process doesn't exist.
+     */
     public function getProcess(int $work_id = -1): Process|false
     {
     }
