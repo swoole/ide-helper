@@ -19,6 +19,7 @@ declare(strict_types=1);
 namespace Swoole\NameResolver;
 
 use Swoole\NameResolver;
+
 use function Swoole\Coroutine\Http\get;
 use function Swoole\Coroutine\Http\request;
 

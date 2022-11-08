@@ -482,17 +482,17 @@ final class Handler
             case CURLOPT_PRIVATE:
                 $this->info['private'] = $value;
                 break;
-            /*
-             * Ignore options
-             */
+                /*
+                 * Ignore options
+                 */
             case CURLOPT_VERBOSE:
                 // trigger_error('swoole_curl_setopt(): CURLOPT_VERBOSE is not supported', E_USER_WARNING);
             case CURLOPT_SSLVERSION:
             case CURLOPT_NOSIGNAL:
             case CURLOPT_FRESH_CONNECT:
-            /*
-             * From PHP 5.1.3, this option has no effect: the raw output will always be returned when CURLOPT_RETURNTRANSFER is used.
-             */
+                /*
+                 * From PHP 5.1.3, this option has no effect: the raw output will always be returned when CURLOPT_RETURNTRANSFER is used.
+                 */
             case CURLOPT_BINARYTRANSFER: /* TODO */
             case CURLOPT_DNS_USE_GLOBAL_CACHE:
             case CURLOPT_DNS_CACHE_TIMEOUT:
@@ -507,9 +507,9 @@ final class Handler
             case CURLOPT_PROXYHEADER:
             case CURLOPT_HTTPPROXYTUNNEL:
                 break;
-            /*
-             * SSL
-             */
+                /*
+                 * SSL
+                 */
             case CURLOPT_SSL_VERIFYHOST:
                 break;
             case CURLOPT_SSL_VERIFYPEER:
@@ -532,9 +532,9 @@ final class Handler
             case CURLOPT_SSLKEYPASSWD:
                 $this->clientOptions[Constant::OPTION_SSL_PASSPHRASE] = $value;
                 break;
-            /*
-             * Http POST
-             */
+                /*
+                 * Http POST
+                 */
             case CURLOPT_POST:
                 $this->method = 'POST';
                 break;
@@ -544,18 +544,18 @@ final class Handler
                     $this->method = 'POST';
                 }
                 break;
-            /*
-             * Upload
-             */
+                /*
+                 * Upload
+                 */
             case CURLOPT_SAFE_UPLOAD:
                 if (!$value) {
                     trigger_error('swoole_curl_setopt(): Disabling safe uploads is no longer supported', E_USER_WARNING);
                     return false;
                 }
                 break;
-            /*
-             * Http Header
-             */
+                /*
+                 * Http Header
+                 */
             case CURLOPT_HTTPHEADER:
                 if (!is_array($value) and !is_iterable($value)) {
                     trigger_error('swoole_curl_setopt(): You must pass either an object or an array with the CURLOPT_HTTPHEADER argument', E_USER_WARNING);
@@ -602,9 +602,9 @@ final class Handler
             case CURLOPT_FAILONERROR:
                 $this->failOnError = $value;
                 break;
-            /*
-             * Http Cookie
-             */
+                /*
+                 * Http Cookie
+                 */
             case CURLOPT_COOKIE:
                 $this->setHeader('Cookie', $value);
                 break;

@@ -82,28 +82,28 @@ function swoole_table(int $size, string $fields): Swoole\Table
         $type = $_f->get(1)->trim();
 
         switch ($type) {
-        case 'i':
-        case 'int':
-            $table->column($name, Swoole\Table::TYPE_INT);
-            break;
-        case 'f':
-        case 'float':
-            $table->column($name, Swoole\Table::TYPE_FLOAT);
-            break;
-        case 's':
-        case 'string':
-            if ($_f->count() < 3) {
-                throw new RuntimeException('need to give string length');
-            }
-            $length = intval($_f->get(2)->trim()->toString());
-            if ($length <= 0) {
-                throw new RuntimeException("invalid string length[{$length}]");
-            }
-            $table->column($name, Swoole\Table::TYPE_STRING, $length);
-            break;
-        default:
-            throw new RuntimeException("unknown field type[{$type}]");
-            break;
+            case 'i':
+            case 'int':
+                $table->column($name, Swoole\Table::TYPE_INT);
+                break;
+            case 'f':
+            case 'float':
+                $table->column($name, Swoole\Table::TYPE_FLOAT);
+                break;
+            case 's':
+            case 'string':
+                if ($_f->count() < 3) {
+                    throw new RuntimeException('need to give string length');
+                }
+                $length = (int) $_f->get(2)->trim()->toString();
+                if ($length <= 0) {
+                    throw new RuntimeException("invalid string length[{$length}]");
+                }
+                $table->column($name, Swoole\Table::TYPE_STRING, $length);
+                break;
+            default:
+                throw new RuntimeException("unknown field type[{$type}]");
+                break;
         }
     }
 
