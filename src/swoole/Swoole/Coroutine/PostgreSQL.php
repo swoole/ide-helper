@@ -51,4 +51,37 @@ class PostgreSQL
     public function escapeIdentifier(string $string): string|false
     {
     }
+
+    /**
+     * Create a large object.
+     *
+     * @return int|false Returns the OID of the new large object, or FALSE when error happens.
+     * @since 5.0.1
+     */
+    public function createLOB(): int|false
+    {
+    }
+
+    /**
+     * Open a large object.
+     *
+     * @param int $oid The OID of the large object to be opened.
+     * @param string $mode The mode to open the large object. It can be "r" for read-only, "w" for write-only, or "rw" for read-write.
+     * @return resource|false Returns the large object resource, or FALSE when error happens.
+     * @since 5.0.1
+     */
+    public function openLOB(int $oid, string $mode = 'r')
+    {
+    }
+
+    /**
+     * Delete a large object.
+     *
+     * @param int $oid The OID of the large object to be deleted.
+     * @return bool Returns TRUE on success, or FALSE when error happens.
+     * @since 5.0.1
+     */
+    public function unlinkLOB(int $oid): bool
+    {
+    }
 }
