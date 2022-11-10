@@ -26,10 +26,35 @@ class Table implements \Iterator, \Countable
 
     /**
      * Maximum number of rows in the table.
+     *
+     * This property isn't initialized when the object is created; instead, it is initialized when the table is created,
+     * i.e., when method Table::create() is called successfully. Once initialized, this property never changes, even
+     * after the table is destroyed (via method \Swoole\Table::destroy()).
+     *
+     * This property doesn't always contain the same value as the return value of method \Swoole\Table::getSize().
+     * The two values are of the same only after the table is created but before it's destroyed. i.e., the two values
+     * are of the same only between the calls of method \Swoole\Table::create() and method \Swoole\Table::destroy().
+     *
+     * @see \Swoole\Table::create()
+     * @see \Swoole\Table::getSize()
      */
-    public int $size;
+    public ?int $size;
 
-    public int $memorySize;
+    /**
+     * Memory allocated (in bytes) for the table.
+     *
+     * This property isn't initialized when the object is created; instead, it is initialized when the table is created,
+     * i.e., when method Table::create() is called successfully. Once initialized, this property never changes, even
+     * after the table is destroyed (via method \Swoole\Table::destroy()).
+     *
+     * This property doesn't always contain the same value as the return value of method \Swoole\Table::getMemorySize().
+     * The two values are of the same only after the table is created but before it's destroyed. i.e., the two values
+     * are of the same only between the calls of method \Swoole\Table::create() and method \Swoole\Table::destroy().
+     *
+     * @see \Swoole\Table::create()
+     * @see \Swoole\Table::getMemorySize()
+     */
+    public ?int $memorySize;
 
     /**
      * @param int $table_size Maximum number of rows in the table.
@@ -46,11 +71,25 @@ class Table implements \Iterator, \Countable
     {
     }
 
+    /**
+     * Create the table.
+     *
+     * @return bool TRUE on success, FALSE on failure.
+     */
     public function create(): bool
     {
     }
 
     /**
+     * Destroy the table.
+     *
+     * It will free all memory allocated for the table, although the Table object itself still exists. After calling
+     * this method, the Table object should not be used anymore.
+     *
+     * After the table is destroyed,
+     *   - property $size and $memorySize still contain the same values of the table before it's destroyed.
+     *   - method \Swoole\Table::getSize() and \Swoole\Table::getMemorySize() return 0.
+     *
      * @return bool returns TRUE all the time
      */
     public function destroy(): bool
@@ -117,12 +156,29 @@ class Table implements \Iterator, \Countable
     /**
      * Get maximum number of rows in the table.
      *
-     * @return int Returns maximum number of rows in the table.
+     * This method doesn't always return the same value as property \Swoole\Table::$size. The two values are of
+     * the same only after the table is created but before it's destroyed. i.e., the two values are of the same only
+     * between the calls of method \Swoole\Table::create() and method \Swoole\Table::destroy().
+     *
+     * @return int Returns maximum number of rows in the table. If the table has been destroyed, returns 0.
+     * @see \Swoole\Table::$size
      */
     public function getSize(): int
     {
     }
 
+    /**
+     * Get memory allocated (in bytes) for the table. If the table hasn't been created yet (by calling method
+     * Table::create()) of if the table has been destroyed (by calling method Table::destroy()), this method
+     * will return 0.
+     *
+     * This method doesn't always return the same value as property \Swoole\Table::$memorySize. The two values are of
+     * the same only after the table is created but before it's destroyed. i.e., the two values are of the same only
+     * between the calls of method \Swoole\Table::create() and method \Swoole\Table::destroy().
+     *
+     * @return int Returns memory allocated (in bytes) for the table. If the table hasn't been created or has been destroyed, returns 0.
+     * @see \Swoole\Table::$memorySize
+     */
     public function getMemorySize(): int
     {
     }
