@@ -342,8 +342,19 @@ define('PRIO_PROCESS', 0);
 define('PRIO_PGRP', 1);
 define('PRIO_USER', 2);
 
+/*
+ * Coroutine-related constants.
+ */
+/*
+ * Maximum number of coroutines that can be created by default.
+ *
+ * The number can be overridden by explicitly setting one of the following two runtime options:
+ *   - \Swoole\Constant::OPTION_MAX_CORO_NUM
+ *   - \Swoole\Constant::OPTION_MAX_COROUTINE
+ */
 define('SWOOLE_DEFAULT_MAX_CORO_NUM', 100000);
-define('SWOOLE_CORO_MAX_NUM_LIMIT', 9223372036854775807);
+define('SWOOLE_CORO_MAX_NUM_LIMIT', PHP_INT_MAX); // Not used anywhere.
+// States of a coroutine. There are four states: SWOOLE_CORO_INIT, SWOOLE_CORO_WAITING, SWOOLE_CORO_RUNNING, and SWOOLE_CORO_END.
 define('SWOOLE_CORO_INIT', 0);
 define('SWOOLE_CORO_WAITING', 1);
 define('SWOOLE_CORO_RUNNING', 2);
@@ -397,13 +408,14 @@ define('SOCKET_ECANCELED', 125); // TODO:
 // Server modes. For details, please check documentation on property \Swoole\Server::$mode.
 define('SWOOLE_BASE', 1);
 define('SWOOLE_PROCESS', 2);
-// Command types in Swoole server.
-define('SWOOLE_SERVER_COMMAND_MASTER', 2);
-define('SWOOLE_SERVER_COMMAND_MANAGER', 32);
-define('SWOOLE_SERVER_COMMAND_REACTOR_THREAD', 4);
-define('SWOOLE_SERVER_COMMAND_EVENT_WORKER', 8);
-define('SWOOLE_SERVER_COMMAND_WORKER', 8);
-define('SWOOLE_SERVER_COMMAND_TASK_WORKER', 16);
+// Types of processes in Swoole server that handle commands.
+define('SWOOLE_SERVER_COMMAND_MASTER', 2); // 2^1
+define('SWOOLE_SERVER_COMMAND_REACTOR_THREAD', 4); // 2^2
+define('SWOOLE_SERVER_COMMAND_EVENT_WORKER', 8); // 2^3
+define('SWOOLE_SERVER_COMMAND_WORKER', SWOOLE_SERVER_COMMAND_EVENT_WORKER); // 2^3
+define('SWOOLE_SERVER_COMMAND_TASK_WORKER', 16); // 2^4
+define('SWOOLE_SERVER_COMMAND_MANAGER', 32); // 2^5
+// Dispatch modes in Swoole server. They define how the server dispatches requests to worker processes.
 define('SWOOLE_DISPATCH_ROUND', 1);
 define('SWOOLE_DISPATCH_FDMOD', 2);
 define('SWOOLE_DISPATCH_IDLE_WORKER', 3);
@@ -414,17 +426,19 @@ define('SWOOLE_DISPATCH_STREAM', 7);
 define('SWOOLE_DISPATCH_CO_CONN_LB', 8);
 define('SWOOLE_DISPATCH_CO_REQ_LB', 9);
 define('SWOOLE_DISPATCH_CONCURRENT_LB', 10);
+// Results when dispatching a request to a worker process in Swoole server.
 define('SWOOLE_DISPATCH_RESULT_DISCARD_PACKET', -1);
 define('SWOOLE_DISPATCH_RESULT_CLOSE_CONNECTION', -2);
 define('SWOOLE_DISPATCH_RESULT_USERFUNC_FALLBACK', -3);
-define('SWOOLE_TASK_TMPFILE', 1);
-define('SWOOLE_TASK_SERIALIZE', 2);
-define('SWOOLE_TASK_NONBLOCK', 4);
-define('SWOOLE_TASK_CALLBACK', 8);
-define('SWOOLE_TASK_WAITALL', 16);
-define('SWOOLE_TASK_COROUTINE', 32);
-define('SWOOLE_TASK_PEEK', 64);
-define('SWOOLE_TASK_NOREPLY', 128);
+// Task flags.
+define('SWOOLE_TASK_TMPFILE', 1); // 2^0
+define('SWOOLE_TASK_SERIALIZE', 2); // 2^1
+define('SWOOLE_TASK_NONBLOCK', 4); // 2^2
+define('SWOOLE_TASK_CALLBACK', 8); // 2^3
+define('SWOOLE_TASK_WAITALL', 16); // 2^4
+define('SWOOLE_TASK_COROUTINE', 32); // 2^5
+define('SWOOLE_TASK_PEEK', 64); // 2^6
+define('SWOOLE_TASK_NOREPLY', 128); // 2^7
 // Statuses of worker processes in Swoole server.
 define('SWOOLE_WORKER_BUSY', 1);
 define('SWOOLE_WORKER_IDLE', 2);
