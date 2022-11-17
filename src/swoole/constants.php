@@ -271,13 +271,13 @@ define('SWOOLE_IOV_MAX', 1024);
  * @see \Swoole\Lock
  */
 #ifdef HAVE_RWLOCK
-define('SWOOLE_RWLOCK', 1);
+define('SWOOLE_RWLOCK', 1); # Supported only if read-write lock is included in the POSIX thread (pthread) libraries.
 #endif
-define('SWOOLE_FILELOCK', 2);
+define('SWOOLE_FILELOCK', 2); // No longer supported. Please use mutex lock (\Swoole\Lock::MUTEX) instead.
 define('SWOOLE_MUTEX', 3);
-define('SWOOLE_SEM', 4);
+define('SWOOLE_SEM', 4); // No longer supported. Please use mutex lock (\Swoole\Lock::MUTEX) instead.
 #ifdef HAVE_SPINLOCK
-define('SWOOLE_SPINLOCK', 5);
+define('SWOOLE_SPINLOCK', 5); # Supported only if the Spin Locks option is provided in the POSIX thread (pthread) libraries.
 #endif
 
 /*
