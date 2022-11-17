@@ -11,6 +11,16 @@ use Swoole\Server\Port;
 /**
  * The Swoole Server class.
  *
+ * There are five types of processes in Swoole server:
+ *   - Master process.
+ *   - Manager process. Optional.
+ *   - Event worker processes. All requests (HTTP, WebSocket, TCP, UDP, etc.) are handled by this type of processes. It supports
+ *     coroutine by default.
+ *   - Task worker processes. Optional. This type of processes was introduced to handle blocking I/O operations in PHP. Ideally, it
+ *     should always work synchronously, although it also supports coroutine and allows asynchronous processing (since Swoole 4.2.12).
+ *     The number of task worker processes is set by option \Swoole\Constant::OPTION_TASK_WORKER_NUM before starting the server.
+ *   - User processes. Optional. These are self-defined processes attached to the server through method \Swoole\Server::addProcess().
+ *
  * History Changes:
  * 1. Following alias methods have been removed from Swoole 5.0.0. Please use the original methods instead.
  *    * \Swoole\Server::after()      => \Swoole\Timer::after().

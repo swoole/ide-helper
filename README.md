@@ -35,10 +35,3 @@ composer require --dev swoole/ide-helper:@dev
 * `swoole.use_shortname`: Boolean. Default `On`. Support short names or not. Short names are all the aliases listed in file [src/swoole/shortnames.php](src/swoole/shortnames.php).
 
 All the directives can be set anywhere except `swoole.use_shortname`, which can only be set in `php.ini` files.
-
-## Notes
-
-There are two types of worker processes in use when starting a Swoole server:
-
-1. `event worker`. All requests (HTTP, WebSocket, TCP, UDP, etc.) are handled by this type of processes. It supports coroutine by default; many I/O operations can run asynchronously in it.
-2. `task worker`. This type of processes was introduced to handle blocking I/O operations in PHP. Ideally, it should always work synchronously, although it also supports coroutine and allows asynchronous processing (since Swoole v4.2.12+).

@@ -61,7 +61,7 @@ class Pool
      * callback functions of worker processes, e.g., onWorkerStart.
      *
      * @param int $work_id ID of the work process to get.
-     *                     - It must be greater than or equal to 0 and less than the number of worker processes in the pool.
+     *                     - It should be greater than or equal to 0 and less than the number of worker processes in the pool.
      *                     - If it's not passed or a negative integer is passed, ID of the current worker process will be used.
      * @return Process|false Returns a worker process object back; returns false if the worker process doesn't exist.
      */
