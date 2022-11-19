@@ -534,6 +534,14 @@ class Server
     {
     }
 
+    /**
+     * Get the socket handle bound to the given port of the server.
+     *
+     * This method is available only when Swoole is installed with option "--enable-sockets" included.
+     *
+     * @param int $port Port number. Use the default port number (specified in the constructor) if not passed in or passed in as 0.
+     * @return \Socket|false Returns a Socket object on success; otherwise FALSE.
+     */
     public function getSocket(int $port = 0): \Socket|false
     {
     }

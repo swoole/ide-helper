@@ -91,6 +91,13 @@ class Port
     {
     }
 
+    /**
+     * Get the socket handle bound to the port.
+     *
+     * This method is available only when Swoole is installed with option "--enable-sockets" included.
+     *
+     * @return \Socket|false Returns a Socket object on success; otherwise FALSE.
+     */
     public function getSocket(): \Socket|false
     {
     }

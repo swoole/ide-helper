@@ -159,6 +159,13 @@ class Client
     {
     }
 
+    /**
+     * Get the socket handle of the client.
+     *
+     * This method is available only when Swoole is installed with option "--enable-sockets" included.
+     *
+     * @return \Socket|false Returns a Socket object on success; otherwise FALSE.
+     */
     public function getSocket(): \Socket|false
     {
     }

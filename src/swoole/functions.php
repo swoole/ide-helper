@@ -106,11 +106,27 @@ function swoole_select(array &$read_array, array &$write_array, array &$error_ar
 }
 
 /**
+ * Set the process name.
+ *
+ * There isn't a method in Swoole to get the process name. You can use PHP function \cli_get_process_title() in to
+ * get the process name later on.
+ *
+ * @param string $process_name The new process name.
+ * @return bool Returns true on success or false on failure.
  * @alias This function has an alias method \Swoole\Process::name().
  * @see \Swoole\Process::name()
+ * @see https://www.php.net/cli_set_process_title
+ * @see https://www.php.net/cli_get_process_title
+ * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
  */
 function swoole_set_process_name(string $process_name): bool
 {
+    if (PHP_SAPI !== 'cli') {
+        // An E_WARNING level error will be thrown out here.
+        return false;
+    }
+
+    return \cli_set_process_title($process_name);
 }
 
 function swoole_get_local_ip(): array

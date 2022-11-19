@@ -123,11 +123,14 @@ class MySQL
     }
 
     /**
-     * @param mixed $string
-     * @param mixed|null $flags
-     * @return mixed
+     * Escape a string for use in a query.
+     *
+     * This method is available only when Swoole is installed with option "--enable-mysqlnd" included.
+     *
+     * @param string $string The string to be escaped.
+     * @return string|false Returns the escaped string, or FALSE on error.
      */
-    public function escape($string, $flags = null)
+    public function escape(string $string): string|false
     {
     }
 

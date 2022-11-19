@@ -132,7 +132,7 @@ class Lock
      * A process may hold multiple concurrent read locks on read-write locks. If so, the process must perform matching
      * unlocks (that is, it must call method \Swoole\Lock::lock_read() n times).
      *
-     * If the lock is already acquired through method \Swoole\Lock::lock() or \Swoole\Locktrylock(), this method will
+     * If the lock is already acquired through method \Swoole\Lock::lock() or \Swoole\Lock::trylock(), this method will
      * block until the lock is released.
      *
      * @return bool TRUE on success, FALSE on failure.
