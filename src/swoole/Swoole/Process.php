@@ -138,8 +138,7 @@ class Process
     /**
      * Set the process name.
      *
-     * There isn't a method in Swoole to get the process name. You can use PHP function \cli_get_process_title() in to
-     * get the process name later on.
+     * There isn't a method in Swoole to get the process name. You can use PHP function \cli_get_process_title() to get the process name.
      *
      * @param string $process_name The new process name.
      * @return bool Returns true on success or false on failure.

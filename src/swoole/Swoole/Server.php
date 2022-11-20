@@ -37,16 +37,64 @@ class Server
 
     public Iterator $connections;
 
-    public $host = '';
-
-    public $port = 0;
-
-    public $type = 0;
+    /**
+     * IP address of the network socket, or path of the UNIX domain socket bound to the primary port.
+     *
+     * If the $sock_type parameter is set to SWOOLE_SOCK_UNIX_STREAM or SWOOLE_SOCK_UNIX_DGRAM in the constructor when
+     * creating the Server object, the $host parameter must be set to the path of the UNIX domain socket. Otherwise,
+     * the $host parameter must be set to the IP address of the network socket.
+     *
+     * When setting to the IP address of the network socket, it can be either an IPv4 or IPv6 address:
+     * - For IPv4,
+     *     - use 127.0.0.1 to listen on the local loopback interface.
+     *     - use 0.0.0.0 to listen on all network interfaces.
+     * - For IPv6,
+     *     - use ::1 to listen on the local loopback interface.
+     *     - use :: to listen on all network interfaces.
+     */
+    public string $host = '';
 
     /**
+     * The primary port of the server. It's the one passed to the constructor when creating the server object.
+     */
+    public int $port = 0;
+
+    /**
+     * Type of the socket bound to the primary port.
+     *
+     * It can be one of the following values:
+     *   - SWOOLE_SOCK_TCP
+     *   - SWOOLE_SOCK_UDP
+     *   - SWOOLE_SOCK_TCP6
+     *   - SWOOLE_SOCK_UDP6
+     *   - SWOOLE_SOCK_UNIX_STREAM
+     *   - SWOOLE_SOCK_UNIX_DGRAM
+     * In addition to specifying a socket type, it may include the bitwise OR of SWOOLE_SSL to enable SSL encryption for
+     * network sockets (SWOOLE_SOCK_TCP, SWOOLE_SOCK_UDP, SWOOLE_SOCK_TCP6, and SWOOLE_SOCK_UDP6).
+     * Thus, the value of $type could be in the format of either of the following:
+     *   - SWOOLE_SOCK_TCP
+     *   - SWOOLE_SOCK_TCP | SWOOLE_SSL
+     *
+     * If SWOOLE_SSL is included, the server must have the following options set properly before starting:
+     *   - \Swoole\Constant::OPTION_SSL_CERT_FILE
+     *   - \Swoole\Constant::OPTION_SSL_KEY_FILE
+     *
+     * @see SWOOLE_SOCK_TCP
+     * @see SWOOLE_SOCK_UDP
+     * @see SWOOLE_SOCK_TCP6
+     * @see SWOOLE_SOCK_UDP6
+     * @see SWOOLE_SOCK_UNIX_STREAM
+     * @see SWOOLE_SOCK_UNIX_DGRAM
+     * @see SWOOLE_SSL
+     */
+    public int $type = 0;
+
+    /**
+     * If SSL is enabled or not on the primary port.
+     *
      * @since 5.0.0
      */
-    public $ssl = false;
+    public bool $ssl = false;
 
     public $mode = 0;
 
@@ -143,8 +191,13 @@ class Server
     private $onPipeMessage;
 
     /**
-     * @param int $mode Either SWOOLE_BASE or SWOOLE_PROCESS. Starting from Swoole 5.0.0, default server mode has been
+     * Constructor of the Swoole Server class.
+     *
+     * @param string $host IP address of the network socket, or path of the UNIX domain socket bound to the primary port. For details, please check property \Swoole\Server::$host.
+     * @param int $port The primary port of the server. This parameter is ignored if $sock_type is SWOOLE_SOCK_UNIX_STREAM or SWOOLE_SOCK_UNIX_DGRAM.
+     * @param int $mode Must be either SWOOLE_BASE or SWOOLE_PROCESS. Starting from Swoole 5.0.0, default server mode has been
      *                  changed from SWOOLE_PROCESS to SWOOLE_BASE.
+     * @param int $sock_type Type of the socket. For details, please check property \Swoole\Server::$type.
      */
     public function __construct(string $host = '0.0.0.0', int $port = 0, int $mode = SWOOLE_BASE, int $sock_type = SWOOLE_SOCK_TCP)
     {
