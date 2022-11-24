@@ -52,7 +52,7 @@ class Event
     /**
      * @alias This method has an alias function \swoole_event_defer().
      * @see \swoole_event_defer()
-     * @return true
+     * @see \Swoole\Timer::after() Add a timer that only runs once after the specified number of milliseconds.
      */
     public static function defer(callable $callback)
     {

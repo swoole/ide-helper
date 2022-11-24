@@ -37,7 +37,7 @@ class Runtime
                 $flags = 0;
             }
         } else {
-            throw new \ErrorException('... expects parameter 1 to be bool or long, ...');
+            throw new \ErrorException('... expects parameter 1 to be boolean or integer, ...');
         }
 
         return self::setHookFlags($flags);

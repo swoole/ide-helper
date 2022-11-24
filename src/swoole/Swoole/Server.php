@@ -41,7 +41,7 @@ class Server
      * IP address of the network socket, or path of the UNIX domain socket bound to the primary port.
      *
      * If the $sock_type parameter is set to SWOOLE_SOCK_UNIX_STREAM or SWOOLE_SOCK_UNIX_DGRAM in the constructor when
-     * creating the Server object, the $host parameter must be set to the path of the UNIX domain socket. Otherwise,
+     * creating a Server object, the $host parameter must be set to the path of the UNIX domain socket. Otherwise,
      * the $host parameter must be set to the IP address of the network socket.
      *
      * When setting to the IP address of the network socket, it can be either an IPv4 or IPv6 address:
@@ -55,7 +55,7 @@ class Server
     public string $host = '';
 
     /**
-     * The primary port of the server. It's the one passed to the constructor when creating the server object.
+     * The primary port of the server. It's the port number actually assigned when creating a Server object.
      */
     public int $port = 0;
 
@@ -250,6 +250,10 @@ class Server
     }
 
     /**
+     * Check if a connection exists.
+     *
+     * @param int $fd The connection file descriptor.
+     * @return bool Returns true if the connection exists, or false if the connection does not exist or has been closed.
      * @alias This method has an alias of \Swoole\Server::exist().
      * @see \Swoole\Server::exist()
      */
@@ -258,6 +262,10 @@ class Server
     }
 
     /**
+     * Check if a connection exists.
+     *
+     * @param int $fd The connection file descriptor.
+     * @return bool Returns true if the connection exists, or false if the connection does not exist or has been closed.
      * @alias Alias of method \Swoole\Server::exists().
      * @see \Swoole\Server::exists()
      */
@@ -284,6 +292,7 @@ class Server
      * @alias Although this method and method \Swoole\Server::resume() are used for different purposes, they are
      *        implemented exactly the same in Swoole.
      * @see \Swoole\Server::resume()
+     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/servers/ddos-protection.php Example of DDoS protection using this method
      */
     public function confirm(int $fd): bool
     {
@@ -292,6 +301,8 @@ class Server
     /**
      * Pause receiving client-side data.
      *
+     * @param int $fd File descriptor of the connection.
+     * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server::resume()
      */
     public function pause(int $fd): bool
@@ -301,6 +312,8 @@ class Server
     /**
      * Resume receiving client-side data.
      *
+     * @param int $fd File descriptor of the connection.
+     * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server::pause()
      */
     public function resume(int $fd): bool
