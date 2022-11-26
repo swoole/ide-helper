@@ -18,9 +18,12 @@ class PostgreSQLStatement
 
     public int $resultStatus = 0;
 
-    public $resultDiag;
+    public array $resultDiag;
 
-    public $notices;
+    /**
+     * Not yet in use anywhere as of Swoole 5.0.1.
+     */
+    public array $notices;
 
     public function execute(array $params = []): bool
     {

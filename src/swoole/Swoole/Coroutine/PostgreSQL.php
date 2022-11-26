@@ -14,15 +14,15 @@ namespace Swoole\Coroutine;
  */
 class PostgreSQL
 {
-    public $error;
+    public string $error;
 
-    public $errCode = 0;
+    public int $errCode = 0;
 
-    public $resultStatus = 0;
+    public int $resultStatus = 0;
 
-    public $resultDiag;
+    public array $resultDiag;
 
-    public $notices;
+    public array $notices;
 
     public function connect(string $conninfo, float $timeout = 2): bool
     {
@@ -40,14 +40,41 @@ class PostgreSQL
     {
     }
 
+    /**
+     * Escape a string for query.
+     *
+     * This method works similar to PHP function \pg_escape_string().
+     *
+     * @param string $string A string containing text to be escaped.
+     * @return string|false A string containing the escaped data. When error happens, it returns FALSE, has error code set in $this->errCode and has error message set in $this->error.
+     * @see https://www.php.net/pg-escape-string PHP function pg_escape_string()
+     */
     public function escape(string $string): string|false
     {
     }
 
+    /**
+     * Escape a literal for insertion into a text field.
+     *
+     * This method works similar to PHP function \pg_escape_literal().
+     *
+     * @param string $string A string containing text to be escaped.
+     * @return string|false A string containing the escaped data. When error happens, it returns FALSE and has error message set in $this->error.
+     * @see https://www.php.net/pg-escape-literal PHP function pg_escape_literal()
+     */
     public function escapeLiteral(string $string): string|false
     {
     }
 
+    /**
+     * Escape an identifier for insertion into a text field.
+     *
+     * This method works similar to PHP function \pg_escape_identifier().
+     *
+     * @param string $string A string containing text to be escaped.
+     * @return string|false A string containing the escaped data. When error happens, it returns FALSE and has error message set in $this->error.
+     * @see https://www.php.net/pg-escape-identifier PHP function pg_escape_identifier()
+     */
     public function escapeIdentifier(string $string): string|false
     {
     }
