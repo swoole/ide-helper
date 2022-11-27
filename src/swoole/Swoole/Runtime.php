@@ -51,7 +51,14 @@ class Runtime
     }
 
     /**
-     * Set runtime hook flags.
+     * Set runtime hook flags. This overrides any flags set previously.
+     *
+     * Here are some examples of setting runtime hook flags:
+     * - setHookFlags(SWOOLE_HOOK_TCP): Enable TCP hook only.
+     * - setHookFlags(SWOOLE_HOOK_TCP | SWOOLE_HOOK_UDP | SWOOLE_HOOK_SOCKETS): Enable TCP, UDP and socket hooks.
+     * - setHookFlags(SWOOLE_HOOK_ALL): Enable all runtime hooks.
+     * - setHookFlags(SWOOLE_HOOK_ALL ^ SWOOLE_HOOK_FILE ^ SWOOLE_HOOK_STDIO): Enable all runtime hooks except file and stdio hooks.
+     * - setHookFlags(0): Disable runtime hooks.
      *
      * @return bool true on success or false on failure
      * @since 4.5.0

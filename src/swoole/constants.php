@@ -382,23 +382,129 @@ define('SWOOLE_CHANNEL_TIMEOUT', -1);
 define('SWOOLE_CHANNEL_CLOSED', -2);
 define('SWOOLE_CHANNEL_CANCELED', -3);
 
-define('SWOOLE_HOOK_TCP', 2);
-define('SWOOLE_HOOK_UDP', 4);
-define('SWOOLE_HOOK_UNIX', 8);
-define('SWOOLE_HOOK_UDG', 16);
-define('SWOOLE_HOOK_SSL', 32);
-define('SWOOLE_HOOK_TLS', 64);
-define('SWOOLE_HOOK_STREAM_FUNCTION', 128);
-define('SWOOLE_HOOK_STREAM_SELECT', 128);
-define('SWOOLE_HOOK_FILE', 256);
-define('SWOOLE_HOOK_STDIO', 32768);
-define('SWOOLE_HOOK_SLEEP', 512);
-define('SWOOLE_HOOK_PROC', 1024);
-define('SWOOLE_HOOK_CURL', 2048);
-define('SWOOLE_HOOK_NATIVE_CURL', 4096);
-define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192);
-define('SWOOLE_HOOK_SOCKETS', 16384);
-define('SWOOLE_HOOK_ALL', 2147481599);
+/*
+ * Hook flags.
+ */
+define('SWOOLE_HOOK_TCP', 2); // 2^1
+define('SWOOLE_HOOK_UDP', 4); // 2^2
+define('SWOOLE_HOOK_UNIX', 8); // 2^3
+define('SWOOLE_HOOK_UDG', 16); // 2^4
+define('SWOOLE_HOOK_SSL', 32); // 2^5
+define('SWOOLE_HOOK_TLS', 64); // 2^6
+/*
+ * Runtime hook flag SWOOLE_HOOK_STREAM_FUNCTION makes the following PHP functions coroutine-friendly:
+ *  - stream_select()
+ *  - stream_socket_pair()
+ */
+define('SWOOLE_HOOK_STREAM_FUNCTION', 128);  // 2^7
+// Runtime hook flag SWOOLE_HOOK_STREAM_SELECT is deprecated in Swoole 4.4.0. It's kept for backward compatibility only.
+define('SWOOLE_HOOK_STREAM_SELECT', SWOOLE_HOOK_STREAM_FUNCTION);
+define('SWOOLE_HOOK_FILE', 256); // 2^8
+/*
+ * Runtime hook flag SWOOLE_HOOK_SLEEP makes the following PHP functions coroutine-friendly:
+ *  - sleep()
+ *  - usleep()
+ *  - time_nanosleep()
+ *  - time_sleep_until()
+ */
+define('SWOOLE_HOOK_SLEEP', 512); // 2^9
+/*
+ * Runtime hook flag SWOOLE_HOOK_PROC makes the following PHP functions coroutine-friendly:
+ *  - proc_open()
+ *  - proc_close()
+ *  - proc_get_status()
+ *  - proc_terminate()
+ */
+define('SWOOLE_HOOK_PROC', 1024); // 2^10
+/*
+ * Runtime hook flag SWOOLE_HOOK_CURL makes the following PHP functions coroutine-friendly:
+ *  - curl_init()
+ *  - curl_setopt()
+ *  - curl_setopt_array()
+ *  - curl_exec()
+ *  - curl_getinfo()
+ *  - curl_errno()
+ *  - curl_error()
+ *  - curl_reset()
+ *  - curl_close()
+ *  - curl_multi_getcontent()
+ */
+define('SWOOLE_HOOK_CURL', 2048); // 2^11
+/*
+ * Runtime hook flag SWOOLE_HOOK_NATIVE_CURL makes the following PHP functions coroutine-friendly:
+ *  - curl_close()
+ *  - curl_copy_handle()
+ *  - curl_errno()
+ *  - curl_error()
+ *  - curl_exec()
+ *  - curl_getinfo()
+ *  - curl_init()
+ *  - curl_setopt()
+ *  - curl_setopt_array()
+ *  - curl_reset()
+ *  - curl_pause()
+ *  - curl_escape()
+ *  - curl_unescape()
+ *  - curl_multi_init()
+ *  - curl_multi_add_handle()
+ *  - curl_multi_exec()
+ *  - curl_multi_errno()
+ *  - curl_multi_select()
+ *  - curl_multi_setopt()
+ *  - curl_multi_getcontent()
+ *  - curl_multi_info_read()
+ *  - curl_multi_remove_handle()
+ *  - curl_multi_close()
+ */
+define('SWOOLE_HOOK_NATIVE_CURL', 4096); // 2^12
+/*
+ * Runtime hook flag SWOOLE_HOOK_BLOCKING_FUNCTION makes the following PHP functions coroutine-friendly:
+ *  - gethostbyname()
+ *  - exec()
+ *  - shell_exec()
+ */
+define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192); // 2^13
+/*
+ * Runtime hook flag SWOOLE_HOOK_BLOCKING_FUNCTION makes the following PHP functions coroutine-friendly:
+ *  - socket_create()
+ *  - socket_create_listen()
+ *  - socket_create_pair()
+ *  - socket_connect()
+ *  - socket_write()
+ *  - socket_read()
+ *  - socket_send()
+ *  - socket_recv()
+ *  - socket_sendto()
+ *  - socket_recvfrom()
+ *  - socket_bind()
+ *  - socket_listen()
+ *  - socket_accept()
+ *  - socket_getpeername()
+ *  - socket_getsockname()
+ *  - socket_getopt()
+ *  - socket_get_option()
+ *  - socket_setopt()
+ *  - socket_set_option()
+ *  - socket_set_block()
+ *  - socket_set_nonblock()
+ *  - socket_shutdown()
+ *  - socket_close()
+ *  - socket_clear_error()
+ *  - socket_last_error()
+ *  - socket_import_stream()
+ *
+ * When enabled, it also makes class \Swoole\Coroutine\Socket a child class of built-in PHP class \Socket.
+ *
+ * @see \Swoole\Coroutine\Socket
+ * @see \Socket
+ */
+define('SWOOLE_HOOK_SOCKETS', 16384); // 2^14
+define('SWOOLE_HOOK_STDIO', 32768); // 2^15
+if (class_exists(Swoole\Coroutine\Curl\Exception::class)) {          #ifdef SW_USE_CURL
+    define('SWOOLE_HOOK_ALL', 0x7FFFFFFF ^ SWOOLE_HOOK_CURL);
+} else {                                                             #else
+    define('SWOOLE_HOOK_ALL', 0x7FFFFFFF ^ SWOOLE_HOOK_NATIVE_CURL);
+}                                                                    #endif
 
 define('SOCKET_ECANCELED', 125); // TODO:
 
