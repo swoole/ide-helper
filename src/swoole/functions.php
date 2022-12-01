@@ -791,198 +791,300 @@ function swoole_native_socket_import_stream($stream)
 }
 
 /**
- * @param $handle[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_close().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_close()
+ * @see https://www.php.net/curl_close
  */
-function swoole_native_curl_close($handle)
+function swoole_native_curl_close(CurlHandle $handle): void
 {
 }
 
 /**
- * @param $handle[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_copy_handle().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_copy_handle()
+ * @see https://www.php.net/curl_copy_handle
  */
-function swoole_native_curl_copy_handle($handle)
+function swoole_native_curl_copy_handle(CurlHandle $handle): CurlHandle|false
 {
 }
 
 /**
- * @param $handle[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_errno().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_errno()
+ * @see https://www.php.net/curl_errno
  */
-function swoole_native_curl_errno($handle)
+function swoole_native_curl_errno(CurlHandle $handle): int
 {
 }
 
 /**
- * @param $handle[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_error().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_error()
+ * @see https://www.php.net/curl_error
  */
-function swoole_native_curl_error($handle)
+function swoole_native_curl_error(CurlHandle $handle): string
 {
 }
 
 /**
- * @param $handle[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_escape().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_escape()
+ * @see https://www.php.net/curl_escape
  */
-function swoole_native_curl_exec($handle)
+function swoole_native_curl_escape(CurlHandle $handle, string $string): string|false
 {
 }
 
 /**
- * @param $handle[required]
- * @param $option[optional]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_exec().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_exec()
+ * @see https://www.php.net/curl_exec
  */
-function swoole_native_curl_getinfo($handle, $option = null)
+function swoole_native_curl_exec(CurlHandle $handle): string|bool
 {
 }
 
 /**
- * @param $url[optional]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_getinfo().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_getinfo()
+ * @see https://www.php.net/curl_getinfo
  */
-function swoole_native_curl_init($url = null)
+function swoole_native_curl_getinfo(CurlHandle $handle, ?int $option = null): mixed
 {
 }
 
 /**
- * @param $handle[required]
- * @param $option[required]
- * @param $value[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_init().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_init()
+ * @see https://www.php.net/curl_init
  */
-function swoole_native_curl_setopt($handle, $option, $value)
+function swoole_native_curl_init(?string $url = null): CurlHandle|false
 {
 }
 
 /**
- * @param $handle[required]
- * @param $options[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_multi_add_handle().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_multi_add_handle()
+ * @see https://www.php.net/curl_multi_add_handle
  */
-function swoole_native_curl_setopt_array($handle, $options)
+function swoole_native_curl_multi_add_handle(CurlMultiHandle $multi_handle, CurlHandle $handle): int
 {
 }
 
 /**
- * @param $handle[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_multi_close().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_multi_close()
+ * @see https://www.php.net/curl_multi_close
  */
-function swoole_native_curl_reset($handle)
+function swoole_native_curl_multi_close(CurlMultiHandle $multi_handle): void
 {
 }
 
 /**
- * @param $handle[required]
- * @param $string[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_multi_errno().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_multi_errno()
+ * @see https://www.php.net/curl_multi_errno
  */
-function swoole_native_curl_escape($handle, $string)
+function swoole_native_curl_multi_errno(CurlMultiHandle $multi_handle): int
 {
 }
 
 /**
- * @param $handle[required]
- * @param $string[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_multi_exec().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_multi_exec()
+ * @see https://www.php.net/curl_multi_exec
  */
-function swoole_native_curl_unescape($handle, $string)
+function swoole_native_curl_multi_exec(CurlMultiHandle $multi_handle, int &$still_running): int
 {
 }
 
 /**
- * @param $handle[required]
- * @param $flags[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_multi_getcontent().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_multi_getcontent()
+ * @see https://www.php.net/curl_multi_getcontent
  */
-function swoole_native_curl_pause($handle, $flags)
+function swoole_native_curl_multi_getcontent(CurlHandle $handle): ?string
 {
 }
 
 /**
- * @param $multi_handle[required]
- * @param $handle[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_multi_info_read().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_multi_info_read()
+ * @see https://www.php.net/curl_multi_info_read
  */
-function swoole_native_curl_multi_add_handle($multi_handle, $handle)
+function swoole_native_curl_multi_info_read(CurlMultiHandle $multi_handle, int &$queued_messages = null): array|false
 {
 }
 
 /**
- * @param $multi_handle[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_multi_init().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_multi_init()
+ * @see https://www.php.net/curl_multi_init
  */
-function swoole_native_curl_multi_close($multi_handle)
+function swoole_native_curl_multi_init(): CurlMultiHandle
 {
 }
 
 /**
- * @param $multi_handle[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_multi_remove_handle().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_multi_remove_handle()
+ * @see https://www.php.net/curl_multi_remove_handle
  */
-function swoole_native_curl_multi_errno($multi_handle)
+function swoole_native_curl_multi_remove_handle(CurlMultiHandle $multi_handle, CurlHandle $handle): int
 {
 }
 
 /**
- * @param $multi_handle[required]
- * @param $still_running[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_multi_select().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_multi_select()
+ * @see https://www.php.net/curl_multi_select
  */
-function swoole_native_curl_multi_exec($multi_handle, &$still_running)
+function swoole_native_curl_multi_select(CurlMultiHandle $multi_handle, float $timeout = 1.0): int
 {
 }
 
 /**
- * @param $multi_handle[required]
- * @param $timeout[optional]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_multi_setopt().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_multi_setopt()
+ * @see https://www.php.net/curl_multi_setopt
  */
-function swoole_native_curl_multi_select($multi_handle, $timeout = 1.0)
+function swoole_native_curl_multi_setopt(CurlMultiHandle $multi_handle, int $option, mixed $value): bool
 {
 }
 
 /**
- * @param $multi_handle[required]
- * @param $option[required]
- * @param $value[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_pause().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_pause()
+ * @see https://www.php.net/curl_pause
  */
-function swoole_native_curl_multi_setopt($multi_handle, $option, $value)
+function swoole_native_curl_pause(CurlHandle $handle, int $flags): int
 {
 }
 
 /**
- * @param $handle[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_reset().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_reset()
+ * @see https://www.php.net/curl_reset
  */
-function swoole_native_curl_multi_getcontent($handle)
+function swoole_native_curl_reset(CurlHandle $handle): void
 {
 }
 
 /**
- * @param $multi_handle[required]
- * @param $queued_messages[optional]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_setopt_array().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_setopt_array()
+ * @see https://www.php.net/curl_setopt_array
  */
-function swoole_native_curl_multi_info_read($multi_handle, &$queued_messages = null)
+function swoole_native_curl_setopt_array(CurlHandle $handle, array $options): bool
 {
 }
 
 /**
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_setopt().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_setopt()
+ * @see https://www.php.net/curl_setopt
  */
-function swoole_native_curl_multi_init()
+function swoole_native_curl_setopt(CurlHandle $handle, int $option, mixed $value): bool
 {
 }
 
 /**
- * @param $multi_handle[required]
- * @param $handle[required]
- * @return mixed
+ * The coroutine version of PHP's cURL function curl_unescape().
+ *
+ * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
+ * function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @see curl_unescape()
+ * @see https://www.php.net/curl_unescape
  */
-function swoole_native_curl_multi_remove_handle($multi_handle, $handle)
+function swoole_native_curl_unescape(CurlHandle $handle, string $string): string|false
 {
 }

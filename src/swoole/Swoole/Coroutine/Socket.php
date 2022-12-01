@@ -13,17 +13,17 @@ use Swoole\Client;
  */
 class Socket
 {
-    public $fd = -1;
+    public int $fd = -1;
 
-    public $domain = 0;
+    public int $domain = 0;
 
-    public $type = 0;
+    public int $type = 0;
 
-    public $protocol = 0;
+    public int $protocol = 0;
 
-    public $errCode = 0;
+    public int $errCode = 0;
 
-    public $errMsg = '';
+    public string $errMsg = '';
 
     public function __construct(int $domain, int $type, int $protocol = 0)
     {

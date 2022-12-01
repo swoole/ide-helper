@@ -299,8 +299,8 @@ class Coroutine
      *
      * This method is available only when Swoole is installed with option "--enable-swoole-coro-time" included.
      *
-     * The official Docker images of Swoole (phpswoole/swoole) doesn't have "--enable-swoole-coro-time" included when
-     * installing Swoole. Thus, this method can not be used directly in the official Docker images of Swoole.
+     * The official Docker images of Swoole (phpswoole/swoole) doesn't have option "--enable-swoole-coro-time" included
+     * when installing Swoole. Thus, this method can not be used directly in the official Docker images of Swoole.
      *
      * @return int Return the execution time of current coroutine in microseconds, or -1 if not executed within a coroutine.
      * @since 5.0.0
