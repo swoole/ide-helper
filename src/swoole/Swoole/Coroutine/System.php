@@ -11,6 +11,12 @@ namespace Swoole\Coroutine;
 class System
 {
     /**
+     * Get the IPv4/IPv6 address corresponding to a given Internet host name.
+     *
+     * @param string $domain_name The host name.
+     * @param int $type The type of address to resolve. Should be either AF_INET or AF_INET6. By default, it resolves to an IPv4 address.
+     * @param float $timeout The timeout for domain resolving (in seconds). No timeout if $timeout is no greater than 0.0.
+     * @return string|false Return the IPv4/IPv6 address on success, or FALSE on failure.
      * @alias This method is an alias of method \Swoole\Coroutine::gethostbyname().
      * @see \Swoole\Coroutine::gethostbyname()
      */

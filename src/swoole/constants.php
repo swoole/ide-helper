@@ -459,9 +459,13 @@ define('SWOOLE_HOOK_CURL', 2048); // 2^11
 define('SWOOLE_HOOK_NATIVE_CURL', 4096); // 2^12
 /*
  * Runtime hook flag SWOOLE_HOOK_BLOCKING_FUNCTION makes the following PHP functions coroutine-friendly:
- *  - gethostbyname()
- *  - exec()
- *  - shell_exec()
+ *  - gethostbyname(): It is replaced with method Swoole\Coroutine::gethostbyname() internally when the runtime hook is enabled.
+ *  - exec(): It is replaced with function swoole_exec() from Swoole Library internally when the runtime hook is enabled.
+ *  - shell_exec(): It is replaced with function swoole_shell_exec() from Swoole Library internally when the runtime hook is enabled.
+ *
+ * @see Swoole\Coroutine::gethostbyname()
+ * @see swoole_exec()
+ * @see swoole_shell_exec()
  */
 define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192); // 2^13
 /*
