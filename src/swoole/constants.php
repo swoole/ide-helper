@@ -383,7 +383,7 @@ define('SWOOLE_CHANNEL_CLOSED', -2);
 define('SWOOLE_CHANNEL_CANCELED', -3);
 
 /*
- * Hook flags.
+ * Runtime hook flags.
  */
 define('SWOOLE_HOOK_TCP', 2); // 2^1
 define('SWOOLE_HOOK_UDP', 4); // 2^2
@@ -393,8 +393,8 @@ define('SWOOLE_HOOK_SSL', 32); // 2^5
 define('SWOOLE_HOOK_TLS', 64); // 2^6
 /*
  * Runtime hook flag SWOOLE_HOOK_STREAM_FUNCTION makes the following PHP functions coroutine-friendly:
- *  - stream_select()
- *  - stream_socket_pair()
+ *   - stream_select()
+ *   - stream_socket_pair()
  */
 define('SWOOLE_HOOK_STREAM_FUNCTION', 128);  // 2^7
 // Runtime hook flag SWOOLE_HOOK_STREAM_SELECT is deprecated in Swoole 4.4.0. It's kept for backward compatibility only.
@@ -402,100 +402,104 @@ define('SWOOLE_HOOK_STREAM_SELECT', SWOOLE_HOOK_STREAM_FUNCTION);
 define('SWOOLE_HOOK_FILE', 256); // 2^8
 /*
  * Runtime hook flag SWOOLE_HOOK_SLEEP makes the following PHP functions coroutine-friendly:
- *  - sleep()
- *  - usleep()
- *  - time_nanosleep()
- *  - time_sleep_until()
+ *   - sleep()
+ *   - usleep()
+ *   - time_nanosleep()
+ *   - time_sleep_until()
  */
 define('SWOOLE_HOOK_SLEEP', 512); // 2^9
 /*
  * Runtime hook flag SWOOLE_HOOK_PROC makes the following PHP functions coroutine-friendly:
- *  - proc_open()
- *  - proc_close()
- *  - proc_get_status()
- *  - proc_terminate()
+ *   - proc_open()
+ *   - proc_close()
+ *   - proc_get_status()
+ *   - proc_terminate()
  */
 define('SWOOLE_HOOK_PROC', 1024); // 2^10
 /*
- * Runtime hook flag SWOOLE_HOOK_CURL makes the following PHP functions coroutine-friendly:
- *  - curl_init()
- *  - curl_setopt()
- *  - curl_setopt_array()
- *  - curl_exec()
- *  - curl_getinfo()
- *  - curl_errno()
- *  - curl_error()
- *  - curl_reset()
- *  - curl_close()
- *  - curl_multi_getcontent()
+ * Runtime hook flag SWOOLE_HOOK_CURL makes the following PHP functions coroutine-friendly by replacing them internally
+ * with functions from Swoole Library:
+ *   - curl_init(): replaced with function swoole_curl_init().
+ *   - curl_setopt(): replaced with function swoole_curl_setopt().
+ *   - curl_setopt_array(): replaced with function swoole_curl_setopt_array().
+ *   - curl_exec(): replaced with function swoole_curl_exec().
+ *   - curl_getinfo(): replaced with function swoole_curl_getinfo().
+ *   - curl_errno(): replaced with function swoole_curl_errno().
+ *   - curl_error(): replaced with function swoole_curl_error().
+ *   - curl_reset(): replaced with function swoole_curl_reset().
+ *   - curl_close(): replaced with function swoole_curl_close().
+ *   - curl_multi_getcontent(): replaced with function swoole_curl_multi_getcontent().
+ *
+ * It's not recommended to use this flag since it doesn't fully support all the features of the original PHP cURL
+ * extension. Please use flag SWOOLE_HOOK_NATIVE_CURL instead.
  */
 define('SWOOLE_HOOK_CURL', 2048); // 2^11
 /*
  * Runtime hook flag SWOOLE_HOOK_NATIVE_CURL makes the following PHP functions coroutine-friendly:
- *  - curl_close()
- *  - curl_copy_handle()
- *  - curl_errno()
- *  - curl_error()
- *  - curl_exec()
- *  - curl_getinfo()
- *  - curl_init()
- *  - curl_setopt()
- *  - curl_setopt_array()
- *  - curl_reset()
- *  - curl_pause()
- *  - curl_escape()
- *  - curl_unescape()
- *  - curl_multi_init()
- *  - curl_multi_add_handle()
- *  - curl_multi_exec()
- *  - curl_multi_errno()
- *  - curl_multi_select()
- *  - curl_multi_setopt()
- *  - curl_multi_getcontent()
- *  - curl_multi_info_read()
- *  - curl_multi_remove_handle()
- *  - curl_multi_close()
+ *   - curl_close()
+ *   - curl_copy_handle()
+ *   - curl_errno()
+ *   - curl_error()
+ *   - curl_exec()
+ *   - curl_getinfo()
+ *   - curl_init()
+ *   - curl_setopt()
+ *   - curl_setopt_array()
+ *   - curl_reset()
+ *   - curl_pause()
+ *   - curl_escape()
+ *   - curl_unescape()
+ *   - curl_multi_init()
+ *   - curl_multi_add_handle()
+ *   - curl_multi_exec()
+ *   - curl_multi_errno()
+ *   - curl_multi_select()
+ *   - curl_multi_setopt()
+ *   - curl_multi_getcontent()
+ *   - curl_multi_info_read()
+ *   - curl_multi_remove_handle()
+ *   - curl_multi_close()
+ *
+ * Runtime hook flag SWOOLE_HOOK_NATIVE_CURL can be enabled only when Swoole is installed with option "--enable-swoole-curl"
+ * included. It's recommended to use this flag instead of flag SWOOLE_HOOK_CURL.
  */
 define('SWOOLE_HOOK_NATIVE_CURL', 4096); // 2^12
 /*
- * Runtime hook flag SWOOLE_HOOK_BLOCKING_FUNCTION makes the following PHP functions coroutine-friendly:
- *  - gethostbyname(): It is replaced with method Swoole\Coroutine::gethostbyname() internally when the runtime hook is enabled.
- *  - exec(): It is replaced with function swoole_exec() from Swoole Library internally when the runtime hook is enabled.
- *  - shell_exec(): It is replaced with function swoole_shell_exec() from Swoole Library internally when the runtime hook is enabled.
- *
- * @see Swoole\Coroutine::gethostbyname()
- * @see swoole_exec()
- * @see swoole_shell_exec()
+ * Runtime hook flag SWOOLE_HOOK_BLOCKING_FUNCTION makes the following PHP functions coroutine-friendly by replacing them internally:
+ *   - gethostbyname(): replaced with method Swoole\Coroutine::gethostbyname() internally.
+ *   - exec(): replaced with function swoole_exec() from Swoole Library internally.
+ *   - shell_exec(): replaced with function swoole_shell_exec() from Swoole Library internally.
  */
 define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192); // 2^13
 /*
- * Runtime hook flag SWOOLE_HOOK_BLOCKING_FUNCTION makes the following PHP functions coroutine-friendly:
- *  - socket_create()
- *  - socket_create_listen()
- *  - socket_create_pair()
- *  - socket_connect()
- *  - socket_write()
- *  - socket_read()
- *  - socket_send()
- *  - socket_recv()
- *  - socket_sendto()
- *  - socket_recvfrom()
- *  - socket_bind()
- *  - socket_listen()
- *  - socket_accept()
- *  - socket_getpeername()
- *  - socket_getsockname()
- *  - socket_getopt()
- *  - socket_get_option()
- *  - socket_setopt()
- *  - socket_set_option()
- *  - socket_set_block()
- *  - socket_set_nonblock()
- *  - socket_shutdown()
- *  - socket_close()
- *  - socket_clear_error()
- *  - socket_last_error()
- *  - socket_import_stream()
+ * Runtime hook flag SWOOLE_HOOK_BLOCKING_FUNCTION makes the following PHP functions coroutine-friendly by replacing them
+ * internally with functions from Swoole Library:
+ *   - socket_create(): replaced with function swoole_socket_create().
+ *   - socket_create_listen(): replaced with function swoole_socket_create_listen().
+ *   - socket_create_pair(): replaced with function swoole_socket_create_pair().
+ *   - socket_connect(): replaced with function swoole_socket_connect().
+ *   - socket_write(): replaced with function swoole_socket_write().
+ *   - socket_read(): replaced with function swoole_socket_read().
+ *   - socket_send(): replaced with function swoole_socket_send().
+ *   - socket_recv(): replaced with function swoole_socket_recv().
+ *   - socket_sendto(): replaced with function swoole_socket_sendto().
+ *   - socket_recvfrom(): replaced with function swoole_socket_recvfrom().
+ *   - socket_bind(): replaced with function swoole_socket_bind().
+ *   - socket_listen(): replaced with function swoole_socket_listen().
+ *   - socket_accept(): replaced with function swoole_socket_accept().
+ *   - socket_getpeername(): replaced with function swoole_socket_getpeername().
+ *   - socket_getsockname(): replaced with function swoole_socket_getsockname().
+ *   - socket_getopt(): replaced with function swoole_socket_getopt().
+ *   - socket_get_option(): replaced with function swoole_socket_get_option().
+ *   - socket_setopt(): replaced with function swoole_socket_setopt().
+ *   - socket_set_option(): replaced with function swoole_socket_set_option().
+ *   - socket_set_block(): replaced with function swoole_socket_set_block().
+ *   - socket_set_nonblock(): replaced with function swoole_socket_set_nonblock().
+ *   - socket_shutdown(): replaced with function swoole_socket_shutdown().
+ *   - socket_close(): replaced with function swoole_socket_close().
+ *   - socket_clear_error(): replaced with function swoole_socket_clear_error().
+ *   - socket_last_error(): replaced with function swoole_socket_last_error().
+ *   - socket_import_stream(): replaced with function swoole_socket_import_stream().
  *
  * When enabled, it also makes class \Swoole\Coroutine\Socket a child class of built-in PHP class \Socket.
  *
@@ -504,13 +508,32 @@ define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192); // 2^13
  */
 define('SWOOLE_HOOK_SOCKETS', 16384); // 2^14
 define('SWOOLE_HOOK_STDIO', 32768); // 2^15
-if (class_exists(Swoole\Coroutine\Curl\Exception::class)) {          #ifdef SW_USE_CURL
+/*
+ * There are two different hook flags for PHP's cURL functions:
+ *   - SWOOLE_HOOK_CURL: Implemented by replacing PHP's cURL functions internally with swoole_curl_*() functions from Swoole Library.
+ *   - SWOOLE_HOOK_NATIVE_CURL (recommended): Implemented using libcurl (the curl library).
+ *
+ * Only one of the two runtime hook flags can be enabled at a time. SWOOLE_HOOK_NATIVE_CURL can be enabled only when
+ * Swoole is installed with option "--enable-swoole-curl" included.
+ * When Swoole is installed with option "--enable-swoole-curl" included, SWOOLE_HOOK_ALL also enables SWOOLE_HOOK_NATIVE_CURL;
+ * otherwise, it enables SWOOLE_HOOK_CURL.
+ *
+ * Class Swoole\Coroutine\Curl\Exception is defined only when option "--enable-swoole-curl" is included during installation.
+ */
+if (class_exists(Swoole\Coroutine\Curl\Exception::class)) { // When Swoole is installed with option "--enable-swoole-curl" included.
     define('SWOOLE_HOOK_ALL', 0x7FFFFFFF ^ SWOOLE_HOOK_CURL);
-} else {                                                             #else
+} else {
     define('SWOOLE_HOOK_ALL', 0x7FFFFFFF ^ SWOOLE_HOOK_NATIVE_CURL);
-}                                                                    #endif
+}
 
-define('SOCKET_ECANCELED', 125); // TODO:
+/*
+ * An asynchronous socket operation was canceled before it completed. The value varies among different systems.
+ *
+ * A typical use case of this constant can be found in class Swoole\Coroutine\Server.
+ *
+ * @see Swoole\Coroutine\Server::start()
+ */
+define('SOCKET_ECANCELED', 125);
 
 /*
  * Constants in this section are used in Swoole servers.
