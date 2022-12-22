@@ -9,7 +9,7 @@ namespace Swoole\Server;
  */
 class Port
 {
-    public $host;
+    public string $host;
 
     public $port = 0;
 
@@ -21,7 +21,7 @@ class Port
 
     public $setting;
 
-    public $connections;
+    public Iterator $connections;
 
     /**
      * @var callable

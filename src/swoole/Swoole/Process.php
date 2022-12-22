@@ -21,7 +21,7 @@ class Process
 
     public const PIPE_WRITE = 4;
 
-    public $pipe;
+    public int $pipe;
 
     public $msgQueueId;
 

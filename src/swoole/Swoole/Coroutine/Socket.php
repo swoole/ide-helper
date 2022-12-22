@@ -181,6 +181,9 @@ class Socket
     }
 
     /**
+     * Check if the socket is closed.
+     *
+     * @return bool Returns true if the socket is closed, false otherwise.
      * @since 4.8.3
      */
     public function isClosed(): bool

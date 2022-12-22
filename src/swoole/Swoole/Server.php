@@ -100,8 +100,14 @@ class Server
 
     public $ports;
 
+    /**
+     * Process ID of the master process.
+     */
     public $master_pid = 0;
 
+    /**
+     * Process ID of the manager process.
+     */
     public $manager_pid = 0;
 
     public $worker_id = -1;
@@ -449,6 +455,19 @@ class Server
     {
     }
 
+    /**
+     * Shutdown the server.
+     *
+     * This method has the same effect as the following command line commands:
+     *   - kill -SIGTERM $master_pid
+     *   - kill -15      $master_pid
+     * The above commands send TERM signals to the master process of the Swoole server. $master_pid is the process ID of
+     * the master process.
+     *
+     * This method can be called from worker processes.
+     *
+     * @return bool TRUE on success, FALSE on failure.
+     */
     public function shutdown(): bool
     {
     }
