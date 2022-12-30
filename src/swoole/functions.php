@@ -38,7 +38,16 @@ function swoole_last_error(): int
 {
 }
 
-function swoole_async_dns_lookup_coro(mixed $domain_name, float $timeout = 60, int $type = AF_INET): string|false
+/**
+ * Lookup the IPv4/IPv6 address corresponding to a given Internet host name.
+ *
+ * Please check documentation of method \Swoole\Coroutine::dnsLookup() for more details.
+ *
+ * @alias This function has two alias methods: \Swoole\Coroutine::dnsLookup() and \Swoole\Coroutine\System::dnsLookup().
+ * @see \Swoole\Coroutine::dnsLookup()
+ * @see \Swoole\Coroutine\System::dnsLookup()
+ */
+function swoole_async_dns_lookup_coro(string $domain_name, float $timeout = 60, int $type = AF_INET): string|false
 {
 }
 

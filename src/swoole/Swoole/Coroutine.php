@@ -313,19 +313,86 @@ class Coroutine
      * Get the IPv4/IPv6 address corresponding to a given Internet host name.
      *
      * @param string $domain_name The host name.
-     * @param int $type The type of address to resolve. Should be either AF_INET or AF_INET6. By default, it resolves to an IPv4 address.
-     * @param float $timeout The timeout for domain resolving (in seconds). No timeout if $timeout is no greater than 0.0.
+     * @param int $type The type of address to resolve. Should be either AF_INET or AF_INET6. By default, it resolves to
+     *                  an IPv4 address.
+     * @param float $timeout The timeout for domain resolving (in seconds).
+     *                       - > 0.001: The timeout value in seconds.
+     *                       - <= 0: No timeout.
+     *                       - Otherwise: 0.001 second. This is the minimum number of seconds that can be used for
+     *                       time-related operations in Swoole, as denoted by constant SWOOLE_TIMER_MIN_SEC.
      * @return string|false Return the IPv4/IPv6 address on success, or FALSE on failure.
+     *                      Runtime option \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM determines which address to return
+     *                      when multiple IPv4/IPv6 addresses are returned during DNS query.
+     *                      - If TRUE (enabled), a random address is returned. This is the default behavior.
+     *                      - If FALSE (disabled), the first address is returned.
+     *                      The result is cached in memory for 60 seconds by default. The expiration time can be
+     *                      configured through runtime option \Swoole\Constant::OPTION_DNS_CACHE_EXPIRE.
+     *
+     * @see \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM Runtime option to enable random DNS lookup (enabled by default).
+     * @see \Swoole\Constant::OPTION_DNS_CACHE_EXPIRE Runtime option to set expiration time of DNS cache (in seconds).
+     *
+     * @see https://www.php.net/gethostbyname The built-in PHP function \gethostbyname()
+     *      There are a few differences between this method and the built-in PHP function \gethostbyname():
+     *      - PHP function \gethostbyname() only works for IPv4 addresses. This method works for both IPv4 and IPv6 addresses.
+     *      - PHP function \gethostbyname() works in blocking mode. This method works in non-blocking mode when invoked in a
+     *        coroutine.
+     *      - PHP function \gethostbyname() doesn't cache the result. This method caches the result of DNS query in memory.
+     *        The result is cached for 60 seconds by default. The expiration time can be configured through runtime option
+     *        \Swoole\Constant::OPTION_DNS_CACHE_EXPIRE.
+     *      - PHP function \gethostbyname() uses the C function gethostbyname() to resolve the host name. This method uses
+     *        C library c-ares if available.
+     *
+     * @see \Swoole\Coroutine::dnsLookup() This method is very similar to method \Swoole\Coroutine::dnsLookup(), with a
+     *      few differences.
+     *      - When multiple IPv4/IPv6 addresses are returned during DNS query, both methods rely on runtime option
+     *        \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM to determine which address to return. By default, a random
+     *        address is returned.
+     *      - When library c-ares is available, both methods use c-ares to resolve the host name and return the same result.
+     *      - When library c-ares is not available, method dnsLookup() makes a DNS query through UDP socket, while method
+     *        gethostbyname() relies on the C function gethostbyname() to resolve the host name.
+     *      - They use different runtime options to configure the behavior of caching DNS query result.
+     *      - Parameter $timeout doesn't always have the same meaning in both methods, although most times they are the same.
+     *
      * @alias This method has an alias method \Swoole\Coroutine\System::gethostbyname().
-     * @see \Swoole\Coroutine\System::gethostbyname()
+     * @see \Swoole\Coroutine\System::dnsLookup()
      */
     public static function gethostbyname(string $domain_name, int $type = AF_INET, float $timeout = -1): string|false
     {
     }
 
     /**
-     * @alias This method has an alias method \Swoole\Coroutine\System::dnsLookup().
-     * @see \Swoole\Coroutine\System::dnsLookup()
+     * Lookup the IPv4/IPv6 address corresponding to a given Internet host name.
+     *
+     * @param string $domain_name The domain name to be resolved.
+     * @param float $timeout The timeout for domain resolving (in seconds). No timeout if $timeout is no greater than 0.0.
+     * @param int $type The type of address to resolve. Should be either AF_INET or AF_INET6. Before Swoole 4.7.0, only AF_INET is supported.
+     * @return string|false returns the resolved IP address on success, or false on failure.
+     *                      Runtime option \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM determines which address to return
+     *                      when multiple IPv4/IPv6 addresses are returned during DNS query.
+     *                      - If TRUE (enabled), a random address is returned. This is the default behavior.
+     *                      - If FALSE (disabled), the first address is returned.
+     *                      The result is cached in memory for 60 seconds by default. The expiration time can be
+     *                      configured through runtime option \Swoole\Constant::OPTION_DNS_CACHE_REFRESH_TIME.
+     *                      When failed, function swoole_last_error() can be used to get the error code. Here are some
+     *                      common errors:
+     *                      - SWOOLE_ERROR_DNSLOOKUP_RESOLVE_FAILED: The domain name can not be resolved.
+     *                      - SWOOLE_ERROR_DNSLOOKUP_RESOLVE_TIMEOUT: Can't resolve the domain name within the given timeout.
+     * @see \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM Runtime option to enable random DNS lookup (enabled by default).
+     * @see \Swoole\Constant::OPTION_DNS_CACHE_REFRESH_TIME Runtime option to set refresh time for DNS cache (in seconds).
+     *
+     * @see \Swoole\Coroutine::gethostbyname() This method is very similar to method \Swoole\Coroutine::gethostbyname(),
+     *      with a few differences.
+     *      - When multiple IPv4/IPv6 addresses are returned during DNS query, both methods rely on runtime option
+     *        \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM to determine which address to return. By default, a random
+     *        address is returned.
+     *      - When library c-ares is available, both methods use c-ares to resolve the host name and return the same result.
+     *      - When library c-ares is not available, method dnsLookup() makes a DNS query through UDP socket, while method
+     *        gethostbyname() relies on the C function gethostbyname() to resolve the host name.
+     *      - They use different runtime options to configure the behavior of caching DNS query result.
+     *      - Parameter $timeout doesn't always have the same meaning in both methods, although most times they are the same.
+     *
+     * @alias This method is an alias of function \swoole_async_dns_lookup_coro().
+     * @see \swoole_async_dns_lookup_coro()
      */
     public static function dnsLookup(string $domain_name, float $timeout = 60, int $type = AF_INET): string|false
     {
