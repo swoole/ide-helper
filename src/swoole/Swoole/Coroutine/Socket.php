@@ -46,6 +46,9 @@ class Socket
     }
 
     /**
+     * Check liveness of the socket.
+     *
+     * @return bool Returns true if the socket is still alive, false otherwise.
      * @since 4.5.0
      */
     public function checkLiveness(): bool

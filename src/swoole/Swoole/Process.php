@@ -144,6 +144,11 @@ class Process
     {
     }
 
+    /**
+     * Terminates the process.
+     *
+     * @param int $exit_code The exit code of the process. It must be an integer in the range 0 to 255, otherwise it will be set to 1 implicitly.
+     */
     public function exit(int $exit_code = 0): void
     {
     }
