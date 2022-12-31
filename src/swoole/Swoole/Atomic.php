@@ -67,10 +67,50 @@ class Atomic
     {
     }
 
-    public function wait(float $timeout = 1): bool
+    /**
+     * Put the current process to block until it's woken up by another process or the timeout expires.
+     *
+     * Before using method \Swoole\Atomic::wait() and \Swoole\Atomic::wakeup(), the counter must be either 0 or 1,
+     * otherwise the behavior is undefined.
+     *   - When the counter is 0, the current process will be put into a blocking state.
+     *   - When the counter is 1, it means the process doesn't need to wait; the method returns true immediately.
+     *
+     * WARNING: This method blocks the whole process, not just the current coroutine. Thus, it's not recommended to use
+     *          this method in Swoole servers nor coroutines.
+     *
+     * @param float $timeout The timeout in seconds.
+     *                       > 0: The process will be woken up after the specified number of seconds (or by another process).
+     *                       <= 0: No timeout. The process will resume execution only when waken up by another process.
+     * @return bool Returns true if no need to wait or waken up by another process; otherwise returns false.
+     *
+     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/io/block-processes-using-swoole-atomic.php
+     *      An example showing how to block processes using class \Swoole\Atomic in a multiprocessing environment.
+     */
+    public function wait(float $timeout = 1.0): bool
     {
     }
 
+    /**
+     * Wake up one or more processes that are blocked by method \Swoole\Atomic::wait().
+     *
+     * Before using method \Swoole\Atomic::wait() and \Swoole\Atomic::wakeup(), the counter must be either 0 or 1,
+     * otherwise the behavior is undefined.
+     *   - When the counter is 0, it means there is no any processes blocked; the method returns true immediately.
+     *   - When the counter is 1, it means there are some processes blocked; the method wakes up (some of) them and returns true.
+     *
+     * When there are N processes blocked by method \Swoole\Atomic::wait(), the following two statements have the same effect:
+     *   - $atomic->wakeup(N);
+     *   - for ($i = 0; $i < N; $i++) $atomic->wakeup();
+     *
+     * There is no guarantee about which processes are awoken. e.g., a process with a higher scheduling priority is not
+     * guaranteed to be awoken in preference to a process with a lower priority.
+     *
+     * @param int $count The number of processes to wake up.
+     * @return bool Returns true if the counter is 0 or the method wakes up at least one process; otherwise returns false.
+     *
+     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/io/block-processes-using-swoole-atomic.php
+     *      An example showing how to block processes using class \Swoole\Atomic in a multiprocessing environment.
+     */
     public function wakeup(int $count = 1): bool
     {
     }
