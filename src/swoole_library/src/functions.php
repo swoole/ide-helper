@@ -124,6 +124,42 @@ function swoole_array_default_value(array $array, $key, $default_value = null)
     return array_key_exists($key, $array) ? $array[$key] : $default_value;
 }
 
+function swoole_is_in_container()
+{
+    $mountinfo = file_get_contents('/proc/self/mountinfo');
+    return strpos($mountinfo, 'kubepods') > 0 || strpos($mountinfo, 'docker') > 0;
+}
+
+function swoole_container_cpu_num()
+{
+    $swoole_cpu_num = intval(getenv('SWOOLE_CPU_NUM'));
+    if ($swoole_cpu_num > 0) {
+        return $swoole_cpu_num;
+    }
+    if (!swoole_is_in_container()) {
+        return swoole_cpu_num();
+    }
+    // cgroup v2
+    $cpu_max = '/sys/fs/cgroup/cpu.max';
+    if (file_exists($cpu_max)) {
+        $cpu_max = file_get_contents($cpu_max);
+        $fields = explode($cpu_max, ' ');
+        $quota_us = $fields[0];
+        if ($quota_us == 'max') {
+            return swoole_cpu_num();
+        }
+        $period_us = $fields[1] ?? 100000;
+    } else {
+        $quota_us = file_get_contents('/sys/fs/cgroup/cpu,cpuacct/cpu.cfs_quota_us');
+        $period_us = file_get_contents('/sys/fs/cgroup/cpu,cpuacct/cpu.cfs_period_us');
+    }
+    $cpu_num = floatval($quota_us) / floatval($period_us);
+    if ($cpu_num < 1) {
+        return swoole_cpu_num();
+    }
+    return intval(floor($cpu_num));
+}
+
 if (!function_exists('array_key_last')) {
     function array_key_last(array $array)
     {

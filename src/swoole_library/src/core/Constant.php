@@ -105,6 +105,18 @@ class Constant
 
     public const OPTION_SOCKET_TIMEOUT = 'socket_timeout';
 
+    public const OPTION_HTTP2_HEADER_TABLE_SIZE = 'http2_header_table_size';
+
+    public const OPTION_HTTP2_ENABLE_PUSH = 'http2_enable_push';
+
+    public const OPTION_HTTP2_MAX_CONCURRENT_STREAMS = 'http2_max_concurrent_streams';
+
+    public const OPTION_HTTP2_INIT_WINDOW_SIZE = 'http2_init_window_size';
+
+    public const OPTION_HTTP2_MAX_FRAME_SIZE = 'http2_max_frame_size';
+
+    public const OPTION_HTTP2_MAX_HEADER_LIST_SIZE = 'http2_max_header_list_size';
+
     public const OPTION_AIO_CORE_WORKER_NUM = 'aio_core_worker_num';
 
     public const OPTION_AIO_WORKER_NUM = 'aio_worker_num';
@@ -205,20 +217,6 @@ class Constant
 
     public const OPTION_HTTP_PROXY_PASSWORD = 'http_proxy_password';
 
-    public const OPTION_TIMEOUT = 'timeout';
-
-    public const OPTION_CONNECT_TIMEOUT = 'connect_timeout';
-
-    public const OPTION_READ_TIMEOUT = 'read_timeout';
-
-    public const OPTION_WRITE_TIMEOUT = 'write_timeout';
-
-    public const OPTION_SSL_DISABLE_COMPRESSION = 'ssl_disable_compression';
-
-    public const OPTION_SSL_ECDH_CURVE = 'ssl_ecdh_curve';
-
-    public const OPTION_SSL_GREASE = 'ssl_grease';
-
     public const OPTION_MAX_CORO_NUM = 'max_coro_num';
 
     public const OPTION_MAX_COROUTINE = 'max_coroutine';
@@ -240,6 +238,10 @@ class Constant
     public const OPTION_DNS_CACHE_CAPACITY = 'dns_cache_capacity';
 
     public const OPTION_MAX_CONCURRENCY = 'max_concurrency';
+
+    public const OPTION_CONNECT_TIMEOUT = 'connect_timeout';
+
+    public const OPTION_TIMEOUT = 'timeout';
 
     public const OPTION_MAX_RETRIES = 'max_retries';
 
@@ -443,6 +445,8 @@ class Constant
 
     public const OPTION_SSL_PREFER_SERVER_CIPHERS = 'ssl_prefer_server_ciphers';
 
+    public const OPTION_SSL_ECDH_CURVE = 'ssl_ecdh_curve';
+
     public const OPTION_SSL_DHPARAM = 'ssl_dhparam';
 
     public const OPTION_SSL_SNI_CERTS = 'ssl_sni_certs';
@@ -450,6 +454,14 @@ class Constant
     public const OPTION_OPEN_SSL = 'open_ssl';
 
     public const OPTION_OPEN_FASTCGI_PROTOCOL = 'open_fastcgi_protocol';
+
+    public const OPTION_READ_TIMEOUT = 'read_timeout';
+
+    public const OPTION_WRITE_TIMEOUT = 'write_timeout';
+
+    public const OPTION_SSL_DISABLE_COMPRESSION = 'ssl_disable_compression';
+
+    public const OPTION_SSL_GREASE = 'ssl_grease';
 
     public const OPTION_EXIT_CONDITION = 'exit_condition';
 

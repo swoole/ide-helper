@@ -801,8 +801,8 @@ final class Handler
                             }
                         }
                     }
+                    $client->setData($this->postData);
                 }
-                $client->setData($this->postData);
             }
             /*
              * Headers

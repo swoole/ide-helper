@@ -38,6 +38,12 @@ class Helper
         'socket_recv_timeout' => true,
         'socket_buffer_size' => true,
         'socket_timeout' => true,
+        'http2_header_table_size' => true,
+        'http2_enable_push' => true,
+        'http2_max_concurrent_streams' => true,
+        'http2_init_window_size' => true,
+        'http2_max_frame_size' => true,
+        'http2_max_header_list_size' => true,
     ];
 
     public const SERVER_OPTIONS = [

@@ -30,15 +30,19 @@ class PDOPool extends ConnectionPool
     {
         $this->config = $config;
         parent::__construct(function () {
+            $driver = $this->config->getDriver();
             return new PDO(
-                "{$this->config->getDriver()}:" .
+                "{$driver}:" .
                 (
                     $this->config->hasUnixSocket() ?
                     "unix_socket={$this->config->getUnixSocket()};" :
                     "host={$this->config->getHost()};" . "port={$this->config->getPort()};"
                 ) .
                 "dbname={$this->config->getDbname()};" .
-                "charset={$this->config->getCharset()}",
+                (
+                    ($driver !== 'pgsql') ?
+                    "charset={$this->config->getCharset()}" : ""
+                ),
                 $this->config->getUsername(),
                 $this->config->getPassword(),
                 $this->config->getOptions()
