@@ -579,11 +579,10 @@ class Server
      * Run a customized command in a specified process of Swoole.
      *
      * @param bool $json_encode If the callback function of the command returns a JSON encoded string back, it can be decoded automatically by setting this parameter to TRUE.
-     * @return mixed|false
      * @see \Swoole\Server::addCommand()
      * @since 4.8.0
      */
-    public function command(string $name, int $process_id, int $process_type, mixed $data, bool $json_decode = true): string|false
+    public function command(string $name, int $process_id, int $process_type, mixed $data, bool $json_decode = true): string|array|false
     {
     }
 

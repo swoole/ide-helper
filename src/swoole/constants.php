@@ -193,6 +193,12 @@ define('SWOOLE_ERROR_CO_CANNOT_CANCEL', 10015);
 define('SWOOLE_ERROR_CO_NOT_EXISTS', 10016);
 define('SWOOLE_ERROR_CO_CANCELED', 10017);
 define('SWOOLE_ERROR_CO_TIMEDOUT', 10018);
+/*
+ * Failed to close the socket since the socket is currently held by other coroutine(s).
+ *
+ * @since 5.0.2
+ */
+define('SWOOLE_ERROR_CO_SOCKET_CLOSE_WAIT', 10019);
 
 // Trace log types (server related).
 define('SWOOLE_TRACE_SERVER', 2); // 2^1

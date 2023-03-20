@@ -56,25 +56,52 @@ class Socket
     }
 
     /**
+     * @since 5.0.2
+     */
+    public function getBoundCid(int $event): int
+    {
+    }
+
+    /**
      * @since 4.5.0
      */
     public function peek(int $length = 65536): string|false
     {
     }
 
+    /**
+     * @see \Swoole\Coroutine\Socket::recvAll()
+     * @see \Swoole\Coroutine\Socket::recvLine()
+     * @see \Swoole\Coroutine\Socket::recvWithBuffer()
+     */
     public function recv(int $length = 65536, float $timeout = 0): string|false
     {
     }
 
+    /**
+     * @see \Swoole\Coroutine\Socket::recv()
+     * @see \Swoole\Coroutine\Socket::recvLine()
+     * @see \Swoole\Coroutine\Socket::recvWithBuffer()
+     */
     public function recvAll(int $length = 65536, float $timeout = 0): string|false
     {
     }
 
-    public function recvLine(int $length = 65535, float $timeout = 0): string|false
+    /**
+     * @see \Swoole\Coroutine\Socket::recv()
+     * @see \Swoole\Coroutine\Socket::recvAll()
+     * @see \Swoole\Coroutine\Socket::recvWithBuffer()
+     */
+    public function recvLine(int $length = 65536, float $timeout = 0): string|false
     {
     }
 
-    public function recvWithBuffer(int $length = 65535, float $timeout = 0): string|false
+    /**
+     * @see \Swoole\Coroutine\Socket::recv()
+     * @see \Swoole\Coroutine\Socket::recvAll()
+     * @see \Swoole\Coroutine\Socket::recvLine()
+     */
+    public function recvWithBuffer(int $length = 65536, float $timeout = 0): string|false
     {
     }
 

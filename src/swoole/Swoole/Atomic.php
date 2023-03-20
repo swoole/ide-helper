@@ -79,8 +79,8 @@ class Atomic
      *
      * @param float $timeout The timeout in seconds.
      *                       > 0: The process will be woken up after the specified number of seconds (or by another process).
-     *                       <= 0: No timeout. The process will resume execution only when waken up by another process.
-     * @return bool Returns true if no need to wait or waken up by another process; otherwise returns false.
+     *                       <= 0: No timeout. The process will resume execution only when woken up by another process.
+     * @return bool Returns true if no need to wait or woken up by another process; otherwise returns false.
      *
      * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/io/block-processes-using-swoole-atomic.php
      *      An example showing how to block processes using class \Swoole\Atomic in a multiprocessing environment.
