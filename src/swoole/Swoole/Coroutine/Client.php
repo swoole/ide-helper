@@ -31,7 +31,12 @@ class Client
 
     public $connected = false;
 
-    private $socket;
+    /**
+     * The socket object of the client.
+     *
+     * This is a private property before Swoole 5.0.2.
+     */
+    public ?Socket $socket;
 
     public function __construct(int $type)
     {

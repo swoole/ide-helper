@@ -88,6 +88,10 @@ class Event
     {
     }
 
+    /**
+     * @deprecated 4.6.0 Use method \Swoole\Coroutine\run() instead.
+     * @see \Swoole\Coroutine\run()
+     */
     public static function rshutdown(): void
     {
     }

@@ -353,6 +353,8 @@ class Coroutine
      *      - They use different runtime options to configure the behavior of caching DNS query result.
      *      - Parameter $timeout doesn't always have the same meaning in both methods, although most times they are the same.
      *
+     * @see \Swoole\Coroutine::getaddrinfo()
+     *
      * @alias This method has an alias method \Swoole\Coroutine\System::gethostbyname().
      * @see \Swoole\Coroutine\System::dnsLookup()
      */
@@ -415,10 +417,14 @@ class Coroutine
     }
 
     /**
+     * @param int $family The type of address to resolve. Should be either AF_INET or AF_INET6.
+     *
+     * @see \Swoole\Coroutine::gethostbyname()
+     *
      * @alias Alias of method \Swoole\Coroutine\System::getaddrinfo().
      * @see \Swoole\Coroutine\System::getaddrinfo()
      */
-    public static function getaddrinfo(string $domain, int $family = AF_INET, int $socktype = SOCK_STREAM, int $protocol = STREAM_IPPROTO_TCP, ?string $service = null, float $timeout = -1): bool|array
+    public static function getaddrinfo(string $domain, int $family = AF_INET, int $socktype = SOCK_STREAM, int $protocol = STREAM_IPPROTO_TCP, ?string $service = null, float $timeout = -1): array|false
     {
     }
 

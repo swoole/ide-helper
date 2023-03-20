@@ -18,7 +18,11 @@ class Response
      */
     public int $fd = 0;
 
-    public $socket;
+    /**
+     * @see \Swoole\Http\Response::create()
+     * @since 4.4.0
+     */
+    public Socket $socket;
 
     /**
      * HTTP headers.

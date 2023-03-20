@@ -7,9 +7,15 @@ namespace Swoole\Coroutine;
 use Swoole\Client;
 
 /**
+ * A coroutine-friendly socket class used to represent a socket connection.
+ *
+ * When runtime hook flag SWOOLE_HOOK_SOCKETS is enabled, this class is used to represent a \Socket object (i.e., it's a
+ * child class of built-in PHP class \Socket).
+ *
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has an alias of "\Co\Socket" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Socket
+ * @see \Socket
  */
 class Socket
 {
@@ -56,6 +62,13 @@ class Socket
     }
 
     /**
+     * Get the coroutine ID that the socket is bound to of the specified event type.
+     *
+     * @param int $event Type of the event that the socket is performing inside the coroutine. It can be one of the following values:
+     *                   - SWOOLE_EVENT_READ
+     *                   - SWOOLE_EVENT_WRITE
+     *                   - SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE.
+     * @return int Returns the coroutine ID that the socket is bound to of the specified event type. Returns 0 if no matching coroutine is found.
      * @since 5.0.2
      */
     public function getBoundCid(int $event): int

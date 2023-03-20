@@ -55,7 +55,7 @@ class System
      * @alias This method has an alias of \Swoole\Coroutine::getaddrinfo().
      * @see \Swoole\Coroutine::getaddrinfo()
      */
-    public static function getaddrinfo(string $domain, int $family = AF_INET, int $socktype = SOCK_STREAM, int $protocol = STREAM_IPPROTO_TCP, ?string $service = null, float $timeout = -1): bool|array
+    public static function getaddrinfo(string $domain, int $family = AF_INET, int $socktype = SOCK_STREAM, int $protocol = STREAM_IPPROTO_TCP, ?string $service = null, float $timeout = -1): array|false
     {
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine\Http;
 
+use Swoole\Coroutine\Socket;
 use Swoole\WebSocket\Frame;
 
 /**
@@ -13,6 +14,13 @@ use Swoole\WebSocket\Frame;
  */
 class Client
 {
+    /**
+     * The socket object of the client.
+     *
+     * @since 5.0.2
+     */
+    public ?Socket $socket;
+
     public int $errCode = 0;
 
     public string $errMsg = '';

@@ -31,6 +31,13 @@ class MySQL
     public $errno = 0;
 
     /**
+     * The socket object used by this MySQL client.
+     *
+     * @since 5.0.2
+     */
+    private ?Socket $socket;
+
+    /**
      * @return mixed
      */
     public function getDefer()

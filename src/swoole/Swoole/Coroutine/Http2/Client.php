@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine\Http2;
 
+use Swoole\Coroutine\Socket;
 use Swoole\Http2\Request;
 use Swoole\Http2\Response;
 
@@ -23,6 +24,13 @@ class Client
     public int $type = 0;
 
     public $setting;
+
+    /**
+     * The socket object of the client.
+     *
+     * @since 5.0.2
+     */
+    public ?Socket $socket;
 
     public bool $connected = false;
 
