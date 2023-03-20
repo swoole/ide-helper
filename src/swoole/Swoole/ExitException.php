@@ -24,8 +24,10 @@ class ExitException extends Exception
 
     /**
      * The status as defined in PHP function exit($status).
+     *
+     * Before Swoole 5.0.2, the status is always an integer.
      */
-    private int $status = 0;
+    private mixed $status = 0;
 
     /**
      * Get the exit flags.
@@ -42,7 +44,7 @@ class ExitException extends Exception
      *
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
-    public function getStatus(): int
+    public function getStatus(): mixed
     {
         return $this->status;
     }

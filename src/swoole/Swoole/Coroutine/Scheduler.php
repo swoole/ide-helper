@@ -10,7 +10,7 @@ namespace Swoole\Coroutine;
  * @see \Co\Scheduler
  * @since 4.4.0
  */
-class Scheduler
+final class Scheduler
 {
     /**
      * Add a task (implemented in the callback).

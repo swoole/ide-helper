@@ -5,11 +5,11 @@ declare(strict_types=1);
 /*
  * Swoole version information.
  */
-define('SWOOLE_VERSION', '5.0.1');
-define('SWOOLE_VERSION_ID', 50001);
+define('SWOOLE_VERSION', '5.0.2');
+define('SWOOLE_VERSION_ID', 50002);
 define('SWOOLE_MAJOR_VERSION', 5);
 define('SWOOLE_MINOR_VERSION', 0);
-define('SWOOLE_RELEASE_VERSION', 1);
+define('SWOOLE_RELEASE_VERSION', 2);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
@@ -227,6 +227,12 @@ define('SWOOLE_TRACE_CO_HTTP_SERVER', 134217728); // 2^27
 define('SWOOLE_TRACE_TABLE', 268435456); // 2^28
 define('SWOOLE_TRACE_CO_CURL', 536870912); // 2^29
 define('SWOOLE_TRACE_CARES', 1073741824); // 2^30
+/*
+ * Constant SWOOLE_TRACE_ZLIB is added in Swoole 5.0.2.
+ *
+ * @since 5.0.2
+ */
+define('SWOOLE_TRACE_ZLIB', 2147483648); // 2^31
 define('SWOOLE_TRACE_ALL', 9223372036854775807); // 2^63 - 1
 
 // Log levels.

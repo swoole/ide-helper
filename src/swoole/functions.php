@@ -341,6 +341,12 @@ function swoole_event_dispatch(): bool
 }
 
 /**
+ * Defers the execution of the given callback.
+ *
+ * This function works similarly to statement setTimeout(callback, 0) in JavaScript.
+ *
+ * @param callable $callback The callback to be executed.
+ * @return true This method always returns true.
  * @alias This function is an alias of method \Swoole\Event::defer().
  * @see \Swoole\Event::defer()
  * @see \swoole_timer_after() Add a timer that only runs once after the specified number of milliseconds.

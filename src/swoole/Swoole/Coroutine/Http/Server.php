@@ -10,7 +10,7 @@ namespace Swoole\Coroutine\Http;
  * @see \Co\Http\Server
  * @since 4.4.0
  */
-class Server
+final class Server
 {
     public $fd = -1;
 

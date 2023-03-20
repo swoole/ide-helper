@@ -7,7 +7,7 @@ namespace Swoole\Server;
 /**
  * @not-serializable Objects of this class cannot be serialized.
  */
-class Task
+final class Task
 {
     public $data;
 

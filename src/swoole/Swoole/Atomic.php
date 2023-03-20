@@ -70,8 +70,7 @@ class Atomic
     /**
      * Put the current process to block until it's woken up by another process or the timeout expires.
      *
-     * Before using method \Swoole\Atomic::wait() and \Swoole\Atomic::wakeup(), the counter must be either 0 or 1,
-     * otherwise the behavior is undefined.
+     * Before using this method, the counter must be either 0 or 1, otherwise the behavior is undefined.
      *   - When the counter is 0, the current process will be put into a blocking state.
      *   - When the counter is 1, it means the process doesn't need to wait; the method returns true immediately.
      *
@@ -93,8 +92,7 @@ class Atomic
     /**
      * Wake up one or more processes that are blocked by method \Swoole\Atomic::wait().
      *
-     * Before using method \Swoole\Atomic::wait() and \Swoole\Atomic::wakeup(), the counter must be either 0 or 1,
-     * otherwise the behavior is undefined.
+     * Before using this method, the counter must be either 0 or 1, otherwise the behavior is undefined.
      *   - When the counter is 0, it means there is no any processes blocked; the method returns true immediately.
      *   - When the counter is 1, it means there are some processes blocked; the method wakes up (some of) them and returns true.
      *
