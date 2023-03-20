@@ -4,11 +4,11 @@ on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Run Coding Style Checks
         run: docker run --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php7.4 php-cs-fixer fix --dry-run
