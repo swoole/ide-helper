@@ -103,6 +103,18 @@ class Constant
 
     public const OPTION_SOCKET_TIMEOUT = 'socket_timeout';
 
+    public const OPTION_HTTP2_HEADER_TABLE_SIZE = 'http2_header_table_size';
+
+    public const OPTION_HTTP2_ENABLE_PUSH = 'http2_enable_push';
+
+    public const OPTION_HTTP2_MAX_CONCURRENT_STREAMS = 'http2_max_concurrent_streams';
+
+    public const OPTION_HTTP2_INIT_WINDOW_SIZE = 'http2_init_window_size';
+
+    public const OPTION_HTTP2_MAX_FRAME_SIZE = 'http2_max_frame_size';
+
+    public const OPTION_HTTP2_MAX_HEADER_LIST_SIZE = 'http2_max_header_list_size';
+
     public const OPTION_AIO_CORE_WORKER_NUM = 'aio_core_worker_num';
 
     public const OPTION_AIO_WORKER_NUM = 'aio_worker_num';
