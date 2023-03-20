@@ -234,9 +234,9 @@ define('SWOOLE_TRACE_TABLE', 268435456); // 2^28
 define('SWOOLE_TRACE_CO_CURL', 536870912); // 2^29
 define('SWOOLE_TRACE_CARES', 1073741824); // 2^30
 /*
- * Constant SWOOLE_TRACE_ZLIB is added in Swoole 5.0.2.
+ * Constant SWOOLE_TRACE_ZLIB is added in Swoole 4.8.13 and 5.0.2.
  *
- * @since 5.0.2
+ * @since 4.8.13 and 5.0.2
  */
 define('SWOOLE_TRACE_ZLIB', 2147483648); // 2^31
 define('SWOOLE_TRACE_ALL', 9223372036854775807); // 2^63 - 1
