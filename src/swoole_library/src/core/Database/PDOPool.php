@@ -15,7 +15,7 @@ use PDO;
 use Swoole\ConnectionPool;
 
 /**
- * @method PDO|PDOProxy get()
+ * @method \PDO|PDOProxy get()
  * @method void put(PDO|PDOProxy $connection)
  */
 class PDOPool extends ConnectionPool
@@ -31,17 +31,17 @@ class PDOPool extends ConnectionPool
         $this->config = $config;
         parent::__construct(function () {
             $driver = $this->config->getDriver();
-            return new PDO(
+            return new \PDO(
                 "{$driver}:" .
                 (
                     $this->config->hasUnixSocket() ?
                     "unix_socket={$this->config->getUnixSocket()};" :
-                    "host={$this->config->getHost()};" . "port={$this->config->getPort()};"
+                    "host={$this->config->getHost()};port={$this->config->getPort()};"
                 ) .
                 "dbname={$this->config->getDbname()};" .
                 (
                     ($driver !== 'pgsql') ?
-                    "charset={$this->config->getCharset()}" : ""
+                    "charset={$this->config->getCharset()}" : ''
                 ),
                 $this->config->getUsername(),
                 $this->config->getPassword(),

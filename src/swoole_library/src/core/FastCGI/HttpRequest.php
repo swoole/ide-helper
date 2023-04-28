@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Swoole\FastCGI;
 
-use InvalidArgumentException;
-
 class HttpRequest extends Request
 {
     protected $params = [
@@ -248,7 +246,7 @@ class HttpRequest extends Request
     public function withProtocolVersion(string $protocolVersion): self
     {
         if (!is_numeric($protocolVersion)) {
-            throw new InvalidArgumentException('Protocol version must be numeric');
+            throw new \InvalidArgumentException('Protocol version must be numeric');
         }
         $this->params['SERVER_PROTOCOL'] = "HTTP/{$protocolVersion}";
         return $this;

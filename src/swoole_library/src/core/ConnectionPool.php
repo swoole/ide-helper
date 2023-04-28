@@ -11,9 +11,7 @@ declare(strict_types=1);
 
 namespace Swoole;
 
-use RuntimeException;
 use Swoole\Coroutine\Channel;
-use Throwable;
 
 class ConnectionPool
 {
@@ -52,7 +50,7 @@ class ConnectionPool
     public function get(float $timeout = -1)
     {
         if ($this->pool === null) {
-            throw new RuntimeException('Pool has been closed');
+            throw new \RuntimeException('Pool has been closed');
         }
         if ($this->pool->isEmpty() && $this->num < $this->size) {
             $this->make();
@@ -91,7 +89,7 @@ class ConnectionPool
                 $constructor = $this->constructor;
                 $connection = $constructor();
             }
-        } catch (Throwable $throwable) {
+        } catch (\Throwable $throwable) {
             $this->num--;
             throw $throwable;
         }

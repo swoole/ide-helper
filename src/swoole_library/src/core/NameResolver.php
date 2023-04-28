@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Swoole;
 
-use RuntimeException;
 use Swoole\Coroutine\Http\ClientProxy;
 use Swoole\NameResolver\Cluster;
 use Swoole\NameResolver\Exception;
@@ -80,18 +79,18 @@ abstract class NameResolver
 
     /**
      * !!! The host MUST BE IP ADDRESS
-     * @param $url
+     * @param mixed $url
      */
     protected function checkServerUrl($url)
     {
         $info = parse_url($url);
         if (empty($info['scheme']) or empty($info['host'])) {
-            throw new RuntimeException("invalid url parameter '{$url}'");
+            throw new \RuntimeException("invalid url parameter '{$url}'");
         }
         if (!filter_var($info['host'], FILTER_VALIDATE_IP)) {
             $info['ip'] = gethostbyname($info['host']);
             if (!filter_var($info['ip'], FILTER_VALIDATE_IP)) {
-                throw new RuntimeException("Failed to resolve host '{$info['host']}'");
+                throw new \RuntimeException("Failed to resolve host '{$info['host']}'");
             }
         } else {
             $info['ip'] = $info['host'];
@@ -109,7 +108,7 @@ abstract class NameResolver
 
     /**
      * @param $r ClientProxy
-     * @param $url
+     * @param mixed $url
      * @return bool
      */
     protected function checkResponse($r, $url)

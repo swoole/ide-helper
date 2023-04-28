@@ -15,7 +15,7 @@ use Redis;
 use Swoole\ConnectionPool;
 
 /**
- * @method Redis get()
+ * @method \Redis get()
  * @method void put(Redis $connection)
  */
 class RedisPool extends ConnectionPool
@@ -27,7 +27,7 @@ class RedisPool extends ConnectionPool
     {
         $this->config = $config;
         parent::__construct(function () {
-            $redis = new Redis();
+            $redis = new \Redis();
             /* Compatible with different versions of Redis extension as much as possible */
             $arguments = [
                 $this->config->getHost(),

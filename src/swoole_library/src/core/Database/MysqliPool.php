@@ -15,7 +15,7 @@ use mysqli;
 use Swoole\ConnectionPool;
 
 /**
- * @method mysqli|MysqliProxy get()
+ * @method \mysqli|MysqliProxy get()
  * @method void put(mysqli|MysqliProxy $connection)
  */
 class MysqliPool extends ConnectionPool
@@ -27,7 +27,7 @@ class MysqliPool extends ConnectionPool
     {
         $this->config = $config;
         parent::__construct(function () {
-            $mysqli = new mysqli();
+            $mysqli = new \mysqli();
             foreach ($this->config->getOptions() as $option => $value) {
                 $mysqli->set_opt($option, $value);
             }
@@ -39,6 +39,7 @@ class MysqliPool extends ConnectionPool
                 $this->config->getPort(),
                 $this->config->getUnixSocket()
             );
+            $mysqli->set_charset($this->config->getCharset());
             if ($mysqli->connect_errno) {
                 throw new MysqliException($mysqli->connect_error, $mysqli->connect_errno);
             }

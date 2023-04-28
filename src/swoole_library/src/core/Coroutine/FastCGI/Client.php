@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine\FastCGI;
 
-use InvalidArgumentException;
 use Swoole\Coroutine\FastCGI\Client\Exception;
 use Swoole\Coroutine\Socket;
 use Swoole\FastCGI\FrameParser;
@@ -55,8 +54,8 @@ class Client
     }
 
     /**
-     * @throws Exception
      * @return HttpResponse|Response
+     * @throws Exception
      */
     public function execute(Request $request, float $timeout = -1): Response
     {
@@ -133,7 +132,7 @@ class Client
         if (empty($host)) {
             $host = $url['path'] ?? '';
             if (empty($host)) {
-                throw new InvalidArgumentException('Invalid url');
+                throw new \InvalidArgumentException('Invalid url');
             }
             $host = "unix:/{$host}";
         }

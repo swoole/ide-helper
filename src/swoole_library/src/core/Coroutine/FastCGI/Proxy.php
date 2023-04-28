@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine\FastCGI;
 
-use InvalidArgumentException;
 use Swoole\FastCGI\HttpRequest;
 use Swoole\FastCGI\HttpResponse;
 use Swoole\Http;
@@ -148,7 +147,7 @@ class Proxy
                 $request->withParam('HTTPS', '1');
             }
         } else {
-            throw new InvalidArgumentException('Not supported on ' . get_class($userRequest));
+            throw new \InvalidArgumentException('Not supported on ' . get_class($userRequest));
         }
         return $request;
     }
@@ -161,7 +160,7 @@ class Proxy
             $userResponse->cookie = $response->getSetCookieHeaderLines();
             $userResponse->end($response->getBody());
         } else {
-            throw new InvalidArgumentException('Not supported on ' . get_class($userResponse));
+            throw new \InvalidArgumentException('Not supported on ' . get_class($userResponse));
         }
     }
 
@@ -200,6 +199,6 @@ class Proxy
             }
             return false;
         }
-        throw new InvalidArgumentException('Not supported on ' . get_class($userResponse));
+        throw new \InvalidArgumentException('Not supported on ' . get_class($userResponse));
     }
 }

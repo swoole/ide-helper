@@ -11,14 +11,11 @@ declare(strict_types=1);
 
 namespace Swoole\Database;
 
-use mysqli;
-use mysqli_stmt;
-
 class MysqliStatementProxy extends ObjectProxy
 {
     public const IO_METHOD_REGEX = '/^close|execute|fetch|prepare$/i';
 
-    /** @var mysqli_stmt */
+    /** @var \mysqli_stmt */
     protected $__object;
 
     /** @var null|string */
@@ -33,13 +30,13 @@ class MysqliStatementProxy extends ObjectProxy
     /** @var null|array */
     protected $bindResultContext;
 
-    /** @var Mysqli|MysqliProxy */
+    /** @var \Mysqli|MysqliProxy */
     protected $parent;
 
     /** @var int */
     protected $parentRound;
 
-    public function __construct(mysqli_stmt $object, ?string $queryString, MysqliProxy $parent)
+    public function __construct(\mysqli_stmt $object, ?string $queryString, MysqliProxy $parent)
     {
         parent::__construct($object);
         $this->queryString = $queryString;

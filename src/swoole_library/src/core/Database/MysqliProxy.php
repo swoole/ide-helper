@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Swoole\Database;
 
-use mysqli;
-
 class MysqliProxy extends ObjectProxy
 {
     public const IO_METHOD_REGEX = '/^autocommit|begin_transaction|change_user|close|commit|kill|multi_query|ping|prepare|query|real_connect|real_query|reap_async_query|refresh|release_savepoint|rollback|savepoint|select_db|send_query|set_charset|ssl_set$/i';
@@ -23,7 +21,7 @@ class MysqliProxy extends ObjectProxy
         2013, // MYSQLND_CR_SERVER_LOST
     ];
 
-    /** @var mysqli */
+    /** @var \mysqli */
     protected $__object;
 
     /** @var string */

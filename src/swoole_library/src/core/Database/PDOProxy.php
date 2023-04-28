@@ -11,9 +11,6 @@ declare(strict_types=1);
 
 namespace Swoole\Database;
 
-use PDO;
-use PDOException;
-
 class PDOProxy extends ObjectProxy
 {
     public const IO_ERRORS = [
@@ -22,7 +19,7 @@ class PDOProxy extends ObjectProxy
         2013, // MYSQLND_CR_SERVER_LOST
     ];
 
-    /** @var PDO */
+    /** @var \PDO */
     protected $__object;
 
     /** @var null|array */
@@ -37,7 +34,7 @@ class PDOProxy extends ObjectProxy
     public function __construct(callable $constructor)
     {
         parent::__construct($constructor());
-        $this->__object->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
+        $this->__object->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
         $this->constructor = $constructor;
     }
 
@@ -58,7 +55,7 @@ class PDOProxy extends ObjectProxy
                 ) {
                     /* '00000' means “no error.”, as specified by ANSI SQL and ODBC. */
                     if (!empty($errorInfo) && $errorInfo[0] !== '00000') {
-                        $exception = new PDOException($errorInfo[2], $errorInfo[1]);
+                        $exception = new \PDOException($errorInfo[2], $errorInfo[1]);
                         $exception->errorInfo = $errorInfo;
                         throw $exception;
                     }

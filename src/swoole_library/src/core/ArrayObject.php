@@ -11,14 +11,9 @@ declare(strict_types=1);
 
 namespace Swoole;
 
-use ArrayAccess;
-use Countable;
-use Iterator;
-use RuntimeException;
-use Serializable;
 use Swoole\Exception\ArrayKeyNotExists;
 
-class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
+class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
 {
     /**
      * @var array
@@ -444,7 +439,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function each(callable $fn): self
     {
         if (array_walk($this->array, $fn) === false) {
-            throw new RuntimeException('array_walk() failed');
+            throw new \RuntimeException('array_walk() failed');
         }
         return $this;
     }
@@ -559,7 +554,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function asort(int $sort_flags = SORT_REGULAR): self
     {
         if (asort($this->array, $sort_flags) !== true) {
-            throw new RuntimeException('asort() failed');
+            throw new \RuntimeException('asort() failed');
         }
         return $this;
     }
@@ -570,7 +565,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function arsort(int $sort_flags = SORT_REGULAR): self
     {
         if (arsort($this->array, $sort_flags) !== true) {
-            throw new RuntimeException('arsort() failed');
+            throw new \RuntimeException('arsort() failed');
         }
         return $this;
     }
@@ -581,7 +576,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function krsort(int $sort_flags = SORT_REGULAR): self
     {
         if (krsort($this->array, $sort_flags) !== true) {
-            throw new RuntimeException('krsort() failed');
+            throw new \RuntimeException('krsort() failed');
         }
         return $this;
     }
@@ -592,7 +587,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function ksort(int $sort_flags = SORT_REGULAR): self
     {
         if (ksort($this->array, $sort_flags) !== true) {
-            throw new RuntimeException('ksort() failed');
+            throw new \RuntimeException('ksort() failed');
         }
         return $this;
     }
@@ -603,7 +598,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function natcasesort(): self
     {
         if (natcasesort($this->array) !== true) {
-            throw new RuntimeException('natcasesort() failed');
+            throw new \RuntimeException('natcasesort() failed');
         }
         return $this;
     }
@@ -614,7 +609,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function natsort(): self
     {
         if (natsort($this->array) !== true) {
-            throw new RuntimeException('natsort() failed');
+            throw new \RuntimeException('natsort() failed');
         }
         return $this;
     }
@@ -625,7 +620,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function rsort(int $sort_flags = SORT_REGULAR): self
     {
         if (rsort($this->array, $sort_flags) !== true) {
-            throw new RuntimeException('rsort() failed');
+            throw new \RuntimeException('rsort() failed');
         }
         return $this;
     }
@@ -636,7 +631,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function shuffle(): self
     {
         if (shuffle($this->array) !== true) {
-            throw new RuntimeException('shuffle() failed');
+            throw new \RuntimeException('shuffle() failed');
         }
         return $this;
     }
@@ -647,7 +642,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function sort(int $sort_flags = SORT_REGULAR): self
     {
         if (sort($this->array, $sort_flags) !== true) {
-            throw new RuntimeException('sort() failed');
+            throw new \RuntimeException('sort() failed');
         }
         return $this;
     }
@@ -658,7 +653,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function uasort(callable $value_compare_func): self
     {
         if (uasort($this->array, $value_compare_func) !== true) {
-            throw new RuntimeException('uasort() failed');
+            throw new \RuntimeException('uasort() failed');
         }
         return $this;
     }
@@ -669,7 +664,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function uksort(callable $value_compare_func): self
     {
         if (uksort($this->array, $value_compare_func) !== true) {
-            throw new RuntimeException('uksort() failed');
+            throw new \RuntimeException('uksort() failed');
         }
         return $this;
     }
@@ -680,7 +675,7 @@ class ArrayObject implements ArrayAccess, Serializable, Countable, Iterator
     public function usort(callable $value_compare_func): self
     {
         if (usort($this->array, $value_compare_func) !== true) {
-            throw new RuntimeException('usort() failed');
+            throw new \RuntimeException('usort() failed');
         }
         return $this;
     }

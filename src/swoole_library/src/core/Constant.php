@@ -58,7 +58,7 @@ class Constant
 
     public const EVENT_HANDSHAKE = 'handshake';
 
-    public const EVENT_BEFORE_HAND_SHAKE_RESPONSE = 'beforeHandShakeResponse';
+    public const EVENT_BEFORE_HANDSHAKE_RESPONSE = 'beforeHandshakeResponse';
 
     public const EVENT_OPEN = 'open';
 
@@ -298,6 +298,10 @@ class Constant
     public const OPTION_STRICT_TYPE = 'strict_type';
 
     public const OPTION_FETCH_MODE = 'fetch_mode';
+
+    public const OPTION_ENABLE_MESSAGE_BUS = 'enable_message_bus';
+
+    public const OPTION_MAX_PACKAGE_SIZE = 'max_package_size';
 
     public const OPTION_SERIALIZE = 'serialize';
 

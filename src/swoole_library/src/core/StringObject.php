@@ -74,6 +74,14 @@ class StringObject
     }
 
     /**
+     * @return static
+     */
+    public function reverse(): self
+    {
+        return new static(strrev($this->string));
+    }
+
+    /**
      * @return false|int
      */
     public function ipos(string $needle)

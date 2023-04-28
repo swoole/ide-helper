@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Swoole\Curl;
 
-use CURLFile;
-use ReflectionClass;
 use Swoole;
 use Swoole\Constant;
 use Swoole\Coroutine\Http\Client;
@@ -193,7 +191,7 @@ final class Handler
         if (!$this->isAvailable()) {
             return false;
         }
-        foreach ((new ReflectionClass(static::class))->getDefaultProperties() as $name => $value) {
+        foreach ((new \ReflectionClass(static::class))->getDefaultProperties() as $name => $value) {
             $this->{$name} = $value;
         }
     }
@@ -795,7 +793,7 @@ final class Handler
                         }
                     } elseif (is_array($this->postData)) {
                         foreach ($this->postData as $k => $v) {
-                            if ($v instanceof CURLFile) {
+                            if ($v instanceof \CURLFile) {
                                 $client->addFile($v->getFilename(), $k, $v->getMimeType() ?: 'application/octet-stream', $v->getPostFilename());
                                 unset($this->postData[$k]);
                             }

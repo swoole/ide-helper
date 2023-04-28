@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Swoole\FastCGI;
 
-use DomainException;
-use RuntimeException;
 use Swoole\FastCGI;
 
 /**
@@ -70,12 +68,12 @@ class FrameParser
     {
         $bufferLength = strlen($buffer);
         if ($bufferLength < FastCGI::HEADER_LEN) {
-            throw new RuntimeException('Not enough data in the buffer to parse');
+            throw new \RuntimeException('Not enough data in the buffer to parse');
         }
         $recordHeader = unpack(FastCGI::HEADER_FORMAT, $buffer);
         $recordType = $recordHeader['type'];
         if (!isset(self::$classMapping[$recordType])) {
-            throw new DomainException("Invalid FastCGI record type {$recordType} received");
+            throw new \DomainException("Invalid FastCGI record type {$recordType} received");
         }
 
         /** @var Record $className */
