@@ -5,11 +5,11 @@ declare(strict_types=1);
 /*
  * Swoole version information.
  */
-define('SWOOLE_VERSION', '5.0.2');
-define('SWOOLE_VERSION_ID', 50002);
+define('SWOOLE_VERSION', '5.0.3');
+define('SWOOLE_VERSION_ID', 50003);
 define('SWOOLE_MAJOR_VERSION', 5);
 define('SWOOLE_MINOR_VERSION', 0);
-define('SWOOLE_RELEASE_VERSION', 2);
+define('SWOOLE_RELEASE_VERSION', 3);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
@@ -150,7 +150,8 @@ define('SWOOLE_ERROR_SOCKS5_HANDSHAKE_FAILED', 7005);
 define('SWOOLE_ERROR_HTTP_PROXY_HANDSHAKE_ERROR', 7101);
 define('SWOOLE_ERROR_HTTP_INVALID_PROTOCOL', 7102);
 define('SWOOLE_ERROR_HTTP_PROXY_HANDSHAKE_FAILED', 7103);
-define('SWOOLE_ERROR_HTTP_PROXY_BAD_RESPONSE', 7104);
+define('SWOOLE_ERROR_HTTP_PROXY_BAD_RESPONSE', 7104); // @since v5.0.3
+define('SWOOLE_ERROR_HTTP_CONFLICT_HEADER', 7105);
 define('SWOOLE_ERROR_WEBSOCKET_BAD_CLIENT', 8501);
 define('SWOOLE_ERROR_WEBSOCKET_BAD_OPCODE', 8502);
 define('SWOOLE_ERROR_WEBSOCKET_UNCONNECTED', 8503);
@@ -353,6 +354,9 @@ define('SIGSYS', 31);
 define('PRIO_PROCESS', 0);
 define('PRIO_PGRP', 1);
 define('PRIO_USER', 2);
+
+define('SWOOLE_MSGQUEUE_ORIENT', 1); // @since v5.0.3
+define('SWOOLE_MSGQUEUE_BALANCE', 2); // @since v5.0.3
 
 /*
  * Coroutine-related constants.

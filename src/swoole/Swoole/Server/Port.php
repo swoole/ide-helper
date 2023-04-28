@@ -61,7 +61,7 @@ class Port
     /**
      * @var callable
      */
-    private $onHandShake;
+    private $onHandshake;
 
     /**
      * @var callable
@@ -78,6 +78,12 @@ class Port
      * @since 4.7.0
      */
     private $onDisconnect;
+
+    /**
+     * @var callable
+     * @since 5.0.3
+     */
+    private $onBeforeHandshakeResponse;
 
     public function set(array $settings): void
     {
