@@ -77,7 +77,7 @@ class Pool
     {
     }
 
-    public function sendMessage(string $data, int $dst_worker_id) : bool
+    public function sendMessage(string $data, int $dst_worker_id): bool
     {
     }
 
