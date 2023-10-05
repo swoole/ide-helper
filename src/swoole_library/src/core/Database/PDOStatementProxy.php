@@ -11,9 +11,12 @@ declare(strict_types=1);
 
 namespace Swoole\Database;
 
+use PDOException;
+use PDOStatement;
+
 class PDOStatementProxy extends ObjectProxy
 {
-    /** @var \PDOStatement */
+    /** @var PDOStatement */
     protected $__object;
 
     /** @var null|array */
@@ -37,7 +40,7 @@ class PDOStatementProxy extends ObjectProxy
     /** @var int */
     protected $parentRound;
 
-    public function __construct(\PDOStatement $object, PDOProxy $parent)
+    public function __construct(PDOStatement $object, PDOProxy $parent)
     {
         parent::__construct($object);
         $this->parent = $parent;
@@ -46,40 +49,17 @@ class PDOStatementProxy extends ObjectProxy
 
     public function __call(string $name, array $arguments)
     {
-        for ($n = 3; $n--;) {
-            $ret = @$this->__object->{$name}(...$arguments);
-            if ($ret === false) {
-                $errorInfo = $this->__object->errorInfo();
-                if (empty($errorInfo)) {
-                    break;
-                }
-                /* no more chances or non-IO failures or in transaction */
-                if (
-                    !in_array($errorInfo[1], $this->parent::IO_ERRORS, true)
-                    || $n === 0
-                    || $this->parent->inTransaction()
-                ) {
-                    /* '00000' means “no error.”, as specified by ANSI SQL and ODBC. */
-                    if (!empty($errorInfo) && $errorInfo[0] !== '00000') {
-                        $exception = new \PDOException($errorInfo[2], $errorInfo[1]);
-                        $exception->errorInfo = $errorInfo;
-                        throw $exception;
-                    }
-                    /* no error info, just return false */
-                    break;
-                }
+        try {
+            $ret = $this->__object->{$name}(...$arguments);
+        } catch (PDOException $e) {
+            if (!$this->parent->inTransaction() && DetectsLostConnections::causedByLostConnection($e)) {
                 if ($this->parent->getRound() === $this->parentRound) {
                     /* if not equal, parent has reconnected */
                     $this->parent->reconnect();
                 }
                 $parent = $this->parent->__getObject();
                 $this->__object = $parent->prepare($this->__object->queryString);
-                if ($this->__object === false) {
-                    $errorInfo = $parent->errorInfo();
-                    $exception = new \PDOException($errorInfo[2], $errorInfo[1]);
-                    $exception->errorInfo = $errorInfo;
-                    throw $exception;
-                }
+
                 if ($this->setAttributeContext) {
                     foreach ($this->setAttributeContext as $attribute => $value) {
                         $this->__object->setAttribute($attribute, $value);
@@ -103,11 +83,12 @@ class PDOStatementProxy extends ObjectProxy
                         $this->__object->bindParam($value, ...$item);
                     }
                 }
-                continue;
+                $ret = $this->__object->{$name}(...$arguments);
+            } else {
+                throw $e;
             }
-            break;
         }
-        /* @noinspection PhpUndefinedVariableInspection */
+
         return $ret;
     }
 

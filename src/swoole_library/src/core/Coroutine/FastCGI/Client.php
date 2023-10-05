@@ -54,8 +54,8 @@ class Client
     }
 
     /**
-     * @return HttpResponse|Response
      * @throws Exception
+     * @return HttpResponse|Response
      */
     public function execute(Request $request, float $timeout = -1): Response
     {

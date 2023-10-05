@@ -24,8 +24,8 @@ class PDOConfig
     /** @var int */
     protected $port = 3306;
 
-    /** @var null|string */
-    protected $unixSocket;
+    /** @var string */
+    protected $unixSocket = '';
 
     /** @var string */
     protected $dbname = 'test';
@@ -71,7 +71,7 @@ class PDOConfig
 
     public function hasUnixSocket(): bool
     {
-        return isset($this->unixSocket);
+        return !empty($this->unixSocket);
     }
 
     public function getUnixSocket(): string

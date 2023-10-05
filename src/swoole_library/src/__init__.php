@@ -40,6 +40,7 @@ return [
         'core/Database/MysqliPool.php',
         'core/Database/MysqliProxy.php',
         'core/Database/MysqliStatementProxy.php',
+        'core/Database/DetectsLostConnections.php',
         'core/Database/PDOConfig.php',
         'core/Database/PDOPool.php',
         'core/Database/PDOProxy.php',

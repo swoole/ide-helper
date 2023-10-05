@@ -11,15 +11,12 @@ declare(strict_types=1);
 
 namespace Swoole\Database;
 
+use PDO;
+use PDOException;
+
 class PDOProxy extends ObjectProxy
 {
-    public const IO_ERRORS = [
-        2002, // MYSQLND_CR_CONNECTION_ERROR
-        2006, // MYSQLND_CR_SERVER_GONE_ERROR
-        2013, // MYSQLND_CR_SERVER_LOST
-    ];
-
-    /** @var \PDO */
+    /** @var PDO */
     protected $__object;
 
     /** @var null|array */
@@ -31,46 +28,41 @@ class PDOProxy extends ObjectProxy
     /** @var int */
     protected $round = 0;
 
+    /** @var int */
+    protected $inTransaction = 0;
+
     public function __construct(callable $constructor)
     {
         parent::__construct($constructor());
-        $this->__object->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
+        $this->__object->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->constructor = $constructor;
     }
 
     public function __call(string $name, array $arguments)
     {
-        for ($n = 3; $n--;) {
-            $ret = @$this->__object->{$name}(...$arguments);
-            if ($ret === false) {
-                $errorInfo = $this->__object->errorInfo();
-                if (empty($errorInfo)) {
-                    break;
-                }
-                /* no more chances or non-IO failures */
-                if (
-                    !in_array($errorInfo[1], static::IO_ERRORS, true)
-                    || $n === 0
-                    || $this->__object->inTransaction()
-                ) {
-                    /* '00000' means “no error.”, as specified by ANSI SQL and ODBC. */
-                    if (!empty($errorInfo) && $errorInfo[0] !== '00000') {
-                        $exception = new \PDOException($errorInfo[2], $errorInfo[1]);
-                        $exception->errorInfo = $errorInfo;
-                        throw $exception;
-                    }
-                    /* no error info, just return false */
-                    break;
-                }
+        try {
+            $ret = $this->__object->{$name}(...$arguments);
+        } catch (PDOException $e) {
+            if (!$this->__object->inTransaction() && DetectsLostConnections::causedByLostConnection($e)) {
                 $this->reconnect();
-                continue;
+                $ret = $this->__object->{$name}(...$arguments);
+            } else {
+                throw $e;
             }
-            if ((strcasecmp($name, 'prepare') === 0) || (strcasecmp($name, 'query') === 0)) {
-                $ret = new PDOStatementProxy($ret, $this);
-            }
-            break;
         }
-        /* @noinspection PhpUndefinedVariableInspection */
+
+        if (strcasecmp($name, 'beginTransaction') === 0) {
+            $this->inTransaction++;
+        }
+
+        if ((strcasecmp($name, 'commit') === 0 || strcasecmp($name, 'rollback') === 0) && $this->inTransaction > 0) {
+            $this->inTransaction--;
+        }
+
+        if ((strcasecmp($name, 'prepare') === 0) || (strcasecmp($name, 'query') === 0)) {
+            $ret = new PDOStatementProxy($ret, $this);
+        }
+
         return $ret;
     }
 
@@ -83,6 +75,7 @@ class PDOProxy extends ObjectProxy
     {
         $constructor = $this->constructor;
         parent::__construct($constructor());
+        $this->__object->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->round++;
         /* restore context */
         if ($this->setAttributeContext) {
@@ -100,6 +93,11 @@ class PDOProxy extends ObjectProxy
 
     public function inTransaction(): bool
     {
-        return $this->__object->inTransaction();
+        return $this->inTransaction > 0;
+    }
+
+    public function reset(): void
+    {
+        $this->inTransaction = 0;
     }
 }
