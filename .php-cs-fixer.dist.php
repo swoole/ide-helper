@@ -46,6 +46,7 @@ return (new PhpCsFixer\Config())
         'ordered_imports'                                  => ['imports_order' => ['class', 'function', 'const'], 'sort_algorithm' => 'alpha'],
         'single_line_comment_style'                        => ['comment_types' => []],
         'single_line_comment_spacing'                      => false,
+        'single_line_empty_body'                           => false,
         'single_quote'                                     => true,
         'standardize_increment'                            => false,
         'standardize_not_equals'                           => true,
