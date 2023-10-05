@@ -732,7 +732,7 @@ function swoole_native_curl_multi_getcontent(CurlHandle $handle): ?string
  * @see curl_multi_info_read()
  * @see https://www.php.net/curl_multi_info_read
  */
-function swoole_native_curl_multi_info_read(CurlMultiHandle $multi_handle, int &$queued_messages = null): array|false
+function swoole_native_curl_multi_info_read(CurlMultiHandle $multi_handle, ?int &$queued_messages = null): array|false
 {
 }
 

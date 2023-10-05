@@ -55,7 +55,7 @@ class MySQL
     /**
      * @return mixed
      */
-    public function connect(array $server_config = null)
+    public function connect(?array $server_config = null)
     {
     }
 
