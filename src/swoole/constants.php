@@ -5,11 +5,11 @@ declare(strict_types=1);
 /*
  * Swoole version information.
  */
-define('SWOOLE_VERSION', '5.0.3');
-define('SWOOLE_VERSION_ID', 50003);
+define('SWOOLE_VERSION', '5.1.0');
+define('SWOOLE_VERSION_ID', 50100);
 define('SWOOLE_MAJOR_VERSION', 5);
-define('SWOOLE_MINOR_VERSION', 0);
-define('SWOOLE_RELEASE_VERSION', 3);
+define('SWOOLE_MINOR_VERSION', 1);
+define('SWOOLE_RELEASE_VERSION', 0);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
@@ -95,6 +95,7 @@ define('SWOOLE_ERROR_QUEUE_FULL', 506);
 define('SWOOLE_ERROR_OPERATION_NOT_SUPPORT', 507);
 define('SWOOLE_ERROR_PROTOCOL_ERROR', 508);
 define('SWOOLE_ERROR_WRONG_OPERATION', 509);
+define('SWOOLE_ERROR_PHP_RUNTIME_NOTICE', 510); // @since 5.1.0
 define('SWOOLE_ERROR_FILE_NOT_EXIST', 700);
 define('SWOOLE_ERROR_FILE_TOO_LARGE', 701);
 define('SWOOLE_ERROR_FILE_EMPTY', 702);
@@ -240,6 +241,9 @@ define('SWOOLE_TRACE_CARES', 1073741824); // 2^30
  * @since 4.8.13 and 5.0.2
  */
 define('SWOOLE_TRACE_ZLIB', 2147483648); // 2^31
+define('SWOOLE_TRACE_CO_PGSQL', 4294967296); // 2^32; @since 5.1.0
+define('SWOOLE_TRACE_CO_ODBC', 8589934592); // 2^33; @since 5.1.0
+define('SWOOLE_TRACE_CO_ORACLE', 17179869184); // 2^34; @since 5.1.0
 define('SWOOLE_TRACE_ALL', 9223372036854775807); // 2^63 - 1
 
 // Log levels.
@@ -524,6 +528,7 @@ define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192); // 2^13
  */
 define('SWOOLE_HOOK_SOCKETS', 16384); // 2^14
 define('SWOOLE_HOOK_STDIO', 32768); // 2^15
+define('SWOOLE_HOOK_PDO_PGSQL', 65536); // 2^16; @since 5.1.0
 /*
  * There are two different hook flags for PHP's cURL functions:
  *   - SWOOLE_HOOK_CURL: Implemented by replacing PHP's cURL functions internally with swoole_curl_*() functions from Swoole Library.

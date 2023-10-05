@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine\Http;
 
+use Swoole\Coroutine\Socket;
+
 /**
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has an alias of "\Co\Http\Server" when directive "swoole.use_shortname" is not explicitly turned off.
@@ -46,7 +48,10 @@ final class Server
     {
     }
 
-    private function onAccept(): void
+    /**
+     * @param Socket $conn Added since Swoole v5.1.0.
+     */
+    private function onAccept(Socket $conn): void
     {
     }
 }

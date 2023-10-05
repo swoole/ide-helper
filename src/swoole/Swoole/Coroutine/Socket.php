@@ -31,6 +31,16 @@ class Socket
 
     public string $errMsg = '';
 
+    /**
+     * @since 5.1.0
+     */
+    public $__ext_sockets_nonblock = false;
+
+    /**
+     * @since 5.1.0
+     */
+    public $__ext_sockets_timeout = 0;
+
     public function __construct(int $domain, int $type, int $protocol = 0)
     {
     }

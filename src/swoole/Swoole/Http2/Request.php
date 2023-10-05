@@ -20,4 +20,9 @@ class Request
     public string $data = '';
 
     public bool $pipeline = false;
+
+    /**
+     * @since 5.1.0
+     */
+    public $usePipelineRead = false;
 }
