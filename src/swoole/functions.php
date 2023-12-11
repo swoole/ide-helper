@@ -278,7 +278,7 @@ function swoole_get_vm_status()
 }
 
 /**
- * @return array|false Return the specified object back; return FALSE when no object found or when error happens.
+ * @return object|false Return the specified object back; return FALSE when no object found or when error happens.
  * @since 4.8.1
  */
 function swoole_get_object_by_handle(int $handle)
