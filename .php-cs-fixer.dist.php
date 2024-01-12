@@ -19,6 +19,7 @@ return (new PhpCsFixer\Config())
         'constant_case'                                    => ['case' => 'lower'],
         'combine_consecutive_unsets'                       => true,
         'declare_strict_types'                             => true,
+        'fully_qualified_strict_types'                     => ['phpdoc_tags' => []],
         'general_phpdoc_annotation_remove'                 => ['annotations' => ['author']],
         'header_comment'                                   => ['comment_type' => 'PHPDoc', 'header' => '', 'separate' => 'bottom', 'location' => 'after_open'],
         'increment_style'                                  => ['style' => 'post'],
