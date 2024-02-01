@@ -22,7 +22,7 @@ class Response extends Message
         if (!static::verify($records)) {
             throw new \InvalidArgumentException('Bad records');
         }
-        $body = '';
+        $body  = '';
         $error = '';
         foreach ($records as $record) {
             if ($record instanceof Stdout) {

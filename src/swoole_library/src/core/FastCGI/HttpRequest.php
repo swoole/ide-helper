@@ -13,26 +13,26 @@ namespace Swoole\FastCGI;
 
 class HttpRequest extends Request
 {
-    protected $params = [
-        'REQUEST_SCHEME' => 'http',
-        'REQUEST_METHOD' => 'GET',
-        'DOCUMENT_ROOT' => '',
-        'SCRIPT_FILENAME' => '',
-        'SCRIPT_NAME' => '',
-        'DOCUMENT_URI' => '/',
-        'REQUEST_URI' => '/',
-        'QUERY_STRING' => '',
-        'CONTENT_TYPE' => 'text/plain',
-        'CONTENT_LENGTH' => '0',
+    protected array $params = [
+        'REQUEST_SCHEME'    => 'http',
+        'REQUEST_METHOD'    => 'GET',
+        'DOCUMENT_ROOT'     => '',
+        'SCRIPT_FILENAME'   => '',
+        'SCRIPT_NAME'       => '',
+        'DOCUMENT_URI'      => '/',
+        'REQUEST_URI'       => '/',
+        'QUERY_STRING'      => '',
+        'CONTENT_TYPE'      => 'text/plain',
+        'CONTENT_LENGTH'    => '0',
         'GATEWAY_INTERFACE' => 'CGI/1.1',
-        'SERVER_PROTOCOL' => 'HTTP/1.1',
-        'SERVER_SOFTWARE' => 'swoole/' . SWOOLE_VERSION,
-        'REMOTE_ADDR' => 'unknown',
-        'REMOTE_PORT' => '0',
-        'SERVER_ADDR' => 'unknown',
-        'SERVER_PORT' => '0',
-        'SERVER_NAME' => 'Swoole',
-        'REDIRECT_STATUS' => '200',
+        'SERVER_PROTOCOL'   => 'HTTP/1.1',
+        'SERVER_SOFTWARE'   => 'swoole/' . SWOOLE_VERSION,
+        'REMOTE_ADDR'       => 'unknown',
+        'REMOTE_PORT'       => '0',
+        'SERVER_ADDR'       => 'unknown',
+        'SERVER_PORT'       => '0',
+        'SERVER_NAME'       => 'Swoole',
+        'REDIRECT_STATUS'   => '200',
     ];
 
     public function getScheme(): ?string
@@ -120,7 +120,8 @@ class HttpRequest extends Request
         $info = parse_url($uri);
         return $this->withRequestUri($uri)
             ->withDocumentUri($info['path'] ?? '')
-            ->withQueryString($info['query'] ?? '');
+            ->withQueryString($info['query'] ?? '')
+        ;
     }
 
     public function getDocumentUri(): ?string
@@ -384,7 +385,7 @@ class HttpRequest extends Request
     {
         $headers = [];
         foreach ($this->params as $name => $value) {
-            if (strpos($name, 'HTTP_') === 0) {
+            if (str_starts_with($name, 'HTTP_')) {
                 $headers[static::convertParamNameToHeaderName($name)] = $value;
             }
         }
@@ -399,8 +400,7 @@ class HttpRequest extends Request
         return $this;
     }
 
-    /** @return $this */
-    public function withBody($body): Message
+    public function withBody($body): self
     {
         if (is_array($body)) {
             $body = http_build_query($body);

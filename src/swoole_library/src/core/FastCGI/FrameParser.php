@@ -24,17 +24,17 @@ class FrameParser
      * @var array
      */
     protected static $classMapping = [
-        FastCGI::BEGIN_REQUEST => FastCGI\Record\BeginRequest::class,
-        FastCGI::ABORT_REQUEST => FastCGI\Record\AbortRequest::class,
-        FastCGI::END_REQUEST => FastCGI\Record\EndRequest::class,
-        FastCGI::PARAMS => FastCGI\Record\Params::class,
-        FastCGI::STDIN => FastCGI\Record\Stdin::class,
-        FastCGI::STDOUT => FastCGI\Record\Stdout::class,
-        FastCGI::STDERR => FastCGI\Record\Stderr::class,
-        FastCGI::DATA => FastCGI\Record\Data::class,
-        FastCGI::GET_VALUES => FastCGI\Record\GetValues::class,
+        FastCGI::BEGIN_REQUEST     => FastCGI\Record\BeginRequest::class,
+        FastCGI::ABORT_REQUEST     => FastCGI\Record\AbortRequest::class,
+        FastCGI::END_REQUEST       => FastCGI\Record\EndRequest::class,
+        FastCGI::PARAMS            => FastCGI\Record\Params::class,
+        FastCGI::STDIN             => FastCGI\Record\Stdin::class,
+        FastCGI::STDOUT            => FastCGI\Record\Stdout::class,
+        FastCGI::STDERR            => FastCGI\Record\Stderr::class,
+        FastCGI::DATA              => FastCGI\Record\Data::class,
+        FastCGI::GET_VALUES        => FastCGI\Record\GetValues::class,
         FastCGI::GET_VALUES_RESULT => FastCGI\Record\GetValuesResult::class,
-        FastCGI::UNKNOWN_TYPE => FastCGI\Record\UnknownType::class,
+        FastCGI::UNKNOWN_TYPE      => FastCGI\Record\UnknownType::class,
     ];
 
     /**
@@ -71,14 +71,14 @@ class FrameParser
             throw new \RuntimeException('Not enough data in the buffer to parse');
         }
         $recordHeader = unpack(FastCGI::HEADER_FORMAT, $buffer);
-        $recordType = $recordHeader['type'];
+        $recordType   = $recordHeader['type'];
         if (!isset(self::$classMapping[$recordType])) {
             throw new \DomainException("Invalid FastCGI record type {$recordType} received");
         }
 
         /** @var Record $className */
         $className = self::$classMapping[$recordType];
-        $record = $className::unpack($buffer);
+        $record    = $className::unpack($buffer);
 
         $offset = FastCGI::HEADER_LEN + $record->getContentLength() + $record->getPaddingLength();
         $buffer = substr($buffer, $offset);

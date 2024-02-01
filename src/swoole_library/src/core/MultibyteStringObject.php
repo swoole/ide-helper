@@ -18,54 +18,45 @@ class MultibyteStringObject extends StringObject
         return mb_strlen($this->string);
     }
 
-    /**
-     * @return false|int
-     */
-    public function indexOf(string $needle, int $offset = 0, ?string $encoding = null)
+    public function indexOf(string $needle, int $offset = 0, ?string $encoding = null): false|int
     {
-        return mb_strpos($this->string, ...func_get_args());
+        return mb_strpos($this->string, $needle, $offset, $encoding);
+    }
+
+    public function lastIndexOf(string $needle, int $offset = 0, ?string $encoding = null): false|int
+    {
+        return mb_strrpos($this->string, $needle, $offset, $encoding);
+    }
+
+    public function pos(string $needle, int $offset = 0, ?string $encoding = null): false|int
+    {
+        return mb_strpos($this->string, $needle, $offset, $encoding);
+    }
+
+    public function rpos(string $needle, int $offset = 0, ?string $encoding = null): false|int
+    {
+        return mb_strrpos($this->string, $needle, $offset, $encoding);
+    }
+
+    public function ipos(string $needle, int $offset = 0, ?string $encoding = null): int|false
+    {
+        return mb_stripos($this->string, $needle, $offset, $encoding);
     }
 
     /**
-     * @return false|int
+     * @todo First parameter will be renamed to $start in Swoole 5.2+.
+     * @todo This method will be refactored and marked as final in Swoole 5.2+.
+     *       1. It should use keyword self instead of static.
+     *       2. Don't use function func_get_args().
      */
-    public function lastIndexOf(string $needle, int $offset = 0, ?string $encoding = null)
+    public function substr(int $offset, ?int $length = null, ?string $encoding = null): static
     {
-        return mb_strrpos($this->string, ...func_get_args());
+        return new static(mb_substr($this->string, ...func_get_args())); // @phpstan-ignore new.static
     }
 
     /**
-     * @return false|int
+     * @todo This method is not implemented correctly.
      */
-    public function pos(string $needle, int $offset = 0, ?string $encoding = null)
-    {
-        return mb_strpos($this->string, ...func_get_args());
-    }
-
-    /**
-     * @return false|int
-     */
-    public function rpos(string $needle, int $offset = 0, ?string $encoding = null)
-    {
-        return mb_strrpos($this->string, ...func_get_args());
-    }
-
-    /**
-     * @return false|int
-     */
-    public function ipos(string $needle, ?string $encoding = null)
-    {
-        return mb_stripos($this->string, ...func_get_args());
-    }
-
-    /**
-     * @return static
-     */
-    public function substr(int $offset, ?int $length = null, ?string $encoding = null)
-    {
-        return new static(mb_substr($this->string, ...func_get_args()));
-    }
-
     public function chunk(int $splitLength = 1, ?int $limit = null): ArrayObject
     {
         return static::detectArrayType(mb_split($this->string, ...func_get_args()));

@@ -20,12 +20,8 @@ use Swoole\ConnectionPool;
  */
 class MysqliPool extends ConnectionPool
 {
-    /** @var MysqliConfig */
-    protected $config;
-
-    public function __construct(MysqliConfig $config, int $size = self::DEFAULT_SIZE)
+    public function __construct(protected MysqliConfig $config, int $size = self::DEFAULT_SIZE)
     {
-        $this->config = $config;
         parent::__construct(function () {
             $mysqli = new \mysqli();
             foreach ($this->config->getOptions() as $option => $value) {
@@ -39,10 +35,10 @@ class MysqliPool extends ConnectionPool
                 $this->config->getPort(),
                 $this->config->getUnixSocket()
             );
-            $mysqli->set_charset($this->config->getCharset());
             if ($mysqli->connect_errno) {
                 throw new MysqliException($mysqli->connect_error, $mysqli->connect_errno);
             }
+            $mysqli->set_charset($this->config->getCharset());
             return $mysqli;
         }, $size, MysqliProxy::class);
     }

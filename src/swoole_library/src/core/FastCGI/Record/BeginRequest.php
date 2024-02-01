@@ -51,9 +51,9 @@ class BeginRequest extends Record
 
     public function __construct(int $role = FastCGI::UNKNOWN_ROLE, int $flags = 0, string $reserved = '')
     {
-        $this->type = FastCGI::BEGIN_REQUEST;
-        $this->role = $role;
-        $this->flags = $flags;
+        $this->type      = FastCGI::BEGIN_REQUEST;
+        $this->role      = $role;
+        $this->flags     = $flags;
         $this->reserved1 = $reserved;
         $this->setContentData($this->packPayload());
     }

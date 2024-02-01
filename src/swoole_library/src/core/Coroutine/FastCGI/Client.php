@@ -22,47 +22,42 @@ use Swoole\FastCGI\Response;
 
 class Client
 {
-    /** @var int */
-    protected $af;
+    protected int $af;
 
-    /** @var string */
-    protected $host;
+    protected string $host;
 
-    /** @var int */
-    protected $port;
+    protected int $port;
 
-    /** @var bool */
-    protected $ssl;
+    protected bool $ssl;
 
-    /** @var Socket */
-    protected $socket;
+    protected ?Socket $socket;
 
     public function __construct(string $host, int $port = 0, bool $ssl = false)
     {
         if (stripos($host, 'unix:/') === 0) {
             $this->af = AF_UNIX;
-            $host = '/' . ltrim(substr($host, strlen('unix:/')), '/');
-            $port = 0;
-        } elseif (strpos($host, ':') !== false) {
+            $host     = '/' . ltrim(substr($host, strlen('unix:/')), '/');
+            $port     = 0;
+        } elseif (str_contains($host, ':')) {
             $this->af = AF_INET6;
         } else {
             $this->af = AF_INET;
         }
         $this->host = $host;
         $this->port = $port;
-        $this->ssl = $ssl;
+        $this->ssl  = $ssl;
     }
 
     /**
-     * @throws Exception
      * @return HttpResponse|Response
+     * @throws Exception
      */
     public function execute(Request $request, float $timeout = -1): Response
     {
-        if (!$this->socket) {
+        if (!isset($this->socket)) {
             $this->socket = $socket = new Socket($this->af, SOCK_STREAM, IPPROTO_IP);
             $socket->setProtocol([
-                'open_ssl' => $this->ssl,
+                'open_ssl'              => $this->ssl,
                 'open_fastcgi_protocol' => true,
             ]);
             if (!$socket->connect($this->host, $this->port, $timeout)) {
@@ -77,33 +72,17 @@ class Client
         }
         $records = [];
         while (true) {
-            if (SWOOLE_VERSION_ID < 40500) {
-                $recvData = '';
-                while (true) {
-                    $tmp = $socket->recv(8192, $timeout);
-                    if (!$tmp) {
-                        if ($tmp === '') {
-                            $this->ioException(SOCKET_ECONNRESET);
-                        }
-                        $this->ioException();
-                    }
-                    $recvData .= $tmp;
-                    if (FrameParser::hasFrame($recvData)) {
-                        break;
-                    }
+            $recvData = $socket->recvPacket($timeout);
+            if (!$recvData) {
+                if ($recvData === '') {
+                    $this->ioException(SOCKET_ECONNRESET);
                 }
-            } else {
-                $recvData = $socket->recvPacket($timeout);
-                if (!$recvData) {
-                    if ($recvData === '') {
-                        $this->ioException(SOCKET_ECONNRESET);
-                    }
-                    $this->ioException();
-                }
-                if (!FrameParser::hasFrame($recvData)) {
-                    $this->ioException(SOCKET_EPROTO);
-                }
+                $this->ioException();
             }
+            if (!FrameParser::hasFrame($recvData)) {
+                $this->ioException(SOCKET_EPROTO);
+            }
+
             do {
                 $records[] = $record = FrameParser::parseFrame($recvData);
             } while (strlen($recvData) !== 0);
@@ -112,21 +91,20 @@ class Client
                     $this->socket->close();
                     $this->socket = null;
                 }
-                switch (true) {
-                    case $request instanceof HttpRequest:
-                        return new HttpResponse($records);
-                    default:
-                        return new Response($records);
-                }
+                return match (true) {
+                    $request instanceof HttpRequest => new HttpResponse($records),
+                    default                         => new Response($records),
+                };
             }
         }
-        /* never here */
-        exit(1);
+
+        // Code execution should never reach here. However, we still put an exit() statement here for safe purpose.
+        exit(1); // @phpstan-ignore deadCode.unreachable
     }
 
     public static function parseUrl(string $url): array
     {
-        $url = parse_url($url);
+        $url  = parse_url($url);
         $host = $url['host'] ?? '';
         $port = $url['port'] ?? 0;
         if (empty($host)) {
@@ -141,15 +119,15 @@ class Client
 
     public static function call(string $url, string $path, $data = '', float $timeout = -1): string
     {
-        $client = new Client(...static::parseUrl($url));
-        $pathInfo = parse_url($path);
-        $path = $pathInfo['path'] ?? '';
-        $root = dirname($path);
-        $scriptName = '/' . basename($path);
+        $client      = new Client(...static::parseUrl($url));
+        $pathInfo    = parse_url($path);
+        $path        = $pathInfo['path'] ?? '';
+        $root        = dirname($path);
+        $scriptName  = '/' . basename($path);
         $documentUri = $scriptName;
-        $query = $pathInfo['query'] ?? '';
-        $requestUri = $query ? "{$documentUri}?{$query}" : $documentUri;
-        $request = new HttpRequest();
+        $query       = $pathInfo['query'] ?? '';
+        $requestUri  = $query ? "{$documentUri}?{$query}" : $documentUri;
+        $request     = new HttpRequest();
         $request->withDocumentRoot($root)
             ->withScriptFilename($path)
             ->withScriptName($documentUri)
@@ -157,7 +135,8 @@ class Client
             ->withRequestUri($requestUri)
             ->withQueryString($query)
             ->withBody($data)
-            ->withMethod($request->getContentLength() === 0 ? 'GET' : 'POST');
+            ->withMethod($request->getContentLength() === 0 ? 'GET' : 'POST')
+        ;
         $response = $client->execute($request, $timeout);
         return $response->getBody();
     }
@@ -167,7 +146,7 @@ class Client
         $socket = $this->socket;
         if ($errno !== null) {
             $socket->errCode = $errno;
-            $socket->errMsg = swoole_strerror($errno);
+            $socket->errMsg  = swoole_strerror($errno);
         }
         $socket->close();
         $this->socket = null;

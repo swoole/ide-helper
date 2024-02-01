@@ -31,7 +31,7 @@ class Params extends Record
      */
     public function __construct(array $values = [])
     {
-        $this->type = FastCGI::PARAMS;
+        $this->type   = FastCGI::PARAMS;
         $this->values = $values;
         $this->setContentData($this->packPayload());
     }
@@ -53,18 +53,18 @@ class Params extends Record
         $currentOffset = 0;
         do {
             [$nameLengthHigh] = array_values(unpack('CnameLengthHigh', $data));
-            $isLongName = ($nameLengthHigh >> 7 == 1);
-            $valueOffset = $isLongName ? 4 : 1;
+            $isLongName       = ($nameLengthHigh >> 7 == 1);
+            $valueOffset      = $isLongName ? 4 : 1;
 
             [$valueLengthHigh] = array_values(unpack('CvalueLengthHigh', substr($data, $valueOffset)));
-            $isLongValue = ($valueLengthHigh >> 7 == 1);
-            $dataOffset = $valueOffset + ($isLongValue ? 4 : 1);
+            $isLongValue       = ($valueLengthHigh >> 7 == 1);
+            $dataOffset        = $valueOffset + ($isLongValue ? 4 : 1);
 
             $formatParts = [
                 $isLongName ? 'NnameLength' : 'CnameLength',
                 $isLongValue ? 'NvalueLength' : 'CvalueLength',
             ];
-            $format = join('/', $formatParts);
+            $format                     = join('/', $formatParts);
             [$nameLength, $valueLength] = array_values(unpack($format, $data));
 
             // Clear top bit for long record
@@ -81,7 +81,7 @@ class Params extends Record
             $self->values[$nameData] = $valueData;
 
             $keyValueLength = $dataOffset + $nameLength + $valueLength;
-            $data = substr($data, $keyValueLength);
+            $data           = substr($data, $keyValueLength);
             $currentOffset += $keyValueLength;
         } while ($currentOffset < $self->getContentLength());
     }
@@ -94,9 +94,9 @@ class Params extends Record
             if ($valueData === null) {
                 continue;
             }
-            $nameLength = strlen($nameData);
+            $nameLength  = strlen($nameData);
             $valueLength = strlen((string) $valueData);
-            $isLongName = $nameLength > 127;
+            $isLongName  = $nameLength > 127;
             $isLongValue = $valueLength > 127;
             $formatParts = [
                 $isLongName ? 'N' : 'C',

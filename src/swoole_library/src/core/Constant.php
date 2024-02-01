@@ -237,8 +237,6 @@ class Constant
 
     public const OPTION_DNS_CACHE_CAPACITY = 'dns_cache_capacity';
 
-    public const OPTION_MAX_CONCURRENCY = 'max_concurrency';
-
     public const OPTION_CONNECT_TIMEOUT = 'connect_timeout';
 
     public const OPTION_TIMEOUT = 'timeout';
@@ -258,6 +256,8 @@ class Constant
     public const OPTION_BODY_DECOMPRESSION = 'body_decompression';
 
     public const OPTION_WEBSOCKET_COMPRESSION = 'websocket_compression';
+
+    public const OPTION_WRITE_FUNC = 'write_func';
 
     public const OPTION_HTTP_PARSE_COOKIE = 'http_parse_cookie';
 
@@ -326,6 +326,8 @@ class Constant
     public const OPTION_MAX_WAIT_TIME = 'max_wait_time';
 
     public const OPTION_MAX_QUEUED_BYTES = 'max_queued_bytes';
+
+    public const OPTION_MAX_CONCURRENCY = 'max_concurrency';
 
     public const OPTION_WORKER_MAX_CONCURRENCY = 'worker_max_concurrency';
 

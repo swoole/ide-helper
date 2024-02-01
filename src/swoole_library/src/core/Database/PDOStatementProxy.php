@@ -11,39 +11,30 @@ declare(strict_types=1);
 
 namespace Swoole\Database;
 
-use PDOException;
-use PDOStatement;
-
 class PDOStatementProxy extends ObjectProxy
 {
-    /** @var PDOStatement */
+    /** @var \PDOStatement */
     protected $__object;
 
-    /** @var null|array */
-    protected $setAttributeContext;
+    protected array $setAttributeContext = [];
 
-    /** @var null|array */
-    protected $setFetchModeContext;
+    protected array $setFetchModeContext;
 
-    /** @var null|array */
-    protected $bindParamContext;
+    protected array $bindParamContext = [];
 
-    /** @var null|array */
-    protected $bindColumnContext;
+    protected array $bindColumnContext = [];
 
-    /** @var null|array */
-    protected $bindValueContext;
+    protected array $bindValueContext = [];
 
-    /** @var \PDO|PDOProxy */
-    protected $parent;
+    protected PDOProxy $parent;
 
     /** @var int */
     protected $parentRound;
 
-    public function __construct(PDOStatement $object, PDOProxy $parent)
+    public function __construct(\PDOStatement $object, PDOProxy $parent)
     {
         parent::__construct($object);
-        $this->parent = $parent;
+        $this->parent      = $parent;
         $this->parentRound = $parent->getRound();
     }
 
@@ -51,37 +42,29 @@ class PDOStatementProxy extends ObjectProxy
     {
         try {
             $ret = $this->__object->{$name}(...$arguments);
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             if (!$this->parent->inTransaction() && DetectsLostConnections::causedByLostConnection($e)) {
                 if ($this->parent->getRound() === $this->parentRound) {
                     /* if not equal, parent has reconnected */
                     $this->parent->reconnect();
                 }
-                $parent = $this->parent->__getObject();
+                $parent         = $this->parent->__getObject();
                 $this->__object = $parent->prepare($this->__object->queryString);
 
-                if ($this->setAttributeContext) {
-                    foreach ($this->setAttributeContext as $attribute => $value) {
-                        $this->__object->setAttribute($attribute, $value);
-                    }
+                foreach ($this->setAttributeContext as $attribute => $value) {
+                    $this->__object->setAttribute($attribute, $value);
                 }
-                if ($this->setFetchModeContext) {
+                if (!empty($this->setFetchModeContext)) {
                     $this->__object->setFetchMode(...$this->setFetchModeContext);
                 }
-                if ($this->bindParamContext) {
-                    foreach ($this->bindParamContext as $param => $item) {
-                        $this->__object->bindParam($param, ...$item);
-                    }
+                foreach ($this->bindParamContext as $param => $item) {
+                    $this->__object->bindParam($param, ...$item);
                 }
-                if ($this->bindColumnContext) {
-                    foreach ($this->bindColumnContext as $column => $item) {
-                        $this->__object->bindColumn($column, ...$item);
-                    }
+                foreach ($this->bindColumnContext as $column => $item) {
+                    $this->__object->bindColumn($column, ...$item);
                 }
-                if ($this->bindValueContext) {
-                    foreach ($this->bindValueContext as $value => $item) {
-                        $this->__object->bindParam($value, ...$item);
-                    }
+                foreach ($this->bindValueContext as $value => $item) {
+                    $this->__object->bindParam($value, ...$item);
                 }
                 $ret = $this->__object->{$name}(...$arguments);
             } else {

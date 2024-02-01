@@ -40,8 +40,8 @@ class UnknownType extends Record
 
     public function __construct(int $type = 0, string $reserved = '')
     {
-        $this->type = FastCGI::UNKNOWN_TYPE;
-        $this->type1 = $type;
+        $this->type      = FastCGI::UNKNOWN_TYPE;
+        $this->type1     = $type;
         $this->reserved1 = $reserved;
         $this->setContentData($this->packPayload());
     }

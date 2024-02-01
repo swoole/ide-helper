@@ -9,10 +9,10 @@
 
 declare(strict_types=1);
 return [
-    'name' => 'swoole',
+    'name'            => 'swoole',
     'checkFileChange' => !getenv('SWOOLE_LIBRARY_DEV'),
-    'output' => getenv('SWOOLE_DIR') . '/ext-src/php_swoole_library.h',
-    'stripComments' => false,
+    'output'          => getenv('SWOOLE_DIR') . '/ext-src/php_swoole_library.h',
+    'stripComments'   => false,
     /* Notice: Sort by dependency */
     'files' => [
         # <basic> #

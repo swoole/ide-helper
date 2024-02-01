@@ -56,10 +56,10 @@ class EndRequest extends Record
         int $appStatus = 0,
         string $reserved = ''
     ) {
-        $this->type = FastCGI::END_REQUEST;
+        $this->type           = FastCGI::END_REQUEST;
         $this->protocolStatus = $protocolStatus;
-        $this->appStatus = $appStatus;
-        $this->reserved1 = $reserved;
+        $this->appStatus      = $appStatus;
+        $this->reserved1      = $reserved;
         $this->setContentData($this->packPayload());
     }
 

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Swoole\Database;
 
-use Exception;
 use PDO;
 use Swoole\ConnectionPool;
 
@@ -20,22 +19,15 @@ use Swoole\ConnectionPool;
  */
 class PDOPool extends ConnectionPool
 {
-    /** @var int */
-    protected $size = 64;
-
-    /** @var PDOConfig */
-    protected $config;
-
-    public function __construct(PDOConfig $config, int $size = self::DEFAULT_SIZE)
+    public function __construct(protected PDOConfig $config, int $size = self::DEFAULT_SIZE)
     {
-        $this->config = $config;
         parent::__construct(function () {
             $driver = $this->config->getDriver();
             if ($driver === 'sqlite') {
-                return new PDO($this->createDSN('sqlite'));
+                return new \PDO($this->createDSN('sqlite'));
             }
 
-            return new PDO($this->createDSN($driver), $this->config->getUsername(), $this->config->getPassword(), $this->config->getOptions());
+            return new \PDO($this->createDSN($driver), $this->config->getUsername(), $this->config->getPassword(), $this->config->getOptions());
         }, $size, PDOProxy::class);
     }
 
@@ -49,7 +41,7 @@ class PDOPool extends ConnectionPool
 
     /**
      * @purpose create DSN
-     * @throws Exception
+     * @throws \Exception
      */
     private function createDSN(string $driver): string
     {
@@ -71,7 +63,7 @@ class PDOPool extends ConnectionPool
                 $dsn = 'sqlite:' . $this->config->getDbname();
                 break;
             default:
-                throw new Exception('Unsupported Database Driver:' . $driver);
+                throw new \Exception('Unsupported Database Driver:' . $driver);
         }
         return $dsn;
     }

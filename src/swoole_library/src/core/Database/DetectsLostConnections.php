@@ -11,10 +11,11 @@ declare(strict_types=1);
 
 namespace Swoole\Database;
 
-use Throwable;
-
 class DetectsLostConnections
 {
+    /**
+     * @var array<string>
+     */
     private const ERROR_MESSAGES = [
         'server has gone away',
         'no connection to the server',
@@ -67,11 +68,11 @@ class DetectsLostConnections
         'SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it',
     ];
 
-    public static function causedByLostConnection(Throwable $e): bool
+    public static function causedByLostConnection(\Throwable $e): bool
     {
         $message = $e->getMessage();
         foreach (self::ERROR_MESSAGES as $needle) {
-            if ($needle !== '' && mb_strpos($message, $needle) !== false) {
+            if (mb_strpos($message, $needle) !== false) {
                 return true;
             }
         }

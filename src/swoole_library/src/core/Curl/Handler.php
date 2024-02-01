@@ -19,7 +19,7 @@ use Swoole\Coroutine\Http\Client;
 use Swoole\Curl\Exception as CurlException;
 use Swoole\Http\Status;
 
-final class Handler
+final class Handler implements \Stringable
 {
     /**
      * @var Client
@@ -27,37 +27,37 @@ final class Handler
     private $client;
 
     private $info = [
-        'url' => '',
-        'content_type' => '',
-        'http_code' => 0,
-        'header_size' => 0,
-        'request_size' => 0,
-        'filetime' => -1,
-        'ssl_verify_result' => 0,
-        'redirect_count' => 0,
-        'total_time' => 5.3E-5,
-        'namelookup_time' => 0.0,
-        'connect_time' => 0.0,
-        'pretransfer_time' => 0.0,
-        'size_upload' => 0.0,
-        'size_download' => 0.0,
-        'speed_download' => 0.0,
-        'speed_upload' => 0.0,
+        'url'                     => '',
+        'content_type'            => '',
+        'http_code'               => 0,
+        'header_size'             => 0,
+        'request_size'            => 0,
+        'filetime'                => -1,
+        'ssl_verify_result'       => 0,
+        'redirect_count'          => 0,
+        'total_time'              => 5.3E-5,
+        'namelookup_time'         => 0.0,
+        'connect_time'            => 0.0,
+        'pretransfer_time'        => 0.0,
+        'size_upload'             => 0.0,
+        'size_download'           => 0.0,
+        'speed_download'          => 0.0,
+        'speed_upload'            => 0.0,
         'download_content_length' => -1.0,
-        'upload_content_length' => -1.0,
-        'starttransfer_time' => 0.0,
-        'redirect_time' => 0.0,
-        'redirect_url' => '',
-        'primary_ip' => '',
-        'certinfo' => [],
-        'primary_port' => 0,
-        'local_ip' => '',
-        'local_port' => 0,
-        'http_version' => 0,
-        'protocol' => 0,
-        'ssl_verifyresult' => 0,
-        'scheme' => '',
-        'private' => '',
+        'upload_content_length'   => -1.0,
+        'starttransfer_time'      => 0.0,
+        'redirect_time'           => 0.0,
+        'redirect_url'            => '',
+        'primary_ip'              => '',
+        'certinfo'                => [],
+        'primary_port'            => 0,
+        'local_ip'                => '',
+        'local_port'              => 0,
+        'http_version'            => 0,
+        'protocol'                => 0,
+        'ssl_verifyresult'        => 0,
+        'scheme'                  => '',
+        'private'                 => '',
     ];
 
     private $withHeaderOut = false;
@@ -141,7 +141,7 @@ final class Handler
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $id = spl_object_id($this);
         return "Object({$id}) of type (curl)";
@@ -191,7 +191,7 @@ final class Handler
         if (!$this->isAvailable()) {
             return false;
         }
-        foreach ((new \ReflectionClass(static::class))->getDefaultProperties() as $name => $value) {
+        foreach ((new \ReflectionClass(self::class))->getDefaultProperties() as $name => $value) {
             $this->{$name} = $value;
         }
     }
@@ -260,7 +260,7 @@ final class Handler
             $this->setError(CURLE_URL_MALFORMAT, 'No URL set!');
             return false;
         }
-        if (strpos($url, '://') === false && $this->unix_socket_path === '') {
+        if (!str_contains($url, '://') && $this->unix_socket_path === '') {
             $url = 'http://' . $url;
         }
         if ($setInfo) {
@@ -331,7 +331,7 @@ final class Handler
     private function setError($code, $msg = ''): void
     {
         $this->errCode = $code;
-        $this->errMsg = $msg ?: curl_strerror($code);
+        $this->errMsg  = $msg ?: curl_strerror($code);
     }
 
     private function hasHeader(string $headerName): bool
@@ -348,7 +348,7 @@ final class Handler
         }
 
         if ($value !== '') {
-            $this->headers[$headerName] = $value;
+            $this->headers[$headerName]            = $value;
             $this->headerMap[$lowerCaseHeaderName] = $headerName;
         } else {
             // remove empty headers (keep same with raw cURL)
@@ -357,10 +357,9 @@ final class Handler
     }
 
     /**
-     * @param mixed $value
-     * @throws Swoole\Curl\Exception
+     * @throws Exception
      */
-    private function setOption(int $opt, $value): bool
+    private function setOption(int $opt, mixed $value): bool
     {
         switch ($opt) {
             // case CURLOPT_STDERR:
@@ -388,7 +387,7 @@ final class Handler
                 break;
             case CURLOPT_RETURNTRANSFER:
                 $this->returnTransfer = $value;
-                $this->transfer = '';
+                $this->transfer       = '';
                 break;
             case CURLOPT_ENCODING:
                 if (empty($value)) {
@@ -410,9 +409,7 @@ final class Handler
                 break;
             case CURLOPT_PROXYTYPE:
                 if ($value !== CURLPROXY_HTTP and $value !== CURLPROXY_SOCKS5) {
-                    throw new Swoole\Curl\Exception(
-                        'swoole_curl_setopt(): Only support following CURLOPT_PROXYTYPE values: CURLPROXY_HTTP, CURLPROXY_SOCKS5'
-                    );
+                    throw new Swoole\Curl\Exception('swoole_curl_setopt(): Only support following CURLOPT_PROXYTYPE values: CURLPROXY_HTTP, CURLPROXY_SOCKS5');
                 }
                 $this->proxyType = $value;
                 break;
@@ -429,7 +426,7 @@ final class Handler
                 $this->proxyPassword = $value;
                 break;
             case CURLOPT_PROXYUSERPWD:
-                $usernamePassword = explode(':', $value);
+                $usernamePassword    = explode(':', $value);
                 $this->proxyUsername = urldecode($usernamePassword[0]);
                 $this->proxyPassword = urldecode($usernamePassword[1] ?? null);
                 break;
@@ -456,9 +453,9 @@ final class Handler
                         $resolve = substr($resolve, 1);
                     }
                     $tmpResolve = explode(':', $resolve, 3);
-                    $host = $tmpResolve[0] ?? '';
-                    $port = $tmpResolve[1] ?? 0;
-                    $ip = $tmpResolve[2] ?? '';
+                    $host       = $tmpResolve[0] ?? '';
+                    $port       = $tmpResolve[1] ?? 0;
+                    $ip         = $tmpResolve[2] ?? '';
                     if ($flag === '-') {
                         unset($this->resolve[$host][$port]);
                     } else {
@@ -469,9 +466,7 @@ final class Handler
                 break;
             case CURLOPT_IPRESOLVE:
                 if ($value !== CURL_IPRESOLVE_WHATEVER and $value !== CURL_IPRESOLVE_V4) {
-                    throw new Swoole\Curl\Exception(
-                        'swoole_curl_setopt(): Only support following CURLOPT_IPRESOLVE values: CURL_IPRESOLVE_WHATEVER, CURL_IPRESOLVE_V4'
-                    );
+                    throw new Swoole\Curl\Exception('swoole_curl_setopt(): Only support following CURLOPT_IPRESOLVE values: CURL_IPRESOLVE_WHATEVER, CURL_IPRESOLVE_V4');
                 }
                 break;
             case CURLOPT_TCP_NODELAY:
@@ -560,8 +555,8 @@ final class Handler
                     return false;
                 }
                 foreach ($value as $header) {
-                    $header = explode(':', $header, 2);
-                    $headerName = $header[0];
+                    $header      = explode(':', $header, 2);
+                    $headerName  = $header[0];
                     $headerValue = trim($header[1] ?? '');
                     $this->setHeader($headerName, $headerValue);
                 }
@@ -689,8 +684,8 @@ final class Handler
     private function execute()
     {
         $this->info['redirect_count'] = $this->info['starttransfer_time'] = 0;
-        $this->info['redirect_url'] = '';
-        $timeBegin = microtime(true);
+        $this->info['redirect_url']   = '';
+        $timeBegin                    = microtime(true);
         /*
          * Socket
          */
@@ -707,12 +702,12 @@ final class Handler
              * Http Proxy
              */
             if ($this->proxy) {
-                $parse = parse_url($this->proxy);
-                $proxy = $parse['host'] ?? $parse['path'];
-                $proxyPort = $parse['port'] ?? $this->proxyPort;
+                $parse         = parse_url($this->proxy);
+                $proxy         = $parse['host'] ?? $parse['path'];
+                $proxyPort     = $parse['port'] ?? $this->proxyPort;
                 $proxyUsername = $parse['user'] ?? $this->proxyUsername;
                 $proxyPassword = $parse['pass'] ?? $this->proxyPassword;
-                $proxyType = $parse['scheme'] ?? $this->proxyType;
+                $proxyType     = $parse['scheme'] ?? $this->proxyType;
                 if (is_string($proxyType)) {
                     if ($proxyType === 'socks5') {
                         $proxyType = CURLPROXY_SOCKS5;
@@ -729,26 +724,21 @@ final class Handler
                     }
                     $this->proxy = $proxy = $ip;
                 }
-                switch ($proxyType) {
-                    case CURLPROXY_HTTP:
-                        $proxyOptions = [
-                            'http_proxy_host' => $proxy,
-                            'http_proxy_port' => $proxyPort,
-                            'http_proxy_username' => $proxyUsername,
-                            'http_proxy_password' => $proxyPassword,
-                        ];
-                        break;
-                    case CURLPROXY_SOCKS5:
-                        $proxyOptions = [
-                            'socks5_host' => $proxy,
-                            'socks5_port' => $proxyPort,
-                            'socks5_username' => $proxyUsername,
-                            'socks5_password' => $proxyPassword,
-                        ];
-                        break;
-                    default:
-                        throw new CurlException("Unexpected proxy type [{$proxyType}]");
-                }
+                $proxyOptions = match ($proxyType) {
+                    CURLPROXY_HTTP => [
+                        'http_proxy_host'     => $proxy,
+                        'http_proxy_port'     => $proxyPort,
+                        'http_proxy_username' => $proxyUsername,
+                        'http_proxy_password' => $proxyPassword,
+                    ],
+                    CURLPROXY_SOCKS5 => [
+                        'socks5_host'     => $proxy,
+                        'socks5_port'     => $proxyPort,
+                        'socks5_username' => $proxyUsername,
+                        'socks5_password' => $proxyPassword,
+                    ],
+                    default => throw new CurlException("Unexpected proxy type [{$proxyType}]"),
+                };
             }
             /*
              * Client Options
@@ -782,7 +772,7 @@ final class Handler
                 }
                 $client->setData($data);
                 // Notice: although we reset it, raw cURL never do this
-                $this->infile = null;
+                $this->infile     = null;
                 $this->infileSize = PHP_INT_MAX;
             } else {
                 // POST data
@@ -825,11 +815,11 @@ final class Handler
             }
             if ($client->statusCode >= 300 and $client->statusCode < 400 and isset($client->headers['location'])) {
                 $redirectParsedUrl = $this->getRedirectUrl($client->headers['location']);
-                $redirectUrl = static::unparseUrl($redirectParsedUrl);
+                $redirectUrl       = self::unparseUrl($redirectParsedUrl);
                 if ($this->followLocation and ($this->maxRedirects === null or $this->info['redirect_count'] < $this->maxRedirects)) {
                     if ($this->info['redirect_count'] === 0) {
                         $this->info['starttransfer_time'] = microtime(true) - $timeBegin;
-                        $redirectBeginTime = microtime(true);
+                        $redirectBeginTime                = microtime(true);
                     }
                     // force GET
                     if (in_array($client->statusCode, [Status::MOVED_PERMANENTLY, Status::FOUND, Status::SEE_OTHER])) {
@@ -852,10 +842,10 @@ final class Handler
                 break;
             }
         }
-        $this->info['total_time'] = microtime(true) - $timeBegin;
-        $this->info['http_code'] = $client->statusCode;
-        $this->info['content_type'] = $client->headers['content-type'] ?? '';
-        $this->info['size_download'] = $this->info['download_content_length'] = strlen($client->body);
+        $this->info['total_time']     = microtime(true) - $timeBegin;
+        $this->info['http_code']      = $client->statusCode;
+        $this->info['content_type']   = $client->headers['content-type'] ?? '';
+        $this->info['size_download']  = $this->info['download_content_length'] = strlen($client->body);
         $this->info['speed_download'] = 1 / $this->info['total_time'] * $this->info['size_download'];
         if (isset($redirectBeginTime)) {
             $this->info['redirect_time'] = microtime(true) - $redirectBeginTime;
@@ -866,7 +856,7 @@ final class Handler
         }
 
         if ($this->unix_socket_path) {
-            $this->info['primary_ip'] = $this->unix_socket_path;
+            $this->info['primary_ip']   = $this->unix_socket_path;
             $this->info['primary_port'] = $this->urlInfo['port'];
         }
 
@@ -908,7 +898,7 @@ final class Handler
         }
 
         if ($this->withHeaderOut) {
-            $headerOutContent = $client->getHeaderOut();
+            $headerOutContent             = $client->getHeaderOut();
             $this->info['request_header'] = $headerOutContent ? $headerOutContent . "\r\n\r\n" : '';
         }
         if ($this->withFileTime) {
@@ -958,14 +948,14 @@ final class Handler
 
     private static function unparseUrl(array $parsedUrl): string
     {
-        $scheme = ($parsedUrl['scheme'] ?? 'http') . '://';
-        $host = $parsedUrl['host'] ?? '';
-        $port = isset($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '';
-        $user = $parsedUrl['user'] ?? '';
-        $pass = isset($parsedUrl['pass']) ? ':' . $parsedUrl['pass'] : '';
-        $pass = ($user or $pass) ? "{$pass}@" : '';
-        $path = $parsedUrl['path'] ?? '';
-        $query = (isset($parsedUrl['query']) and $parsedUrl['query'] !== '') ? '?' . $parsedUrl['query'] : '';
+        $scheme   = ($parsedUrl['scheme'] ?? 'http') . '://';
+        $host     = $parsedUrl['host'] ?? '';
+        $port     = isset($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '';
+        $user     = $parsedUrl['user'] ?? '';
+        $pass     = isset($parsedUrl['pass']) ? ':' . $parsedUrl['pass'] : '';
+        $pass     = ($user or $pass) ? "{$pass}@" : '';
+        $path     = $parsedUrl['path'] ?? '';
+        $query    = (isset($parsedUrl['query']) and $parsedUrl['query'] !== '') ? '?' . $parsedUrl['query'] : '';
         $fragment = isset($parsedUrl['fragment']) ? '#' . $parsedUrl['fragment'] : '';
         return $scheme . $user . $pass . $host . $port . $path . $query . $fragment;
     }
@@ -979,7 +969,7 @@ final class Handler
             if (!isset($location[0])) {
                 return [];
             }
-            $redirectUri = $this->urlInfo;
+            $redirectUri          = $this->urlInfo;
             $redirectUri['query'] = '';
             if ($location[0] === '/') {
                 $redirectUri['path'] = $location;
@@ -988,7 +978,7 @@ final class Handler
                 if ($path === '.') {
                     $path = '/';
                 }
-                if (isset($location[1]) and substr($location, 0, 2) === './') {
+                if (isset($location[1]) and str_starts_with($location, './')) {
                     $location = substr($location, 2);
                 }
                 $redirectUri['path'] = $path . $location;

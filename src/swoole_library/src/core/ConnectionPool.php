@@ -17,27 +17,19 @@ class ConnectionPool
 {
     public const DEFAULT_SIZE = 64;
 
-    /** @var Channel */
-    protected $pool;
+    protected ?Channel $pool;
 
     /** @var callable */
     protected $constructor;
 
-    /** @var int */
-    protected $size;
+    protected int $size;
 
-    /** @var int */
-    protected $num;
+    protected int $num = 0;
 
-    /** @var null|string */
-    protected $proxy;
-
-    public function __construct(callable $constructor, int $size = self::DEFAULT_SIZE, ?string $proxy = null)
+    public function __construct(callable $constructor, int $size = self::DEFAULT_SIZE, protected ?string $proxy = null)
     {
-        $this->pool = new Channel($this->size = $size);
+        $this->pool        = new Channel($this->size = $size);
         $this->constructor = $constructor;
-        $this->num = 0;
-        $this->proxy = $proxy;
     }
 
     public function fill(): void
@@ -76,7 +68,7 @@ class ConnectionPool
     {
         $this->pool->close();
         $this->pool = null;
-        $this->num = 0;
+        $this->num  = 0;
     }
 
     protected function make(): void
@@ -87,7 +79,7 @@ class ConnectionPool
                 $connection = new $this->proxy($this->constructor);
             } else {
                 $constructor = $this->constructor;
-                $connection = $constructor();
+                $connection  = $constructor();
             }
         } catch (\Throwable $throwable) {
             $this->num--;

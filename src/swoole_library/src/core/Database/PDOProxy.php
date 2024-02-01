@@ -11,30 +11,27 @@ declare(strict_types=1);
 
 namespace Swoole\Database;
 
-use PDO;
-use PDOException;
-
+/**
+ * @method \PDO __getObject()
+ */
 class PDOProxy extends ObjectProxy
 {
-    /** @var PDO */
+    /** @var \PDO */
     protected $__object;
 
-    /** @var null|array */
-    protected $setAttributeContext;
+    protected array $setAttributeContext = [];
 
     /** @var callable */
     protected $constructor;
 
-    /** @var int */
-    protected $round = 0;
+    protected int $round = 0;
 
-    /** @var int */
-    protected $inTransaction = 0;
+    protected int $inTransaction = 0;
 
     public function __construct(callable $constructor)
     {
         parent::__construct($constructor());
-        $this->__object->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->__object->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->constructor = $constructor;
     }
 
@@ -42,7 +39,7 @@ class PDOProxy extends ObjectProxy
     {
         try {
             $ret = $this->__object->{$name}(...$arguments);
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             if (!$this->__object->inTransaction() && DetectsLostConnections::causedByLostConnection($e)) {
                 $this->reconnect();
                 $ret = $this->__object->{$name}(...$arguments);
@@ -75,13 +72,11 @@ class PDOProxy extends ObjectProxy
     {
         $constructor = $this->constructor;
         parent::__construct($constructor());
-        $this->__object->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->__object->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->round++;
         /* restore context */
-        if ($this->setAttributeContext) {
-            foreach ($this->setAttributeContext as $attribute => $value) {
-                $this->__object->setAttribute($attribute, $value);
-            }
+        foreach ($this->setAttributeContext as $attribute => $value) {
+            $this->__object->setAttribute($attribute, $value);
         }
     }
 
