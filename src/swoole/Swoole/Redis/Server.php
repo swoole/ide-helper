@@ -85,7 +85,7 @@ class Server extends \Swoole\Server
     /**
      * @return callable|null Returns the callback function if defined, otherwise NULL.
      */
-    public function getHandler(string $command): callable|null
+    public function getHandler(string $command): ?callable
     {
     }
 
