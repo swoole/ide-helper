@@ -39,6 +39,12 @@ class ConnectionPool
         }
     }
 
+    /**
+     * Get a connection from the pool.
+     *
+     * @param float $timeout > 0 means waiting for the specified number of seconds. other means no waiting.
+     * @return mixed|false Returns a connection object from the pool, or false if the pool is full and the timeout is reached.
+     */
     public function get(float $timeout = -1)
     {
         if ($this->pool === null) {

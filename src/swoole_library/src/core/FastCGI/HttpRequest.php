@@ -400,13 +400,14 @@ class HttpRequest extends Request
         return $this;
     }
 
-    public function withBody($body): self
+    public function withBody(array|string|\Stringable $body): self
     {
         if (is_array($body)) {
             $body = http_build_query($body);
             $this->withContentType('application/x-www-form-urlencoded');
         }
         parent::withBody($body);
+
         return $this->withContentLength(strlen($body));
     }
 

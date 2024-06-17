@@ -11,6 +11,11 @@ declare(strict_types=1);
 
 namespace Swoole\Database;
 
+/**
+ * The proxy class for PHP class PDOStatement.
+ *
+ * @see https://www.php.net/PDOStatement The PDOStatement class
+ */
 class PDOStatementProxy extends ObjectProxy
 {
     /** @var \PDOStatement */
@@ -81,7 +86,12 @@ class PDOStatementProxy extends ObjectProxy
         return $this->__object->setAttribute($attribute, $value);
     }
 
-    public function setFetchMode(int $mode, ...$args): bool
+    /**
+     * Set the default fetch mode for this statement.
+     *
+     * @see https://www.php.net/manual/en/pdostatement.setfetchmode.php
+     */
+    public function setFetchMode(int $mode, ...$params): bool
     {
         $this->setFetchModeContext = func_get_args();
         return $this->__object->setFetchMode(...$this->setFetchModeContext);

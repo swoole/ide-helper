@@ -41,7 +41,7 @@ class Consul extends NameResolver
         ];
         $url = $this->baseUrl . '/v1/agent/service/register';
         $r   = request($url, 'PUT', json_encode($data, JSON_THROW_ON_ERROR));
-        return $this->checkResponse($r, $url);
+        return $this->checkResponse($r);
     }
 
     public function leave(string $name, string $ip, int $port): bool
@@ -52,7 +52,7 @@ class Consul extends NameResolver
             $port
         );
         $r = request($url, 'PUT');
-        return $this->checkResponse($r, $url);
+        return $this->checkResponse($r);
     }
 
     public function enableMaintenanceMode(string $name, string $ip, int $port): bool
@@ -63,14 +63,14 @@ class Consul extends NameResolver
             $port
         );
         $r = request($url, 'PUT');
-        return $this->checkResponse($r, $url);
+        return $this->checkResponse($r);
     }
 
     public function getCluster(string $name): ?Cluster
     {
         $url = $this->baseUrl . '/v1/catalog/service/' . $this->prefix . $name;
         $r   = get($url);
-        if (!$this->checkResponse($r, $url)) {
+        if (!$this->checkResponse($r)) {
             return null;
         }
         $list = json_decode($r->getBody(), null, 512, JSON_THROW_ON_ERROR);

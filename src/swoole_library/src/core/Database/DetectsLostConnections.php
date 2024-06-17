@@ -47,11 +47,8 @@ class DetectsLostConnections
         'SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo failed: Name or service not known',
         'SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for',
         'SQLSTATE[HY000]: General error: 7 SSL SYSCALL error: EOF detected',
-        'SQLSTATE[HY000] [2002] Connection timed out',
-        'SSL: Connection timed out',
         'SQLSTATE[HY000]: General error: 1105 The last transaction was aborted due to Seamless Scaling. Please retry.',
         'Temporary failure in name resolution',
-        'SSL: Broken pipe',
         'SQLSTATE[08S01]: Communication link failure',
         'SQLSTATE[08006] [7] could not connect to server: Connection refused Is the server running on host',
         'SQLSTATE[HY000]: General error: 7 SSL SYSCALL error: No route to host',
@@ -59,13 +56,19 @@ class DetectsLostConnections
         'SQLSTATE[08006] [7] could not translate host name',
         'TCP Provider: Error code 0x274C',
         'SQLSTATE[HY000] [2002] No such file or directory',
-        'SSL: Operation timed out',
         'Reason: Server is in script upgrade mode. Only administrator can connect at this time.',
         'Unknown $curl_error_code: 77',
-        'SSL: Handshake timed out',
         'SQLSTATE[08006] [7] SSL error: sslv3 alert unexpected message',
         'SQLSTATE[08006] [7] unrecognized SSL error code:',
         'SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it',
+        'Broken pipe',
+        // PDO::prepare(): Send of 77 bytes failed with errno=110 Operation timed out
+        // SSL: Handshake timed out
+        // SSL: Operation timed out
+        // SSL: Connection timed out
+        // SQLSTATE[HY000] [2002] Connection timed out
+        'timed out',
+        'Error reading result',
     ];
 
     public static function causedByLostConnection(\Throwable $e): bool

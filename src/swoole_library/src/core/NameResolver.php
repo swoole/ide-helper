@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Swoole;
 
 use Swoole\Coroutine\Http\ClientProxy;
+use Swoole\Http\Status;
 use Swoole\NameResolver\Cluster;
 use Swoole\NameResolver\Exception;
 
@@ -102,22 +103,12 @@ abstract class NameResolver
         $this->info    = $info;
     }
 
-    protected function checkResponse(?ClientProxy $r, string $url): bool
+    protected function checkResponse(ClientProxy $response): bool
     {
-        if (empty($r)) {
-            throw new Exception("failed to request URL({$url})");
+        if ($response->getStatusCode() === Status::OK) {
+            return true;
         }
-        if ($r->getStatusCode() !== 200) {
-            $msg = '';
-            if (!empty($r->errMsg)) {
-                $msg .= 'errMsg: ' . $r->errMsg;
-            }
-            $body = $r->getBody();
-            if (empty($r->errMsg)) {
-                $msg .= 'Http Body: ' . $body;
-            }
-            throw new Exception($msg, $r->errCode ?: $r->getStatusCode());
-        }
-        return true;
+
+        throw new Exception('Http Body: ' . $response->getBody(), $response->getStatusCode());
     }
 }

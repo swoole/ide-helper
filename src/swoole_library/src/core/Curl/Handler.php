@@ -22,7 +22,7 @@ use Swoole\Http\Status;
 final class Handler implements \Stringable
 {
     /**
-     * @var Client
+     * @var Client|null
      */
     private $client;
 
@@ -96,13 +96,13 @@ final class Handler implements \Stringable
 
     private $nobody = false;
 
-    /** @var callable */
+    /** @var callable|null */
     private $headerFunction;
 
-    /** @var callable */
+    /** @var callable|null */
     private $readFunction;
 
-    /** @var callable */
+    /** @var callable|null */
     private $writeFunction;
 
     private $noProgress = true;
@@ -176,14 +176,14 @@ final class Handler implements \Stringable
         return $this->isAvailable() ? $this->info : false;
     }
 
-    public function errno()
+    public function errno(): int
     {
-        return $this->isAvailable() ? $this->errCode : false;
+        return $this->isAvailable() ? $this->errCode : 0;
     }
 
-    public function error()
+    public function error(): string
     {
-        return $this->isAvailable() ? $this->errMsg : false;
+        return $this->isAvailable() ? $this->errMsg : '';
     }
 
     public function reset()
@@ -204,12 +204,12 @@ final class Handler implements \Stringable
         return $this->transfer;
     }
 
-    public function close()
+    public function close(): void
     {
         if (!$this->isAvailable()) {
-            return false;
+            return;
         }
-        foreach ($this as &$property) {
+        foreach ($this as &$property) { // @phpstan-ignore foreach.nonIterable
             $property = null;
         }
         $this->closed = true;
@@ -305,7 +305,7 @@ final class Handler implements \Stringable
             $urlInfo['port'] = intval($urlInfo['port']);
         }
         $port = $urlInfo['port'];
-        if ($this->client) {
+        if (isset($this->client)) {
             $oldUrlInfo = $this->urlInfo;
             if (($host !== $oldUrlInfo['host']) || ($port !== $oldUrlInfo['port']) || ($scheme !== $oldUrlInfo['scheme'])) {
                 /* target changed */
@@ -321,7 +321,7 @@ final class Handler implements \Stringable
         $this->info['primary_port'] = $port;
         if (!isset($this->urlInfo['port']) || $this->urlInfo['port'] !== $port) {
             $this->urlInfo['port'] = $port;
-            if ($this->client) {
+            if (isset($this->client)) {
                 /* target changed */
                 $this->create();
             }
@@ -386,7 +386,7 @@ final class Handler implements \Stringable
                 $this->clientOptions[Constant::OPTION_KEEP_ALIVE] = !$value;
                 break;
             case CURLOPT_RETURNTRANSFER:
-                $this->returnTransfer = $value;
+                $this->returnTransfer = (bool) $value;
                 $this->transfer       = '';
                 break;
             case CURLOPT_ENCODING:
@@ -409,7 +409,7 @@ final class Handler implements \Stringable
                 break;
             case CURLOPT_PROXYTYPE:
                 if ($value !== CURLPROXY_HTTP and $value !== CURLPROXY_SOCKS5) {
-                    throw new Swoole\Curl\Exception('swoole_curl_setopt(): Only support following CURLOPT_PROXYTYPE values: CURLPROXY_HTTP, CURLPROXY_SOCKS5');
+                    throw new CurlException('swoole_curl_setopt(): Only support following CURLOPT_PROXYTYPE values: CURLPROXY_HTTP, CURLPROXY_SOCKS5');
                 }
                 $this->proxyType = $value;
                 break;
@@ -466,7 +466,7 @@ final class Handler implements \Stringable
                 break;
             case CURLOPT_IPRESOLVE:
                 if ($value !== CURL_IPRESOLVE_WHATEVER and $value !== CURL_IPRESOLVE_V4) {
-                    throw new Swoole\Curl\Exception('swoole_curl_setopt(): Only support following CURLOPT_IPRESOLVE values: CURL_IPRESOLVE_WHATEVER, CURL_IPRESOLVE_V4');
+                    throw new CurlException('swoole_curl_setopt(): Only support following CURLOPT_IPRESOLVE values: CURL_IPRESOLVE_WHATEVER, CURL_IPRESOLVE_V4');
                 }
                 break;
             case CURLOPT_TCP_NODELAY:
@@ -676,7 +676,7 @@ final class Handler implements \Stringable
                 $this->method = 'GET';
                 break;
             default:
-                throw new Swoole\Curl\Exception("swoole_curl_setopt(): option[{$opt}] is not supported");
+                throw new CurlException("swoole_curl_setopt(): option[{$opt}] is not supported");
         }
         return true;
     }
@@ -693,7 +693,7 @@ final class Handler implements \Stringable
             $this->setError(CURLE_URL_MALFORMAT, 'No URL set or URL using bad/illegal format');
             return false;
         }
-        if (!$this->client) {
+        if (!isset($this->client)) {
             $this->create();
         }
         while (true) {
@@ -924,7 +924,7 @@ final class Handler implements \Stringable
         }
 
         if ($this->writeFunction) {
-            if (!is_callable($this->writeFunction)) {
+            if (!is_callable($this->writeFunction)) { // @phpstan-ignore booleanNot.alwaysFalse
                 trigger_error('curl_exec(): Could not call the CURLOPT_WRITEFUNCTION', E_USER_WARNING);
                 $this->setError(CURLE_WRITE_ERROR, 'Failure writing output to destination');
                 return false;

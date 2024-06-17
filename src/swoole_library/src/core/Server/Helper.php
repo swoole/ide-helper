@@ -222,11 +222,11 @@ class Helper
         }
     }
 
-    public static function onBeforeShutdown(Server $server)
+    public static function onBeforeShutdown(Server $server): void
     {
-        if ($server->admin_server) { // @phpstan-ignore if.alwaysTrue
+        if (isset($server->admin_server)) { // @phpstan-ignore isset.property
             $server->admin_server->shutdown();
-            $server->admin_server = null;
+            $server->admin_server = null; // @phpstan-ignore assign.propertyType
         }
     }
 

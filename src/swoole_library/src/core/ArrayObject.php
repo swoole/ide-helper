@@ -289,16 +289,12 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
         return self::detectStringType(implode($glue, $this->array));
     }
 
-    public function serialize(): StringObject
+    public function serialize(): string
     {
-        return self::detectStringType(serialize($this->array));
+        return serialize($this->array);
     }
 
-    /**
-     * @param string $string
-     * @return $this
-     */
-    public function unserialize($string): self
+    public function unserialize(string|\Stringable|StringObject $string): self
     {
         $this->array = (array) unserialize((string) $string);
         return $this;

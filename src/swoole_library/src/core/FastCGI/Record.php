@@ -81,12 +81,17 @@ class Record implements \Stringable
 
     /**
      * Unpacks the message from the binary data buffer
-     *
-     * @param string $data Binary buffer with raw data
      */
-    final public static function unpack(string $data): static
+    final public static function unpack(string $binaryData): static
     {
-        $self = new static(); // @phpstan-ignore new.static
+        /** @var static $self */
+        $self = (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
+
+        /** @phpstan-var false|array{version: int, type: int, requestId: int, contentLength: int, paddingLength: int, reserved: int} */
+        $packet = unpack(FastCGI::HEADER_FORMAT, $binaryData);
+        if ($packet === false) {
+            throw new \RuntimeException('Can not unpack data from the binary buffer');
+        }
         [
             $self->version,
             $self->type,
@@ -94,9 +99,9 @@ class Record implements \Stringable
             $self->contentLength,
             $self->paddingLength,
             $self->reserved
-        ] = array_values(unpack(FastCGI::HEADER_FORMAT, $data));
+        ] = array_values($packet);
 
-        $payload = substr($data, FastCGI::HEADER_LEN);
+        $payload = substr($binaryData, FastCGI::HEADER_LEN);
         self::unpackPayload($self, $payload);
         if (static::class !== self::class && $self->contentLength > 0) {
             static::unpackPayload($self, $payload);
@@ -190,18 +195,18 @@ class Record implements \Stringable
      * Method to unpack the payload for the record.
      *
      * NB: Default implementation will be always called
-     *
-     * @param static $self Instance of current frame
-     * @param string $data Binary data
      */
-    protected static function unpackPayload($self, string $data): void
+    protected static function unpackPayload(self $self, string $binaryData): void
     {
+        /** @phpstan-var false|array{contentData: string, paddingData: string} */
+        $payload = unpack("a{$self->contentLength}contentData/a{$self->paddingLength}paddingData", $binaryData);
+        if ($payload === false) {
+            throw new \RuntimeException('Can not unpack data from the binary buffer');
+        }
         [
             $self->contentData,
             $self->paddingData
-        ] = array_values(
-            unpack("a{$self->contentLength}contentData/a{$self->paddingLength}paddingData", $data)
-        );
+        ] = array_values($payload);
     }
 
     /**

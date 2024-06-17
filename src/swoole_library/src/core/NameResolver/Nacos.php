@@ -38,7 +38,7 @@ class Nacos extends NameResolver
 
         $url = $this->baseUrl . '/nacos/v1/ns/instance?' . http_build_query($params);
         $r   = Coroutine\Http\post($url, []);
-        return $this->checkResponse($r, $url);
+        return $this->checkResponse($r);
     }
 
     /**
@@ -52,7 +52,7 @@ class Nacos extends NameResolver
 
         $url = $this->baseUrl . '/nacos/v1/ns/instance?' . http_build_query($params);
         $r   = Coroutine\Http\request($this->baseUrl . '/nacos/v1/ns/instance?' . http_build_query($params), 'DELETE');
-        return $this->checkResponse($r, $url);
+        return $this->checkResponse($r);
     }
 
     /**
@@ -64,7 +64,7 @@ class Nacos extends NameResolver
 
         $url = $this->baseUrl . '/nacos/v1/ns/instance/list?' . http_build_query($params);
         $r   = Coroutine\Http\get($url);
-        if (!$this->checkResponse($r, $url)) {
+        if (!$this->checkResponse($r)) {
             return null;
         }
         $result = json_decode($r->getBody(), null, 512, JSON_THROW_ON_ERROR);

@@ -58,15 +58,9 @@ function request_with_http_client(
     if ($data) {
         $client->setData($data);
     }
-    if (is_array($options)) {
-        $client->set($options);
-    }
-    if (is_array($headers)) {
-        $client->setHeaders($headers);
-    }
-    if (is_array($cookies)) {
-        $client->setCookies($cookies);
-    }
+    $client->set($options ?: []);
+    $client->setHeaders($headers ?: []);
+    $client->setCookies($cookies ?: []);
     $request_url = swoole_array_default_value($info, 'path', '/');
     if (!empty($info['query'])) {
         $request_url .= '?' . $info['query'];
@@ -75,8 +69,8 @@ function request_with_http_client(
         return new ClientProxy(
             $client->getBody(),
             $client->getStatusCode(),
-            $client->getHeaders(),
-            $client->getCookies()
+            $client->getHeaders() ?: [],
+            $client->getCookies() ?: []
         );
     }
     throw new Exception($client->errMsg, $client->errCode);
@@ -146,7 +140,7 @@ function request_with_curl(
     }
     $body = curl_exec($ch);
     if ($body !== false) {
-        return new ClientProxy($body, curl_getinfo($ch, CURLINFO_HTTP_CODE), $responseHeaders, $responseCookies);
+        return new ClientProxy($body, curl_getinfo($ch, CURLINFO_RESPONSE_CODE), $responseHeaders, $responseCookies);
     }
     throw new Exception(curl_error($ch), curl_errno($ch));
 }

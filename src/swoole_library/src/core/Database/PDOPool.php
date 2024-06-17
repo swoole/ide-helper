@@ -31,11 +31,23 @@ class PDOPool extends ConnectionPool
         }, $size, PDOProxy::class);
     }
 
+    /**
+     * Get a PDO connection from the pool. The PDO connection (a PDO object) is wrapped in a PDOProxy object returned.
+     *
+     * @param float $timeout > 0 means waiting for the specified number of seconds. other means no waiting.
+     * @return PDOProxy|false Returns a PDOProxy object from the pool, or false if the pool is full and the timeout is reached.
+     *                        {@inheritDoc}
+     */
     public function get(float $timeout = -1)
     {
+        /* @var \Swoole\Database\PDOProxy|false $pdo */
         $pdo = parent::get($timeout);
-        /* @var \Swoole\Database\PDOProxy $pdo */
+        if ($pdo === false) {
+            return false;
+        }
+
         $pdo->reset();
+
         return $pdo;
     }
 
@@ -60,6 +72,16 @@ class PDOPool extends ConnectionPool
                 $dsn = 'oci:dbname=' . ($this->config->hasUnixSocket() ? $this->config->getUnixSocket() : $this->config->getHost()) . ':' . $this->config->getPort() . '/' . $this->config->getDbname() . ';charset=' . $this->config->getCharset();
                 break;
             case 'sqlite':
+                // There are three types of SQLite databases: databases on disk, databases in memory, and temporary
+                // databases (which are deleted when the connections are closed). It doesn't make sense to use
+                // connection pool for the latter two types of databases, because each connection connects to a
+                //different in-memory or temporary SQLite database.
+                if ($this->config->getDbname() === '') {
+                    throw new \Exception('Connection pool in Swoole does not support temporary SQLite databases.');
+                }
+                if ($this->config->getDbname() === ':memory:') {
+                    throw new \Exception('Connection pool in Swoole does not support creating SQLite databases in memory.');
+                }
                 $dsn = 'sqlite:' . $this->config->getDbname();
                 break;
             default:

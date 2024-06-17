@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Swoole\Coroutine\FastCGI;
 
+use Swoole\Constant;
 use Swoole\Coroutine\FastCGI\Client\Exception;
 use Swoole\Coroutine\Socket;
 use Swoole\FastCGI\FrameParser;
@@ -49,7 +50,7 @@ class Client
     }
 
     /**
-     * @return HttpResponse|Response
+     * @return ($request is HttpRequest ? HttpResponse : Response)
      * @throws Exception
      */
     public function execute(Request $request, float $timeout = -1): Response
@@ -57,8 +58,8 @@ class Client
         if (!isset($this->socket)) {
             $this->socket = $socket = new Socket($this->af, SOCK_STREAM, IPPROTO_IP);
             $socket->setProtocol([
-                'open_ssl'              => $this->ssl,
-                'open_fastcgi_protocol' => true,
+                Constant::OPTION_OPEN_SSL              => $this->ssl,
+                Constant::OPTION_OPEN_FASTCGI_PROTOCOL => true,
             ]);
             if (!$socket->connect($this->host, $this->port, $timeout)) {
                 $this->ioException();
@@ -91,10 +92,8 @@ class Client
                     $this->socket->close();
                     $this->socket = null;
                 }
-                return match (true) {
-                    $request instanceof HttpRequest => new HttpResponse($records),
-                    default                         => new Response($records),
-                };
+                // @phpstan-ignore argument.type,argument.type
+                return ($request instanceof HttpRequest) ? new HttpResponse($records) : new Response($records);
             }
         }
 

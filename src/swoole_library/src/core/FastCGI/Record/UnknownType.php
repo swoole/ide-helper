@@ -26,19 +26,15 @@ class UnknownType extends Record
 {
     /**
      * Type of the unrecognized management record.
-     *
-     * @var int
      */
-    protected $type1;
+    protected int $type1;
 
     /**
      * Reserved data, 7 bytes maximum
-     *
-     * @var string
      */
-    protected $reserved1;
+    protected string $reserved1;
 
-    public function __construct(int $type = 0, string $reserved = '')
+    public function __construct(int $type, string $reserved = '')
     {
         $this->type      = FastCGI::UNKNOWN_TYPE;
         $this->type1     = $type;
@@ -58,12 +54,21 @@ class UnknownType extends Record
      * {@inheritdoc}
      * @param static $self
      */
-    public static function unpackPayload($self, string $data): void
+    public static function unpackPayload($self, string $binaryData): void
     {
-        [$self->type1, $self->reserved1] = array_values(unpack('Ctype/a7reserved', $data));
+        assert($self instanceof self);
+
+        /** @phpstan-var false|array{type: int, reserved: string} */
+        $payload = unpack('Ctype/a7reserved', $binaryData);
+        if ($payload === false) {
+            throw new \RuntimeException('Can not unpack data from the binary buffer');
+        }
+        [$self->type1, $self->reserved1] = array_values($payload);
     }
 
-    /** {@inheritdoc} */
+    /**
+     * {@inheritdoc}
+     */
     protected function packPayload(): string
     {
         return pack(

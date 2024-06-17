@@ -107,7 +107,7 @@ class StringObject implements \Stringable
      */
     public function substr(int $offset, ?int $length = null)
     {
-        return new static(substr($this->string, ...func_get_args())); // @phpstan-ignore new.static
+        return new static(substr($this->string, $offset, $length)); // @phpstan-ignore new.static
     }
 
     public function repeat(int $times): static
@@ -167,14 +167,27 @@ class StringObject implements \Stringable
         return $this->string[$index];
     }
 
-    public function chunkSplit(int $chunkLength = 76, string $chunkEnd = ''): static
+    /**
+     * Get a new string object by splitting the string of current object into smaller chunks.
+     *
+     * @param int $length The chunk length.
+     * @param string $separator The line ending sequence.
+     * @see https://www.php.net/chunk_split
+     */
+    public function chunkSplit(int $length = 76, string $separator = "\r\n"): static
     {
-        return new static(chunk_split($this->string, ...func_get_args())); // @phpstan-ignore new.static
+        return new static(chunk_split($this->string, $length, $separator)); // @phpstan-ignore new.static
     }
 
-    public function chunk(int $splitLength = 1): ArrayObject
+    /**
+     * Convert a string to an array object of class \Swoole\ArrayObject.
+     *
+     * @param int $length Maximum length of the chunk.
+     * @see https://www.php.net/str_split
+     */
+    public function chunk(int $length = 1): ArrayObject
     {
-        return static::detectArrayType(str_split($this->string, ...func_get_args()));
+        return static::detectArrayType(str_split($this->string, $length));
     }
 
     public function toString(): string
