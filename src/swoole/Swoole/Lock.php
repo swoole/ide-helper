@@ -54,16 +54,6 @@ class Lock
      */
     public const SPINLOCK = SWOOLE_SPINLOCK;
 
-    /**
-     * @removed 4.5.3 No longer supported. Please use mutex lock (\Swoole\Lock::MUTEX) instead.
-     */
-    public const FILELOCK = SWOOLE_FILELOCK;
-
-    /**
-     * @removed 4.5.3 No longer supported. Please use mutex lock (\Swoole\Lock::MUTEX) instead.
-     */
-    public const SEM = SWOOLE_SEM;
-
     public int $errCode = 0;
 
     /**

@@ -253,6 +253,19 @@ function swoole_substr_json_decode(string $str, int $offset, int $length, bool $
 {
 }
 
+/**
+ * Triggers a fatal error when the string passed in is "fatal_error"; otherwise nothing happens.
+ *
+ * @internal This function is for testing purposes only when running unit tests in CI pipelines.
+ * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
+ */
+function swoole_test_fn(string $case): void
+{
+    if ($case === 'fatal_error') {
+        throw new Swoole\Error('test');
+    }
+}
+
 function swoole_internal_call_user_shutdown_begin(): bool
 {
 }
@@ -384,20 +397,6 @@ function swoole_event_wait(): void
  * @see \Swoole\Event::exit()
  */
 function swoole_event_exit(): void
-{
-}
-
-/**
- * Set runtime options for timers.
- *
- * @param array $settings An array of settings. There is only one option available:
- *                        - \Swoole\Constant::OPTION_ENABLE_COROUTINE: whether to enable coroutine support for timers.
- * @see \Swoole\Timer::set()
- * @see \Swoole\Constant::OPTION_ENABLE_COROUTINE
- * @alias This function is an alias of method \Swoole\Timer::set().
- * @deprecated 4.6.0
- */
-function swoole_timer_set(array $settings): void
 {
 }
 

@@ -19,12 +19,24 @@ use Swoole\Client;
  */
 class Socket
 {
+    /**
+     * @readonly
+     */
     public int $fd = -1;
 
+    /**
+     * @readonly
+     */
     public int $domain = 0;
 
+    /**
+     * @readonly
+     */
     public int $type = 0;
 
+    /**
+     * @readonly
+     */
     public int $protocol = 0;
 
     public int $errCode = 0;

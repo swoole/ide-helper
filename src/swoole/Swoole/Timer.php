@@ -15,20 +15,6 @@ use Swoole\Timer\Iterator;
 class Timer
 {
     /**
-     * Set runtime options for timers.
-     *
-     * @param array $settings An array of settings. There is only one option available:
-     *                        - \Swoole\Constant::OPTION_ENABLE_COROUTINE: whether to enable coroutine support for timers.
-     * @see \swoole_timer_set()
-     * @see \Swoole\Constant::OPTION_ENABLE_COROUTINE
-     * @alias This method has an alias function \swoole_timer_set().
-     * @deprecated 4.6.0
-     */
-    public static function set(array $settings): void
-    {
-    }
-
-    /**
      * Add a timer that will run when the specified timer interval has elapsed.
      *
      * If coroutine support is enabled, Swoole will create a new coroutine to execute the callback function. Thus, there

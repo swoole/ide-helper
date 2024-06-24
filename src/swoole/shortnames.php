@@ -21,17 +21,10 @@ class_alias(Swoole\Coroutine\Http\Client::class, Co\Http\Client::class);
 class_alias(Swoole\Coroutine\Http\Client\Exception::class, Co\Http\Client\Exception::class);
 class_alias(Swoole\Coroutine\Http\Server::class, Co\Http\Server::class);
 class_alias(Swoole\Coroutine\Iterator::class, Co\Iterator::class);
-class_alias(Swoole\Coroutine\PostgreSQL::class, Co\PostgreSQL::class);
 class_alias(Swoole\Coroutine\Scheduler::class, Co\Scheduler::class);
 class_alias(Swoole\Coroutine\Socket::class, Co\Socket::class);
 class_alias(Swoole\Coroutine\Socket\Exception::class, Co\Socket\Exception::class);
 class_alias(Swoole\Coroutine\System::class, Co\System::class);
-
-// Following classes are deprecated since Swoole 5.0.0 and will be removed in the future.
-class_alias(Swoole\Coroutine\MySQL::class, Co\MySQL::class);
-class_alias(Swoole\Coroutine\MySQL\Exception::class, Co\MySQL\Exception::class);
-class_alias(Swoole\Coroutine\MySQL\Statement::class, Co\MySQL\Statement::class);
-class_alias(Swoole\Coroutine\Redis::class, Co\Redis::class);
 
 /**
  * Create a coroutine.

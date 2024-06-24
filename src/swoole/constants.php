@@ -5,12 +5,12 @@ declare(strict_types=1);
 /*
  * Swoole version information.
  */
-define('SWOOLE_VERSION', '5.1.3');
-define('SWOOLE_VERSION_ID', 50103);
-define('SWOOLE_MAJOR_VERSION', 5);
-define('SWOOLE_MINOR_VERSION', 1);
-define('SWOOLE_RELEASE_VERSION', 3);
-define('SWOOLE_EXTRA_VERSION', '');
+define('SWOOLE_VERSION', '6.0.0-dev');
+define('SWOOLE_VERSION_ID', 60000);
+define('SWOOLE_MAJOR_VERSION', 6);
+define('SWOOLE_MINOR_VERSION', 0);
+define('SWOOLE_RELEASE_VERSION', 0);
+define('SWOOLE_EXTRA_VERSION', 'dev');
 
 /*
  * If debug logging is enabled or not in Swoole.
@@ -96,6 +96,9 @@ define('SWOOLE_ERROR_OPERATION_NOT_SUPPORT', 507);
 define('SWOOLE_ERROR_PROTOCOL_ERROR', 508);
 define('SWOOLE_ERROR_WRONG_OPERATION', 509);
 define('SWOOLE_ERROR_PHP_RUNTIME_NOTICE', 510); // @since 5.1.0
+define('SWOOLE_ERROR_FOR_TEST', 511); // @since 6.0.0-alpha
+define('SWOOLE_ERROR_UNDEFINED_BEHAVIOR', 600); // @since 6.0.0-alpha
+define('SWOOLE_ERROR_NOT_THREAD_SAFETY', 601); // @since 6.0.0-alpha
 define('SWOOLE_ERROR_FILE_NOT_EXIST', 700);
 define('SWOOLE_ERROR_FILE_TOO_LARGE', 701);
 define('SWOOLE_ERROR_FILE_EMPTY', 702);
@@ -292,9 +295,7 @@ define('SWOOLE_IOV_MAX', 1024);
 #ifdef HAVE_RWLOCK
 define('SWOOLE_RWLOCK', 1); # Supported only if read-write lock is included in the POSIX thread (pthread) libraries.
 #endif
-define('SWOOLE_FILELOCK', 2); // No longer supported. Please use mutex lock (\Swoole\Lock::MUTEX) instead.
 define('SWOOLE_MUTEX', 3);
-define('SWOOLE_SEM', 4); // No longer supported. Please use mutex lock (\Swoole\Lock::MUTEX) instead.
 #ifdef HAVE_SPINLOCK
 define('SWOOLE_SPINLOCK', 5); # Supported only if the Spin Locks option is provided in the POSIX thread (pthread) libraries.
 #endif
@@ -739,23 +740,6 @@ define('SWOOLE_TIMER_MAX_MS', 9223372036854775807);
 define('SWOOLE_TIMER_MAX_SEC', (float) (SWOOLE_TIMER_MAX_MS / 1000));
 
 /*
- * Constants in this section are used in class \Swoole\Coroutine\PostgreSQLStatement only. They are available only when
- * Swoole is installed with option "--enable-swoole-pgsql" included.
- */
-/*
- * @since 5.0.0
- */
-define('SW_PGSQL_ASSOC', 1);
-/*
- * @since 5.0.0
- */
-define('SW_PGSQL_NUM', 2);
-/*
- * @since 5.0.0
- */
-define('SW_PGSQL_BOTH', 3);
-
-/*
  * Constants in this section are available only when OpenSSL support is enabled (i.e., when Swoole is installed with
  * configuration option "--enable-openssl" included).
  */
@@ -816,129 +800,3 @@ define('SWOOLE_SSL_TLSv1_3', 64);
 define('SWOOLE_SSL_DTLS', 128);
 #endif
 #endif /* SW_USE_OPENSSL */
-
-/*
- * Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0. Please use PDO_MySQL or mysqli on top of the
- * mysqlnd library, with runtime hook SWOOLE_HOOK_TCP or SWOOLE_HOOK_ALL turned on.
- */
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_UNKNOWN_ERROR', 2000);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_CONNECTION_ERROR', 2002);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_SERVER_GONE_ERROR', 2006);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_OUT_OF_MEMORY', 2008);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_SERVER_LOST', 2013);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_COMMANDS_OUT_OF_SYNC', 2014);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_CANT_FIND_CHARSET', 2019);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_MALFORMED_PACKET', 2027);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_NOT_IMPLEMENTED', 2054);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_NO_PREPARE_STMT', 2030);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_PARAMS_NOT_BOUND', 2031);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_INVALID_PARAMETER_NO', 2034);
-/*
- * @deprecated 5.0.0 Coroutine-version of the MySQL driver is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_MYSQLND_CR_INVALID_BUFFER_USE', 2035);
-
-/*
- * Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0. Please use phpredis (the PHP extension for Redis)
- * instead, with runtime hook SWOOLE_HOOK_TCP or SWOOLE_HOOK_ALL turned on.
- */
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_MODE_MULTI', 0);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_MODE_PIPELINE', 1);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_TYPE_NOT_FOUND', 0);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_TYPE_STRING', 1);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_TYPE_SET', 2);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_TYPE_LIST', 3);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_TYPE_ZSET', 4);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_TYPE_HASH', 5);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_ERR_IO', 1);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_ERR_OTHER', 2);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_ERR_EOF', 3);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_ERR_PROTOCOL', 4);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_ERR_OOM', 5);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_ERR_CLOSED', 6);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_ERR_NOAUTH', 7);
-/*
- * @deprecated 5.0.0 Class \Swoole\Coroutine\Redis is deprecated in Swoole 5.0.0.
- */
-define('SWOOLE_REDIS_ERR_ALLOC', 8);
