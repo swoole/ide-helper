@@ -256,6 +256,7 @@ function swoole_substr_json_decode(string $str, int $offset, int $length, bool $
 /**
  * Triggers a fatal error when the string passed in is "fatal_error"; otherwise nothing happens.
  *
+ * @since 6.0.0
  * @internal This function is for testing purposes only when running unit tests in CI pipelines.
  * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
  */
