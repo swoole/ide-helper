@@ -67,7 +67,7 @@ class Admin
 
     private static string $accessToken = '';
 
-    public static function init(Server $server)
+    public static function init(Server $server): void
     {
         $accepted_process_types = SWOOLE_SERVER_COMMAND_MASTER |
             SWOOLE_SERVER_COMMAND_MANAGER |

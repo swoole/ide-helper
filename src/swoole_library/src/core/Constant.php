@@ -125,6 +125,8 @@ class Constant
 
     public const OPTION_AIO_MAX_IDLE_TIME = 'aio_max_idle_time';
 
+    public const OPTION_IOURING_ENTRIES = 'iouring_entries';
+
     public const OPTION_ENABLE_SIGNALFD = 'enable_signalfd';
 
     public const OPTION_WAIT_SIGNAL = 'wait_signal';
@@ -281,35 +283,15 @@ class Constant
 
     public const OPTION_UPLOAD_TMP_DIR = 'upload_tmp_dir';
 
-    public const OPTION_HOST = 'host';
-
-    public const OPTION_PORT = 'port';
-
-    public const OPTION_SSL = 'ssl';
-
-    public const OPTION_USER = 'user';
-
-    public const OPTION_PASSWORD = 'password';
-
-    public const OPTION_DATABASE = 'database';
-
-    public const OPTION_CHARSET = 'charset';
-
-    public const OPTION_STRICT_TYPE = 'strict_type';
-
-    public const OPTION_FETCH_MODE = 'fetch_mode';
-
     public const OPTION_ENABLE_MESSAGE_BUS = 'enable_message_bus';
 
     public const OPTION_MAX_PACKAGE_SIZE = 'max_package_size';
 
-    public const OPTION_SERIALIZE = 'serialize';
-
-    public const OPTION_RECONNECT = 'reconnect';
-
-    public const OPTION_COMPATIBILITY_MODE = 'compatibility_mode';
+    public const OPTION_SSL = 'ssl';
 
     public const OPTION_CHROOT = 'chroot';
+
+    public const OPTION_USER = 'user';
 
     public const OPTION_GROUP = 'group';
 
@@ -406,6 +388,10 @@ class Constant
     public const OPTION_BUFFER_OUTPUT_SIZE = 'buffer_output_size';
 
     public const OPTION_MESSAGE_QUEUE_KEY = 'message_queue_key';
+
+    public const OPTION_BOOTSTRAP = 'bootstrap';
+
+    public const OPTION_INIT_ARGUMENTS = 'init_arguments';
 
     public const OPTION_BACKLOG = 'backlog';
 

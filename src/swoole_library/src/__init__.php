@@ -87,6 +87,9 @@ return [
         'core/NameResolver/Redis.php',
         'core/NameResolver/Nacos.php',
         'core/NameResolver/Consul.php',
+        # <core for Thread> #
+        'core/Thread/Pool.php',
+        'core/Thread/Runnable.php',
         # <core for functions> #
         'core/Coroutine/functions.php',
         # <ext> #

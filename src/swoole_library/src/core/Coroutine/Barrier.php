@@ -47,7 +47,7 @@ class Barrier
     /**
      * @throws Exception
      */
-    public static function wait(Barrier &$barrier, float $timeout = -1)
+    public static function wait(Barrier &$barrier, float $timeout = -1): void
     {
         if ($barrier->cid !== -1) {
             throw new Exception('The barrier is waiting, cannot wait again.');

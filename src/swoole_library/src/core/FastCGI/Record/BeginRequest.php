@@ -97,7 +97,7 @@ class BeginRequest extends Record
         [
             $self->role,
             $self->flags,
-            $self->reserved1
+            $self->reserved1,
         ] = array_values($payload);
     }
 

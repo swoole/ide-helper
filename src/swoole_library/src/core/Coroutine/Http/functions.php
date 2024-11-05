@@ -22,7 +22,7 @@ function request(
     mixed $data = null,
     ?array $options = null,
     ?array $headers = null,
-    ?array $cookies = null
+    ?array $cookies = null,
 ): ClientProxy {
     $driver = swoole_library_get_option('http_client_driver');
     return match ($driver) {
@@ -41,7 +41,7 @@ function request_with_http_client(
     mixed $data = null,
     ?array $options = null,
     ?array $headers = null,
-    ?array $cookies = null
+    ?array $cookies = null,
 ): ClientProxy {
     $info = parse_url($url);
     if (empty($info['scheme'])) {
@@ -85,7 +85,7 @@ function request_with_curl(
     mixed $data = null,
     ?array $options = null,
     ?array $headers = null,
-    ?array $cookies = null
+    ?array $cookies = null,
 ): ClientProxy {
     $ch = curl_init($url);
     if (empty($ch)) {
@@ -154,7 +154,7 @@ function request_with_stream(
     mixed $data = null,
     ?array $options = null,
     ?array $headers = null,
-    ?array $cookies = null
+    ?array $cookies = null,
 ): ClientProxy {
     $stream_options = [
         'http' => [

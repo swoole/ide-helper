@@ -98,7 +98,7 @@ class Record implements \Stringable
             $self->requestId,
             $self->contentLength,
             $self->paddingLength,
-            $self->reserved
+            $self->reserved,
         ] = array_values($packet);
 
         $payload = substr($binaryData, FastCGI::HEADER_LEN);
@@ -205,7 +205,7 @@ class Record implements \Stringable
         }
         [
             $self->contentData,
-            $self->paddingData
+            $self->paddingData,
         ] = array_values($payload);
     }
 

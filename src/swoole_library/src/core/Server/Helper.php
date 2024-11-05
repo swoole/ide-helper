@@ -111,6 +111,8 @@ class Helper
         'output_buffer_size'          => true,
         'buffer_output_size'          => true,
         'message_queue_key'           => true,
+        'init_arguments'              => true,
+        'bootstrap'                   => true,
     ];
 
     public const PORT_OPTIONS = [
@@ -201,7 +203,7 @@ class Helper
         'admin_server'         => true,
     ];
 
-    public static function checkOptions(array $input_options)
+    public static function checkOptions(array $input_options): void
     {
         $const_options = self::GLOBAL_OPTIONS + self::SERVER_OPTIONS + self::PORT_OPTIONS
             + self::AIO_OPTIONS + self::COROUTINE_OPTIONS + self::HELPER_OPTIONS;
@@ -215,7 +217,7 @@ class Helper
         }
     }
 
-    public static function onBeforeStart(Server $server)
+    public static function onBeforeStart(Server $server): void
     {
         if (!empty($server->setting['admin_server'])) {
             Admin::init($server);
@@ -230,7 +232,7 @@ class Helper
         }
     }
 
-    public static function onWorkerStart(Server $server, int $workerId)
+    public static function onWorkerStart(Server $server, int $workerId): void
     {
         if (!empty($server->setting['stats_file']) and $workerId == 0) {
             $interval_ms = empty($server->setting['stats_timer_interval']) ? self::STATS_TIMER_INTERVAL_TIME : intval($server->setting['stats_timer_interval']);
@@ -254,7 +256,7 @@ class Helper
         }
     }
 
-    public static function onWorkerExit(Server $server, int $workerId)
+    public static function onWorkerExit(Server $server, int $workerId): void
     {
         if ($server->stats_timer) {
             Timer::clear($server->stats_timer);
