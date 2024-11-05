@@ -610,7 +610,7 @@ class Server
      * @return int|false Return the ID of the process (\Swoole\Process::$id) back if succeeds; otherwise return FALSE.
      * @see \Swoole\Process::$id
      */
-    public function addProcess(Process $process): int
+    public function addProcess(Process $process): int|false
     {
     }
 

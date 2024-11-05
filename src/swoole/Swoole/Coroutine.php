@@ -134,6 +134,12 @@ class Coroutine
     {
     }
 
+    /**
+     * Resume the execution of given coroutine.
+     *
+     * @param int $cid Coroutine ID.
+     * @return bool Returns true if successfully resumed, or false on failure.
+     */
     public static function resume(int $cid): bool
     {
     }
@@ -491,9 +497,10 @@ class Coroutine
 
     /**
      * @alias This method is an alias of method \Swoole\Coroutine\System::fread().
+     * @param mixed $handle
      * @see \Swoole\Coroutine\System::fread()
      * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fread() directly.
-     * @param mixed $handle
+     * @removed 6.0.0
      */
     public static function fread($handle, int $length = 0): string|false
     {
@@ -501,9 +508,10 @@ class Coroutine
 
     /**
      * @alias This method is an alias of method \Swoole\Coroutine\System::fgets().
+     * @param mixed $handle
      * @see \Swoole\Coroutine\System::fgets()
      * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fgets() directly.
-     * @param mixed $handle
+     * @removed 6.0.0
      */
     public static function fgets($handle): string|false
     {
@@ -511,9 +519,10 @@ class Coroutine
 
     /**
      * @alias This method is an alias of method \Swoole\Coroutine\System::fwrite().
+     * @param mixed $handle
      * @see \Swoole\Coroutine\System::fwrite()
      * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fwrite() directly.
-     * @param mixed $handle
+     * @removed 6.0.0
      */
     public static function fwrite($handle, string $data, int $length = 0): int|false
     {

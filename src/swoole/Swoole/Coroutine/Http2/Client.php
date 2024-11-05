@@ -43,6 +43,15 @@ class Client
      */
     public bool $ssl = false;
 
+    /**
+     * ID of the last stream that the client has received from the server to shutdown the connection.
+     *
+     * This property is only set when a GOAWAY frame is received from the server.
+     *
+     * @since 6.0.0 This property was accessible as a dynamic property in versions prior to Swoole 6.0.0, but it has been explicitly declared as of Swoole 6.0.0.
+     */
+    public int $serverLastStreamId = 0;
+
     public function __construct(string $host, int $port = 80, bool $open_ssl = false)
     {
     }

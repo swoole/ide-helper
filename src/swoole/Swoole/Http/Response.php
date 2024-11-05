@@ -66,23 +66,64 @@ class Response
     }
 
     /**
+     * Set a cookie.
+     *
+     * This method is exactly the same as method $this->rawcookie() except that the cookie value will be automatically
+     * urlencoded when set.
+     *
      * @alias This method has an alias of \Swoole\Http\Response::setCookie().
+     * @param Cookie|string $name The name of the cookie as a string, or a Cookie object.
+     *                            Only string values were accepted before Swoole 6.0.0.
+     * @param bool $partitioned Specifies whether the cookie should be stored using partitioned storage.
+     *                          Available since Swoole 6.0.0; prior versions did not support partitioned storage for cookies.
      * @see \Swoole\Http\Response::setCookie()
+     * @see \Swoole\Http\Response::rawcookie()
      */
-    public function cookie(string $name, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = ''): bool
+    public function cookie(Cookie|string $name, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = '', bool $partitioned = false): bool
     {
     }
 
     /**
+     * Set a cookie.
+     *
      * @alias Alias of method \Swoole\Http\Response::cookie().
+     * @param Cookie|string $name The name of the cookie as a string, or a Cookie object.
+     *                            Only string values were accepted before Swoole 6.0.0.
+     * @param bool $partitioned Specifies whether the cookie should be stored using partitioned storage.
+     *                          Available since Swoole 6.0.0; prior versions did not support partitioned storage for cookies.
      * @see \Swoole\Http\Response::cookie()
      * @since 4.4.0
      */
-    public function setCookie(string $name, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = ''): bool
+    public function setCookie(Cookie|string $name, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = '', bool $partitioned = false): bool
     {
     }
 
-    public function rawcookie(string $name, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = ''): bool
+    /**
+     * Set a cookie without urlencoding the cookie value.
+     *
+     * This method is exactly the same as method $this->cookie() except that the cookie value will not be automatically
+     * urlencoded when set.
+     *
+     * @alias This method has an alias of \Swoole\Http\Response::setRawCookie().
+     * @param Cookie|string $name The name of the cookie as a string, or a Cookie object.
+     *                            Only string values were accepted before Swoole 6.0.0.
+     * @param bool $partitioned Specifies whether the cookie should be stored using partitioned storage.
+     *                          Available since Swoole 6.0.0; prior versions did not support partitioned storage for cookies.
+     * @see \Swoole\Http\Response::setRawCookie()
+     * @see \Swoole\Http\Response::cookie()
+     */
+    public function rawcookie(Cookie|string $name, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = '', bool $partitioned = false): bool
+    {
+    }
+
+    /**
+     * Set a cookie without urlencoding the cookie value.
+     *
+     * @alias Alias of method \Swoole\Http\Response::rawcookie().
+     * @see \Swoole\Http\Response::rawcookie()
+     * @since 6.0.0
+     */
+    public function setRawCookie(Cookie|string $name_or_object, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = '', bool $partitioned = false): bool
     {
     }
 
