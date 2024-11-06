@@ -6,6 +6,8 @@ namespace Swoole\Connection;
 
 /**
  * @not-serializable Objects of this class cannot be serialized.
+ * @implements \Iterator<int, int>
+ * @implements \ArrayAccess<int, int>
  */
 class Iterator implements \Iterator, \ArrayAccess, \Countable
 {
