@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Swoole\Curl;
 
-use Swoole;
 use Swoole\Constant;
 use Swoole\Coroutine\Http\Client;
+use Swoole\Coroutine\System;
 use Swoole\Curl\Exception as CurlException;
 use Swoole\Http\Status;
 
@@ -717,7 +717,7 @@ final class Handler implements \Stringable
                 }
 
                 if (!filter_var($proxy, FILTER_VALIDATE_IP)) {
-                    $ip = Swoole\Coroutine::gethostbyname($proxy, AF_INET, $this->clientOptions['connect_timeout'] ?? -1);
+                    $ip = System::gethostbyname($proxy, AF_INET, $this->clientOptions['connect_timeout'] ?? -1);
                     if (!$ip) {
                         $this->setError(CURLE_COULDNT_RESOLVE_PROXY, 'Could not resolve proxy: ' . $proxy);
                         return false;

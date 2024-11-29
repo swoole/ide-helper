@@ -14,12 +14,13 @@ namespace Swoole\Thread;
 abstract class Runnable
 {
     protected Atomic $running;
+
     protected int $id;
 
     public function __construct($running, $index)
     {
         $this->running = $running;
-        $this->id = $index;
+        $this->id      = $index;
     }
 
     abstract public function run(array $args): void;
