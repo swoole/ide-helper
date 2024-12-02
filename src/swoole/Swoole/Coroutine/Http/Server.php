@@ -36,7 +36,15 @@ final class Server
     {
     }
 
-    public function handle(string $pattern, callable $callback): void
+    /**
+     * Register a callback function to handle the HTTP request specified by the URL pattern.
+     *
+     * @param string $pattern The URL pattern to match, e.g., "/index".
+     * @param callable $callback The callback function to handle the HTTP request.
+     * @return bool Return true on success. Return false on failure.
+     *              Before Swoole v6.0.0-rc1, it returns void.
+     */
+    public function handle(string $pattern, callable $callback): bool
     {
     }
 

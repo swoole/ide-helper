@@ -5,12 +5,12 @@ declare(strict_types=1);
 /*
  * Swoole version information.
  */
-define('SWOOLE_VERSION', '6.0.0-dev');
+define('SWOOLE_VERSION', '6.0.0-RC1');
 define('SWOOLE_VERSION_ID', 60000);
 define('SWOOLE_MAJOR_VERSION', 6);
 define('SWOOLE_MINOR_VERSION', 0);
 define('SWOOLE_RELEASE_VERSION', 0);
-define('SWOOLE_EXTRA_VERSION', 'dev');
+define('SWOOLE_EXTRA_VERSION', '');
 
 /*
  * If debug logging is enabled or not in Swoole.
@@ -304,6 +304,7 @@ define('SWOOLE_MUTEX', 3);
 #ifdef HAVE_SPINLOCK
 define('SWOOLE_SPINLOCK', 5); # Supported only if the Spin Locks option is provided in the POSIX thread (pthread) libraries.
 #endif
+define('SWOOLE_COROLOCK', 6); # @since v6.0.0-rc1
 
 /*
  * Following SIG_* and PRIO_* constants are set only when PHP extension pcntl (to support Process Control) is not
@@ -563,6 +564,8 @@ if (class_exists(Swoole\Coroutine\Curl\Exception::class)) { // When Swoole is in
  * @see Swoole\Coroutine\Server::start()
  */
 define('SOCKET_ECANCELED', 125);
+
+define('TCP_INFO', 11); // @since v6.0.0-rc1
 
 /*
  * Constants in this section are used in Swoole servers.

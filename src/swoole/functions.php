@@ -102,7 +102,7 @@ function swoole_test_kernel_coroutine(int $count = 100, float $sleep_time = 1.0)
  * @alias This function has an alias function swoole_select().
  * @see swoole_select()
  */
-function swoole_client_select(array &$read_array, array &$write_array, array &$error_array, float $timeout = 0.5): int|false
+function swoole_client_select(array &$read, array &$write, array &$except, float $timeout = 0.5): int|false
 {
 }
 
@@ -110,7 +110,7 @@ function swoole_client_select(array &$read_array, array &$write_array, array &$e
  * @alias This function is an alias of function swoole_client_select().
  * @see swoole_client_select()
  */
-function swoole_select(array &$read_array, array &$write_array, array &$error_array, float $timeout = 0.5): int|false
+function swoole_select(array &$read, array &$write, array &$except, float $timeout = 0.5): int|false
 {
 }
 
