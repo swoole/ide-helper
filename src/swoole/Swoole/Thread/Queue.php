@@ -8,6 +8,10 @@ use Countable;
 
 class Queue implements Countable
 {
+    public const NOTIFY_NONE = 0;
+    public const NOTIFY_ONE = 1;
+    public const NOTIFY_ALL = 2;
+
     public function __construct()
     {
     }
