@@ -519,7 +519,7 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
      */
     public function natcasesort(): self
     {
-        if (natcasesort($this->array) !== true) {
+        if (natcasesort($this->array) !== true) { // @phpstan-ignore notIdentical.alwaysFalse
             throw new \RuntimeException('natcasesort() failed');
         }
         return $this;
@@ -530,7 +530,7 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
      */
     public function natsort(): self
     {
-        if (natsort($this->array) !== true) {
+        if (natsort($this->array) !== true) { // @phpstan-ignore notIdentical.alwaysFalse
             throw new \RuntimeException('natsort() failed');
         }
         return $this;
@@ -541,7 +541,7 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
      */
     public function rsort(int $sort_flags = SORT_REGULAR): self
     {
-        if (rsort($this->array, $sort_flags) !== true) {
+        if (rsort($this->array, $sort_flags) !== true) { // @phpstan-ignore notIdentical.alwaysFalse
             throw new \RuntimeException('rsort() failed');
         }
         return $this;

@@ -15,6 +15,9 @@ use PhpParser\Error;
 use PhpParser\ParserFactory;
 use Swoole\Thread;
 
+/**
+ * @since 6.0.0-beta
+ */
 class Pool
 {
     private array $threads = [];

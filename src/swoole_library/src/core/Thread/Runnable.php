@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Swoole\Thread;
 
+/**
+ * @since 6.0.0-beta
+ */
 abstract class Runnable
 {
     protected Atomic $running;

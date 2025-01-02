@@ -107,11 +107,11 @@ class Server
             return false;
         }
 
-        while ($this->running) {
-            /** @var Socket $conn */
+        while ($this->running) { // @phpstan-ignore while.alwaysTrue
             $conn = null;
+            /** @var Socket $conn */
             $conn = $socket->accept();
-            if ($conn) {
+            if ($conn) { // @phpstan-ignore if.alwaysTrue
                 $conn->setProtocol($this->setting);
                 if (!empty($this->setting[Constant::OPTION_OPEN_SSL])) {
                     $fn = static function ($fn, $connection) {
@@ -146,6 +146,6 @@ class Server
             }
         }
 
-        return true;
+        return true; // @phpstan-ignore deadCode.unreachable
     }
 }

@@ -53,9 +53,9 @@ class Params extends Record
      * {@inheritdoc}
      * @param static $self
      */
-    protected static function unpackPayload($self, string $binaryData): void
+    protected static function unpackPayload(Record $self, string $binaryData): void
     {
-        assert($self instanceof self);
+        assert($self instanceof self); // @phpstan-ignore function.alreadyNarrowedType,instanceof.alwaysTrue
         $currentOffset = 0;
         do {
             /** @phpstan-var false|array{nameLengthHigh: int} */

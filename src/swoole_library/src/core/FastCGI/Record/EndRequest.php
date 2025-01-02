@@ -86,9 +86,9 @@ class EndRequest extends Record
      * {@inheritdoc}
      * @param static $self
      */
-    protected static function unpackPayload($self, string $binaryData): void
+    protected static function unpackPayload(Record $self, string $binaryData): void
     {
-        assert($self instanceof self);
+        assert($self instanceof self); // @phpstan-ignore function.alreadyNarrowedType,instanceof.alwaysTrue
 
         /** @phpstan-var false|array{appStatus: int, protocolStatus: int, reserved: string} */
         $payload = unpack('NappStatus/CprotocolStatus/a3reserved', $binaryData);

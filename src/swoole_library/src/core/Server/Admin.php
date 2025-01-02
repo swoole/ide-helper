@@ -808,9 +808,6 @@ class Admin
             }
 
             if ($param->isOptional() && !$param->isVariadic()) {
-                if (!$result['user_defined'] && PHP_VERSION_ID < 80000) {
-                    continue;
-                }
                 $optional = '?';
                 if ($param->isDefaultValueAvailable()) {
                     $value = $param->getDefaultValue();

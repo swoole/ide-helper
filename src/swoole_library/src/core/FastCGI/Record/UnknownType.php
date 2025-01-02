@@ -54,9 +54,9 @@ class UnknownType extends Record
      * {@inheritdoc}
      * @param static $self
      */
-    public static function unpackPayload($self, string $binaryData): void
+    public static function unpackPayload(Record $self, string $binaryData): void
     {
-        assert($self instanceof self);
+        assert($self instanceof self); // @phpstan-ignore function.alreadyNarrowedType,instanceof.alwaysTrue
 
         /** @phpstan-var false|array{type: int, reserved: string} */
         $payload = unpack('Ctype/a7reserved', $binaryData);

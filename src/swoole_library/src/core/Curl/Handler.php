@@ -453,7 +453,7 @@ final class Handler implements \Stringable
                         $resolve = substr($resolve, 1);
                     }
                     $tmpResolve = explode(':', $resolve, 3);
-                    $host       = $tmpResolve[0] ?? '';
+                    $host       = $tmpResolve[0];
                     $port       = $tmpResolve[1] ?? 0;
                     $ip         = $tmpResolve[2] ?? '';
                     if ($flag === '-') {
@@ -483,10 +483,6 @@ final class Handler implements \Stringable
             case CURLOPT_SSLVERSION:
             case CURLOPT_NOSIGNAL:
             case CURLOPT_FRESH_CONNECT:
-                /*
-                 * From PHP 5.1.3, this option has no effect: the raw output will always be returned when CURLOPT_RETURNTRANSFER is used.
-                 */
-            case CURLOPT_BINARYTRANSFER: /* TODO */
             case CURLOPT_DNS_USE_GLOBAL_CACHE:
             case CURLOPT_DNS_CACHE_TIMEOUT:
             case CURLOPT_STDERR:
@@ -909,7 +905,7 @@ final class Handler implements \Stringable
             }
         }
 
-        if ($this->cookieJar && $this->cookieJar !== '') {
+        if (!empty($this->cookieJar)) {
             if ($this->cookieJar === '-') {
                 foreach ((array) $client->set_cookie_headers as $cookie) {
                     echo $cookie . PHP_EOL;

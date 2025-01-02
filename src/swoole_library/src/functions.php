@@ -9,8 +9,8 @@
 
 declare(strict_types=1);
 
-if (PHP_VERSION_ID < 70200) {
-    throw new RuntimeException('require PHP version 7.2 or later');
+if (PHP_VERSION_ID < 80100) { // @phpstan-ignore smaller.alwaysFalse
+    throw new RuntimeException('require PHP version 8.1 or later');
 }
 
 if (SWOOLE_USE_SHORTNAME) { // @phpstan-ignore if.alwaysTrue
