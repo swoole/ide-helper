@@ -538,13 +538,29 @@ define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192); // 2^13
 define('SWOOLE_HOOK_SOCKETS', 16384); // 2^14
 define('SWOOLE_HOOK_STDIO', 32768); // 2^15
 /*
- * Runtime hook flag SWOOLE_HOOK_PDO_PGSQL makes the PDO_PGSQL driver coroutine-friendly. This flag is available only when Swoole is installed with option "--enable-swoole-pgsql" included.
+ * Runtime hook flag SWOOLE_HOOK_PDO_PGSQL makes the PDO_PGSQL driver coroutine-friendly. This flag is available only
+ * when Swoole is installed with option "--enable-swoole-pgsql" included.
  *
  * @since 5.1.0
  */
 define('SWOOLE_HOOK_PDO_PGSQL', 65536); // 2^16
 /*
- * Runtime hook flag SWOOLE_HOOK_PDO_SQLITE makes the PDO_SQLITE driver coroutine-friendly. This flag is available only when Swoole is installed with option "--enable-swoole-sqlite" included.
+ * Runtime hook flag SWOOLE_HOOK_PDO_ODBC makes the PDO_ODBC driver coroutine-friendly. This flag is available only when
+ * Swoole is installed with option "--with-swoole-odbc" included.
+ *
+ * @since 5.1.0
+ */
+define('SWOOLE_HOOK_PDO_ODBC', 131072); // 2^17
+/*
+ * Runtime hook flag SWOOLE_HOOK_PDO_ORACLE makes the PDO_OCI driver coroutine-friendly. This flag is available only
+ * when Swoole is installed with option "--with-swoole-oracle" included.
+ *
+ * @since 5.1.0
+ */
+define('SWOOLE_HOOK_PDO_ORACLE', 262144); // 2^18
+/*
+ * Runtime hook flag SWOOLE_HOOK_PDO_SQLITE makes the PDO_SQLITE driver coroutine-friendly. This flag is available only
+ * when Swoole is installed with option "--enable-swoole-sqlite" included.
  *
  * @since 5.1.0
  */
