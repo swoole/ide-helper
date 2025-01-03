@@ -17,7 +17,8 @@ namespace Swoole\Atomic;
  * This class uses signed 64-bit integers to store the value. To store the value using unsigned 32-bit integers, use
  * class \Swoole\Atomic instead.
  *
- * @see \Swoole\Atomic
+ * @see \Swoole\Thread\Atomic\Long Use this instead when PHP is compiled with Zend Thread Safety (ZTS) enabled.
+ * @see \Swoole\Atomic Use this instead to store the value using unsigned 32-bit integers instead of signed 64-bit integers.
  * @not-serializable Objects of this class cannot be serialized.
  */
 class Long

@@ -29,6 +29,8 @@ class Process
 
     /**
      * Process ID. This is to uniquely identify the process in the OS.
+     *
+     * @readonly
      */
     public int $pid;
 
@@ -38,11 +40,21 @@ class Process
      * In a Swoole program (e.g., a Swoole-based server), there are different types of processes, including event worker
      * processes, task worker processes, and user worker processes. This ID is to uniquely identify the process in the
      * running Swoole program.
+     *
+     * @readonly
      */
     public int $id;
 
+    /**
+     * @var callable The callback function of the process.
+     */
     private $callback;
 
+    /**
+     * The constructor.
+     *
+     * @param callable $callback The callback function of the process.
+     */
     public function __construct(callable $callback, bool $redirect_stdin_and_stdout = false, int $pipe_type = 2, bool $enable_coroutine = false)
     {
     }

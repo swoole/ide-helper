@@ -17,7 +17,8 @@ namespace Swoole;
  * This class uses unsigned 32-bit integers to store the value. To store the value using signed 64-bit integers, use class
  * \Swoole\Atomic\Long instead. Note that class \Swoole\Atomic\Long doesn't have method wait() nor wakeup() implemented.
  *
- * @see \Swoole\Atomic\Long
+ * @see \Swoole\Thread\Atomic Use this instead when PHP is compiled with Zend Thread Safety (ZTS) enabled.
+ * @see \Swoole\Atomic\Long Use this instead to store the value using signed 64-bit integers instead of unsigned 32-bit integers.
  * @not-serializable Objects of this class cannot be serialized.
  */
 class Atomic

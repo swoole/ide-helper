@@ -9,20 +9,6 @@ namespace Swoole\Async;
  */
 class Client extends \Swoole\Client
 {
-    public const MSG_OOB = 1;
-
-    public const MSG_PEEK = 2;
-
-    public const MSG_DONTWAIT = 64;
-
-    public const MSG_WAITALL = 256;
-
-    public const SHUT_RDWR = 2;
-
-    public const SHUT_RD = 0;
-
-    public const SHUT_WR = 1;
-
     private $onConnect;
 
     private $onError;
@@ -37,15 +23,10 @@ class Client extends \Swoole\Client
 
     private $onSSLReady;
 
+    /**
+     * @param int $type Socket type. Please check comments on property \Swoole\Client::$type for more details.
+     */
     public function __construct(int $type)
-    {
-    }
-
-    public function __destruct()
-    {
-    }
-
-    public function connect(string $host, int $port = 0, float $timeout = 0.5, int $sock_flag = 0): bool
     {
     }
 
@@ -65,15 +46,17 @@ class Client extends \Swoole\Client
     {
     }
 
+    /**
+     * Enable SSL encryption on the connection.
+     *
+     * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
+     * option "--enable-openssl" included).
+     *
+     * {@inheritDoc}
+     * @param callable|null $onSslReady Callback function to be executed when SSL handshake is successful.
+     * @return bool TRUE if SSL handshake is successful; otherwise FALSE.
+     */
     public function enableSSL(?callable $onSslReady = null): bool
-    {
-    }
-
-    public function isConnected(): bool
-    {
-    }
-
-    public function close(bool $force = false): bool
     {
     }
 

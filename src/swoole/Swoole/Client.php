@@ -115,12 +115,17 @@ class Client
     }
 
     /**
+     * Enable SSL encryption on the connection.
+     *
      * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
      * option "--enable-openssl" included).
      *
+     * @param callable|null $onSslReady Callback function to be executed when SSL handshake is successful.
+     *                                  Added in v6.0.0-rc1 for child class Swoole\Async\Client only. It has no effect
+     *                                  on this class.
      * @return bool TRUE if SSL handshake is successful; otherwise FALSE.
      */
-    public function enableSSL(): bool
+    public function enableSSL(?callable $onSslReady = null): bool
     {
     }
 

@@ -14,6 +14,12 @@ namespace Swoole;
  */
 final class Thread
 {
+    /**
+     * The number of concurrent threads supported by the hardware.
+     *
+     * Note that value of this constant is system- and implementation- specific, and may not be exact, but just an
+     * approximation. The actual value on your machine could be smaller or (much) larger than the number hardcoded here.
+     */
     public const HARDWARE_CONCURRENCY = 12;
 
     public const API_NAME = 'POSIX Threads';
@@ -71,6 +77,13 @@ final class Thread
     {
     }
 
+    /**
+     * Set the name of the thread.
+     *
+     * @param string $name The name of the thread.
+     * @return bool TRUE on success, or FALSE on failure.
+     * @see https://linux.die.net/man/3/pthread_setname_np
+     */
     public static function setName(string $name): bool
     {
     }
@@ -102,10 +115,24 @@ final class Thread
     {
     }
 
+    /**
+     * set scheduling policy and priority of a thread.
+     *
+     * @return bool Returns true on success or false on failure.
+     * @see \Swoole\Swoole::getPriority()
+     * @see https://linux.die.net/man/3/pthread_setschedparam
+     */
     public static function setPriority(int $priority, int $policy = 0): bool
     {
     }
 
+    /**
+     * Get scheduling policy and parameters of a thread.
+     *
+     * @return array{policy: int, priority: int} An array containing the scheduling policy and priority of the thread.
+     * @see \Swoole\Swoole::setPriority()
+     * @see https://linux.die.net/man/3/pthread_getschedparam
+     */
     public static function getPriority(): array
     {
     }

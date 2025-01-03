@@ -30,6 +30,7 @@ namespace Swoole;
  *
  * If you think you need to use locks with coroutines, you can probably use channels instead.
  *
+ * @see \Swoole\Thread\Lock Use this instead when PHP is compiled with Zend Thread Safety (ZTS) enabled.
  * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/deadlocks/swoole-lock.php
  * @not-serializable Objects of this class cannot be serialized.
  */
