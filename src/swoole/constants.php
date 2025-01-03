@@ -570,9 +570,14 @@ define('TCP_INFO', 11); // @since v6.0.0-rc1
 /*
  * Constants in this section are used in Swoole servers.
  */
+
 // Server modes. For details, please check documentation on property \Swoole\Server::$mode.
 define('SWOOLE_BASE', 1);
 define('SWOOLE_PROCESS', 2);
+// Constant SWOOLE_THREAD is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is
+// installed with the "--enable-swoole-thread" configuration option.
+define('SWOOLE_THREAD', 3); // @since v6.0.0
+
 // Types of processes in Swoole server that handle commands.
 define('SWOOLE_SERVER_COMMAND_MASTER', 2); // 2^1
 define('SWOOLE_SERVER_COMMAND_REACTOR_THREAD', 4); // 2^2

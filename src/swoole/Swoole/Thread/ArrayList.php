@@ -4,11 +4,18 @@ declare(strict_types=1);
 
 namespace Swoole\Thread;
 
-use ArrayAccess;
-use Countable;
-
-class ArrayList implements ArrayAccess, Countable
+/**
+ * Class \Swoole\Thread\ArrayList.
+ *
+ * This class is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is installed with
+ * the "--enable-swoole-thread" configuration option.
+ *
+ * @since 6.0.0
+ */
+final class ArrayList implements \ArrayAccess, \Countable
 {
+    public int $id = 0;
+
     public function __construct(?array $array = null)
     {
     }
@@ -33,10 +40,6 @@ class ArrayList implements ArrayAccess, Countable
     {
     }
 
-    public function count(): int
-    {
-    }
-
     public function incr(mixed $key, mixed $value = 1): mixed
     {
     }
@@ -46,6 +49,10 @@ class ArrayList implements ArrayAccess, Countable
     }
 
     public function clean(): void
+    {
+    }
+
+    public function count(): int
     {
     }
 

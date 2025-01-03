@@ -4,9 +4,40 @@ declare(strict_types=1);
 
 namespace Swoole;
 
-class Thread
+/**
+ * Class \Swoole\Thread.
+ *
+ * This class is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is installed with
+ * the "--enable-swoole-thread" configuration option.
+ *
+ * @since 6.0.0
+ */
+final class Thread
 {
-    public int $id;
+    public const HARDWARE_CONCURRENCY = 12;
+
+    public const API_NAME = 'POSIX Threads';
+
+    public const SCHED_OTHER = 0;
+
+    public const SCHED_FIFO = 1;
+
+    public const SCHED_RR = 2;
+
+    public const SCHED_BATCH = 3;
+
+    public const SCHED_ISO = 4;
+
+    public const SCHED_IDLE = 5;
+
+    public const SCHED_DEADLINE = 6;
+
+    /**
+     * Thread ID. Default is 0.
+     *
+     * @readonly
+     */
+    public int $id = 0;
 
     public function __construct(string $script_file, mixed ...$args)
     {
@@ -52,15 +83,15 @@ class Thread
     {
     }
 
-    public function setPriority(int $priority, int $policy = 0): bool
+    public static function setPriority(int $priority, int $policy = 0): bool
     {
     }
 
-    public function getPriority(): array
+    public static function getPriority(): array
     {
     }
 
-    public function getNativeId(): int
+    public static function getNativeId(): int
     {
     }
 }

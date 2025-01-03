@@ -4,9 +4,25 @@ declare(strict_types=1);
 
 namespace Swoole\Thread;
 
-class Lock
+/**
+ * Class \Swoole\Thread\Lock.
+ *
+ * This class is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is installed with
+ * the "--enable-swoole-thread" configuration option.
+ *
+ * @since 6.0.0
+ */
+final class Lock
 {
-    public function __construct(int $type = SWOOLE_MUTEX)
+    public const RWLOCK = 1;
+
+    public const MUTEX = 3;
+
+    public const SPINLOCK = 5;
+
+    public $errCode = 0;
+
+    public function __construct(int $type = 3)
     {
     }
 
@@ -18,7 +34,7 @@ class Lock
     {
     }
 
-    public function locakwait(float $timeout = 1.0): bool
+    public function lockwait(float $timeout = 1): bool
     {
     }
 
@@ -38,4 +54,3 @@ class Lock
     {
     }
 }
-

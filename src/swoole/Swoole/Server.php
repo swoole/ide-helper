@@ -96,7 +96,20 @@ class Server
      */
     public bool $ssl = false;
 
-    public $mode = 0;
+    /**
+     * Server mode. Must be either SWOOLE_BASE, SWOOLE_PROCESS, or SWOOLE_THREAD.
+     *
+     * Starting from Swoole 5.0.0, default server mode has been changed from SWOOLE_PROCESS to SWOOLE_BASE.
+     *
+     * Mode SWOOLE_THREAD is supported since 6.0.0. It is available only when PHP is compiled with Zend Thread Safety
+     * (ZTS) enabled and Swoole is installed with the "--enable-swoole-thread" configuration option.
+     *
+     * @see SWOOLE_BASE
+     * @see SWOOLE_PROCESS
+     * @see SWOOLE_THREAD
+     * @readonly
+     */
+    public int $mode;
 
     public $ports;
 
@@ -122,6 +135,14 @@ class Server
      * @since 4.8.0
      */
     public AdminServer $admin_server;
+
+    /**
+     * This property is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is
+     * installed with the "--enable-swoole-thread" configuration option.
+     *
+     * @since 6.0.0
+     */
+    public string $bootstrap = '';
 
     /**
      * @var callable
@@ -201,8 +222,7 @@ class Server
      *
      * @param string $host IP address of the network socket, or path of the UNIX domain socket bound to the primary port. For details, please check property \Swoole\Server::$host.
      * @param int $port The primary port of the server. This parameter is ignored if $sock_type is SWOOLE_SOCK_UNIX_STREAM or SWOOLE_SOCK_UNIX_DGRAM.
-     * @param int $mode Must be either SWOOLE_BASE or SWOOLE_PROCESS. Starting from Swoole 5.0.0, default server mode has been
-     *                  changed from SWOOLE_PROCESS to SWOOLE_BASE.
+     * @param int $mode Server mode. Check property \Swoole\Server::$mode for details.
      * @param int $sock_type Type of the socket. For details, please check property \Swoole\Server::$type.
      */
     public function __construct(string $host = '0.0.0.0', int $port = 0, int $mode = SWOOLE_BASE, int $sock_type = SWOOLE_SOCK_TCP)

@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Swoole\Thread;
 
-use ArrayAccess;
-use Countable;
-
-class Map implements ArrayAccess, Countable
+/**
+ * Class \Swoole\Thread\Map.
+ *
+ * This class is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is installed with
+ * the "--enable-swoole-thread" configuration option.
+ *
+ * @since 6.0.0
+ */
+final class Map implements \ArrayAccess, \Countable
 {
     public function __construct(?array $array = null)
     {
@@ -37,14 +42,6 @@ class Map implements ArrayAccess, Countable
     {
     }
 
-    public function keys(): array
-    {
-    }
-
-    public function values(): array
-    {
-    }
-
     public function incr(mixed $key, mixed $value = 1): mixed
     {
     }
@@ -65,8 +62,15 @@ class Map implements ArrayAccess, Countable
     {
     }
 
+    public function keys(): array
+    {
+    }
+
+    public function values(): array
+    {
+    }
+
     public function toArray(): array
     {
     }
 }
-
