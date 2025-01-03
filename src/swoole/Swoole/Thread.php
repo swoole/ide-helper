@@ -75,10 +75,29 @@ final class Thread
     {
     }
 
+    /**
+     * Set CPU affinity of a thread.
+     *
+     * This method is available only on some operating systems that support CPU affinity. It's not available on Windows
+     * or macOS.
+     *
+     * @param array<int> $cpu_settings
+     * @return bool TRUE on success, or FALSE on failure.
+     * @see https://linux.die.net/man/3/pthread_setaffinity_np
+     */
     public static function setAffinity(array $cpu_settings): bool
     {
     }
 
+    /**
+     * Get CPU affinity of a thread.
+     *
+     * This method is available only on some operating systems that support CPU affinity. It's not available on Windows
+     * or macOS.
+     *
+     * @return array<int> An array of integers representing the affinity mask of current thread.
+     * @see https://linux.die.net/man/3/pthread_getaffinity_np
+     */
     public static function getAffinity(): array
     {
     }
