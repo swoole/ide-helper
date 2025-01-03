@@ -21,6 +21,28 @@ class Pool
     public int $master_pid = -1;
 
     /**
+     * Process ID of the current worker process.
+     *
+     * This property is set right before the "onWorkerStart" callback function of the pool is called when starting the
+     * worker process. It remains the same throughout the life cycle of the worker process.
+     *
+     * @since 6.0.0
+     * @readonly
+     */
+    public int $workerPid = -1;
+
+    /**
+     * ID of the current worker process.
+     *
+     * This property is set right before the "onWorkerStart" callback function of the pool is called when starting the
+     * worker process. It remains the same throughout the life cycle of the worker process.
+     *
+     * @since 6.0.0
+     * @readonly
+     */
+    public int $workerId = -1;
+
+    /**
      * List of the worker processes.
      *
      * A worker process is added to this list only when the process is return from an explicit method call to \Swoole\Process\Pool::getProcess(). Thus, this property may not have all the worker processes included.
@@ -30,6 +52,26 @@ class Pool
      * @since 4.4.0
      */
     public ?array $workers;
+
+    /**
+     * If current worker process is considered as running or not.
+     *
+     * This property is set to TRUE right before the "onWorkerStart" callback function of the pool is called when
+     * starting the worker process. It will be set to FALSE before the "onWorkerStop", "onWorkerExit", or "onShutdown"
+     * callback function is called.
+     *
+     * @since 6.0.0
+     * @readonly
+     */
+    public bool $workerRunning = true;
+
+    /**
+     * If current (master or worker) process is considered as running or not.
+     *
+     * @since 6.0.0
+     * @readonly
+     */
+    public bool $running = true;
 
     public function __construct(int $worker_num, int $ipc_type = SWOOLE_IPC_NONE, int $msgqueue_key = 0, bool $enable_coroutine = false)
     {

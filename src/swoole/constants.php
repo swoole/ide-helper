@@ -5,7 +5,7 @@ declare(strict_types=1);
 /*
  * Swoole version information.
  */
-define('SWOOLE_VERSION', '6.0.0-RC1');
+define('SWOOLE_VERSION', '6.0.0');
 define('SWOOLE_VERSION_ID', 60000);
 define('SWOOLE_MAJOR_VERSION', 6);
 define('SWOOLE_MINOR_VERSION', 0);
@@ -537,7 +537,18 @@ define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192); // 2^13
  */
 define('SWOOLE_HOOK_SOCKETS', 16384); // 2^14
 define('SWOOLE_HOOK_STDIO', 32768); // 2^15
-define('SWOOLE_HOOK_PDO_PGSQL', 65536); // 2^16; @since 5.1.0
+/*
+ * Runtime hook flag SWOOLE_HOOK_PDO_PGSQL makes the PDO_PGSQL driver coroutine-friendly. This flag is available only when Swoole is installed with option "--enable-swoole-pgsql" included.
+ *
+ * @since 5.1.0
+ */
+define('SWOOLE_HOOK_PDO_PGSQL', 65536); // 2^16
+/*
+ * Runtime hook flag SWOOLE_HOOK_PDO_SQLITE makes the PDO_SQLITE driver coroutine-friendly. This flag is available only when Swoole is installed with option "--enable-swoole-sqlite" included.
+ *
+ * @since 5.1.0
+ */
+define('SWOOLE_HOOK_PDO_SQLITE', 524288); // 2^19
 /*
  * There are two different hook flags for PHP's cURL functions:
  *   - SWOOLE_HOOK_CURL: Implemented by replacing PHP's cURL functions internally with swoole_curl_*() functions from Swoole Library.

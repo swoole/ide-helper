@@ -107,12 +107,12 @@ class System
      * @param int|array<int> $signals An integer or an array of integers representing the signal number(s).
      *                                Before Swoole v6.0.0-rc1, only integer is supported.
      * @param float $timeout The timeout value in seconds. Minimum value is 0.001. -1 means no timeout.
-     * @return bool Returns true on success. Returns false on failure.
+     * @return int|false Returns the signal number received on success, or false on failure.
      * @alias This method has an alias of \Swoole\Coroutine::waitSignal().
      * @see \Swoole\Coroutine::waitSignal()
      * @since 4.5.0
      */
-    public static function waitSignal(int|array $signals, float $timeout = -1): bool
+    public static function waitSignal(int|array $signals, float $timeout = -1): int|false
     {
     }
 
