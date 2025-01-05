@@ -55,7 +55,7 @@ class Process
      *
      * @param callable $callback The callback function of the process.
      */
-    public function __construct(callable $callback, bool $redirect_stdin_and_stdout = false, int $pipe_type = 2, bool $enable_coroutine = false)
+    public function __construct(callable $callback, bool $redirect_stdin_and_stdout = false, int $pipe_type = SOCK_DGRAM, bool $enable_coroutine = false)
     {
     }
 
