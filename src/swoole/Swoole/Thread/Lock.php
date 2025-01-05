@@ -24,7 +24,7 @@ final class Lock
 
     public const SPINLOCK = SWOOLE_SPINLOCK;
 
-    public $errCode = 0;
+    public int $errCode = 0;
 
     public function __construct(int $type = self::MUTEX)
     {

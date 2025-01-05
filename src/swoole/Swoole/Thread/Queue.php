@@ -22,7 +22,7 @@ final class Queue implements \Countable
     public const NOTIFY_ONE = 1;
 
     /**
-     * Unblocks all threads currently waiting for this queue.
+     * Unblock all threads currently waiting for this queue.
      *
      * This constant is used by method Queue::push() only.
      */
@@ -32,7 +32,8 @@ final class Queue implements \Countable
      * Push a value into the queue.
      *
      * @param mixed $value The value to push into the queue.
-     * @param int $notify_which How to unblock threads that are waiting on the queue. Either NOTIFY_ONE, NOTIFY_ALL, or 0 (not to notify anyone).
+     * @param int $notify_which How to unblock threads that are waiting on the queue. Either Queue::NOTIFY_ONE,
+     *                          Queue::NOTIFY_ALL, or 0 (not to notify anyone).
      */
     public function push(mixed $value, int $notify_which = 0): void
     {
