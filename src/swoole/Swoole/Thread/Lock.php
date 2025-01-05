@@ -30,10 +30,6 @@ final class Lock
     {
     }
 
-    public function __destruct()
-    {
-    }
-
     public function lock(): bool
     {
     }
