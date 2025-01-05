@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Swoole\Async;
 
 /**
- * @since 6.0.0-rc1
+ * @since 6.0.0
  */
 class Client extends \Swoole\Client
 {
