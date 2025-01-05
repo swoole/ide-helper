@@ -18,19 +18,15 @@ namespace Swoole\Thread;
  */
 final class Lock
 {
-    public const RWLOCK = 1;
+    public const RWLOCK = SWOOLE_RWLOCK;
 
-    public const MUTEX = 3;
+    public const MUTEX = SWOOLE_MUTEX;
 
-    public const SPINLOCK = 5;
+    public const SPINLOCK = SWOOLE_SPINLOCK;
 
-    public $errCode = 0;
+    public int $errCode = 0;
 
-    public function __construct(int $type = 3)
-    {
-    }
-
-    public function __destruct()
+    public function __construct(int $type = self::MUTEX)
     {
     }
 

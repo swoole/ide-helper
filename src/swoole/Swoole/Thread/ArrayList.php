@@ -20,18 +20,38 @@ final class ArrayList implements \ArrayAccess, \Countable
     {
     }
 
+    /**
+     * @see \ArrayAccess::offsetGet()
+     * @see https://www.php.net/manual/en/arrayaccess.offsetget.php
+     * {@inheritDoc}
+     */
     public function offsetGet(mixed $key): mixed
     {
     }
 
+    /**
+     * @see \ArrayAccess::offsetExists()
+     * @see https://www.php.net/manual/en/arrayaccess.offsetexists.php
+     * {@inheritDoc}
+     */
     public function offsetExists(mixed $key): bool
     {
     }
 
+    /**
+     * @see \ArrayAccess::offsetSet()
+     * @see https://www.php.net/manual/en/arrayaccess.offsetset.php
+     * {@inheritDoc}
+     */
     public function offsetSet(mixed $key, mixed $value): void
     {
     }
 
+    /**
+     * @see \ArrayAccess::offsetUnset()
+     * @see https://www.php.net/manual/en/arrayaccess.offsetunset.php
+     * {@inheritDoc}
+     */
     public function offsetUnset(mixed $key): void
     {
     }
@@ -52,6 +72,11 @@ final class ArrayList implements \ArrayAccess, \Countable
     {
     }
 
+    /**
+     * @see \Countable::count()
+     * @see https://www.php.net/manual/en/countable.count.php
+     * {@inheritDoc}
+     */
     public function count(): int
     {
     }
