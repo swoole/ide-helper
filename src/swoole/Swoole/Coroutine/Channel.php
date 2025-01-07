@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Swoole\Coroutine;
 
 /**
+ * @template T
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has two aliases: \chan and \Co\Channel (when directive "swoole.use_shortname" is not explicitly turned off).
  * @see \chan
@@ -45,7 +46,7 @@ class Channel
     /**
      * Push an element into the channel.
      *
-     * @param mixed $data The element to be pushed into the channel. It's allowed to be any type of value. However, to avoid any confusion, it's recommended not to use empty values like 0, 0.0, false, ' ', null, etc.
+     * @param T $data The element to be pushed into the channel. It's allowed to be any type of value. However, to avoid any confusion, it's recommended not to use empty values like 0, 0.0, false, ' ', null, etc.
      * @param float $timeout > 0 means waiting for the specified number of seconds. other means no waiting.
      * @return bool TRUE on success. If failed, return FALSE and set the error code ($this->errCode) with a non-zero value.
      */
@@ -59,7 +60,7 @@ class Channel
      * This pop operation works in a FIFO (first-in-first-out) manner, since elements in the channel are stored in a queue but not a stack.
      *
      * @param float $timeout > 0 means waiting for the specified number of seconds. other means no waiting.
-     * @return mixed Remove an element from the front end of the channel, and return the element back. If failed, return FALSE and set the error code ($this->errCode) with a non-zero value.
+     * @return T|false Remove an element from the front end of the channel, and return the element back. If failed, return FALSE and set the error code ($this->errCode) with a non-zero value.
      */
     public function pop(float $timeout = -1): mixed
     {
