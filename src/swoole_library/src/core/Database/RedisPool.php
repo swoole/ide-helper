@@ -15,7 +15,7 @@ use Redis;
 use Swoole\ConnectionPool;
 
 /**
- * @method \Redis get()
+ * @method \Redis get(float $timeout = -1)
  * @method void put(Redis $connection)
  */
 class RedisPool extends ConnectionPool
