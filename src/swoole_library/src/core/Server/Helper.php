@@ -181,6 +181,9 @@ class Helper
         'dns_lookup_random'      => true,
         'use_async_resolver'     => true,
         'enable_coroutine'       => true,
+        'iouring_entries'        => true,
+        'iouring_workers'        => true,
+        'iouring_flag'           => true,
     ];
 
     public const COROUTINE_OPTIONS = [

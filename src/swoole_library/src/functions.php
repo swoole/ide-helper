@@ -150,7 +150,7 @@ function swoole_container_cpu_num()
         $cpu_max  = file_get_contents($cpu_max);
         $fields   = explode($cpu_max, ' ');
         $quota_us = $fields[0];
-        if ($quota_us == 'max') {
+        if ($quota_us === 'max') { // @phpstan-ignore identical.alwaysFalse
             return swoole_cpu_num();
         }
         $period_us = $fields[1] ?? 100000;
