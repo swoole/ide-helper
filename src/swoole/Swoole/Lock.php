@@ -14,8 +14,9 @@ namespace Swoole;
  * cause memory leaks since memory usage could keep increasing as new requests keep coming in. In general, it's not
  * recommended to keep creating/destroying locks since this could cause memory leaks.
  *
- * Locks should not be used in coroutines, especially when there are coroutine switching between method calls to
- * \Swoole\Lock::lock() and \Swoole\Lock::unlock(). For example, the following example will cause deadlock:
+ * This Lock class is not coroutine-friendly. It should not be used across different coroutines, especially when there
+ * are coroutine switching between method calls to \Swoole\Lock::lock() and \Swoole\Lock::unlock(). For example, the
+ * following example will cause deadlock:
  *
  *   Swoole\Coroutine\run(function () {
  *       $lock = new Swoole\Lock();
@@ -28,9 +29,12 @@ namespace Swoole;
  *       }
  *   });
  *
- * If you think you need to use locks with coroutines, you can probably use channels instead.
+ * If you think you need to use locks with coroutines, there are two options:
+ * 1. use channels (before Swoole 6.0.1).
+ * 2. use class \Swoole\Coroutine\Lock (since Swoole 6.0.1).
  *
  * @see \Swoole\Thread\Lock Use this instead when PHP is compiled with Zend Thread Safety (ZTS) enabled.
+ * @see \Swoole\Coroutine\Lock Use this instead when using locks accross coroutines.
  * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/deadlocks/swoole-lock.php
  * @not-serializable Objects of this class cannot be serialized.
  */
@@ -157,15 +161,6 @@ class Lock
      * @return bool TRUE on success, FALSE on failure.
      */
     public function unlock(): bool
-    {
-    }
-
-    /**
-     * Destroy the lock and release any resources used by the lock.
-     *
-     * After calling this method, the lock object should not be used anymore.
-     */
-    public function destroy(): void
     {
     }
 }

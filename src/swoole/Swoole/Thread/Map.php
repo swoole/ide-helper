@@ -98,4 +98,13 @@ final class Map implements \ArrayAccess, \Countable
     public function toArray(): array
     {
     }
+
+    /**
+     * Sort the map in ascending order.
+     *
+     * @since 6.0.1
+     */
+    public function sort(): void
+    {
+    }
 }

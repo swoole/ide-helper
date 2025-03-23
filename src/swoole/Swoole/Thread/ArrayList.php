@@ -84,4 +84,13 @@ final class ArrayList implements \ArrayAccess, \Countable
     public function toArray(): array
     {
     }
+
+    /**
+     * Sort the list in ascending order, without maintaining index association.
+     *
+     * @since 6.0.1
+     */
+    public function sort(): void
+    {
+    }
 }
