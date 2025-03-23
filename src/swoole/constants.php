@@ -5,11 +5,11 @@ declare(strict_types=1);
 /*
  * Swoole version information.
  */
-define('SWOOLE_VERSION', '6.0.1');
-define('SWOOLE_VERSION_ID', 60001);
+define('SWOOLE_VERSION', '6.0.2');
+define('SWOOLE_VERSION_ID', 60002);
 define('SWOOLE_MAJOR_VERSION', 6);
 define('SWOOLE_MINOR_VERSION', 0);
-define('SWOOLE_RELEASE_VERSION', 1);
+define('SWOOLE_RELEASE_VERSION', 2);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*

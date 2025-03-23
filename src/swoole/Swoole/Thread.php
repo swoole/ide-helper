@@ -45,26 +45,75 @@ final class Thread
      */
     public int $id = 0;
 
+    /**
+     * The constructor.
+     *
+     * @param string $script_file Path to the PHP script file that will be executed in the thread.
+     * @param mixed ...$args List of arguments to pass to the PHP script file.
+     *                       Inside the thread created, these arguments can be accessed via method Thread::getArguments().
+     * @see Thread::getArguments()
+     */
     public function __construct(string $script_file, mixed ...$args)
     {
     }
 
+    /**
+     * Check if this thread is still running or not.
+     *
+     * @since 6.0.2
+     */
+    public function isAlive(): bool
+    {
+    }
+
+    /**
+     * Blocks the main thread (the calling thread) until this thread finishes its execution.
+     *
+     * @return bool TRUE on success, or FALSE on failure.
+     * @see https://en.cppreference.com/w/cpp/thread/thread/join
+     */
     public function join(): bool
     {
     }
 
+    /**
+     * Checks if this thread is joinable or not.
+     *
+     * A thread is joinable if it hasn't been joined nor detached. A thread that has finished executing code, but has
+     * not yet been joined is still considered an active thread of execution and is therefore joinable.
+     *
+     * @return bool TRUE if the thread is joinable, FALSE otherwise.
+     * @see https://en.cppreference.com/w/cpp/thread/thread/joinable
+     */
     public function joinable(): bool
     {
     }
 
+    /**
+     * Get the exit status of this thread.
+     */
     public function getExitStatus(): int
     {
     }
 
+    /**
+     * Separate this thread from the main thread (the calling thread), allowing its execution to continue independently.
+     * This thread will run in the background, and the main thread (the calling thread) will not wait for it to finish.
+     *
+     * @return bool TRUE if detached successfully, FALSE otherwise.
+     * @see https://en.cppreference.com/w/cpp/thread/thread/detach
+     */
     public function detach(): bool
     {
     }
 
+    /**
+     * Get the list of arguments passed to the thread.
+     *
+     * The arguments are the same as the ones passed to the constructor of the thread, excluding the script file.
+     *
+     * @see Thread::__construct()
+     */
     public static function getArguments(): ?array
     {
     }
@@ -74,6 +123,24 @@ final class Thread
     }
 
     public static function getInfo(): array
+    {
+    }
+
+    /**
+     * Get the number of threads that are still running, i.e., not yet finished their execution.
+     *
+     * @since 6.0.2
+     */
+    public static function activeCount(): int
+    {
+    }
+
+    /**
+     * Yield the current thread, allowing other threads to run.
+     *
+     * @since 6.0.2
+     */
+    public static function yield(): void
     {
     }
 
