@@ -250,6 +250,18 @@ class Response
     {
     }
 
+    /**
+     * Receive data from the attached WebSocket connection.
+     *
+     * @param float $timeout Timeout in seconds. -1 means never timeout; 0 means to use the default value of option "socket_read_timeout".
+     * @return Frame|string|false
+     *                            Returns a \Swoole\WebSocket\Frame object when succeeds.
+     *                            Returns an empty string when the HTTP connection is closed.
+     *                            Returns FALSE when error happens. Use method \swoole_last_error() to get error code.
+     * @see \Swoole\Constant::OPTION_SOCKET_READ_TIMEOUT
+     * @see \Swoole\WebSocket\Frame
+     * @see \swoole_last_error()
+     */
     public function recv(float $timeout = 0): Frame|string|false
     {
     }
