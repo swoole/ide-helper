@@ -23,6 +23,12 @@ class PipeMessage
      */
     public int $worker_id = 0;
 
+    /**
+     * The time when the message was dispatched.
+     *
+     * The value is in the same format as the return value of PHP function `microtime(true)`. i.e., the value is a float
+     * representing the time in seconds since the Unix epoch accurate to the nearest microsecond.
+     */
     public float $dispatch_time = 0;
 
     public $data;

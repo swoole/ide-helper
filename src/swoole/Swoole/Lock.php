@@ -30,8 +30,8 @@ namespace Swoole;
  *   });
  *
  * If you think you need to use locks with coroutines, there are two options:
- * 1. use channels (before Swoole 6.0.1).
- * 2. use class \Swoole\Coroutine\Lock (since Swoole 6.0.1).
+ * 1. use channels instead (before Swoole 6.0.1).
+ * 2. use class \Swoole\Coroutine\Lock instead (since Swoole 6.0.1).
  *
  * @see \Swoole\Thread\Lock Use this instead when PHP is compiled with Zend Thread Safety (ZTS) enabled.
  * @see \Swoole\Coroutine\Lock Use this instead when using locks accross coroutines.

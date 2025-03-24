@@ -13,7 +13,8 @@ namespace Swoole\Thread;
  * This class is a thread-safe version of the \Swoole\Lock class. For more information, see the documentation for the
  * \Swoole\Lock class.
  *
- * @see \Swoole\Lock Use this instead when PHP is compiled without Zend Thread Safety (ZTS) enabled.
+ * @see \Swoole\Lock For inter-process locking when ZTS is not enabled.
+ * @see \Swoole\Coroutine\Lock To use locks accross coroutines when ZTS is not enabled.
  * @since 6.0.0
  */
 final class Lock

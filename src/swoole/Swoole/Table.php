@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Swoole;
 
 /**
+ * Class \Swoole\Table.
+ *
  * History Changes:
  *
  * 1. In Swoole 5.0.0, class \Swoole\Table no longer implements interface \ArrayAccess. Following methods
@@ -15,6 +17,8 @@ namespace Swoole;
  *    * \Swoole\Table::offsetUnset()
  *
  * @not-serializable Objects of this class cannot be serialized.
+ * @template TRow
+ * @implements \Iterator<string, TRow>
  */
 class Table implements \Iterator, \Countable
 {
@@ -219,6 +223,7 @@ class Table implements \Iterator, \Countable
     }
 
     /**
+     * @return TRow
      * @see \Iterator::current()
      * @see https://www.php.net/manual/en/iterator.current.php
      * {@inheritDoc}
