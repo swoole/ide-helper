@@ -103,8 +103,12 @@ final class Map implements \ArrayAccess, \Countable
      * Sort the map in ascending order.
      *
      * @since 6.0.1
+     * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
     public function sort(): void
     {
+        $array = $this->toArray();
+        asort($array);
+        $this->__construct($array);
     }
 }

@@ -119,6 +119,9 @@ class Pool
     {
     }
 
+    /**
+     * @since 5.0.3
+     */
     public function sendMessage(string $data, int $dst_worker_id): bool
     {
     }
