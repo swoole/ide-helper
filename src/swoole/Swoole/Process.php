@@ -203,4 +203,18 @@ class Process
     public static function daemon(bool $nochdir = true, bool $noclose = true, array $pipes = []): bool
     {
     }
+
+    /**
+     * Set a process's CPU affinity mask.
+     *
+     * This method is available only on some operating systems that support CPU affinity. It's not available on Windows
+     * or macOS.
+     *
+     * @param array<int> $cpu_settings
+     * @return bool TRUE on success, or FALSE on failure.
+     * @see https://linux.die.net/man/2/sched_setaffinity
+     */
+    public static function setAffinity(array $cpu_settings): bool
+    {
+    }
 }
