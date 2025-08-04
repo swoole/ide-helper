@@ -48,7 +48,7 @@ class Client
      *
      * This property is only set when a GOAWAY frame is received from the server.
      *
-     * @since 6.0.0 This property was accessible as a dynamic property in versions prior to Swoole 6.0.0, but it has been explicitly declared as of Swoole 6.0.0.
+     * @since 5.1.8 This property was accessible as a dynamic property in versions prior to Swoole 5.1.8, but it has been explicitly declared as of Swoole 5.1.8.
      */
     public int $serverLastStreamId = 0;
 
