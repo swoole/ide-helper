@@ -70,14 +70,8 @@ class Response
      *   - the underlying HTTP connection has been detached.
      *
      * Once the Response object is not writable anymore, every method writing to the response (e.g., initHeader(),
-     * header(), trailer(), status(), write(), sendfile(), redirect(), and end()) fails and returns FALSE.
-     *
-     * @see \Swoole\Http\Response::end()
-     * @see \Swoole\Http\Response::detach()
-     * @since 4.6.0
-     *
-     * @example
-     * <pre>
+     * header(), trailer(), status(), write(), sendfile(), redirect(), and end()) fails and returns FALSE. e.g.,
+     * ```php
      * $server = new \Swoole\Http\Server('0.0.0.0', 9501);
      *
      * $server->on('request', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
@@ -88,7 +82,11 @@ class Response
      * });
      *
      * $server->start();
-     * </pre>
+     * ```
+     *
+     * @see \Swoole\Http\Response::end()
+     * @see \Swoole\Http\Response::detach()
+     * @since 4.6.0
      */
     public function isWritable(): bool
     {

@@ -27,13 +27,8 @@ class Coroutine
     }
 
     /**
-     * Defers the execution of a callback function until the surrounding function of a coroutine returns.
-     *
-     * @alias This method is an alias of function swoole_coroutine_defer().
-     * @see \swoole_coroutine_defer()
-     *
-     * @example
-     * <pre>
+     * Defers the execution of a callback function until the surrounding function of a coroutine returns. e.g.,
+     * ```php
      * \Swoole\Coroutine::create(function () {  // The surrounding function of a coroutine.
      *   echo '1';
      *   \Swoole\Coroutine::defer(function () { // The callback function to be deferred.
@@ -41,7 +36,10 @@ class Coroutine
      *   });
      *   echo '2';
      * });
-     * <pre>
+     * ```
+     *
+     * @alias This method is an alias of function swoole_coroutine_defer().
+     * @see \swoole_coroutine_defer()
      */
     public static function defer(callable $callback): void
     {
@@ -258,36 +256,32 @@ class Coroutine
     }
 
     /**
-     * Get a list of all running coroutines within the process.
+     * Get a list of all running coroutines within the process. e.g.,
+     * ```php
+     * foreach (\Swoole\Coroutine::list() as $cid) {
+     *   var_dump(\Swoole\Coroutine::getBackTrace($cid));
+     * };
+     * ```
      *
      * @alias This method has an alias of \Swoole\Coroutine::listCoroutines().
      * @see \Swoole\Coroutine::listCoroutines()
      * @since 4.4.0
-     *
-     * @example
-     * <pre>
-     * foreach (\Swoole\Coroutine::list() as $cid) {
-     *   var_dump(\Swoole\Coroutine::getBackTrace($cid));
-     * };
-     * <pre>
      */
     public static function list(): Iterator
     {
     }
 
     /**
-     * Get a list of all running coroutines within the process.
+     * Get a list of all running coroutines within the process. e.g.,
+     * ```php
+     * foreach (\Swoole\Coroutine::listCoroutines() as $cid) {
+     *   var_dump(\Swoole\Coroutine::getBackTrace($cid));
+     * };
+     * ```
      *
      * @alias Alias of method \Swoole\Coroutine::list().
      * @see \Swoole\Coroutine::list()
      * @since 4.4.0
-     *
-     * @example
-     * <pre>
-     * foreach (\Swoole\Coroutine::listCoroutines() as $cid) {
-     *   var_dump(\Swoole\Coroutine::getBackTrace($cid));
-     * };
-     * <pre>
      */
     public static function listCoroutines(): Iterator
     {

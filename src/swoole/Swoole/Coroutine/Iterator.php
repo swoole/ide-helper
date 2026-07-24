@@ -8,14 +8,12 @@ namespace Swoole\Coroutine;
  * An iterator that can be used to iterate over the IDs of all the running coroutines within the process.
  *
  * In Swoole, this class is only used for \Swoole\Coroutine::list() and \Swoole\Coroutine::listCoroutines(), where the
- * return value is an instance of this class.
- *
- * @example
- * <pre>
+ * return value is an instance of this class. e.g.,
+ * ```php
  * foreach (\Swoole\Coroutine::list() as $cid) {
  *   var_dump(\Swoole\Coroutine::getBackTrace($cid));
  * };
- * <pre>
+ * ```
  *
  * @see \Swoole\Coroutine::list()
  * @see \Swoole\Coroutine::listCoroutines()

@@ -7,14 +7,12 @@ namespace Swoole\Server;
 /**
  * When an event worker process or a task worker process crashes, an onWorkerError event will be triggered in the manager
  * process, with a StatusInfo object as the second parameter. The StatusInfo object can be used to log the issue and
- * send out alerts.
- *
- * @example
- * <pre>
+ * send out alerts. e.g.,
+ * ```php
  * $server->on('WorkerError', function (Swoole\Server $serv, Swoole\Server\StatusInfo $info) {
  *   var_dump($info);
  * });
- * </pre>
+ * ```
  */
 class StatusInfo
 {

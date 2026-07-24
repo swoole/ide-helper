@@ -224,29 +224,27 @@ class Pool
      * process has stopped serving the pool, so that the master process forks a new worker process (using the same
      * worker ID) to replace it immediately. The calling process itself is not terminated: it stops handling messages
      * dispatched by the pool, and continues to run its own code independently. That way, a worker process can be used
-     * to run a long-running task without blocking the pool.
+     * to run a long-running task without blocking the pool. e.g.,
+     * ```php
+     * use Swoole\Process\Pool;
+     *
+     * $pool = new Pool(2, SWOOLE_IPC_SOCKET);
+     *
+     * $pool->on('Message', function (Pool $pool, string $message) {
+     *     $pool->detach(); // The master process forks a new worker process to replace the current one.
+     *     while (true) {   // The current process keeps running, and is not managed by the pool anymore.
+     *         sleep(1);
+     *         echo 'pid=', posix_getpid(), PHP_EOL;
+     *     }
+     * });
+     *
+     * $pool->listen('127.0.0.1', 8089);
+     * $pool->start();
+     * ```
      *
      * @return bool Returns true on success; returns false when the method is not called inside a running worker
      *              process of the pool.
      * @since 4.7.0
-     *
-     * @example
-     * <pre>
-     *   use Swoole\Process\Pool;
-     *
-     *   $pool = new Pool(2, SWOOLE_IPC_SOCKET);
-     *
-     *   $pool->on('Message', function (Pool $pool, string $message) {
-     *     $pool->detach(); // The master process forks a new worker process to replace the current one.
-     *     while (true) {   // The current process keeps running, and is not managed by the pool anymore.
-     *       sleep(1);
-     *       echo 'pid=', posix_getpid(), PHP_EOL;
-     *     }
-     *   });
-     *
-     *   $pool->listen('127.0.0.1', 8089);
-     *   $pool->start();
-     * </pre>
      */
     public function detach(): bool
     {

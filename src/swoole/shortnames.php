@@ -44,13 +44,8 @@ function go(callable $func, ...$params): int|false
 /**
  * Defers the execution of a callback function until the surrounding function of a coroutine returns.
  *
- * This function is available only when directive "swoole.use_shortname" is not explicitly turned off.
- *
- * @alias This function is an alias of function swoole_coroutine_defer().
- * @see swoole_coroutine_defer()
- *
- * @example
- * <pre>
+ * This function is available only when directive "swoole.use_shortname" is not explicitly turned off. e.g.,
+ * ```php
  * go(function () {      // The surrounding function of a coroutine.
  *   echo '1';
  *   defer(function () { // The callback function to be deferred.
@@ -58,7 +53,10 @@ function go(callable $func, ...$params): int|false
  *   });
  *   echo '2';
  * });
- * <pre>
+ * ```
+ *
+ * @alias This function is an alias of function swoole_coroutine_defer().
+ * @see swoole_coroutine_defer()
  */
 function defer(callable $callback): void
 {

@@ -131,18 +131,16 @@ class Timer
     }
 
     /**
-     * Get a list of timer IDs of all the timers set in current process.
+     * Get a list of timer IDs of all the timers set in current process. e.g.,
+     * ```php
+     * foreach (\Swoole\Timer::list() as $timerId) {
+     *   var_dump(\Swoole\Timer::info($timerId));
+     * };
+     * ```
      *
      * @alias This method has an alias function \swoole_timer_list().
      * @see \swoole_timer_list()
      * @since 4.4.0
-     *
-     * @example
-     * <pre>
-     * foreach (\Swoole\Timer::list() as $timerId) {
-     *   var_dump(\Swoole\Timer::info($timerId));
-     * };
-     * <pre>
      */
     public static function list(): Iterator
     {

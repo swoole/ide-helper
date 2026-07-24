@@ -10,10 +10,8 @@ namespace Swoole\Server;
  *
  * A PipeMessage object is passed to the onPipeMessage callback as the second argument when option
  * \Swoole\Constant::OPTION_EVENT_OBJECT is enabled on the server. Otherwise, the ID of the source worker process and
- * the message data are passed to the callback as two separate arguments.
- *
- * @example
- * <pre>
+ * the message data are passed to the callback as two separate arguments. e.g.,
+ * ```php
  * $server = new \Swoole\Server('127.0.0.1', 9501);
  * $server->set([\Swoole\Constant::OPTION_EVENT_OBJECT => true]);
  *
@@ -22,7 +20,7 @@ namespace Swoole\Server;
  * });
  *
  * $server->start();
- * </pre>
+ * ```
  *
  * @see \Swoole\Constant::OPTION_EVENT_OBJECT
  * @see \Swoole\Server::sendMessage()

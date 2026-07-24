@@ -109,14 +109,8 @@ function swoole_coroutine_create(callable $func, ...$params): int|false
 }
 
 /**
- * Defers the execution of a callback function until the surrounding function of a coroutine returns.
- *
- * @alias This function has an alias function \defer() and an alias method \Swoole\Coroutine::defer().
- * @see \defer()
- * @see \Swoole\Coroutine::defer()
- *
- * @example
- * <pre>
+ * Defers the execution of a callback function until the surrounding function of a coroutine returns. e.g.,
+ * ```php
  * swoole_coroutine_create(function () {  // The surrounding function of a coroutine.
  *   echo '1';
  *   swoole_coroutine_defer(function () { // The callback function to be deferred.
@@ -124,7 +118,11 @@ function swoole_coroutine_create(callable $func, ...$params): int|false
  *   });
  *   echo '2';
  * });
- * <pre>
+ * ```
+ *
+ * @alias This function has an alias function \defer() and an alias method \Swoole\Coroutine::defer().
+ * @see \defer()
+ * @see \Swoole\Coroutine::defer()
  */
 function swoole_coroutine_defer(callable $callback): void
 {
@@ -645,17 +643,15 @@ function swoole_timer_stats(): array
 }
 
 /**
- * Get a list of timer IDs of all the timers set in current process.
- *
- * @alias This function is an alias of method \Swoole\Timer::list().
- * @see \Swoole\Timer::list()
- *
- * @example
- * <pre>
+ * Get a list of timer IDs of all the timers set in current process. e.g.,
+ * ```php
  * foreach (swoole_timer_list() as $timerId) {
  *   var_dump(swoole_timer_info($timerId));
  * };
- * <pre>
+ * ```
+ *
+ * @alias This function is an alias of method \Swoole\Timer::list().
+ * @see \Swoole\Timer::list()
  */
 function swoole_timer_list(): Iterator
 {

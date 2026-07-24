@@ -82,6 +82,13 @@ conventions consistently — they are what every existing file already follows a
 - **Methods/functions explainable via pseudocode**: include a PHP implementation in the body annotated with
   `@pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for
   explanation purpose only.` (see `Swoole\Runtime::enableCoroutine()`).
+- **Sample/usage code in a docblock**: use a Markdown fenced code block (` ```php ... ``` `) inline in the
+  description, not the `@example` tag. `@example` is meant to point at a separate example *file* (phpDocumentor's
+  documented meaning for the tag), which this repo doesn't have; a fenced block, by contrast, is the convention that
+  actually renders with syntax highlighting in PhpStorm/VS Code hover tooltips and in phpDocumentor output, since
+  both parse the description as Markdown. Lead into it with a short clause ending in "e.g.,", and place it as part
+  of the flowing description (before any tags), not off to the side after `@return`/`@since`/etc. (see
+  `Swoole\Http\Cookie` or `Swoole\Http\Request::$cookie` for examples).
 - **Removed class/method/function/constant**: delete it outright — do not deprecate or leave stale stubs behind.
 - **Symbols gated behind a build option**: document the requirement plainly in the header/docblock, e.g. for
   `\Swoole\Thread\Atomic`: "This class is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled
@@ -98,6 +105,27 @@ conventions consistently — they are what every existing file already follows a
   has two shortname aliases).
 - Cross-reference other related symbols with `@see` tags too (interface methods being implemented, related
   classes/constants, etc.) — this is used heavily throughout the codebase and helps IDE users navigate.
+- **Inherited methods explicitly re-listed in a child class**: if a method is inherited from a parent class but the
+  child class explicitly lists it too, add a `{@inheritDoc}` line in its docblock.
+- **Group same-type PHPDoc tags together within a comment block**, rather than interleaving different tag types line
+  by line. For example, change:
+  ```text
+  /**
+   * @see classA
+   * @alias Alias of function functionA.
+   * @see classB
+   * @alias Alias of function functionB.
+   */
+  ```
+  to:
+  ```text
+  /**
+   * @see classA
+   * @see classB
+   * @alias Alias of function functionA.
+   * @alias Alias of function functionB.
+   */
+  ```
 - **`@see` tags pointing at a line of code in a tagged swoole-src release** (e.g.
   `@see https://github.com/swoole/swoole-src/blob/v6.0.2/ext-src/swoole_server.cc#L53`, as used in
   `Swoole\Server::on()`): when bringing stubs up to date with a new release, re-verify every such link against that
