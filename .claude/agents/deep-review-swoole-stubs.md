@@ -19,8 +19,12 @@ against the matching swoole-src release, fixing whatever's missing, incomplete, 
 
 Read this repository's `CLAUDE.md` (at the repo root) in full before doing anything else — especially the
 "Stub-writing conventions" section. That section is your complete checklist for what a correct stub looks like
-(`@since`, `@readonly`, `@alias`/`@see` pairing, `@not-serializable`, `@pseudocode-included`, build-flag-gated
-symbols, cross-referencing, and — above everything else — writing for a PHP developer, not a C developer).
+(`@since`, `@readonly`, `@alias`/`@see` pairing, `@not-serializable`, `@pseudocode-included`, `{@inheritDoc}` for a
+re-listed inherited method, grouping same-type PHPDoc tags together, Markdown-fenced example code instead of
+`@example`, complete and accurately-typed properties/parameters/returns using only PHP-8.1-compatible native types,
+build-flag-gated symbols, cross-referencing, and — above everything else — writing for a PHP developer, not a C
+developer). It's a living checklist — re-read it each session rather than relying on memory of a prior run, since
+new conventions get added to it over time.
 
 **Scope: `src/swoole/` only** (`constants.php`, `functions.php`, `shortnames.php`, `Swoole/**`). Do not touch
 `src/swoole_library/` — that's a verbatim copy of real PHP source synced by wholesale replacement, not a stub, and
@@ -97,6 +101,12 @@ against the stub line by line. Concretely:
   happy path) — this is what most often makes an existing docblock incomplete rather than wrong. Confirm every
   parameter has a matching `@param` tag (type + description) and every non-`void` return has an `@return` tag (type
   + description) — a typed signature alone isn't sufficient documentation.
+- **PHP 8.1 syntax constraint on every native type you write or touch**: this project's minimum supported version is
+  PHP 8.1, so never write a standalone `true`/`false`/`null` type or a DNF type like `(A&B)|C` inline — those need
+  PHP 8.2+. If the fully accurate type needs one of those constructs, use the closest 8.1-compatible native type (or
+  omit the native type) and put the precise type in the `@param`/`@return` tag instead. This is easy to get backwards
+  while chasing accuracy (a standalone `false` return type genuinely is more precise than `bool`), so double-check
+  every native type you add or change against this constraint specifically, not just against swoole-src accuracy.
 - **Constants**: find every `SW_REGISTER_LONG_CONSTANT`/`SW_REGISTER_STRING_CONSTANT`/`REGISTER_LONG_CONSTANT`/
   `zend_declare_class_constant_long` call relevant to the area you're on.
 - **Build-flag-gated symbols**: watch for `#ifdef`/`#if defined(...)` guards (e.g. `SW_USE_OPENSSL`, `HAVE_...`,
@@ -154,8 +164,13 @@ Run this repo's own CI-equivalent checks and fix anything they flag before wrapp
 one:
 ```bash
 docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine php-cs-fixer fix --dry-run
-docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine phplint src
+docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.1-alpine phplint src
 ```
+Run `phplint` against `php8.1-alpine` specifically, not `php8.5-alpine` — this project's minimum supported version
+is 8.1, and PHP's parser is backward-permissive (an 8.2+-only construct like a standalone `false` type parses fine
+under 8.5 but fails under 8.1), so 8.1 is the only version whose parser actually enforces the "inline type
+declarations must be valid PHP 8.1 syntax" convention. CI runs this same check against 8.1 through 8.5 (see
+`.github/workflows/syntax_checks.yml`); 8.1 is the binding one for this purpose.
 (Check CLAUDE.md's "Commands" section in case the exact versions/commands have since changed.)
 
 Commit your changes locally on whatever branch is currently checked out (don't create a new branch). It's fine —

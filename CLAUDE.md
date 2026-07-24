@@ -80,6 +80,14 @@ conventions consistently — they are what every existing file already follows a
   PHPDoc tag, since the tag is what carries the description. When reviewing a file, treat an undocumented or
   untyped-but-present member exactly like a missing one: it still needs to be fixed, not skipped because "it's
   already there."
+- **Inline type declarations must be valid PHP 8.1 syntax.** This project supports PHP 8.1+ (see the syntax-check
+  command above, run against 8.1 through 8.5), so a native type declaration that only PHP 8.2+ understands — a
+  standalone `true`/`false`/`null` type, or a DNF (disjunctive normal form) type like `(A&B)|C` — would break on the
+  oldest supported version and must never be used inline. When swoole-src's real, fully-accurate type needs one of
+  those constructs, fall back to the closest PHP-8.1-compatible native type instead (e.g., `bool` in place of a
+  standalone `false`), or omit the native type declaration entirely if nothing 8.1-compatible fits, and document the
+  precise type via a `@param`/`@return` tag instead — PHPDoc's type syntax isn't constrained by what a given PHP
+  version can parse inline.
 - **New class/method/function/constant**: add an `@since X.Y.Z` tag (see existing usage in `functions.php` and
   `constants.php` for the exact placement — as a PHPDoc tag for methods/functions/classes, or as a trailing
   `// @since X.Y.Z` line comment for `define()` constants).

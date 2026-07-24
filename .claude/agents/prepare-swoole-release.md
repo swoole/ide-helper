@@ -132,18 +132,33 @@ SWOOLE_EXTRA_VERSION   // empty string '' for a stable release
 
 # Step 4: apply the edits, following this project's conventions exactly
 
-For every stub you touch, apply the "Stub-writing conventions" from CLAUDE.md:
+For every stub you touch, apply the "Stub-writing conventions" from CLAUDE.md — re-read that section fresh each
+time rather than relying on this summary from memory, since it's a living list new conventions get added to:
 - New class/method/function/constant → `@since X.Y.Z` tag (or trailing `// @since X.Y.Z` for `define()` constants).
 - Changed method/function arguments → don't silently update the signature; add a comment showing what it looked
   like before and what it looks like now.
+- Completeness/typing baseline → every property/parameter/return you touch needs an accurate native type
+  declaration and at least a one-line docblock description; every parameter needs a `@param` tag, every non-`void`
+  return needs an `@return` tag. Don't leave a symbol under-documented just because its name/signature isn't what
+  changed in this release.
+- Inline type declarations must be valid PHP 8.1 syntax (this project's minimum supported version) — never use a
+  standalone `true`/`false`/`null` type or a DNF type like `(A&B)|C` inline (PHP 8.2+ only). When full accuracy
+  needs one of those, fall back to the closest 8.1-compatible native type (or omit the native type) and put the
+  precise type in `@param`/`@return` instead.
 - Removed class/method/function/constant → delete it outright. Do not deprecate or leave a stale stub behind.
 - Non-serializable classes → `@not-serializable Objects of this class cannot be serialized.`
 - Readonly properties → `@readonly` tag.
 - Methods explainable via pseudocode → a real PHP implementation in the body, annotated with
   `@pseudocode-included ...` (see CLAUDE.md for the exact wording).
+- Sample/usage code in a docblock → a Markdown fenced ` ```php ... ``` ` block inline in the description (leading
+  into it with "e.g.,"), not the `@example` tag — `@example` is meant for a separate example file this repo doesn't
+  have, and won't render with syntax highlighting the way a fenced block does.
 - Symbols gated behind a build option (`--enable-*`/`--with-*`) → document the requirement plainly, following the
   existing phrasing pattern for this (see `\Swoole\Thread\Atomic` or the `SWOOLE_HOOK_PDO_*` constants).
 - Aliases → `@alias` + `@see` on *both* sides of the pair, worded appropriately for each side.
+- Inherited method explicitly re-listed in a child class → add `{@inheritDoc}` in its docblock.
+- Group same-type PHPDoc tags together within a comment block, rather than interleaving different tag types
+  (e.g. all `@see` tags together, then all `@alias` tags together).
 - `@see` tags pointing at a specific line of swoole-src source for the *previously* supported version → update both
   the tag and the line number for the new release (the referenced line routinely moves even when unchanged
   conceptually).
@@ -165,8 +180,13 @@ swoole-src source yourself before reporting it as fact. Don't just relay a sub-t
 Run this repo's own CI-equivalent checks and fix anything they flag:
 ```bash
 docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine php-cs-fixer fix --dry-run
-docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine phplint src
+docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.1-alpine phplint src
 ```
+Run `phplint` against `php8.1-alpine`, not `php8.5-alpine` — this project's minimum supported version is 8.1, and
+since PHP's parser is backward-permissive, an 8.2+-only construct (e.g. a standalone `false` return type) parses
+fine under 8.5 but fails under 8.1. 8.1 is the version that actually enforces the "inline type declarations must be
+valid PHP 8.1 syntax" convention; CI checks all of 8.1 through 8.5 (`.github/workflows/syntax_checks.yml`), but 8.1
+is the binding one here.
 (Check CLAUDE.md's "Commands" section for the current versions/commands in case they've since changed.)
 
 # Step 6: commit — but do not tag, and do not push
