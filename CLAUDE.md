@@ -53,7 +53,7 @@ behavior, since no method body ever executes.
 `php-cs-fixer` rules are defined in `.php-cs-fixer.dist.php` and explicitly exclude `swoole_library/` (that
 directory keeps upstream's own formatting since it's copied verbatim).
 
-## Updating stubs for a new Swoole release
+## Stub-writing conventions
 
 This is the main recurring task in this repository. When bringing the stubs up to date with a Swoole release,
 compare against the actual C source/headers in https://github.com/swoole/swoole-src for that release, and examine
@@ -62,6 +62,14 @@ https://github.com/swoole/library for anything under `src/swoole_library/`). **N
 `.stub.php` files shipped in a Swoole release — they are not a reliable source for this work. Then apply these
 conventions consistently — they are what every existing file already follows and what reviewers expect:
 
+- **Above all, write for a PHP developer, not a C developer.** Comments/stubs are meant to be easy to understand,
+  unless the technical detail being documented genuinely can't be explained accurately in plain, simple words —
+  don't reach for jargon or low-level precision the reader didn't ask for.
+- **Stay at the PHP level whenever possible.** When accuracy requires mentioning a system call or another piece of
+  the underlying implementation (e.g., `msgget(2)`, `ftok(3)`, `mmap()`, a row/hashtable struct layout), phrase it in
+  plain language a PHP developer can follow without prior C/POSIX knowledge, and add a `@see` link to a man page or
+  other reference so a reader who wants the full technical depth can dig further on their own — the docblock itself
+  should not require that background to be understood.
 - **New class/method/function/constant**: add an `@since X.Y.Z` tag (see existing usage in `functions.php` and
   `constants.php` for the exact placement — as a PHPDoc tag for methods/functions/classes, or as a trailing
   `// @since X.Y.Z` line comment for `define()` constants).
