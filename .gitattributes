@@ -2,3 +2,5 @@
 /.gitignore             export-ignore
 /.gitattributes         export-ignore
 /.php-cs-fixer.dist.php export-ignore
+/.claude                export-ignore
+/CLAUDE.md              export-ignore
