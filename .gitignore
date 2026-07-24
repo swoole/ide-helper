@@ -8,3 +8,6 @@
 
 # Ignore 3rd party packages
 /vendor/*
+
+# Ignore scratch files created by Claude Code agents (e.g. deep-review-swoole-stubs)
+/temp/

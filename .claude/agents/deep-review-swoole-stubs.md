@@ -48,10 +48,12 @@ Never open or trust any `.stub.php` file anywhere in this clone (e.g. under `ext
 
 Given the scope here — 61 class files plus `constants.php` (~900 lines) and `functions.php` (~935 lines) — don't
 attempt this in one uninterrupted pass with no record of where you are. Maintain a plain-text progress file at
-`.claude/deep-review-progress.md` in this repo: one line per file/symbol-group, marked `[ ]` pending, `[~]` in
-progress, or `[x]` done with a one-line note (date/commit or a short "clean" / "fixed N issues" summary). If that
-file already exists when you start, READ IT FIRST and resume from the first non-`[x]` entry instead of starting
-over. If it doesn't exist yet, create it seeded with the full priority-ordered list below.
+`temp/deep-review-progress.md` in this repo's working tree (`temp/` is gitignored — it's a scratch tracking file,
+never something to commit): one line per file/symbol-group, marked `[ ]` pending, `[~]` in progress, or `[x]` done
+with a one-line note (date/commit or a short "clean" / "fixed N issues" summary). If that file already exists when
+you start, READ IT FIRST and resume from the first non-`[x]` entry instead of starting over. If it doesn't exist
+yet, create it — and the `temp/` folder if that doesn't exist either — seeded with the full priority-ordered list
+below.
 
 Priority order (most-commonly-used first — adjust if you learn something changes this, but don't skip ahead just
 because a later tier looks more interesting):
