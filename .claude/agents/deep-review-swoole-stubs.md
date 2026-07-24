@@ -86,10 +86,17 @@ against the stub line by line. Concretely:
 
 - **Classes**: find the class registration (`zend_register_internal_class_ex`/similar) and its `swoole_xxx_ce`
   class-entry variable; find its method table (`static const zend_function_entry swoole_xxx_methods[]`) for the
-  complete method list, and its `zend_declare_property_*` calls for the complete property list.
+  complete method list, and its `zend_declare_property_*` calls for the complete property list. For **every single
+  property** in that list — not just the ones that look interesting — confirm the stub declares it with an accurate
+  native type (check how the property is actually populated/read in the `.cc` source to determine the real type;
+  don't leave it untyped just because that's easier) and has at least a one-line docblock description. A class with
+  10 properties and only 2 documented is not done, even if those 2 are perfect — go through the full list explicitly
+  before moving on, don't rely on skimming and remembering the interesting-looking ones.
 - **Methods/functions**: for each `PHP_METHOD(swoole_xxx, yyy)`/`PHP_FUNCTION(yyy)`, read the actual body to
   understand real behavior, parameters, defaults, return values, and every distinct failure mode (not just the
-  happy path) — this is what most often makes an existing docblock incomplete rather than wrong.
+  happy path) — this is what most often makes an existing docblock incomplete rather than wrong. Confirm every
+  parameter has a matching `@param` tag (type + description) and every non-`void` return has an `@return` tag (type
+  + description) — a typed signature alone isn't sufficient documentation.
 - **Constants**: find every `SW_REGISTER_LONG_CONSTANT`/`SW_REGISTER_STRING_CONSTANT`/`REGISTER_LONG_CONSTANT`/
   `zend_declare_class_constant_long` call relevant to the area you're on.
 - **Build-flag-gated symbols**: watch for `#ifdef`/`#if defined(...)` guards (e.g. `SW_USE_OPENSSL`, `HAVE_...`,
@@ -98,10 +105,24 @@ against the stub line by line. Concretely:
   requirement following the existing pattern (see `\Swoole\Thread\Atomic` or the `SWOOLE_HOOK_PDO_*` constants in
   CLAUDE.md for the exact phrasing convention).
 
-For each real symbol you find, check three things against the stub:
+For each real symbol you find, check four things against the stub:
 1. **Missing** — swoole-src has it, the stub doesn't. Add it.
-2. **Present but wrong/incomplete/hard to read** — fix it, following every applicable convention from CLAUDE.md.
-3. **Present in stub but gone from swoole-src** — delete it outright. Don't deprecate it or leave a stale stub.
+2. **Present but wrong/hard to read** — fix it, following every applicable convention from CLAUDE.md.
+3. **Present but incompletely documented or typed** — this is the easiest failure mode to accidentally skip, because
+   the symbol technically "already exists" so it's tempting to move on. It doesn't count as done until it has: an
+   accurate native type declaration (properties, parameters, returns), a `@param` tag per parameter, an `@return`
+   tag for every non-`void` return, and at least a one-line description. Treat this exactly like a missing symbol —
+   fix it, don't leave it for "later."
+4. **Present in stub but gone from swoole-src** — delete it outright. Don't deprecate it or leave a stale stub.
+
+Before marking a file/area `[x]` in the progress file, do one mechanical self-check pass so you don't rely purely on
+memory of what you already looked at: grep the file for the failure patterns above, e.g.
+```bash
+grep -n '^\s*public \$\w\+\s*\(;\|=\)' path/to/File.php   # untyped properties (no type between `public` and `$name`)
+grep -n -B2 '^\s*public function\|^\s*function ' path/to/File.php | grep -c '/\*\*'  # rough docblock-coverage check
+```
+If either check surfaces something you haven't already verified against source, go back and fix it before moving
+on — don't let a file get checked off with known gaps.
 
 # Step 3: fix what you find
 

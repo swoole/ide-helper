@@ -70,6 +70,16 @@ conventions consistently — they are what every existing file already follows a
   plain language a PHP developer can follow without prior C/POSIX knowledge, and add a `@see` link to a man page or
   other reference so a reader who wants the full technical depth can dig further on their own — the docblock itself
   should not require that background to be understood.
+- **Completeness and typing is the baseline, not a special case.** A symbol existing in the stub isn't enough —
+  every public property must carry a native PHP type declaration that accurately reflects what swoole-src actually
+  stores there (nullable/union types where applicable; never leave a bare, untyped `public $x;` just because the
+  underlying C property is loosely typed or populated dynamically), and every property/method/function needs at
+  least a one-line docblock description, even when nothing else about it warrants a special tag. Likewise, every
+  method/function parameter needs a matching `@param` tag (type + description) and every non-`void` return needs an
+  `@return` tag (type + description) — a native type declaration on the signature is not a substitute for the
+  PHPDoc tag, since the tag is what carries the description. When reviewing a file, treat an undocumented or
+  untyped-but-present member exactly like a missing one: it still needs to be fixed, not skipped because "it's
+  already there."
 - **New class/method/function/constant**: add an `@since X.Y.Z` tag (see existing usage in `functions.php` and
   `constants.php` for the exact placement — as a PHPDoc tag for methods/functions/classes, or as a trailing
   `// @since X.Y.Z` line comment for `define()` constants).
