@@ -16,6 +16,8 @@ class Coroutine
     /**
      * Create a coroutine.
      *
+     * @param callable $func The function to be executed inside the new coroutine.
+     * @param mixed ...$param Arguments passed to the function when the coroutine starts running.
      * @return int|false Returns the coroutine ID on success, or false on failure. Note that this method won't return
      *                   the coroutine ID back until the new coroutine yields its execution.
      * @alias This method has two alias functions: \go() and \swoole_coroutine_create().
@@ -38,6 +40,7 @@ class Coroutine
      * });
      * ```
      *
+     * @param callable $callback The callback function to be executed when the surrounding function of the current coroutine returns.
      * @alias This method is an alias of function swoole_coroutine_defer().
      * @see \swoole_coroutine_defer()
      */
@@ -48,6 +51,7 @@ class Coroutine
     /**
      * To set runtime configurations of coroutines.
      *
+     * @param array $options An array of runtime options, e.g., "max_coroutine", "hook_flags", "socket_timeout", "enable_preemptive_scheduler", etc.
      * @alias This method has an alias method \Swoole\Coroutine\Scheduler::set().
      * @see \Swoole\Coroutine\Scheduler::set()
      */
@@ -58,6 +62,8 @@ class Coroutine
     /**
      * To get runtime configurations of coroutines.
      *
+     * @return array|null Returns an array of the runtime options previously set through method \Swoole\Coroutine::set()
+     *                    (or \Swoole\Coroutine\Scheduler::set()), or NULL if no options have been set yet.
      * @alias This method has an alias method \Swoole\Coroutine\Scheduler::getOptions().
      * @see \Swoole\Coroutine\Scheduler::getOptions()
      */
@@ -77,8 +83,18 @@ class Coroutine
     }
 
     /**
+     * Suspend the execution of current coroutine.
+     *
+     * The suspended coroutine stays inactive until it's resumed by a call to method \Swoole\Coroutine::resume() (made
+     * from some other coroutine or from outside of coroutines), or until it's cancelled by a call to method
+     * \Swoole\Coroutine::cancel().
+     *
+     * @return bool TRUE once the coroutine has been resumed; FALSE if the coroutine was cancelled while suspended, in
+     *              which case function \swoole_last_error() returns error code SWOOLE_ERROR_CO_CANCELED.
      * @alias This method has an alias of \Swoole\Coroutine::suspend().
      * @see \Swoole\Coroutine::suspend()
+     * @see \Swoole\Coroutine::resume()
+     * @see \Swoole\Coroutine::cancel()
      */
     public static function yield(): bool
     {
@@ -138,6 +154,10 @@ class Coroutine
     }
 
     /**
+     * Suspend the execution of current coroutine.
+     *
+     * @return bool TRUE once the coroutine has been resumed; FALSE if the coroutine was cancelled while suspended, in
+     *              which case function \swoole_last_error() returns error code SWOOLE_ERROR_CO_CANCELED.
      * @alias Alias of method \Swoole\Coroutine::yield().
      * @see \Swoole\Coroutine::yield()
      */
@@ -148,13 +168,33 @@ class Coroutine
     /**
      * Resume the execution of given coroutine.
      *
+     * Only coroutines suspended by method \Swoole\Coroutine::yield() (or its alias suspend()) can be resumed by this
+     * method; coroutines that are waiting for I/O operations to finish can not.
+     *
      * @param int $cid Coroutine ID.
-     * @return bool Returns true if successfully resumed, or false on failure.
+     * @return bool Returns true if successfully resumed, or false on failure (e.g., when the given coroutine doesn't
+     *              exist, or when it's waiting for an I/O operation to finish instead of being suspended by method
+     *              \Swoole\Coroutine::yield()).
+     * @see \Swoole\Coroutine::yield()
      */
     public static function resume(int $cid): bool
     {
     }
 
+    /**
+     * Get statistics of coroutines and related resources within the process.
+     *
+     * @return array Returns an array with the following fields in it:
+     *               - event_num: Number of events being watched by the event loop.
+     *               - signal_listener_num: Number of signal listeners.
+     *               - aio_task_num: Number of pending tasks in the thread pool that handles file I/O and blocking operations.
+     *               - aio_worker_num: Number of worker threads in that thread pool.
+     *               - aio_queue_size: Size of the task queue of that thread pool.
+     *               - c_stack_size: Size of the C stack allocated for each coroutine (in bytes).
+     *               - coroutine_num: Number of active coroutines.
+     *               - coroutine_peak_num: Peak number of active coroutines.
+     *               - coroutine_last_cid: ID of the most recently created coroutine.
+     */
     public static function stats(): array
     {
     }
@@ -162,6 +202,7 @@ class Coroutine
     /**
      * Get the ID of current coroutine. A coroutine ID is a unique positive integer within the same process.
      *
+     * @return int Returns the ID of current coroutine, or -1 when called from a non-coroutine context.
      * @alias This method has an alias of \Swoole\Coroutine::getuid().
      * @see \Swoole\Coroutine::getuid()
      */
@@ -172,6 +213,7 @@ class Coroutine
     /**
      * Get the ID of current coroutine. A coroutine ID is a unique positive integer within the same process.
      *
+     * @return int Returns the ID of current coroutine, or -1 when called from a non-coroutine context.
      * @alias Alias of method \Swoole\Coroutine::getCid().
      * @see \Swoole\Coroutine::getCid()
      */
@@ -212,7 +254,7 @@ class Coroutine
      * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
      * @param int $options A bitmask for the following options: DEBUG_BACKTRACE_PROVIDE_OBJECT, DEBUG_BACKTRACE_IGNORE_ARGS.
      * @param int $limit To limit the number of stack frames returned. By default (limit=0) it returns all stack frames.
-     * @param array|false Returns an array of associative arrays, or FALSE if the specified coroutine does not exist.
+     * @return array|false Returns an array of associative arrays, or FALSE if the specified coroutine does not exist.
      * @see \debug_backtrace()
      */
     public static function getBackTrace(int $cid = 0, int $options = DEBUG_BACKTRACE_PROVIDE_OBJECT, int $limit = 0): array|false
@@ -234,10 +276,14 @@ class Coroutine
     }
 
     /**
-     * Get execution time (in milliseconds) of the specified coroutine.
+     * Get how long the specified coroutine has been running.
+     *
+     * The returned value is the wall-clock time elapsed since the coroutine was created, in milliseconds.
      *
      * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
-     * @return int Return the execution time of the specified coroutine in milliseconds.
+     * @return int Returns the time elapsed since the specified coroutine was created (in milliseconds), or -1 if the
+     *             specified coroutine doesn't exist (including when the method is called with no argument, or with 0,
+     *             from a non-coroutine context).
      * @since 4.5.0
      */
     public static function getElapsed(int $cid = 0): int
@@ -263,6 +309,7 @@ class Coroutine
      * };
      * ```
      *
+     * @return Iterator An iterator over the IDs of all running coroutines within the process.
      * @alias This method has an alias of \Swoole\Coroutine::listCoroutines().
      * @see \Swoole\Coroutine::listCoroutines()
      * @since 4.4.0
@@ -279,6 +326,7 @@ class Coroutine
      * };
      * ```
      *
+     * @return Iterator An iterator over the IDs of all running coroutines within the process.
      * @alias Alias of method \Swoole\Coroutine::list().
      * @see \Swoole\Coroutine::list()
      * @since 4.4.0
@@ -452,6 +500,15 @@ class Coroutine
     }
 
     /**
+     * Execute a shell command, in a coroutine-friendly way.
+     *
+     * Please check documentation of method \Swoole\Coroutine\System::exec() for more details.
+     *
+     * @param string $command The command to be executed.
+     * @param bool $get_error_stream If TRUE, the error output of the command (its standard error) is captured as part
+     *                               of field "output" of the return value as well.
+     * @return array|false Returns FALSE if the command fails to run; otherwise, returns an array with fields "output",
+     *                     "code", and "signal" in it.
      * @alias Alias of method \Swoole\Coroutine\System::exec().
      * @see \Swoole\Coroutine\System::exec()
      */
@@ -460,6 +517,13 @@ class Coroutine
     }
 
     /**
+     * Pause the current coroutine for the given number of seconds.
+     *
+     * Please check documentation of method \Swoole\Coroutine\System::sleep() for more details.
+     *
+     * @param float $seconds Number of seconds to sleep. It must be no less than 0.001 (one millisecond).
+     * @return bool TRUE once the time is up; FALSE if $seconds is less than 0.001, or if the coroutine is cancelled
+     *              while sleeping.
      * @alias Alias of method \Swoole\Coroutine\System::sleep().
      * @see \Swoole\Coroutine\System::sleep()
      */
@@ -495,6 +559,12 @@ class Coroutine
     }
 
     /**
+     * Get information about the filesystem that the given path belongs to (e.g., total and free disk space).
+     *
+     * Please check documentation of method \Swoole\Coroutine\System::statvfs() for more details.
+     *
+     * @param string $path Path of any file or directory on the filesystem.
+     * @return array Returns an array of filesystem statistics, with fields like "bsize", "blocks", "bfree", and "bavail" in it.
      * @alias Alias of method \Swoole\Coroutine\System::statvfs().
      * @see \Swoole\Coroutine\System::statvfs()
      */
@@ -503,6 +573,13 @@ class Coroutine
     }
 
     /**
+     * Read a whole file into a string, in a coroutine-friendly way.
+     *
+     * Please check documentation of method \Swoole\Coroutine\System::readFile() for more details.
+     *
+     * @param string $filename Path of the file to read.
+     * @param int $flag Either 0 (the default) or constant LOCK_EX (to acquire an exclusive lock on the file while reading it).
+     * @return string|false Returns the content of the file on success, or FALSE on failure.
      * @alias Alias of method \Swoole\Coroutine\System::readFile().
      * @see \Swoole\Coroutine\System::readFile()
      */
@@ -511,6 +588,14 @@ class Coroutine
     }
 
     /**
+     * Write a string to a file, in a coroutine-friendly way.
+     *
+     * Please check documentation of method \Swoole\Coroutine\System::writeFile() for more details.
+     *
+     * @param string $filename Path of the file to write to.
+     * @param string $fileContent The content to write to the file.
+     * @param int $flags A bitmask made of constants FILE_APPEND and LOCK_EX, same as in the built-in PHP function \file_put_contents().
+     * @return int|false Returns the number of bytes written on success, or FALSE on failure.
      * @alias Alias of method \Swoole\Coroutine\System::writeFile().
      * @see \Swoole\Coroutine\System::writeFile()
      */
@@ -519,6 +604,13 @@ class Coroutine
     }
 
     /**
+     * Wait for any child process of the current process to exit, in a coroutine-friendly way.
+     *
+     * Please check documentation of method \Swoole\Coroutine\System::wait() for more details.
+     *
+     * @param float $timeout The maximum time to wait (in seconds). If specified as a negative number (which is the
+     *                       default), it waits indefinitely until a child process exits.
+     * @return array|false Returns FALSE on failure; otherwise, returns an array with fields "pid", "code", and "signal" in it.
      * @alias Alias of method \Swoole\Coroutine\System::wait().
      * @see \Swoole\Coroutine\System::wait()
      * @since 4.5.0
@@ -528,6 +620,14 @@ class Coroutine
     }
 
     /**
+     * Wait for a specific child process of the current process to exit, in a coroutine-friendly way.
+     *
+     * Please check documentation of method \Swoole\Coroutine\System::waitPid() for more details.
+     *
+     * @param int $pid Process ID of the child process to wait for.
+     * @param float $timeout The maximum time to wait (in seconds). If specified as a negative number (which is the
+     *                       default), it waits indefinitely until the child process exits.
+     * @return array|false Returns FALSE on failure; otherwise, returns an array with fields "pid", "code", and "signal" in it.
      * @alias Alias of method \Swoole\Coroutine\System::waitPid().
      * @see \Swoole\Coroutine\System::waitPid()
      * @since 4.5.0
@@ -552,7 +652,17 @@ class Coroutine
     }
 
     /**
+     * Wait until a socket becomes readable and/or writable.
+     *
+     * Please check documentation of method \Swoole\Coroutine\System::waitEvent() for more details.
+     *
+     * @param mixed $socket The socket to watch. It can be a stream resource, a \Socket object of the PHP sockets
+     *                      extension, or a Swoole object representing a socket connection.
      * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
+     * @param float $timeout The maximum time to wait (in seconds). If specified as a negative number (which is the
+     *                       default), it waits indefinitely until one of the given events happens.
+     * @return int|false Returns the event(s) that happened on the socket (a bitmask of SWOOLE_EVENT_READ and
+     *                   SWOOLE_EVENT_WRITE) on success, or FALSE on failure.
      * @alias Alias of method \Swoole\Coroutine\System::waitEvent().
      * @see \Swoole\Coroutine\System::waitEvent()
      * @since 4.5.0

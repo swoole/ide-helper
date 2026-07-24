@@ -16,7 +16,7 @@ class Channel
     /**
      * Size of the channel. This indicates the maximum number of elements that can be stored in the channel. It has to be greater than 0.
      */
-    public int $capacity;
+    public int $capacity = 0;
 
     /**
      * Error code of the last push() or pop() operation.
@@ -47,7 +47,9 @@ class Channel
      * Push an element into the channel.
      *
      * @param TData $data The element to be pushed into the channel. It's allowed to be any type of value. However, to avoid any confusion, it's recommended not to use empty values like 0, 0.0, false, ' ', null, etc.
-     * @param float $timeout > 0 means waiting for the specified number of seconds. other means no waiting.
+     * @param float $timeout Maximum time to wait (in seconds) when the channel is full. If it's 0, a negative number
+     *                       (which is the default), or any other value not greater than 0, the call waits indefinitely
+     *                       until room becomes available in the channel.
      * @return bool TRUE on success. If failed, return FALSE and set the error code ($this->errCode) with a non-zero value.
      */
     public function push(mixed $data, float $timeout = -1): bool
@@ -59,7 +61,9 @@ class Channel
      *
      * This pop operation works in a FIFO (first-in-first-out) manner, since elements in the channel are stored in a queue but not a stack.
      *
-     * @param float $timeout > 0 means waiting for the specified number of seconds. other means no waiting.
+     * @param float $timeout Maximum time to wait (in seconds) when the channel is empty. If it's 0, a negative number
+     *                       (which is the default), or any other value not greater than 0, the call waits indefinitely
+     *                       until an element is pushed into the channel.
      * @return TData|false Remove an element from the front end of the channel, and return the element back. If failed, return FALSE and set the error code ($this->errCode) with a non-zero value.
      */
     public function pop(float $timeout = -1): mixed
@@ -88,7 +92,7 @@ class Channel
      *   2. coroutines that are waiting for elements to be pushed into the channel will be woken up; inside the coroutines, calls to method push() return FALSE.
      *   3. coroutines that are waiting for elements to be popped out of the channel will be woken up; inside the coroutines, calls to method pop() return FALSE.
      *
-     * @return bool Returns true on success or false on failure.
+     * @return bool Returns TRUE on success, or FALSE if the channel is closed already.
      */
     public function close(): bool
     {
@@ -108,6 +112,8 @@ class Channel
      *     'producer_num' => 1, // The channel is full, and there is one method call to method `push()` that is waiting for elements to be popped from the channel.
      *     'queue_num'    => 2, // There are two elements in the channel. In this case, the size of the channel is also two.
      *   ]
+     *
+     * @return array Returns an array with three fields in it: "consumer_num", "producer_num", and "queue_num".
      */
     public function stats(): array
     {

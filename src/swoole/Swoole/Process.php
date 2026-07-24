@@ -7,18 +7,55 @@ namespace Swoole;
 use Swoole\Coroutine\Socket;
 
 /**
+ * A Process object represents a child process to be forked from the current process. The class wraps process
+ * creation with built-in inter-process communication (a pipe, and optionally a System V message queue), and also
+ * provides static helpers for signal handling, process control, and daemonization.
+ *
+ * Objects of this class can be used in PHP CLI mode only.
+ *
  * @not-serializable Objects of this class cannot be serialized.
  */
 class Process
 {
+    /**
+     * Flag that can be combined (through a bitwise OR) with the message queue mode passed to method
+     * \Swoole\Process::useQueue() to make the message queue non-blocking: methods \Swoole\Process::push() and
+     * \Swoole\Process::pop() return false immediately instead of blocking when the queue is full or empty.
+     *
+     * @see \Swoole\Process::useQueue()
+     */
     public const IPC_NOWAIT = 256;
 
+    /**
+     * Option for method \Swoole\Process::close(): close the master end of the pipe, which is the end used by the
+     * process where the Process object is created.
+     *
+     * @see \Swoole\Process::close()
+     */
     public const PIPE_MASTER = 1;
 
+    /**
+     * Option for method \Swoole\Process::close(): close the worker end of the pipe, which is the end used by the
+     * child process.
+     *
+     * @see \Swoole\Process::close()
+     */
     public const PIPE_WORKER = 2;
 
+    /**
+     * Option for method \Swoole\Process::close(): shut down the reading direction of the pipe used by the current
+     * process, keeping the pipe itself open.
+     *
+     * @see \Swoole\Process::close()
+     */
     public const PIPE_READ = 3;
 
+    /**
+     * Option for method \Swoole\Process::close(): shut down the writing direction of the pipe used by the current
+     * process, keeping the pipe itself open.
+     *
+     * @see \Swoole\Process::close()
+     */
     public const PIPE_WRITE = 4;
 
     /**
@@ -26,14 +63,17 @@ class Process
      * master end's descriptor in the process where the object is created, and the worker end's descriptor inside the
      * child process.
      *
-     * It's only set after the process has a pipe, i.e., after method \Swoole\Process::start() is called successfully
-     * (and the process was created with a pipe, which is the default).
+     * It's only set when the process has a pipe (which is the case by default; see the $pipe_type parameter of the
+     * constructor): the property is set to the master end's descriptor when the object is constructed, and it's
+     * updated to the worker end's descriptor inside the child process once method \Swoole\Process::start() forks it.
+     * It stays NULL when the process is created without a pipe.
      *
      * @readonly
+     * @see \Swoole\Process::__construct()
      * @see \Swoole\Process::start()
      * @see \Swoole\Process::exportSocket()
      */
-    public int $pipe;
+    public ?int $pipe = null;
 
     /**
      * Identifier of the System V message queue used by the process, as returned by system call msgget().
@@ -45,7 +85,7 @@ class Process
      * @see \Swoole\Process::$msgQueueKey
      * @see https://www.man7.org/linux/man-pages/man2/msgget.2.html
      */
-    public ?int $msgQueueId;
+    public ?int $msgQueueId = null;
 
     /**
      * Key of the System V message queue used by the process, which is parameter $key passed to method
@@ -60,12 +100,12 @@ class Process
      * @see \Swoole\Process::$msgQueueId
      * @see https://www.man7.org/linux/man-pages/man3/ftok.3.html
      */
-    public ?int $msgQueueKey;
+    public ?int $msgQueueKey = null;
 
     /**
      * Process ID. This is to uniquely identify the process in the OS.
      *
-     * It's only set when the process represented by the object exists:
+     * It's NULL until the process represented by the object exists:
      *   - After method \Swoole\Process::start() is called successfully, it holds the process ID of the child process
      *     created, both in the parent process and in the child process itself.
      *   - For a process added to a server through method \Swoole\Server::addProcess(), it's set inside the user process
@@ -79,7 +119,7 @@ class Process
      * @see \Swoole\Server::addProcess()
      * @see \Swoole\Process\Pool::getProcess()
      */
-    public int $pid;
+    public ?int $pid = null;
 
     /**
      * ID of the process.
@@ -109,12 +149,18 @@ class Process
      * Besides identifying the process, the ID also determines the message type used by methods \Swoole\Process::push()
      * and \Swoole\Process::pop().
      *
+     * Please note that although a process created directly in PHP (through "new \Swoole\Process(...)" followed by a
+     * method call to \Swoole\Process::start()) has an ID internally, assigned as described above, this property is not
+     * populated for it: the property stays NULL, and the internal ID is only observable indirectly (e.g., through the
+     * message type used by methods \Swoole\Process::push() and \Swoole\Process::pop()). The property is populated only
+     * in the \Swoole\Server::addProcess() and \Swoole\Process\Pool::getProcess() cases described above.
+     *
      * @readonly
      * @see \Swoole\Process::useQueue()
      * @see \Swoole\Server::addProcess()
      * @see \Swoole\Process\Pool::getProcess()
      */
-    public int $id;
+    public ?int $id = null;
 
     /**
      * @var callable The callback function of the process.
@@ -124,9 +170,48 @@ class Process
     /**
      * The constructor.
      *
-     * @param callable $callback The callback function of the process.
+     * The object represents a child process to be forked by method \Swoole\Process::start(); the callback function
+     * given is what the child process executes.
+     *
+     * Objects of this class can be created in PHP CLI mode only.
+     *
+     * @param callable $callback The callback function of the process. It's called inside the child process, with the
+     *                           \Swoole\Process object as its only argument, once the child process is started; the
+     *                           child process quits when the callback function finishes.
+     * @param bool $redirect_stdin_and_stdout Redirect the standard input, output, and error of the child process to
+     *                                        the pipe: data written by the child process to STDOUT or STDERR can then
+     *                                        be read from the pipe (e.g., via method \Swoole\Process::read()) on the
+     *                                        other side, and data written into the pipe on the other side can be read
+     *                                        by the child process from STDIN. When enabled, a stream typed pipe is
+     *                                        used implicitly, overriding parameter $pipe_type.
+     * @param int $pipe_type Type of the pipe created for exchanging data between the current process and the child
+     *                       process: 0 (no pipe is created), 1 (a stream typed pipe, i.e., a pair of connected
+     *                       SOCK_STREAM Unix domain sockets), or 2 (a datagram typed pipe, i.e., a pair of connected
+     *                       SOCK_DGRAM Unix domain sockets). The default value is declared as constant SOCK_DGRAM,
+     *                       whose value (2 on Linux and macOS) matches the numbering of the pipe types.
+     * @param bool $enable_coroutine Enable coroutine support in the child process or not. When enabled, an event loop
+     *                               is created in the child process and the callback function runs inside a
+     *                               coroutine; the child process quits once the callback function has returned and
+     *                               the event loop has nothing left to process.
+     * @throws \Error When the constructor is called more than once on the same object, when used not in PHP CLI mode,
+     *                when called in the master process of a running server, or when asynchronous (AIO) threads have
+     *                been started in the current process.
+     * @throws \Swoole\Exception When failed to create the Unix domain sockets backing the pipe.
+     * @see \Swoole\Process::start()
+     * @see \Swoole\Process::set()
+     * @see \Swoole\Process::$pipe
      */
     public function __construct(callable $callback, bool $redirect_stdin_and_stdout = false, int $pipe_type = SOCK_DGRAM, bool $enable_coroutine = false)
+    {
+    }
+
+    /**
+     * The destructor.
+     *
+     * There is no need to call this method directly. The resources held by the object (the pipe, for example) are
+     * released internally when the object is destroyed.
+     */
+    public function __destruct()
     {
     }
 
@@ -204,6 +289,20 @@ class Process
     {
     }
 
+    /**
+     * Set the pipe of the process to blocking or non-blocking mode.
+     *
+     * By default the pipe is in blocking mode: read and write operations on it wait until data arrives or until the
+     * data is written out. In non-blocking mode, methods \Swoole\Process::read() and \Swoole\Process::write() return
+     * false right away when there is no data to read or when the data can't be written out at once.
+     *
+     * An E_WARNING level error is thrown out when the process doesn't have a pipe.
+     *
+     * @param bool $blocking Put the pipe in blocking mode (true) or non-blocking mode (false).
+     * @see \Swoole\Process::setTimeout()
+     * @see \Swoole\Process::read()
+     * @see \Swoole\Process::write()
+     */
     public function setBlocking(bool $blocking): void
     {
     }
@@ -280,10 +379,39 @@ class Process
     {
     }
 
+    /**
+     * Fork the child process and start it.
+     *
+     * The child process executes the callback function passed to the constructor and quits when the function
+     * finishes; the child process itself never returns from this method call. In the calling process, the method
+     * returns the process ID of the child process.
+     *
+     * @return bool|int Returns the process ID of the child process (a positive integer) on success. It returns
+     *                  false, with an E_WARNING level error thrown out, when the process has been started already
+     *                  (and is still alive), or when the operating system fails to fork a new process.
+     * @see \Swoole\Process::__construct()
+     * @see \Swoole\Process::wait()
+     * @see \Swoole\Process::$pid
+     */
     public function start(): bool|int
     {
     }
 
+    /**
+     * Write data into the pipe of the process, to be read on the other end.
+     *
+     * This method can be used both in the process where the object is created and in the child process, each writing
+     * to its own end of the pipe. When an event loop is running in the current process and the pipe is in
+     * non-blocking mode, the data is written asynchronously through the event loop; otherwise, the method blocks
+     * until the data is written out.
+     *
+     * @param string $data The data to write. It can't be empty.
+     * @return int|false Returns the number of bytes written on success. It returns false, with an E_WARNING level
+     *                   error thrown out, when $data is empty, when the process doesn't have a pipe, or when the
+     *                   write fails.
+     * @see \Swoole\Process::read()
+     * @see \Swoole\Process::setBlocking()
+     */
     public function write(string $data): int|false
     {
     }
@@ -311,6 +439,20 @@ class Process
     {
     }
 
+    /**
+     * Read data from the pipe of the process.
+     *
+     * This method can be used both in the process where the object is created and in the child process, each reading
+     * from its own end of the pipe. By default the method blocks until data is available.
+     *
+     * @param int $size Maximum number of bytes to read.
+     * @return string|false Returns the data read on success; returns false on failure, with an E_WARNING level error
+     *                      thrown out when the process doesn't have a pipe or when the read fails (unless the read
+     *                      was interrupted by a signal).
+     * @see \Swoole\Process::write()
+     * @see \Swoole\Process::setBlocking()
+     * @see \Swoole\Process::setTimeout()
+     */
     public function read(int $size = 8192): string|false
     {
     }
@@ -388,6 +530,18 @@ class Process
     {
     }
 
+    /**
+     * Export the pipe of the process as a \Swoole\Coroutine\Socket object, so that data can be exchanged through the
+     * pipe using the coroutine-friendly socket API.
+     *
+     * The Socket object wraps a duplicate of the underlying descriptor of the pipe, and the same Socket object is
+     * returned every time this method is called on the same Process object.
+     *
+     * @return Socket|false Returns a \Swoole\Coroutine\Socket object on success; returns false on failure, with an
+     *                      E_WARNING level error thrown out when the process doesn't have a pipe.
+     * @see \Swoole\Process::$pipe
+     * @see \Swoole\Coroutine\Socket
+     */
     public function exportSocket(): Socket|false
     {
     }
@@ -415,22 +569,118 @@ class Process
         return \cli_set_process_title($process_name);
     }
 
+    /**
+     * Wait for a child process of the current process to exit, and reap it.
+     *
+     * This static method waits for any child process of the calling process, not only the ones started through
+     * \Swoole\Process objects. An exited child process stays in the system as a "zombie" process until it's reaped by
+     * a call to this method. When child processes are managed asynchronously, register a handler for the SIGCHLD
+     * signal (via method \Swoole\Process::signal()) and call this method inside it in non-blocking mode, in a loop,
+     * until it returns false.
+     *
+     * @param bool $blocking Block until a child process exits (true, the default), or return false right away when no
+     *                       child process has exited yet (false).
+     * @return array|false Returns an array with the following three keys when a child process has exited:
+     *                     - pid (int): Process ID of the exited child process.
+     *                     - code (int): Exit code of the child process.
+     *                     - signal (int): Number of the signal that killed the child process, or 0 when the child
+     *                     process exited normally.
+     *                     Returns false on failure, e.g., when the current process has no child process to wait for.
+     * @see \Swoole\Process::signal()
+     * @see https://www.man7.org/linux/man-pages/man2/waitpid.2.html
+     */
     public static function wait(bool $blocking = true): array|false
     {
     }
 
+    /**
+     * Register (or remove) an asynchronous handler for a signal.
+     *
+     * The handler is executed through the event loop of the current process when the signal arrives; the event loop
+     * is created implicitly if it doesn't exist yet. This method can be used in PHP CLI mode only; a fatal error is
+     * triggered otherwise.
+     *
+     * @param int $signal_no The signal number, e.g., SIGTERM, SIGUSR1, or SIGCHLD.
+     * @param callable|null $callback The callback function, called with the signal number as its only argument when
+     *                                the signal arrives. When null is passed, the handler registered before for the
+     *                                signal is removed instead. Constant SIG_IGN can also be passed in place of a
+     *                                callback to make the process ignore the signal.
+     * @return bool Returns true on success. It returns false, with an E_WARNING level error thrown out, when the
+     *              signal number is invalid, when the signal is already handled internally by Swoole itself, or when
+     *              null is passed but no handler has been registered for the signal.
+     * @see \Swoole\Process::alarm()
+     * @see \Swoole\Process::wait()
+     * @see \Swoole\Process::kill()
+     */
     public static function signal(int $signal_no, ?callable $callback = null): bool
     {
     }
 
+    /**
+     * Set (or cancel) an interval timer that delivers a signal to the current process periodically, through system
+     * call setitimer().
+     *
+     * The signal delivered depends on parameter $type; use method \Swoole\Process::signal() to handle it. This
+     * method can be used in PHP CLI mode only (a fatal error is triggered otherwise), and it can't be used together
+     * with the timers of \Swoole\Timer: when timers exist in the current process, an E_WARNING level error is thrown
+     * out and false is returned.
+     *
+     * @param int $usec Interval of the timer in microseconds. When 0 or a negative integer is passed, the timer is
+     *                  cancelled.
+     * @param int $type One of the following three values:
+     *                  - 0 (the default; ITIMER_REAL): The timer counts down in real time. Signal SIGALRM is
+     *                  delivered.
+     *                  - 1 (ITIMER_VIRTUAL): The timer counts down only while the process is executing. Signal
+     *                  SIGVTALRM is delivered.
+     *                  - 2 (ITIMER_PROF): The timer counts down while the process is executing, and while the kernel
+     *                  is working on behalf of the process. Signal SIGPROF is delivered.
+     * @return bool Returns true on success or false on failure.
+     * @see \Swoole\Process::signal()
+     * @see \Swoole\Timer
+     * @see https://www.man7.org/linux/man-pages/man2/setitimer.2.html
+     */
     public static function alarm(int $usec, int $type = 0): bool
     {
     }
 
+    /**
+     * Send a signal to a process.
+     *
+     * When 0 is passed as the signal number, no signal is sent; the method just checks whether the target process
+     * exists (and whether the current process is allowed to send signals to it), making it a handy way to test if a
+     * process is still alive.
+     *
+     * @param int $pid Process ID of the target process.
+     * @param int $signal_no The signal to send. Default to SIGTERM (15).
+     * @return bool Returns true on success. It returns false, with an E_WARNING level error thrown out, when the
+     *              signal can't be sent (the error is suppressed, though, when $signal_no is 0 and the target process
+     *              simply doesn't exist).
+     * @see \Swoole\Process::wait()
+     * @see \Swoole\Process::signal()
+     * @see https://www.man7.org/linux/man-pages/man2/kill.2.html
+     */
     public static function kill(int $pid, int $signal_no = 15): bool
     {
     }
 
+    /**
+     * Turn the current process into a daemon, detached from the terminal and running in the background.
+     *
+     * Note that daemonizing involves a fork: the process that keeps running afterwards is a new process, with a
+     * process ID different from the one the script started with.
+     *
+     * @param bool $nochdir Keep the current working directory unchanged (true, the default); when false is passed,
+     *                      the working directory is changed to the root directory (/).
+     * @param bool $noclose Keep the standard input, output, and error streams as they are (true, the default); when
+     *                      false is passed, they are redirected to /dev/null.
+     * @param array $pipes Streams, sockets, or file descriptors to install as the standard streams of the current
+     *                     process before daemonizing: the first element replaces the standard input (file descriptor
+     *                     0), the second the standard output (1), and the third the standard error (2). NULL elements
+     *                     leave the corresponding descriptors unchanged, and elements beyond the third one are
+     *                     ignored. To keep the replaced streams in effect, leave $noclose as true.
+     * @return bool Returns true on success or false on failure.
+     * @see https://www.man7.org/linux/man-pages/man3/daemon.3.html
+     */
     public static function daemon(bool $nochdir = true, bool $noclose = true, array $pipes = []): bool
     {
     }

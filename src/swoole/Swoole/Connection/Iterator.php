@@ -32,6 +32,16 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * The destructor.
+     *
+     * There is no need to call this method directly; it does nothing. The resources held by the object are released
+     * internally when the object is destroyed.
+     */
+    public function __destruct()
+    {
+    }
+
+    /**
      * @see \Iterator::rewind()
      * @see https://www.php.net/manual/en/iterator.rewind.php
      * {@inheritDoc}

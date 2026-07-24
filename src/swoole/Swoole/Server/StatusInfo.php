@@ -27,7 +27,10 @@ class StatusInfo
     public int $worker_pid = 0;
 
     /**
-     * @var int The status field that was filled in by the waitpid function after the worker process was created.
+     * @var int The raw process status reported by the operating system when the worker process exited (the status
+     *          value filled in by the waitpid(2) system call). Properties $exit_code and $signal are both derived
+     *          from this value, so usually there is no need to inspect it directly.
+     * @see https://man7.org/linux/man-pages/man2/waitpid.2.html
      */
     public int $status = 0;
 

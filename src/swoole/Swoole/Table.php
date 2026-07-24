@@ -45,16 +45,31 @@ namespace Swoole;
  */
 class Table implements \Iterator, \Countable
 {
+    /**
+     * Column type for storing integers.
+     *
+     * @see \Swoole\Table::column()
+     */
     public const TYPE_INT = 1;
 
+    /**
+     * Column type for storing floating-point numbers.
+     *
+     * @see \Swoole\Table::column()
+     */
     public const TYPE_FLOAT = 2;
 
+    /**
+     * Column type for storing strings.
+     *
+     * @see \Swoole\Table::column()
+     */
     public const TYPE_STRING = 3;
 
     /**
      * Maximum number of rows in the table.
      *
-     * This property isn't initialized when the object is created; instead, it is initialized when the table is created,
+     * This property is NULL when the object is created; it is initialized when the table is created,
      * i.e., when method Table::create() is called successfully. Once initialized, this property never changes, even
      * after the table is destroyed (via method \Swoole\Table::destroy()).
      *
@@ -66,12 +81,12 @@ class Table implements \Iterator, \Countable
      * @see \Swoole\Table::create()
      * @see \Swoole\Table::getSize()
      */
-    public ?int $size;
+    public ?int $size = null;
 
     /**
      * Memory allocated (in bytes) for the table.
      *
-     * This property isn't initialized when the object is created; instead, it is initialized when the table is created,
+     * This property is NULL when the object is created; it is initialized when the table is created,
      * i.e., when method Table::create() is called successfully. Once initialized, this property never changes, even
      * after the table is destroyed (via method \Swoole\Table::destroy()).
      *
@@ -83,7 +98,7 @@ class Table implements \Iterator, \Countable
      * @see \Swoole\Table::create()
      * @see \Swoole\Table::getMemorySize()
      */
-    public ?int $memorySize;
+    public ?int $memorySize = null;
 
     /**
      * A table is built on top of shared memory and can't be resized once created, thus its capacity has to be
@@ -241,16 +256,29 @@ class Table implements \Iterator, \Countable
      *
      * @param string $key The key of the row. Only the first 63 bytes of the key are used.
      * @param string|null $field The name of the column.
-     * @return mixed The return value could be one of the following:
-     *               - boolean false if the key doesn't exist, or if $field is given but doesn't match any column.
-     *               - the value of the column if $field is specified.
-     *               - an array of all columns if $field is not specified.
+     * @return array|string|float|int|false The return value could be one of the following:
+     *                                      - boolean false if the key doesn't exist, or if $field is given but
+     *                                      doesn't match any column.
+     *                                      - the value of the column (a string, float, or integer, depending on the
+     *                                      type of the column) if $field is specified.
+     *                                      - an array of all columns if $field is not specified.
      */
-    public function get(string $key, ?string $field = null): mixed
+    public function get(string $key, ?string $field = null): array|string|float|int|false
     {
     }
 
     /**
+     * Count the number of rows in the table.
+     *
+     * Although not part of the declared signature, the underlying implementation also accepts an optional mode
+     * argument (e.g., $table->count(COUNT_RECURSIVE)): when constant COUNT_NORMAL (0, the default) is passed, the
+     * number of rows is returned; any other value (e.g., constant COUNT_RECURSIVE) makes the method return the
+     * number of rows multiplied by the number of columns, mimicking how PHP function \count() treats
+     * two-dimensional arrays. Note that PHP function \count() always calls this method without arguments, i.e.,
+     * \count($table, COUNT_RECURSIVE) still returns the number of rows only.
+     *
+     * @return int Number of rows currently stored in the table. If the table hasn't been created yet or has been
+     *             destroyed, 0 is returned.
      * @see \Countable::count()
      * @see https://www.php.net/manual/en/countable.count.php
      * {@inheritDoc}

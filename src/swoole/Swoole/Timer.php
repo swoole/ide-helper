@@ -11,6 +11,9 @@ use Swoole\Timer\Iterator;
  *
  * Timer operations are performed in memory only; there is no IO involved. Benchmark result shows that it takes 0.08
  * second to create/delete 100,000 timers using random intervals.
+ *
+ * All methods of this class are static. Objects of this class can't be instantiated; trying to instantiate one
+ * results in an \Error being thrown.
  */
 class Timer
 {
@@ -41,8 +44,10 @@ class Timer
      *     });
      *
      * @param int $ms The timer interval in milliseconds. It must be no less than SWOOLE_TIMER_MIN_MS (1 millisecond).
-     * @param callable $callback The callback function to be executed when the timer interval has elapsed.
-     * @param mixed $params The parameters to be passed to the callback function.
+     * @param callable $callback The callback function to be executed when the timer interval has elapsed. The timer
+     *                           ID is passed to the callback function as its first argument, followed by the
+     *                           parameters given in $params.
+     * @param mixed ...$params The parameters to be passed to the callback function.
      * @return int|false Returns the timer ID on success, or false on failure.
      * @alias This method has an alias function \swoole_timer_tick().
      * @see SWOOLE_TIMER_MIN_MS
@@ -104,7 +109,11 @@ class Timer
      *   - removed (boolean): Whether the timer has been removed.
      *
      * @param int $timer_id Timer ID returned by \Swoole\Timer::tick() or \Swoole\Timer::after().
-     * @return array|null Returns an array of timer information, or null if the timer does not exist.
+     * @return array|null Returns an array of timer information, or null if the timer does not exist. When no timer
+     *                    has ever been added in the current thread (i.e., the timer scheduler is not initialized),
+     *                    false is returned at run time although the return type declared for this method is
+     *                    array|null. The type declared here matches the one the extension itself declares, i.e., the
+     *                    mismatch is in Swoole, not in this stub.
      * @alias This method has an alias function \swoole_timer_info().
      * @see \swoole_timer_info()
      * @since 4.4.0
@@ -138,6 +147,7 @@ class Timer
      * };
      * ```
      *
+     * @return Iterator An iterator (a subclass of \ArrayIterator) holding the IDs of all the active timers.
      * @alias This method has an alias function \swoole_timer_list().
      * @see \swoole_timer_list()
      * @since 4.4.0
@@ -148,6 +158,9 @@ class Timer
 
     /**
      * Clear a timer in current process.
+     *
+     * Only timers created in PHP (via methods \Swoole\Timer::tick() and \Swoole\Timer::after()) can be cleared;
+     * timers created internally by Swoole itself can't.
      *
      * @param int $timer_id Timer ID returned by \Swoole\Timer::tick() or \Swoole\Timer::after().
      * @return bool Returns true on success, false on failure or if the timer does not exist.

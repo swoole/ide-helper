@@ -7,6 +7,10 @@ namespace Swoole\Process;
 use Swoole\Process;
 
 /**
+ * A process pool manages a fixed-size group of worker processes: the master process (the process where the pool is
+ * created and started) forks the given number of worker processes, replaces them with new ones when they quit, and,
+ * depending on the IPC mode chosen, dispatches messages to them.
+ *
  * @not-serializable Objects of this class cannot be serialized.
  */
 class Pool
@@ -52,7 +56,7 @@ class Pool
      * @see \Swoole\Process\Pool::getProcess()
      * @since 4.4.0
      */
-    public ?array $workers;
+    public ?array $workers = null;
 
     /**
      * If current worker process is considered as running or not.
@@ -111,6 +115,16 @@ class Pool
     }
 
     /**
+     * The destructor.
+     *
+     * There is no need to call this method directly. The resources held by the pool are released internally when the
+     * object is destroyed.
+     */
+    public function __destruct()
+    {
+    }
+
+    /**
      * Set runtime options for the process pool.
      *
      * This method should be called before method \Swoole\Process\Pool::start() is called.
@@ -122,7 +136,7 @@ class Pool
      *     worker processes over the message bus or not. Default to false. The message bus splits a message into chunks
      *     when needed, which allows messages larger than the socket buffer to be delivered through method
      *     \Swoole\Process\Pool::sendMessage(). It works only when the IPC mode of the pool is SWOOLE_IPC_UNIXSOCK;
-     *     otherwise, method \Swoole\Process\Pool::start() fails with an E_WARNING level error thrown out.
+     *     otherwise, method \Swoole\Process\Pool::start() fails with a warning logged.
      *   - \Swoole\Constant::OPTION_MAX_PACKAGE_SIZE (int): Maximum size of a message a worker process can receive, in
      *     bytes. Default to 2097152 (2 MB). In IPC mode SWOOLE_IPC_SOCKET, a connection sending a larger package is
      *     closed.
@@ -196,21 +210,73 @@ class Pool
      * @param int $work_id ID of the work process to get.
      *                     - It should be greater than or equal to 0 and less than the number of worker processes in the pool.
      *                     - If it's not passed or a negative integer is passed, ID of the current worker process will be used.
-     * @return Process|false Returns a worker process object back; returns false if the worker process doesn't exist.
+     * @return Process|false Returns a worker process object back; returns false when the worker process doesn't
+     *                       exist (an E_WARNING level error is thrown out in this case) or when the pool hasn't been
+     *                       started yet.
      */
     public function getProcess(int $work_id = -1): Process|false
     {
     }
 
+    /**
+     * Create the server socket that the worker processes of the pool accept connections from, in IPC mode
+     * SWOOLE_IPC_SOCKET.
+     *
+     * This method can only be used when the IPC mode of the pool is SWOOLE_IPC_SOCKET, and it must be called before
+     * method \Swoole\Process\Pool::start() is called. Data received from a client connection is dispatched to a
+     * worker process and delivered through the "onMessage" event; method \Swoole\Process\Pool::write() is used to
+     * send data back to the client.
+     *
+     * @param string $host The IP address to listen on, e.g., "127.0.0.1" or "0.0.0.0". To listen on a Unix domain
+     *                     socket instead, prefix the path with "unix:", e.g., "unix:/tmp/pool.sock" (parameter $port
+     *                     is ignored in that case).
+     * @param int $port The port to listen on. It's ignored when listening on a Unix domain socket.
+     * @param int $backlog Maximum number of pending connections queued by the operating system for the listening
+     *                     socket.
+     * @return bool Returns true on success. It returns false, with an E_WARNING level error thrown out, when the pool
+     *              has been started already or when the IPC mode of the pool is not SWOOLE_IPC_SOCKET; it also
+     *              returns false when the socket fails to listen (e.g., the port is in use).
+     * @see \Swoole\Process\Pool::write()
+     * @see \Swoole\Process\Pool::on()
+     */
     public function listen(string $host, int $port = 0, int $backlog = 2048): bool
     {
     }
 
+    /**
+     * Send data back to the client being served, in IPC mode SWOOLE_IPC_SOCKET.
+     *
+     * This method is to be called inside a worker process, typically in the callback function of the "onMessage"
+     * event, to respond to the client whose data is being handled; the connection is closed once the response has
+     * been sent. It can only be used when the IPC mode of the pool is SWOOLE_IPC_SOCKET.
+     *
+     * @param string $data The data to send. It can't be empty.
+     * @return bool Returns true on success. It returns false when $data is empty or when the response fails to be
+     *              sent; it also returns false, with an E_WARNING level error thrown out, when the IPC mode of the
+     *              pool is not SWOOLE_IPC_SOCKET.
+     * @see \Swoole\Process\Pool::listen()
+     * @see \Swoole\Process\Pool::on()
+     */
     public function write(string $data): bool
     {
     }
 
     /**
+     * Send a message to a worker process of the pool, in IPC mode SWOOLE_IPC_UNIXSOCK.
+     *
+     * The message is delivered to the worker process identified by $dst_worker_id, where it triggers the "onMessage"
+     * event. This method can only be used after the pool has been started, and only when the IPC mode of the pool is
+     * SWOOLE_IPC_UNIXSOCK. Messages larger than the socket buffer require the message bus to be enabled (see option
+     * \Swoole\Constant::OPTION_ENABLE_MESSAGE_BUS of method \Swoole\Process\Pool::set()).
+     *
+     * @param string $data The message to send.
+     * @param int $dst_worker_id ID of the worker process to deliver the message to, ranging from 0 to the number of
+     *                           worker processes minus 1.
+     * @return bool Returns true on success. It returns false, with an E_WARNING level error thrown out, when the pool
+     *              hasn't been started yet or when the IPC mode of the pool is not SWOOLE_IPC_UNIXSOCK; it also
+     *              returns false when the message fails to be sent.
+     * @see \Swoole\Process\Pool::on()
+     * @see \Swoole\Process\Pool::set()
      * @since 5.0.3
      */
     public function sendMessage(string $data, int $dst_worker_id): bool
@@ -251,13 +317,35 @@ class Pool
     }
 
     /**
-     * @return false|null
+     * Start the process pool: the worker processes are forked, and the master process starts managing them.
+     *
+     * This method blocks in the master process until the pool is shut down (e.g., by method
+     * \Swoole\Process\Pool::shutdown(), or by a SIGTERM signal sent to the master process); worker processes that
+     * quit are replaced with new ones automatically in the meantime. The registered callback functions are executed
+     * in the master process ("onStart"/"onShutdown") and in the worker processes (the rest) accordingly.
+     *
+     * @return false|null Returns null in the master process after the pool has been shut down. It returns false, with
+     *                    an E_WARNING or E_ERROR level error thrown out, when the pool has been started already, when
+     *                    a required callback function is missing (a callback function for event "onWorkerStart" or
+     *                    "onMessage" is required when coroutine support is enabled, or when the IPC mode is not
+     *                    SWOOLE_IPC_NONE), or when the pool fails to start.
+     * @throws \Swoole\Exception When a callback function is registered for event "onWorkerExit" but coroutine support
+     *                           is not enabled.
+     * @see \Swoole\Process\Pool::on()
+     * @see \Swoole\Process\Pool::shutdown()
      */
     public function start()
     {
     }
 
     /**
+     * Mark the pool as no longer running in the current process, and stop the event loop of the current worker
+     * process so that the process can quit gracefully.
+     *
+     * This method is normally called inside a worker process (e.g., in the callback function of event "onMessage")
+     * to make the worker process stop processing events and quit. It does nothing when the pool hasn't been started.
+     *
+     * @see \Swoole\Process\Pool::shutdown()
      * @since 4.7.0
      */
     public function stop(): void
@@ -271,6 +359,9 @@ class Pool
      * process and all worker processes.
      *
      * @return bool TRUE on success, FALSE on failure.
+     * @throws \Swoole\Exception When the pool hasn't been started yet (i.e., when property
+     *                           \Swoole\Process\Pool::$master_pid is not a positive integer).
+     * @see \Swoole\Process\Pool::$master_pid
      * @since 4.3.2
      */
     public function shutdown(): bool

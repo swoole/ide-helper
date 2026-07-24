@@ -20,20 +20,29 @@ class Response
     public int $fd = 0;
 
     /**
+     * The socket object of the underlying connection.
+     *
+     * It's set only when the response is served by a coroutine HTTP server, or when the Response object is created
+     * from a \Swoole\Coroutine\Socket object using method Response::create(); it's NULL otherwise.
+     *
      * @see \Swoole\Http\Response::create()
      * @since 4.4.0
      */
-    public Socket $socket;
+    public ?Socket $socket = null;
 
     /**
-     * HTTP headers.
+     * HTTP headers of the response.
+     *
+     * It's NULL until method Response::initHeader() is called or a header is set.
      */
-    public array $header;
+    public ?array $header = null;
 
     /**
-     * HTTP cookies.
+     * HTTP cookies of the response, as a list of "Set-Cookie" header values.
+     *
+     * It's NULL until method Response::initHeader() is called or a cookie is set.
      */
-    public array $cookie;
+    public ?array $cookie = null;
 
     /**
      * Trailer fields.
@@ -41,10 +50,12 @@ class Response
      * Trailer fields can be useful for supplying message integrity checks, digital signatures, delivery metrics, or
      * post-processing status information. They are included at the end of the response message.
      *
+     * It's NULL until method Response::initHeader() is called or a trailer is set.
+     *
      * @see https://httpwg.org/specs/rfc9110.html#trailer.fields HTTP Semantics (#trailer.fields)
      * @see https://httpwg.org/specs/rfc9112.html#chunked.trailer.section HTTP/1.1 (#chunked.trailer.section)
      */
-    public array $trailer;
+    public ?array $trailer = null;
 
     /**
      * Update property $header, $cookie and $trailer to the latest values.
@@ -99,10 +110,27 @@ class Response
      * urlencoded when set.
      *
      * @alias This method has an alias of \Swoole\Http\Response::setCookie().
-     * @param Cookie|string $name_or_object The name of the cookie as a string, or a Cookie object.
+     * @param Cookie|string $name_or_object The name of the cookie as a string, or a Cookie object. When a Cookie
+     *                                      object is given, the rest of the parameters are ignored.
      *                                      Only string values were accepted before Swoole 6.0.0.
+     * @param string $value The value of the cookie. When an empty string is given, the cookie is marked as deleted
+     *                      (expired immediately).
+     * @param int $expires When the cookie expires, as a Unix timestamp. 0 (the default) makes it a session cookie
+     *                     that is discarded when the browser is closed.
+     * @param string $path The path on the server the cookie applies to.
+     * @param string $domain The domain the cookie applies to.
+     * @param bool $secure Whether the cookie should only be sent over HTTPS connections.
+     * @param bool $httponly Whether the cookie should be inaccessible to client-side JavaScript (i.e., the "HttpOnly"
+     *                       attribute).
+     * @param string $samesite The "SameSite" attribute of the cookie: one of "Strict", "Lax", or "None". An empty
+     *                         string (the default) omits the attribute.
+     * @param string $priority The "Priority" attribute of the cookie: one of "Low", "Medium", or "High". An empty
+     *                         string (the default) omits the attribute.
      * @param bool $partitioned Specifies whether the cookie should be stored using partitioned storage.
      *                          Available since Swoole 6.0.0; prior versions did not support partitioned storage for cookies.
+     * @return bool Return TRUE on success; return FALSE when failed, e.g., when the response has been finished or
+     *              detached, or when the cookie can't be serialized (no name set, an attribute containing illegal
+     *              characters, or an expiration year beyond 9999).
      * @see \Swoole\Http\Response::setCookie()
      * @see \Swoole\Http\Response::rawcookie()
      * @see \Swoole\Http\Cookie
@@ -115,10 +143,27 @@ class Response
      * Set a cookie.
      *
      * @alias Alias of method \Swoole\Http\Response::cookie().
-     * @param Cookie|string $name_or_object The name of the cookie as a string, or a Cookie object.
+     * @param Cookie|string $name_or_object The name of the cookie as a string, or a Cookie object. When a Cookie
+     *                                      object is given, the rest of the parameters are ignored.
      *                                      Only string values were accepted before Swoole 6.0.0.
+     * @param string $value The value of the cookie. When an empty string is given, the cookie is marked as deleted
+     *                      (expired immediately).
+     * @param int $expires When the cookie expires, as a Unix timestamp. 0 (the default) makes it a session cookie
+     *                     that is discarded when the browser is closed.
+     * @param string $path The path on the server the cookie applies to.
+     * @param string $domain The domain the cookie applies to.
+     * @param bool $secure Whether the cookie should only be sent over HTTPS connections.
+     * @param bool $httponly Whether the cookie should be inaccessible to client-side JavaScript (i.e., the "HttpOnly"
+     *                       attribute).
+     * @param string $samesite The "SameSite" attribute of the cookie: one of "Strict", "Lax", or "None". An empty
+     *                         string (the default) omits the attribute.
+     * @param string $priority The "Priority" attribute of the cookie: one of "Low", "Medium", or "High". An empty
+     *                         string (the default) omits the attribute.
      * @param bool $partitioned Specifies whether the cookie should be stored using partitioned storage.
      *                          Available since Swoole 6.0.0; prior versions did not support partitioned storage for cookies.
+     * @return bool Return TRUE on success; return FALSE when failed, e.g., when the response has been finished or
+     *              detached, or when the cookie can't be serialized (no name set, an attribute containing illegal
+     *              characters, or an expiration year beyond 9999).
      * @see \Swoole\Http\Response::cookie()
      * @see \Swoole\Http\Cookie
      * @since 4.4.0
@@ -134,10 +179,29 @@ class Response
      * urlencoded when set.
      *
      * @alias This method has an alias of \Swoole\Http\Response::setRawCookie().
-     * @param Cookie|string $name_or_object The name of the cookie as a string, or a Cookie object.
+     * @param Cookie|string $name_or_object The name of the cookie as a string, or a Cookie object. When a Cookie
+     *                                      object is given, the rest of the parameters are ignored.
      *                                      Only string values were accepted before Swoole 6.0.0.
+     * @param string $value The value of the cookie. It must not contain illegal characters (control characters and
+     *                      the characters ",", ";", " ", "\t", "\r", "\n", "\013", and "\014"), since the value is not
+     *                      urlencoded by this method. When an empty string is given, the cookie is marked as deleted
+     *                      (expired immediately).
+     * @param int $expires When the cookie expires, as a Unix timestamp. 0 (the default) makes it a session cookie
+     *                     that is discarded when the browser is closed.
+     * @param string $path The path on the server the cookie applies to.
+     * @param string $domain The domain the cookie applies to.
+     * @param bool $secure Whether the cookie should only be sent over HTTPS connections.
+     * @param bool $httponly Whether the cookie should be inaccessible to client-side JavaScript (i.e., the "HttpOnly"
+     *                       attribute).
+     * @param string $samesite The "SameSite" attribute of the cookie: one of "Strict", "Lax", or "None". An empty
+     *                         string (the default) omits the attribute.
+     * @param string $priority The "Priority" attribute of the cookie: one of "Low", "Medium", or "High". An empty
+     *                         string (the default) omits the attribute.
      * @param bool $partitioned Specifies whether the cookie should be stored using partitioned storage.
      *                          Available since Swoole 6.0.0; prior versions did not support partitioned storage for cookies.
+     * @return bool Return TRUE on success; return FALSE when failed, e.g., when the response has been finished or
+     *              detached, or when the cookie can't be serialized (no name set, an attribute containing illegal
+     *              characters, or an expiration year beyond 9999).
      * @see \Swoole\Http\Response::setRawCookie()
      * @see \Swoole\Http\Response::cookie()
      * @see \Swoole\Http\Cookie
@@ -150,6 +214,27 @@ class Response
      * Set a cookie without urlencoding the cookie value.
      *
      * @alias Alias of method \Swoole\Http\Response::rawcookie().
+     * @param Cookie|string $name_or_object The name of the cookie as a string, or a Cookie object. When a Cookie
+     *                                      object is given, the rest of the parameters are ignored.
+     * @param string $value The value of the cookie. It must not contain illegal characters (control characters and
+     *                      the characters ",", ";", " ", "\t", "\r", "\n", "\013", and "\014"), since the value is not
+     *                      urlencoded by this method. When an empty string is given, the cookie is marked as deleted
+     *                      (expired immediately).
+     * @param int $expires When the cookie expires, as a Unix timestamp. 0 (the default) makes it a session cookie
+     *                     that is discarded when the browser is closed.
+     * @param string $path The path on the server the cookie applies to.
+     * @param string $domain The domain the cookie applies to.
+     * @param bool $secure Whether the cookie should only be sent over HTTPS connections.
+     * @param bool $httponly Whether the cookie should be inaccessible to client-side JavaScript (i.e., the "HttpOnly"
+     *                       attribute).
+     * @param string $samesite The "SameSite" attribute of the cookie: one of "Strict", "Lax", or "None". An empty
+     *                         string (the default) omits the attribute.
+     * @param string $priority The "Priority" attribute of the cookie: one of "Low", "Medium", or "High". An empty
+     *                         string (the default) omits the attribute.
+     * @param bool $partitioned Specifies whether the cookie should be stored using partitioned storage.
+     * @return bool Return TRUE on success; return FALSE when failed, e.g., when the response has been finished or
+     *              detached, or when the cookie can't be serialized (no name set, an attribute containing illegal
+     *              characters, or an expiration year beyond 9999).
      * @see \Swoole\Http\Response::rawcookie()
      * @see \Swoole\Http\Cookie
      * @since 6.0.0
@@ -192,6 +277,9 @@ class Response
     /**
      * Set an HTTP header.
      *
+     * @param string $key Name of the header.
+     * @param string|array $value Value(s) of the header. When an array is given, the header is sent multiple times,
+     *                            once for each value in the array.
      * @param bool $format Format (capitalize) the header name or leave it as is.
      *                     For example, HTTP header name "cOntent-tYpe" is converted to "Content-Type" by default.
      * @return bool Return TRUE on success, or FALSE when failed.
@@ -205,6 +293,9 @@ class Response
     /**
      * Set an HTTP header.
      *
+     * @param string $key Name of the header.
+     * @param string|array $value Value(s) of the header. When an array is given, the header is sent multiple times,
+     *                            once for each value in the array.
      * @param bool $format Format (capitalize) the header name or leave it as is.
      *                     For example, HTTP header name "cOntent-tYpe" is converted to "Content-Type" by default.
      * @return bool Return TRUE on success, or FALSE when failed.
@@ -220,15 +311,26 @@ class Response
      * Add a trailer to the HTTP response.
      *
      * @param string $key Name of the trailer field. It must be less than 128 bytes in length.
+     * @param string|null $value Value of the trailer field. When NULL is given, the field is recorded without a value.
+     *                           Although Swoole declares this parameter as a non-nullable string, NULL is accepted at
+     *                           runtime.
      * @return bool TRUE on success, or FALSE when failed. Typically, it fails because of one of the following reasons:
      *              - Name of the trailer field is too long.
      *              - The server has finished processing the request and sending the response.
      *              - The underlying HTTP connection has been detached.
      */
-    public function trailer(string $key, string $value): bool
+    public function trailer(string $key, ?string $value): bool
     {
     }
 
+    /**
+     * Send a PING frame to the remote peer to check that the connection is still alive.
+     *
+     * This method works only when the HTTP/2 protocol is used.
+     *
+     * @return bool Return TRUE on success; return FALSE when failed, or when the connection is not an HTTP/2 connection.
+     * @see \Swoole\Coroutine\Http2\Client::ping()
+     */
     public function ping(): bool
     {
     }
@@ -301,6 +403,25 @@ class Response
     {
     }
 
+    /**
+     * Send a file (or part of it) as the body of the HTTP response, and finish processing the request.
+     *
+     * The file is sent directly from disk without being loaded into PHP memory first, so this method is the preferred
+     * way to serve files of any size. Header "Content-Type" is set based on the file extension automatically, unless
+     * it has been set explicitly. This method can't be used after method Response::write(); use one or the other.
+     *
+     * @param string $filename Path to the file to send. It must be a regular file, and must not be empty.
+     * @param int $offset Offset in bytes from the beginning of the file where the data to send starts. Default is 0
+     *                    (from the beginning of the file).
+     * @param int $length Number of bytes to send. Default is 0, meaning everything from the offset to the end of the
+     *                    file.
+     * @return bool Return TRUE on success; return FALSE when failed, e.g., when the file doesn't exist or is not a
+     *              regular file, when the offset/length given exceeds the size of the file, when chunked transfer
+     *              encoding is in use (method Response::write() has been called), or when the response has been
+     *              finished or detached.
+     * @see \Swoole\Http\Response::end()
+     * @see \Swoole\Http\Response::write()
+     */
     public function sendfile(string $filename, int $offset = 0, int $length = 0): bool
     {
     }

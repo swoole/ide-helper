@@ -30,6 +30,7 @@ function swoole_cpu_num(): int
  * To translate the error code to an error message, use the following statement:
  *     swoole_strerror(swoole_last_error(), SWOOLE_STRERROR_SWOOLE);
  *
+ * @return int Returns the error code of the latest failed operation.
  * @alias This function has an alias method \Swoole\Server::getLastError().
  * @see \Swoole\Server::getLastError()
  * @see swoole_strerror()
@@ -43,6 +44,10 @@ function swoole_last_error(): int
  *
  * Please check documentation of method \Swoole\Coroutine::dnsLookup() for more details.
  *
+ * @param string $domain_name The Internet host name to look up, e.g., "www.swoole.com".
+ * @param float $timeout Maximum number of seconds to wait before the lookup is aborted. Defaults to 60.
+ * @param int $type Type of IP addresses to look up: AF_INET for IPv4 addresses (the default), or AF_INET6 for IPv6 addresses.
+ * @return string|false Returns the IP address of the host on success, or false on failure.
  * @alias This function has two alias methods: \Swoole\Coroutine::dnsLookup() and \Swoole\Coroutine\System::dnsLookup().
  * @see \Swoole\Coroutine::dnsLookup()
  * @see \Swoole\Coroutine\System::dnsLookup()
@@ -98,6 +103,8 @@ function swoole_async_set(array $settings): bool
 /**
  * Create a coroutine.
  *
+ * @param callable $func The function to execute inside the new coroutine.
+ * @param mixed ...$params The parameters to pass to the function when the coroutine starts.
  * @return int|false Returns the coroutine ID on success, or false on failure. Note that this method won't return
  *                   the coroutine ID back until the new coroutine yields its execution.
  * @alias This function has an alias function \go() and an alias method \Swoole\Coroutine::create().
@@ -120,6 +127,7 @@ function swoole_coroutine_create(callable $func, ...$params): int|false
  * });
  * ```
  *
+ * @param callable $callback The callback function to be deferred.
  * @alias This function has an alias function \defer() and an alias method \Swoole\Coroutine::defer().
  * @see \defer()
  * @see \Swoole\Coroutine::defer()
@@ -128,27 +136,73 @@ function swoole_coroutine_defer(callable $callback): void
 {
 }
 
+/**
+ * Creates a pair of connected sockets, like what PHP function socket_create_pair() does, but returning
+ * \Swoole\Coroutine\Socket objects that work inside coroutines without blocking the process.
+ *
+ * @param int $domain The protocol family of the sockets, e.g., AF_UNIX.
+ * @param int $type The communication type of the sockets, e.g., SOCK_STREAM.
+ * @param int $protocol The protocol of the sockets, e.g., IPPROTO_IP.
+ * @return array|false Returns an array of two connected \Swoole\Coroutine\Socket objects on success (data written to
+ *                     one can be read from the other), or false on failure.
+ * @see https://www.php.net/socket_create_pair
+ * @see \Swoole\Coroutine\Socket
+ */
 function swoole_coroutine_socketpair(int $domain, int $type, int $protocol): array|false
 {
 }
 
+/**
+ * Creates a kernel-level (C-level) coroutine that sleeps repeatedly. When coroutine support is not activated yet, the
+ * function does nothing.
+ *
+ * @param int $count Number of times the coroutine sleeps before it finishes.
+ * @param float $sleep_time Number of seconds to sleep each time.
+ * @internal This function is intended for testing purposes only.
+ */
 function swoole_test_kernel_coroutine(int $count = 100, float $sleep_time = 1.0): void
 {
 }
 
 /**
+ * Waits until some of the given sockets/streams change status, like what PHP function stream_select() does.
+ *
+ * At least one of the three arrays passed in must be non-empty; entries can be stream resources, socket resources, or
+ * objects of class \Swoole\Client. Once the function returns, each array contains only the entries that are ready.
+ *
+ * Note: this stub used to declare the signature with non-nullable array parameters as
+ * swoole_client_select(array &$read, array &$write, array &$except, float $timeout = 0.5); the three array
+ * parameters have always been nullable in the Swoole extension itself.
+ *
+ * @param array|null $read Entries to watch for readability. Pass null to watch none.
+ * @param array|null $write Entries to watch for writability. Pass null to watch none.
+ * @param array|null $except Entries to watch for exceptional conditions (e.g. a hangup). Pass null to watch none.
+ * @param float $timeout Maximum number of seconds to wait. Defaults to 0.5.
+ * @return int|false Returns the number of entries that are ready, or false on failure.
  * @alias This function has an alias function swoole_select().
  * @see swoole_select()
+ * @see https://www.php.net/stream_select
  */
-function swoole_client_select(array &$read, array &$write, array &$except, float $timeout = 0.5): int|false
+function swoole_client_select(?array &$read, ?array &$write, ?array &$except, float $timeout = 0.5): int|false
 {
 }
 
 /**
+ * Waits until some of the given sockets/streams change status, like what PHP function stream_select() does.
+ *
+ * Note: this stub used to declare the signature with non-nullable array parameters as
+ * swoole_select(array &$read, array &$write, array &$except, float $timeout = 0.5); the three array parameters have
+ * always been nullable in the Swoole extension itself.
+ *
+ * @param array|null $read Entries to watch for readability. Pass null to watch none.
+ * @param array|null $write Entries to watch for writability. Pass null to watch none.
+ * @param array|null $except Entries to watch for exceptional conditions (e.g. a hangup). Pass null to watch none.
+ * @param float $timeout Maximum number of seconds to wait. Defaults to 0.5.
+ * @return int|false Returns the number of entries that are ready, or false on failure.
  * @alias This function is an alias of function swoole_client_select().
  * @see swoole_client_select()
  */
-function swoole_select(array &$read, array &$write, array &$except, float $timeout = 0.5): int|false
+function swoole_select(?array &$read, ?array &$write, ?array &$except, float $timeout = 0.5): int|false
 {
 }
 
@@ -175,10 +229,28 @@ function swoole_set_process_name(string $process_name): bool
     return \cli_set_process_title($process_name);
 }
 
+/**
+ * Gets the IPv4 addresses of the network interfaces on the machine.
+ *
+ * Interfaces that are down, the loopback address 127.0.0.1, and IPv6 addresses are not included in the result.
+ *
+ * @return array Returns an array mapping each network interface name to its IPv4 address, e.g.,
+ *               ["eth0" => "192.168.1.5"]. If the network interfaces cannot be read, a warning is raised and false is
+ *               returned instead.
+ * @see swoole_get_local_mac()
+ */
 function swoole_get_local_ip(): array
 {
 }
 
+/**
+ * Gets the MAC (hardware) addresses of the network interfaces on the machine.
+ *
+ * @return array Returns an array mapping each network interface name to its MAC address in the form
+ *               "XX:XX:XX:XX:XX:XX", e.g., ["eth0" => "02:42:AC:11:00:02"]. On systems where the information cannot
+ *               be read, a warning is raised and false is returned instead.
+ * @see swoole_get_local_ip()
+ */
 function swoole_get_local_mac(): array
 {
 }
@@ -200,19 +272,51 @@ function swoole_strerror(int $errno, int $error_type = SWOOLE_STRERROR_SYSTEM): 
 {
 }
 
+/**
+ * Gets the error code of the most recent failed system call (the C-level "errno" value of the process).
+ *
+ * @return int Returns the error code of the most recent failed system call, or 0 if there is none.
+ * @see swoole_strerror()
+ * @see https://man7.org/linux/man-pages/man3/errno.3.html
+ */
 function swoole_errno(): int
 {
 }
 
+/**
+ * Resets the error code of the latest failed operation back to 0.
+ *
+ * @see swoole_last_error()
+ */
 function swoole_clear_error(): void
 {
 }
 
+/**
+ * Writes a message to the Swoole log (the log file configured through setting "log_file", or standard output by
+ * default). The message is dropped silently when $level is lower than the configured log level.
+ *
+ * @param int $level Log level of the message. It should be one of the SWOOLE_LOG_* constants, e.g., SWOOLE_LOG_NOTICE.
+ * @param string $msg The message to log.
+ * @see swoole_error_log_ex()
+ */
 function swoole_error_log(int $level, string $msg): void
 {
 }
 
 /**
+ * Writes a message to the Swoole log, with a Swoole error code attached to it.
+ *
+ * Compared with function swoole_error_log(), this function takes an extra error code, which is included in the
+ * message logged and stored as the error code of the latest failed operation. Messages whose error code has been
+ * suppressed via function swoole_ignore_error() are not logged.
+ *
+ * @param int $level Log level of the message. It should be one of the SWOOLE_LOG_* constants, e.g., SWOOLE_LOG_NOTICE.
+ * @param int $error A Swoole error code (one of the SWOOLE_ERROR_* constants).
+ * @param string $msg The message to log.
+ * @see swoole_error_log()
+ * @see swoole_ignore_error()
+ * @see swoole_last_error()
  * @since 4.8.1
  */
 function swoole_error_log_ex(int $level, int $error, string $msg): void
@@ -220,12 +324,25 @@ function swoole_error_log_ex(int $level, int $error, string $msg): void
 }
 
 /**
+ * Stops the given Swoole error code from being logged from now on.
+ *
+ * @param int $error The Swoole error code (one of the SWOOLE_ERROR_* constants) to suppress.
+ * @see swoole_error_log_ex()
  * @since 4.8.1
  */
 function swoole_ignore_error(int $error): void
 {
 }
 
+/**
+ * Calculates the hash code of a string.
+ *
+ * @param string $data The string to hash.
+ * @param int $type The hash algorithm to use: 0 (the default) uses the same hash algorithm that PHP uses internally
+ *                  for arrays (DJBX33A), while 1 uses the "one-at-a-time" hash algorithm.
+ * @return int|false Returns the hash code of the string as an integer, or false when $type is not a supported
+ *                   algorithm.
+ */
 function swoole_hashcode(string $data, int $type = 0): int|false
 {
 }
@@ -262,6 +379,8 @@ function swoole_mime_type_add(string $suffix, string $mime_type): bool
 /**
  * Sets the MIME type of a file name suffix, overwriting the existing entry if there is one.
  *
+ * @param string $suffix The file name suffix, without a leading dot, e.g., "json". It has to be given in lower case.
+ * @param string $mime_type The MIME type of the suffix, e.g., "application/json".
  * @see swoole_mime_type_add() Description of the list of MIME types managed by the swoole_mime_type_*() functions.
  * @since 4.5.0
  */
@@ -273,6 +392,7 @@ function swoole_mime_type_set(string $suffix, string $mime_type): void
  * Checks if the suffix of the given file name has a MIME type registered.
  *
  * @param string $filename A file name, e.g., "/var/www/index.html". Only its suffix is taken into account.
+ * @return bool Returns true if the suffix of the file name has a MIME type registered, false otherwise.
  * @see swoole_mime_type_add() Description of the list of MIME types managed by the swoole_mime_type_*() functions.
  * @since 4.5.0
  */
@@ -283,6 +403,7 @@ function swoole_mime_type_exists(string $filename): bool
 /**
  * Removes a file name suffix and its MIME type from the list.
  *
+ * @param string $suffix The file name suffix, without a leading dot, e.g., "json". It has to be given in lower case.
  * @return bool Returns TRUE on success, FALSE when the suffix is not on the list.
  * @see swoole_mime_type_add() Description of the list of MIME types managed by the swoole_mime_type_*() functions.
  * @since 4.5.0
@@ -324,6 +445,13 @@ function swoole_mime_type_list(): array
 {
 }
 
+/**
+ * Empties the DNS cache used by Swoole's coroutine-friendly DNS lookups (e.g., function
+ * swoole_async_dns_lookup_coro() and method \Swoole\Coroutine\System::gethostbyname()).
+ *
+ * @see swoole_async_dns_lookup_coro()
+ * @see \Swoole\Coroutine\System::gethostbyname()
+ */
 function swoole_clear_dns_cache(): void
 {
 }
@@ -387,6 +515,15 @@ function swoole_implicit_fn(string $fn, mixed $args = null): mixed
 {
 }
 
+/**
+ * Marks the point where PHP starts executing the shutdown functions registered via register_shutdown_function().
+ *
+ * Swoole registers this function itself as the very first shutdown function, so that it can tell whether code (e.g.
+ * coroutine creation) is running during request shutdown. It fails with a warning when called anywhere else.
+ *
+ * @return bool Returns true when called at the right moment during request shutdown, false (with a warning) otherwise.
+ * @internal This function is intended for internal use only.
+ */
 function swoole_internal_call_user_shutdown_begin(): bool
 {
 }
@@ -412,21 +549,50 @@ function swoole_get_vm_status(): array
 }
 
 /**
+ * Get a PHP object by its object handle (the internal ID shown by var_dump() and function spl_object_id()).
+ *
+ * @param int $handle The object handle.
  * @return object|false Return the specified object back; return FALSE when no object found or when error happens.
+ * @see https://www.php.net/spl_object_id
  * @since 4.8.1
  */
 function swoole_get_object_by_handle(int $handle): object|false
 {
 }
 
+/**
+ * Translates a service name into a host address using the name resolvers registered via function
+ * swoole_name_resolver_add().
+ *
+ * @param string $name The name to resolve, e.g., a host name or a service name.
+ * @param Context $ctx Contextual information passed to the name resolvers.
+ * @return string Returns the resolved address. When no registered resolver takes care of the name, a regular DNS
+ *                lookup is performed instead; an empty string is returned when the name cannot be resolved at all.
+ * @see swoole_name_resolver_add()
+ */
 function swoole_name_resolver_lookup(string $name, Context $ctx): string
 {
 }
 
+/**
+ * Appends a name resolver to the list of name resolvers used by Swoole.
+ *
+ * @param NameResolver $ns The name resolver to add.
+ * @return bool Returns true on success, false on failure.
+ * @see swoole_name_resolver_lookup()
+ * @see swoole_name_resolver_remove()
+ */
 function swoole_name_resolver_add(NameResolver $ns): bool
 {
 }
 
+/**
+ * Removes a name resolver from the list of name resolvers used by Swoole.
+ *
+ * @param NameResolver $ns The name resolver to remove.
+ * @return bool Returns true on success, false when the given name resolver is not on the list.
+ * @see swoole_name_resolver_add()
+ */
 function swoole_name_resolver_remove(NameResolver $ns): bool
 {
 }
@@ -449,34 +615,61 @@ function swoole_event_add(mixed $fd, ?callable $read_callback = null, ?callable 
 }
 
 /**
+ * Removes a file descriptor from the event loop, so that it's no longer watched for readability or writability.
+ *
+ * @param mixed $fd The descriptor to stop watching. It can be any of the values accepted by function swoole_event_add().
+ * @return bool Returns true on success, or false on failure (e.g. the descriptor is not being watched).
  * @alias This function is an alias of method \Swoole\Event::del().
  * @see \Swoole\Event::del()
+ * @see swoole_event_add()
  */
 function swoole_event_del(mixed $fd): bool
 {
 }
 
 /**
+ * Updates the callbacks and/or the events watched of a file descriptor already added to the event loop.
+ *
+ * Only the arguments passed with a non-default value are updated; the rest keep their current settings.
+ *
+ * @param mixed $fd The descriptor being watched. It can be any of the values accepted by function swoole_event_add().
+ * @param callable|null $read_callback New callback for when $fd becomes readable.
+ * @param callable|null $write_callback New callback for when $fd becomes writable.
  * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
+ * @return bool Returns true on success, or false on failure (e.g. the descriptor is not being watched, or a
+ *              requested event has no matching callback set).
  * @alias This function is an alias of method \Swoole\Event::set().
  * @see \Swoole\Event::set()
+ * @see swoole_event_add()
  */
 function swoole_event_set(mixed $fd, ?callable $read_callback = null, ?callable $write_callback = null, int $events = 0): bool
 {
 }
 
 /**
+ * Checks if a file descriptor is being watched in the event loop for the given events.
+ *
+ * @param mixed $fd The descriptor to check. It can be any of the values accepted by function swoole_event_add().
  * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
+ * @return bool Returns true if the descriptor is being watched for any of the given events, false otherwise.
  * @alias This function is an alias of method \Swoole\Event::isset().
  * @see \Swoole\Event::isset()
+ * @see swoole_event_add()
  */
 function swoole_event_isset(mixed $fd, int $events = SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE): bool
 {
 }
 
 /**
+ * Runs a single iteration of the event loop, processing the events that are ready at the moment.
+ *
+ * Unlike function swoole_event_wait(), this function doesn't keep looping; it's meant for programs that manage their
+ * own main loop.
+ *
+ * @return bool Returns true on success, false on failure.
  * @alias This function is an alias of method \Swoole\Event::dispatch().
  * @see \Swoole\Event::dispatch()
+ * @see swoole_event_wait()
  */
 function swoole_event_dispatch(): bool
 {
@@ -498,6 +691,12 @@ function swoole_event_defer(callable $callback): bool
 }
 
 /**
+ * Sets a callback function to be executed at the end (or, optionally, at the beginning) of each iteration of the
+ * event loop.
+ *
+ * @param callable|null $callback The callback function. Pass null to remove the callback currently set.
+ * @param bool $before When true, the callback is executed at the beginning of each iteration instead of at the end.
+ * @return bool Returns true on success, or false on failure (e.g. when passing null while no callback is set).
  * @alias This function is an alias of method \Swoole\Event::cycle().
  * @see \Swoole\Event::cycle()
  */
@@ -506,24 +705,38 @@ function swoole_event_cycle(?callable $callback, bool $before = false): bool
 }
 
 /**
+ * Writes data to a file descriptor through the event loop: the data is sent right away if possible, with the
+ * remainder buffered and sent automatically once the descriptor becomes writable.
+ *
+ * @param mixed $fd The descriptor to write to. It can be any of the values accepted by function swoole_event_add().
+ * @param string $data The data to write.
+ * @return bool Returns true on success, false on failure.
  * @alias This function is an alias of method \Swoole\Event::write().
  * @see \Swoole\Event::write()
+ * @see swoole_event_add()
  */
 function swoole_event_write(mixed $fd, string $data): bool
 {
 }
 
 /**
+ * Starts the event loop and keeps it running until there is nothing left to watch. Code after this call only runs
+ * once the event loop has finished.
+ *
  * @alias This function is an alias of method \Swoole\Event::wait().
  * @see \Swoole\Event::wait()
+ * @see swoole_event_exit()
  */
 function swoole_event_wait(): void
 {
 }
 
 /**
+ * Asks the running event loop to stop, making function swoole_event_wait() return.
+ *
  * @alias This function is an alias of method \Swoole\Event::exit().
  * @see \Swoole\Event::exit()
+ * @see swoole_event_wait()
  */
 function swoole_event_exit(): void
 {
@@ -582,7 +795,7 @@ function swoole_timer_after(int $ms, callable $callback, ...$params): int|false
  *
  * @param int $ms The timer interval in milliseconds. It must be no less than SWOOLE_TIMER_MIN_MS (1 millisecond).
  * @param callable $callback The callback function to be executed when the timer interval has elapsed.
- * @param mixed $params The parameters to be passed to the callback function.
+ * @param mixed ...$params The parameters to be passed to the callback function.
  * @return int|false Returns the timer ID on success, or false on failure.
  * @alias This function is an alias of method \Swoole\Timer::tick().
  * @see SWOOLE_TIMER_MIN_MS
@@ -650,6 +863,7 @@ function swoole_timer_stats(): array
  * };
  * ```
  *
+ * @return Iterator Returns an iterator of timer IDs, which can be traversed with a foreach loop.
  * @alias This function is an alias of method \Swoole\Timer::list().
  * @see \Swoole\Timer::list()
  */
@@ -686,6 +900,7 @@ function swoole_timer_clear_all(): bool
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
  * @see curl_close()
  * @see https://www.php.net/curl_close
  */
@@ -699,6 +914,8 @@ function swoole_native_curl_close(CurlHandle $handle): void
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
+ * @return CurlHandle|false Returns a new cURL handle, or false on failure.
  * @see curl_copy_handle()
  * @see https://www.php.net/curl_copy_handle
  */
@@ -712,6 +929,8 @@ function swoole_native_curl_copy_handle(CurlHandle $handle): CurlHandle|false
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
+ * @return int Returns the error number of the last cURL operation on the given handle, or 0 (CURLE_OK) if no error happened.
  * @see curl_errno()
  * @see https://www.php.net/curl_errno
  */
@@ -725,6 +944,8 @@ function swoole_native_curl_errno(CurlHandle $handle): int
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
+ * @return string Returns the error message of the last cURL operation on the given handle, or an empty string if no error happened.
  * @see curl_error()
  * @see https://www.php.net/curl_error
  */
@@ -738,6 +959,9 @@ function swoole_native_curl_error(CurlHandle $handle): string
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
+ * @param string $string The string to be encoded.
+ * @return string|false Returns the URL-encoded string, or false on failure.
  * @see curl_escape()
  * @see https://www.php.net/curl_escape
  */
@@ -751,6 +975,9 @@ function swoole_native_curl_escape(CurlHandle $handle, string $string): string|f
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
+ * @return string|bool Returns true on success, or false on failure. However, when option CURLOPT_RETURNTRANSFER is set on the
+ *                     handle, the response is returned as a string instead of true.
  * @see curl_exec()
  * @see https://www.php.net/curl_exec
  */
@@ -764,6 +991,10 @@ function swoole_native_curl_exec(CurlHandle $handle): string|bool
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
+ * @param int|null $option A CURLINFO_* constant selecting the piece of information to return. When omitted or null, an
+ *                         associative array with all the available pieces of information is returned.
+ * @return mixed Returns the requested piece of information (or all of them as an array), or false on failure.
  * @see curl_getinfo()
  * @see https://www.php.net/curl_getinfo
  */
@@ -777,6 +1008,8 @@ function swoole_native_curl_getinfo(CurlHandle $handle, ?int $option = null): mi
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param string|null $url When given, option CURLOPT_URL is set to this value.
+ * @return CurlHandle|false Returns a cURL handle on success, or false on failure.
  * @see curl_init()
  * @see https://www.php.net/curl_init
  */
@@ -790,6 +1023,9 @@ function swoole_native_curl_init(?string $url = null): CurlHandle|false
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlMultiHandle $multi_handle The cURL multi handle.
+ * @param CurlHandle $handle The cURL handle to add.
+ * @return int Returns 0 (CURLM_OK) on success, or one of the CURLM_* error codes on failure.
  * @see curl_multi_add_handle()
  * @see https://www.php.net/curl_multi_add_handle
  */
@@ -803,6 +1039,7 @@ function swoole_native_curl_multi_add_handle(CurlMultiHandle $multi_handle, Curl
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlMultiHandle $multi_handle The cURL multi handle.
  * @see curl_multi_close()
  * @see https://www.php.net/curl_multi_close
  */
@@ -816,6 +1053,9 @@ function swoole_native_curl_multi_close(CurlMultiHandle $multi_handle): void
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlMultiHandle $multi_handle The cURL multi handle.
+ * @return int Returns the error number of the last cURL multi operation on the given handle, or 0 (CURLM_OK) if no
+ *             error happened.
  * @see curl_multi_errno()
  * @see https://www.php.net/curl_multi_errno
  */
@@ -829,6 +1069,9 @@ function swoole_native_curl_multi_errno(CurlMultiHandle $multi_handle): int
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlMultiHandle $multi_handle The cURL multi handle.
+ * @param int $still_running Set to the number of transfers that are still running.
+ * @return int Returns 0 (CURLM_OK) on success, or one of the CURLM_* error codes on failure.
  * @see curl_multi_exec()
  * @see https://www.php.net/curl_multi_exec
  */
@@ -842,6 +1085,9 @@ function swoole_native_curl_multi_exec(CurlMultiHandle $multi_handle, int &$stil
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
+ * @return string|null Returns the content fetched by the handle when option CURLOPT_RETURNTRANSFER is set on it, or
+ *                     null otherwise.
  * @see curl_multi_getcontent()
  * @see https://www.php.net/curl_multi_getcontent
  */
@@ -855,10 +1101,17 @@ function swoole_native_curl_multi_getcontent(CurlHandle $handle): ?string
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * Note: this stub used to declare parameter $queued_messages with a native type, as "?int &$queued_messages = null";
+ * the parameter has always been untyped in the Swoole extension itself, matching PHP's own curl_multi_info_read().
+ *
+ * @param CurlMultiHandle $multi_handle The cURL multi handle.
+ * @param int|null $queued_messages Set to the number of messages still in the queue.
+ * @return array|false Returns an associative array with information about a finished transfer, or false when there is
+ *                     no message left.
  * @see curl_multi_info_read()
  * @see https://www.php.net/curl_multi_info_read
  */
-function swoole_native_curl_multi_info_read(CurlMultiHandle $multi_handle, ?int &$queued_messages = null): array|false
+function swoole_native_curl_multi_info_read(CurlMultiHandle $multi_handle, &$queued_messages = null): array|false
 {
 }
 
@@ -868,6 +1121,7 @@ function swoole_native_curl_multi_info_read(CurlMultiHandle $multi_handle, ?int 
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @return CurlMultiHandle Returns a new cURL multi handle.
  * @see curl_multi_init()
  * @see https://www.php.net/curl_multi_init
  */
@@ -881,6 +1135,9 @@ function swoole_native_curl_multi_init(): CurlMultiHandle
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlMultiHandle $multi_handle The cURL multi handle.
+ * @param CurlHandle $handle The cURL handle to remove.
+ * @return int Returns 0 (CURLM_OK) on success, or one of the CURLM_* error codes on failure.
  * @see curl_multi_remove_handle()
  * @see https://www.php.net/curl_multi_remove_handle
  */
@@ -894,6 +1151,9 @@ function swoole_native_curl_multi_remove_handle(CurlMultiHandle $multi_handle, C
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlMultiHandle $multi_handle The cURL multi handle.
+ * @param float $timeout Maximum number of seconds to wait.
+ * @return int Returns the number of handles with activity, or -1 on failure.
  * @see curl_multi_select()
  * @see https://www.php.net/curl_multi_select
  */
@@ -907,10 +1167,30 @@ function swoole_native_curl_multi_select(CurlMultiHandle $multi_handle, float $t
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlMultiHandle $multi_handle The cURL multi handle.
+ * @param int $option A CURLMOPT_* constant selecting the option to set.
+ * @param mixed $value The value to set the option to.
+ * @return bool Returns true on success, or false on failure.
  * @see curl_multi_setopt()
  * @see https://www.php.net/curl_multi_setopt
  */
 function swoole_native_curl_multi_setopt(CurlMultiHandle $multi_handle, int $option, mixed $value): bool
+{
+}
+
+/**
+ * The coroutine version of PHP's cURL function curl_multi_strerror().
+ *
+ * This function is available only when PHP is 8.4 or above and Swoole is installed with option "--enable-swoole-curl"
+ * included. Don't use this function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @param int $error_code One of the CURLM_* error codes.
+ * @return string|null Returns a text description of the given error code, or null when the error code is unknown.
+ * @see curl_multi_strerror()
+ * @see https://www.php.net/curl_multi_strerror
+ * @since 6.0.0
+ */
+function swoole_native_curl_multi_strerror(int $error_code): ?string
 {
 }
 
@@ -920,6 +1200,9 @@ function swoole_native_curl_multi_setopt(CurlMultiHandle $multi_handle, int $opt
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
+ * @param int $flags One of the CURLPAUSE_* constants, telling which directions of the transfer to pause or resume.
+ * @return int Returns 0 (CURLE_OK) on success, or one of the CURLE_* error codes on failure.
  * @see curl_pause()
  * @see https://www.php.net/curl_pause
  */
@@ -933,6 +1216,7 @@ function swoole_native_curl_pause(CurlHandle $handle, int $flags): int
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
  * @see curl_reset()
  * @see https://www.php.net/curl_reset
  */
@@ -946,6 +1230,9 @@ function swoole_native_curl_reset(CurlHandle $handle): void
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
+ * @param array $options An array mapping CURLOPT_* constants to the values to set them to.
+ * @return bool Returns true if all the options are set successfully, false otherwise.
  * @see curl_setopt_array()
  * @see https://www.php.net/curl_setopt_array
  */
@@ -959,10 +1246,30 @@ function swoole_native_curl_setopt_array(CurlHandle $handle, array $options): bo
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
+ * @param int $option A CURLOPT_* constant selecting the option to set.
+ * @param mixed $value The value to set the option to.
+ * @return bool Returns true on success, or false on failure.
  * @see curl_setopt()
  * @see https://www.php.net/curl_setopt
  */
 function swoole_native_curl_setopt(CurlHandle $handle, int $option, mixed $value): bool
+{
+}
+
+/**
+ * The coroutine version of PHP's cURL function curl_strerror().
+ *
+ * This function is available only when PHP is 8.4 or above and Swoole is installed with option "--enable-swoole-curl"
+ * included. Don't use this function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @param int $error_code One of the CURLE_* error codes.
+ * @return string|null Returns a text description of the given error code, or null when the error code is unknown.
+ * @see curl_strerror()
+ * @see https://www.php.net/curl_strerror
+ * @since 6.0.0
+ */
+function swoole_native_curl_strerror(int $error_code): ?string
 {
 }
 
@@ -972,9 +1279,44 @@ function swoole_native_curl_setopt(CurlHandle $handle, int $option, mixed $value
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
  * function directly; always use the corresponding PHP's cURL function instead.
  *
+ * @param CurlHandle $handle The cURL handle.
+ * @param string $string The URL-encoded string to be decoded.
+ * @return string|false Returns the decoded string, or false on failure.
  * @see curl_unescape()
  * @see https://www.php.net/curl_unescape
  */
 function swoole_native_curl_unescape(CurlHandle $handle, string $string): string|false
+{
+}
+
+/**
+ * The coroutine version of PHP's cURL function curl_upkeep().
+ *
+ * This function is available only when PHP is 8.4 or above, Swoole is installed with option "--enable-swoole-curl"
+ * included, and libcurl is 7.62.0 or above. Don't use this function directly; always use the corresponding PHP's cURL
+ * function instead.
+ *
+ * @param CurlHandle $handle The cURL handle.
+ * @return bool Returns true on success, or false on failure.
+ * @see curl_upkeep()
+ * @see https://www.php.net/curl_upkeep
+ * @since 6.0.0
+ */
+function swoole_native_curl_upkeep(CurlHandle $handle): bool
+{
+}
+
+/**
+ * The coroutine version of PHP's cURL function curl_version().
+ *
+ * This function is available only when PHP is 8.4 or above and Swoole is installed with option "--enable-swoole-curl"
+ * included. Don't use this function directly; always use the corresponding PHP's cURL function instead.
+ *
+ * @return array|false Returns an associative array with information about the cURL version in use, or false on failure.
+ * @see curl_version()
+ * @see https://www.php.net/curl_version
+ * @since 6.0.0
+ */
+function swoole_native_curl_version(): array|false
 {
 }

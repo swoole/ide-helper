@@ -15,21 +15,31 @@ define('SWOOLE_EXTRA_VERSION', '');
 /*
  * If debug logging is enabled or not in Swoole.
  *
- * Debug logging is enabled when Swoole is installed with configuration option "--enable-debug-log" included.
+ * Debug logging is enabled when Swoole is installed with configuration option "--enable-debug-log" included, in which
+ * case this constant is true; otherwise it is false, as shown here.
  */
-define('SWOOLE_DEBUG', 0);
+define('SWOOLE_DEBUG', false);
 
+/*
+ * Next three constants tell which compression libraries were found and built in when Swoole was compiled. Each of them
+ * is defined (as true) only when the corresponding support is available; otherwise the constant does not exist at all:
+ *   - SWOOLE_HAVE_COMPRESSION: at least one of the supported compression libraries (zlib, brotli, or zstd) is built in,
+ *     so HTTP requests/responses can be compressed and decompressed.
+ *   - SWOOLE_HAVE_ZLIB: the zlib library (for gzip/deflate compression) is built in.
+ *   - SWOOLE_HAVE_BROTLI: the brotli library (for Brotli compression) is built in.
+ */
 #ifdef SW_HAVE_COMPRESSION
-define('SWOOLE_HAVE_COMPRESSION', '1');
+define('SWOOLE_HAVE_COMPRESSION', true);
 #endif
 #ifdef SW_HAVE_ZLIB
-define('SWOOLE_HAVE_ZLIB', '1');
+define('SWOOLE_HAVE_ZLIB', true);
 #endif
 #ifdef SW_HAVE_BROTLI
-define('SWOOLE_HAVE_BROTLI', '1');
+define('SWOOLE_HAVE_BROTLI', true);
 #endif
 
-define('SWOOLE_USE_HTTP2', '1');
+// HTTP/2 support is always built into Swoole, so this constant is always defined as true.
+define('SWOOLE_USE_HTTP2', true);
 
 // Support short names or not. Short names are all the aliases listed in file ./shortnames.php.
 define('SWOOLE_USE_SHORTNAME', (bool) ini_get('swoole.use_shortname'));
@@ -411,6 +421,265 @@ define('PRIO_PROCESS', 0);
 define('PRIO_PGRP', 1);
 define('PRIO_USER', 2);
 
+/*
+ * Following socket-related constants (AF_*, SOCK_*, MSG_*, SO_*, SOL_*, SOMAXCONN, TCP_NODELAY, MCAST_*,
+ * IP_MULTICAST_*, IPV6_*, IPPROTO_*, AI_*, and most SOCKET_E* constants) are set only when PHP extension sockets (to
+ * support low-level socket communication) is not installed, so that socket-related code (e.g., code working with
+ * class \Swoole\Coroutine\Socket) keeps working without that extension.
+ *
+ * The constants are the same as those defined in PHP extension sockets, as you can see from the following link:
+ *   - https://www.php.net/manual/en/sockets.constants.php
+ *
+ * Note that values of these constants are not always the same in different operating systems. The values shown here
+ * are for Linux only. A few constants of PHP extension sockets that exist only on other operating systems (MSG_EOF,
+ * SO_FAMILY, SO_LABEL, SO_PEERLABEL, SO_LISTENQLIMIT, SO_LISTENQLEN, and SO_USER_COOKIE) are not listed here.
+ *
+ * @see \Swoole\Coroutine\Socket
+ */
+// Address families. They specify the kind of addresses a socket communicates with.
+define('AF_UNIX', 1); // Local communication between processes on the same machine (Unix domain sockets).
+define('AF_INET', 2); // IPv4 Internet protocols.
+define('AF_INET6', 10); // IPv6 Internet protocols.
+// Socket types. They specify the communication semantics of a socket.
+define('SOCK_STREAM', 1); // Reliable, connection-based byte stream (used by TCP).
+define('SOCK_DGRAM', 2); // Connectionless datagrams of a fixed maximum length (used by UDP).
+define('SOCK_RAW', 3); // Raw network protocol access.
+define('SOCK_RDM', 4); // Reliably-delivered datagrams, without guaranteed ordering.
+define('SOCK_SEQPACKET', 5); // Reliable, connection-based, sequenced datagrams of a fixed maximum length.
+// Message flags. They modify the behavior of a single send or receive operation on a socket.
+define('MSG_OOB', 1); // Send or receive out-of-band (urgent) data.
+define('MSG_PEEK', 2); // Peek at the incoming data without removing it from the receive queue.
+define('MSG_DONTROUTE', 4); // Send without following the normal routing table (directly reachable hosts only).
+define('MSG_CTRUNC', 8); // Set on receive when some control (ancillary) data was discarded for lack of buffer space.
+define('MSG_TRUNC', 32); // Set on receive when the datagram was larger than the buffer and got truncated.
+define('MSG_WAITALL', 256); // Block until the full amount of requested data has been received.
+#ifdef MSG_EOR
+define('MSG_EOR', 128); // Mark the end of a record.
+#endif
+#ifdef MSG_DONTWAIT
+define('MSG_DONTWAIT', 64); // Perform this one operation in non-blocking mode.
+#endif
+#ifdef MSG_CONFIRM
+define('MSG_CONFIRM', 2048); // Tell the link layer that the peer replied, so it does not need to re-probe it.
+#endif
+#ifdef MSG_ERRQUEUE
+define('MSG_ERRQUEUE', 8192); // Receive queued errors from the socket's error queue instead of regular data.
+#endif
+#ifdef MSG_NOSIGNAL
+define('MSG_NOSIGNAL', 16384); // Do not raise the SIGPIPE signal when the other end has closed the connection.
+#endif
+#ifdef MSG_MORE
+define('MSG_MORE', 32768); // The caller has more data to send; the kernel may combine the pieces into one packet.
+#endif
+#ifdef MSG_WAITFORONE
+define('MSG_WAITFORONE', 65536); // When receiving multiple messages, return as soon as at least one is available.
+#endif
+#ifdef MSG_CMSG_CLOEXEC
+define('MSG_CMSG_CLOEXEC', 1073741824); // Set the close-on-exec flag on file descriptors received over the socket.
+#endif
+/*
+ * Socket options. They are read with socket_get_option() and changed with socket_set_option() (or, in Swoole, with
+ * methods \Swoole\Coroutine\Socket::getOption() and \Swoole\Coroutine\Socket::setOption()).
+ *
+ * @see https://man7.org/linux/man-pages/man7/socket.7.html socket(7)
+ * @see \Swoole\Coroutine\Socket::getOption()
+ * @see \Swoole\Coroutine\Socket::setOption()
+ */
+define('SO_DEBUG', 1); // Enable protocol-level debugging output.
+define('SO_REUSEADDR', 2); // Allow reusing a local address that is in the TIME_WAIT state.
+define('SO_TYPE', 3); // The type of the socket (e.g., SOCK_STREAM); read-only.
+define('SO_ERROR', 4); // The pending error on the socket, cleared once read; read-only.
+define('SO_DONTROUTE', 5); // Send without following the normal routing table (directly reachable hosts only).
+define('SO_BROADCAST', 6); // Allow sending datagrams to broadcast addresses.
+define('SO_SNDBUF', 7); // Size of the send buffer, in bytes.
+define('SO_RCVBUF', 8); // Size of the receive buffer, in bytes.
+define('SO_KEEPALIVE', 9); // Send keep-alive probes on an idle connection.
+define('SO_OOBINLINE', 10); // Deliver out-of-band data inline with regular data.
+define('SO_LINGER', 13); // Whether (and how long) closing the socket blocks until unsent data is transmitted.
+#ifdef SO_REUSEPORT
+define('SO_REUSEPORT', 15); // Allow multiple sockets to bind to exactly the same address and port.
+#endif
+define('SO_RCVLOWAT', 18); // Minimum number of bytes in the receive buffer before a read returns data.
+define('SO_SNDLOWAT', 19); // Minimum number of bytes available in the send buffer before a write proceeds.
+define('SO_RCVTIMEO', 20); // Timeout for blocking receive operations.
+define('SO_SNDTIMEO', 21); // Timeout for blocking send operations.
+#ifdef SO_BINDTODEVICE
+define('SO_BINDTODEVICE', 25); // Bind the socket to a specific network interface (e.g., "eth0").
+#endif
+define('SOL_SOCKET', 1); // Option level for socket-level options (the SO_* options above).
+define('SOMAXCONN', 4096); // Maximum length the queue of pending connections may grow to.
+#ifdef TCP_NODELAY
+define('TCP_NODELAY', 1); // Disable Nagle's algorithm: send small pieces of data right away instead of batching them.
+#endif
+/*
+ * Multicast options. They manage memberships and behavior of sockets in IP multicast groups.
+ *
+ * The MCAST_* constants are option names used together with option level IPPROTO_IP (for IPv4) or IPPROTO_IPV6 (for
+ * IPv6); the IP_MULTICAST_* option names work at level IPPROTO_IP only, and the IPV6_MULTICAST_* ones at level
+ * IPPROTO_IPV6 only.
+ */
+define('MCAST_JOIN_GROUP', 42); // Join a multicast group.
+#ifdef HAS_MCAST_EXT
+define('MCAST_BLOCK_SOURCE', 43); // Stop receiving data sent to the group from a specific source address.
+define('MCAST_UNBLOCK_SOURCE', 44); // Start receiving again data sent to the group from a previously blocked source.
+#endif
+define('MCAST_LEAVE_GROUP', 45); // Leave a multicast group.
+#ifdef HAS_MCAST_EXT
+define('MCAST_JOIN_SOURCE_GROUP', 46); // Receive data sent to the group only from a specific source address.
+define('MCAST_LEAVE_SOURCE_GROUP', 47); // Stop receiving data sent to the group from a specific source address.
+#endif
+define('IP_MULTICAST_IF', 32); // The outgoing network interface for IPv4 multicast packets.
+define('IP_MULTICAST_TTL', 33); // Time-to-live of outgoing IPv4 multicast packets.
+define('IP_MULTICAST_LOOP', 34); // Whether IPv4 multicast packets sent are looped back to the local sockets.
+define('IPV6_MULTICAST_IF', 17); // The outgoing network interface for IPv6 multicast packets.
+define('IPV6_MULTICAST_HOPS', 18); // Hop limit of outgoing IPv6 multicast packets.
+define('IPV6_MULTICAST_LOOP', 19); // Whether IPv6 multicast packets sent are looped back to the local sockets.
+#ifdef IPV6_V6ONLY
+define('IPV6_V6ONLY', 26); // Restrict an AF_INET6 socket to IPv6 communication only.
+#endif
+/*
+ * Socket error codes. They are operating system error numbers (as defined in errno(3)) prefixed with "SOCKET_", and
+ * can be checked against the error code of a failed socket operation (e.g., against property
+ * \Swoole\Coroutine\Socket::$errCode).
+ *
+ * Constant SOCKET_ECANCELED, defined near the end of this file, belongs to the same family but is defined by Swoole
+ * even when PHP extension sockets is installed.
+ *
+ * @see https://man7.org/linux/man-pages/man3/errno.3.html errno(3)
+ * @see \Swoole\Coroutine\Socket::$errCode
+ * @see SOCKET_ECANCELED
+ */
+define('SOCKET_EPERM', 1); // Operation not permitted.
+define('SOCKET_ENOENT', 2); // No such file or directory.
+define('SOCKET_EINTR', 4); // Interrupted system call.
+define('SOCKET_EIO', 5); // I/O error.
+define('SOCKET_ENXIO', 6); // No such device or address.
+define('SOCKET_E2BIG', 7); // Argument list too long.
+define('SOCKET_EBADF', 9); // Bad file descriptor.
+define('SOCKET_EAGAIN', 11); // Try again: the operation would block.
+define('SOCKET_ENOMEM', 12); // Out of memory.
+define('SOCKET_EACCES', 13); // Permission denied.
+define('SOCKET_EFAULT', 14); // Bad address.
+define('SOCKET_ENOTBLK', 15); // Block device required.
+define('SOCKET_EBUSY', 16); // Device or resource busy.
+define('SOCKET_EEXIST', 17); // File exists.
+define('SOCKET_EXDEV', 18); // Cross-device link.
+define('SOCKET_ENODEV', 19); // No such device.
+define('SOCKET_ENOTDIR', 20); // Not a directory.
+define('SOCKET_EISDIR', 21); // Is a directory.
+define('SOCKET_EINVAL', 22); // Invalid argument.
+define('SOCKET_ENFILE', 23); // Too many open files in the system.
+define('SOCKET_EMFILE', 24); // Too many open files in the process.
+define('SOCKET_ENOTTY', 25); // Inappropriate I/O control operation.
+define('SOCKET_ENOSPC', 28); // No space left on device.
+define('SOCKET_ESPIPE', 29); // Illegal seek.
+define('SOCKET_EROFS', 30); // Read-only file system.
+define('SOCKET_EMLINK', 31); // Too many links.
+define('SOCKET_EPIPE', 32); // Broken pipe.
+define('SOCKET_ENAMETOOLONG', 36); // File name too long.
+define('SOCKET_ENOLCK', 37); // No locks available.
+define('SOCKET_ENOSYS', 38); // Function not implemented.
+define('SOCKET_ENOTEMPTY', 39); // Directory not empty.
+define('SOCKET_ELOOP', 40); // Too many levels of symbolic links.
+define('SOCKET_EWOULDBLOCK', 11); // Operation would block; same value as SOCKET_EAGAIN on Linux.
+define('SOCKET_ENOMSG', 42); // No message of the desired type.
+define('SOCKET_EIDRM', 43); // Identifier removed.
+define('SOCKET_ECHRNG', 44); // Channel number out of range.
+define('SOCKET_EL2NSYNC', 45); // Level 2 not synchronized.
+define('SOCKET_EL3HLT', 46); // Level 3 halted.
+define('SOCKET_EL3RST', 47); // Level 3 reset.
+define('SOCKET_ELNRNG', 48); // Link number out of range.
+define('SOCKET_EUNATCH', 49); // Protocol driver not attached.
+define('SOCKET_ENOCSI', 50); // No CSI structure available.
+define('SOCKET_EL2HLT', 51); // Level 2 halted.
+define('SOCKET_EBADE', 52); // Invalid exchange.
+define('SOCKET_EBADR', 53); // Invalid request descriptor.
+define('SOCKET_EXFULL', 54); // Exchange full.
+define('SOCKET_ENOANO', 55); // No anode.
+define('SOCKET_EBADRQC', 56); // Invalid request code.
+define('SOCKET_EBADSLT', 57); // Invalid slot.
+define('SOCKET_ENOSTR', 60); // Device not a stream.
+define('SOCKET_ENODATA', 61); // No data available.
+define('SOCKET_ETIME', 62); // Timer expired.
+define('SOCKET_ENOSR', 63); // Out of stream resources.
+define('SOCKET_ENONET', 64); // Machine is not on the network.
+define('SOCKET_EREMOTE', 66); // Object is remote.
+define('SOCKET_ENOLINK', 67); // Link has been severed.
+define('SOCKET_EADV', 68); // Advertise error.
+define('SOCKET_ESRMNT', 69); // Srmount error.
+define('SOCKET_ECOMM', 70); // Communication error on send.
+define('SOCKET_EPROTO', 71); // Protocol error.
+define('SOCKET_EMULTIHOP', 72); // Multihop attempted.
+define('SOCKET_EBADMSG', 74); // Bad message.
+define('SOCKET_ENOTUNIQ', 76); // Name not unique on network.
+define('SOCKET_EBADFD', 77); // File descriptor in bad state.
+define('SOCKET_EREMCHG', 78); // Remote address changed.
+define('SOCKET_ERESTART', 85); // Interrupted system call should be restarted.
+define('SOCKET_ESTRPIPE', 86); // Streams pipe error.
+define('SOCKET_EUSERS', 87); // Too many users.
+define('SOCKET_ENOTSOCK', 88); // The file descriptor is not a socket.
+define('SOCKET_EDESTADDRREQ', 89); // Destination address required.
+define('SOCKET_EMSGSIZE', 90); // Message too long.
+define('SOCKET_EPROTOTYPE', 91); // Protocol wrong type for socket.
+define('SOCKET_ENOPROTOOPT', 92); // Protocol option not available.
+define('SOCKET_EPROTONOSUPPORT', 93); // Protocol not supported.
+define('SOCKET_ESOCKTNOSUPPORT', 94); // Socket type not supported.
+define('SOCKET_EOPNOTSUPP', 95); // Operation not supported on the socket.
+define('SOCKET_EPFNOSUPPORT', 96); // Protocol family not supported.
+define('SOCKET_EAFNOSUPPORT', 97); // Address family not supported by protocol.
+define('SOCKET_EADDRINUSE', 98); // Address already in use.
+define('SOCKET_EADDRNOTAVAIL', 99); // Cannot assign requested address.
+define('SOCKET_ENETDOWN', 100); // Network is down.
+define('SOCKET_ENETUNREACH', 101); // Network is unreachable.
+define('SOCKET_ENETRESET', 102); // Network dropped connection because of reset.
+define('SOCKET_ECONNABORTED', 103); // Software caused connection abort.
+define('SOCKET_ECONNRESET', 104); // Connection reset by peer.
+define('SOCKET_ENOBUFS', 105); // No buffer space available.
+define('SOCKET_EISCONN', 106); // The socket is already connected.
+define('SOCKET_ENOTCONN', 107); // The socket is not connected.
+define('SOCKET_ESHUTDOWN', 108); // Cannot send after socket shutdown.
+define('SOCKET_ETOOMANYREFS', 109); // Too many references: cannot splice.
+define('SOCKET_ETIMEDOUT', 110); // Connection timed out.
+define('SOCKET_ECONNREFUSED', 111); // Connection refused.
+define('SOCKET_EHOSTDOWN', 112); // Host is down.
+define('SOCKET_EHOSTUNREACH', 113); // No route to host.
+define('SOCKET_EALREADY', 114); // Operation already in progress.
+define('SOCKET_EINPROGRESS', 115); // Operation now in progress.
+define('SOCKET_EISNAM', 120); // Is a named type file.
+define('SOCKET_EREMOTEIO', 121); // Remote I/O error.
+define('SOCKET_EDQUOT', 122); // Disk quota exceeded.
+define('SOCKET_ENOMEDIUM', 123); // No medium found.
+define('SOCKET_EMEDIUMTYPE', 124); // Wrong medium type.
+// Protocol levels/numbers, to tell which protocol layer a socket option (or a new socket) applies to.
+define('IPPROTO_IP', 0); // Option level for IPv4-level options.
+define('IPPROTO_IPV6', 41); // Option level for IPv6-level options.
+define('SOL_TCP', 6); // Option level for TCP-level options.
+define('SOL_UDP', 17); // Option level for UDP-level options.
+define('IPV6_UNICAST_HOPS', 16); // Socket option: hop limit of outgoing IPv6 unicast packets.
+/*
+ * Address-info flags. They adjust how host names and service names are resolved into socket addresses (e.g., by
+ * function socket_addrinfo_lookup() of PHP extension sockets).
+ *
+ * @see https://man7.org/linux/man-pages/man3/getaddrinfo.3.html getaddrinfo(3)
+ */
+define('AI_PASSIVE', 1); // Resolve to an address suitable for binding a listening socket.
+define('AI_CANONNAME', 2); // Also return the canonical name of the host.
+define('AI_NUMERICHOST', 4); // The host must be a numeric address string; no name lookup is performed.
+#ifdef AI_V4MAPPED
+define('AI_V4MAPPED', 8); // If no IPv6 addresses are found, return IPv4 addresses mapped into IPv6 format.
+#endif
+#ifdef AI_ALL
+define('AI_ALL', 16); // Together with AI_V4MAPPED, return both IPv6 and mapped IPv4 addresses.
+#endif
+define('AI_ADDRCONFIG', 32); // Return addresses of a family only when the system has an address of that family configured.
+#ifdef AI_IDN
+define('AI_IDN', 64); // Convert internationalized domain names to their ASCII form before resolving.
+define('AI_CANONIDN', 128); // Convert the returned canonical name back from ASCII to its internationalized form.
+#endif
+#ifdef AI_NUMERICSERV
+define('AI_NUMERICSERV', 1024); // The service must be given as a numeric port string; no service name lookup is performed.
+#endif
+
 define('SWOOLE_MSGQUEUE_ORIENT', 1); // @since v5.0.3
 define('SWOOLE_MSGQUEUE_BALANCE', 2); // @since v5.0.3
 
@@ -663,7 +932,11 @@ if (class_exists(Swoole\Coroutine\Curl\Exception::class)) { // When Swoole is in
 }
 
 /*
- * An asynchronous socket operation was canceled before it completed. The value varies among different systems.
+ * An asynchronous socket operation was canceled before it completed. The value varies among different systems; the
+ * value shown here is for Linux.
+ *
+ * Unlike the other SOCKET_E* constants defined earlier in this file, this constant is defined by Swoole even when PHP
+ * extension sockets is installed, since that extension does not define it.
  *
  * A typical use case of this constant can be found in class Swoole\Coroutine\Server.
  *
@@ -671,6 +944,17 @@ if (class_exists(Swoole\Coroutine\Curl\Exception::class)) { // When Swoole is in
  */
 define('SOCKET_ECANCELED', 125);
 
+/*
+ * A TCP-level socket option (used with option level SOL_TCP) to read detailed state information about a TCP
+ * connection, e.g., through method \Swoole\Coroutine\Socket::getOption(). The value varies among different systems;
+ * the value shown here is for Linux.
+ *
+ * Like SOCKET_ECANCELED, this constant is defined by Swoole even when PHP extension sockets is installed, since that
+ * extension does not define it.
+ *
+ * @see https://man7.org/linux/man-pages/man7/tcp.7.html tcp(7)
+ * @see \Swoole\Coroutine\Socket::getOption()
+ */
 define('TCP_INFO', 11); // @since v6.0.0
 
 /*
