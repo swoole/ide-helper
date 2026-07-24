@@ -10,6 +10,7 @@ namespace Swoole;
  * This class is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is installed with
  * the "--enable-swoole-thread" configuration option.
  *
+ * @not-serializable Objects of this class cannot be serialized.
  * @since 6.0.0
  */
 final class Thread
@@ -30,12 +31,24 @@ final class Thread
 
     public const SCHED_RR = 2;
 
+    /**
+     * This constant is defined only on systems whose scheduler provides the SCHED_BATCH policy (Linux).
+     */
     public const SCHED_BATCH = 3;
 
+    /**
+     * This constant is defined only on systems whose scheduler provides the SCHED_ISO policy.
+     */
     public const SCHED_ISO = 4;
 
+    /**
+     * This constant is defined only on systems whose scheduler provides the SCHED_IDLE policy (Linux).
+     */
     public const SCHED_IDLE = 5;
 
+    /**
+     * This constant is defined only on systems whose scheduler provides the SCHED_DEADLINE policy (Linux).
+     */
     public const SCHED_DEADLINE = 6;
 
     /**
@@ -186,7 +199,7 @@ final class Thread
      * set scheduling policy and priority of a thread.
      *
      * @return bool Returns true on success or false on failure.
-     * @see \Swoole\Swoole::getPriority()
+     * @see \Swoole\Thread::getPriority()
      * @see https://linux.die.net/man/3/pthread_setschedparam
      */
     public static function setPriority(int $priority, int $policy = 0): bool
@@ -197,7 +210,7 @@ final class Thread
      * Get scheduling policy and parameters of a thread.
      *
      * @return array{policy: int, priority: int} An array containing the scheduling policy and priority of the thread.
-     * @see \Swoole\Swoole::setPriority()
+     * @see \Swoole\Thread::setPriority()
      * @see https://linux.die.net/man/3/pthread_getschedparam
      */
     public static function getPriority(): array

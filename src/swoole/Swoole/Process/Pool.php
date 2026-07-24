@@ -16,6 +16,7 @@ class Pool
      *
      * This property will be set to a positive integer when method \Swoole\Process\Pool::start() is called successfully.
      *
+     * @readonly
      * @since 4.3.2
      */
     public int $master_pid = -1;

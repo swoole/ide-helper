@@ -13,6 +13,7 @@ namespace Swoole\Thread\Atomic;
  * This class is a thread-safe version of the \Swoole\Atomic\Long class. For more information, see the documentation for
  * the \Swoole\Atomic\Long class.
  *
+ * @not-serializable Objects of this class cannot be serialized.
  * @since 6.0.0
  * @see \Swoole\Atomic\Long Use this instead when PHP is compiled without Zend Thread Safety (ZTS) enabled.
  * @see \Swoole\Thread\Atomic Use this instead to store the value using unsigned 32-bit integers instead of signed 64-bit integers.

@@ -62,6 +62,7 @@ class Table implements \Iterator, \Countable
      * The two values are of the same only after the table is created but before it's destroyed. i.e., the two values
      * are of the same only between the calls of method \Swoole\Table::create() and method \Swoole\Table::destroy().
      *
+     * @readonly
      * @see \Swoole\Table::create()
      * @see \Swoole\Table::getSize()
      */
@@ -78,6 +79,7 @@ class Table implements \Iterator, \Countable
      * The two values are of the same only after the table is created but before it's destroyed. i.e., the two values
      * are of the same only between the calls of method \Swoole\Table::create() and method \Swoole\Table::destroy().
      *
+     * @readonly
      * @see \Swoole\Table::create()
      * @see \Swoole\Table::getMemorySize()
      */

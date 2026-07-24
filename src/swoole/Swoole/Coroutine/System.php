@@ -128,37 +128,4 @@ class System
     public static function waitEvent(mixed $socket, int $events = SWOOLE_EVENT_READ, float $timeout = -1): int|false
     {
     }
-
-    /**
-     * @alias This method has an alias method \Swoole\Coroutine::fread().
-     * @param mixed $handle
-     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fread() directly.
-     * @removed 6.0.0
-     * @see \Swoole\Coroutine::fread()
-     */
-    public static function fread($handle, int $length = 0): string|false
-    {
-    }
-
-    /**
-     * @alias This method has an alias method \Swoole\Coroutine::fwrite().
-     * @param mixed $handle
-     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fwrite() directly.
-     * @removed 6.0.0
-     * @see \Swoole\Coroutine::fwrite()
-     */
-    public static function fwrite($handle, string $data, int $length = 0): int|false
-    {
-    }
-
-    /**
-     * @alias This method has an alias method \Swoole\Coroutine::fgets().
-     * @param mixed $handle
-     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fgets() directly.
-     * @removed 6.0.0
-     * @see \Swoole\Coroutine::fgets()
-     */
-    public static function fgets($handle): string|false
-    {
-    }
 }

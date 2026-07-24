@@ -52,6 +52,14 @@ class Client
      */
     public int $serverLastStreamId = 0;
 
+    /**
+     * @param string $host The target host to connect to.
+     * @param int $port The target port to connect to. Defaults to 80.
+     * @param bool $open_ssl Whether to establish the connection over TLS/SSL. Setting this to TRUE is only
+     *                       supported when OpenSSL support is enabled (i.e., when Swoole is installed with the
+     *                       configuration option "--enable-openssl" included); otherwise the constructor throws a
+     *                       \Swoole\Coroutine\Http2\Client\Exception.
+     */
     public function __construct(string $host, int $port = 80, bool $open_ssl = false)
     {
     }

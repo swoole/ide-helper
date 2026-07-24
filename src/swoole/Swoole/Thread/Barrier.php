@@ -13,6 +13,7 @@ namespace Swoole\Thread;
  * This class is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is installed with
  * the "--enable-swoole-thread" configuration option.
  *
+ * @not-serializable Objects of this class cannot be serialized.
  * @since 6.0.0
  */
 final class Barrier

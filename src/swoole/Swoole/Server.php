@@ -850,7 +850,7 @@ class Server
     /**
      * Run a customized command in a specified process of Swoole.
      *
-     * @param bool $json_encode If the callback function of the command returns a JSON encoded string back, it can be decoded automatically by setting this parameter to TRUE.
+     * @param bool $json_decode If the callback function of the command returns a JSON encoded string back, it can be decoded automatically by setting this parameter to TRUE.
      * @see \Swoole\Server::addCommand()
      * @since 4.8.0
      */

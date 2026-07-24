@@ -413,7 +413,7 @@ class Coroutine
      * @see \Swoole\Coroutine::getaddrinfo()
      *
      * @alias This method has an alias method \Swoole\Coroutine\System::gethostbyname().
-     * @see \Swoole\Coroutine\System::dnsLookup()
+     * @see \Swoole\Coroutine\System::gethostbyname()
      */
     public static function gethostbyname(string $domain_name, int $type = AF_INET, float $timeout = -1): string|false
     {
@@ -564,39 +564,6 @@ class Coroutine
      * @since 4.5.0
      */
     public static function waitEvent(mixed $socket, int $events = SWOOLE_EVENT_READ, float $timeout = -1): int|false
-    {
-    }
-
-    /**
-     * @alias This method is an alias of method \Swoole\Coroutine\System::fread().
-     * @param mixed $handle
-     * @see \Swoole\Coroutine\System::fread()
-     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fread() directly.
-     * @removed 6.0.0
-     */
-    public static function fread($handle, int $length = 0): string|false
-    {
-    }
-
-    /**
-     * @alias This method is an alias of method \Swoole\Coroutine\System::fgets().
-     * @param mixed $handle
-     * @see \Swoole\Coroutine\System::fgets()
-     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fgets() directly.
-     * @removed 6.0.0
-     */
-    public static function fgets($handle): string|false
-    {
-    }
-
-    /**
-     * @alias This method is an alias of method \Swoole\Coroutine\System::fwrite().
-     * @param mixed $handle
-     * @see \Swoole\Coroutine\System::fwrite()
-     * @deprecated 4.5.1 Turn on runtime hook SWOOLE_HOOK_FILE or SWOOLE_HOOK_ALL, and use the built-in PHP function fwrite() directly.
-     * @removed 6.0.0
-     */
-    public static function fwrite($handle, string $data, int $length = 0): int|false
     {
     }
 }

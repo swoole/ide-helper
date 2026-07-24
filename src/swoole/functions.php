@@ -87,10 +87,11 @@ function swoole_async_dns_lookup_coro(string $domain_name, float $timeout = 60, 
  *                        enabled. Enabled by default; disabling it turns off automatic coroutine creation in
  *                        callbacks.
  *
+ * @return bool Returns true on success. Returns false when the settings cannot be applied (e.g. invalid arguments).
  * @see \Swoole\Coroutine::set()
  * @see SWOOLE_HOOK_FILE
  */
-function swoole_async_set(array $settings): void
+function swoole_async_set(array $settings): bool
 {
 }
 
@@ -329,22 +330,62 @@ function swoole_clear_dns_cache(): void
 {
 }
 
-function swoole_substr_unserialize(string $str, int $offset, int $length, array $options = []): mixed
-{
-}
-
-function swoole_substr_json_decode(string $str, int $offset, int $length, bool $associative = false, int $depth = 512, int $flags = 0): mixed
+/**
+ * Unserializes a value stored inside the given string, without first copying the substring out.
+ *
+ * This is a memory-friendly equivalent of unserialize(substr($str, $offset, $length)): the serialized value is read
+ * straight out of $str at the given position, so the temporary copy that substr() would create is avoided. It is
+ * handy when a small serialized record is stored inside a large buffer.
+ *
+ * @param string $str The string containing the serialized value.
+ * @param int $offset Position in $str to start reading from. A negative offset counts back from the end of the string.
+ * @param int $length Number of bytes to read. When 0 (the default), or larger than what remains after $offset, the
+ *                    rest of the string is used.
+ * @param array $options Options passed through to PHP's unserialize(), e.g. ["allowed_classes" => false].
+ * @return mixed Returns the unserialized value, or false on failure (e.g. when $str is empty or $offset falls outside
+ *               the string).
+ * @see https://www.php.net/unserialize
+ */
+function swoole_substr_unserialize(string $str, int $offset, int $length = 0, array $options = []): mixed
 {
 }
 
 /**
- * Triggers an error based on the provided string. Possible actions include triggering a fatal error,
- * throwing an exception, or exiting with a non-zero status code.
+ * Decodes a JSON value stored inside the given string, without first copying the substring out.
  *
+ * This is a memory-friendly equivalent of json_decode(substr($str, $offset, $length), ...): the JSON is parsed
+ * straight out of $str at the given position, so the temporary copy that substr() would create is avoided. It is
+ * handy when a small JSON document is embedded in a large buffer.
+ *
+ * @param string $str The string containing the JSON document.
+ * @param int $offset Position in $str to start reading from. A negative offset counts back from the end of the string.
+ * @param int $length Number of bytes to read. When 0 (the default), or larger than what remains after $offset, the
+ *                    rest of the string is used.
+ * @param bool $associative When true, JSON objects are returned as associative arrays instead of objects. Mirrors the
+ *                          same argument of PHP's json_decode().
+ * @param int $depth Maximum nesting depth. Defaults to 512.
+ * @param int $flags Bitmask of JSON decoding flags (the JSON_* constants), e.g. JSON_BIGINT_AS_STRING.
+ * @return mixed Returns the decoded value, or null (with an E_WARNING) when $str is empty or $offset falls outside
+ *               the string.
+ * @see https://www.php.net/json_decode
+ */
+function swoole_substr_json_decode(string $str, int $offset, int $length = 0, bool $associative = false, int $depth = 512, int $flags = 0): mixed
+{
+}
+
+/**
+ * Internal testing helper that performs a low-level action selected by name, such as triggering a fatal error,
+ * exiting with a given status code, aborting the process, or reporting a value's reference count.
+ *
+ * @param string $fn Name of the action to perform, e.g. "fatal_error", "bailout", "abort", "refcount" or
+ *                   "func_handler". An unknown name makes the function throw a \Swoole\Exception.
+ * @param mixed $args Optional argument for the selected action (e.g. the exit status for "bailout", or the value
+ *                    whose reference count to report for "refcount").
+ * @return mixed The result depends on the action selected; most actions return null, while e.g. "refcount" returns an int.
  * @internal This function is intended for testing purposes only.
  * @since 6.0.0
  */
-function swoole_implicit_fn(string $fn, int $args = 95): void
+function swoole_implicit_fn(string $fn, mixed $args = null): mixed
 {
 }
 
@@ -358,7 +399,7 @@ function swoole_internal_call_user_shutdown_begin(): bool
  * @return array|false Return an array of objects back; return FALSE when no objects exist or when error happens.
  * @since 4.8.1
  */
-function swoole_get_objects()
+function swoole_get_objects(): array|false
 {
 }
 
@@ -368,7 +409,7 @@ function swoole_get_objects()
  * @return array The array contains two fields: "object_num" (# of objects) and "resource_num" (# of resources).
  * @since 4.8.1
  */
-function swoole_get_vm_status()
+function swoole_get_vm_status(): array
 {
 }
 
@@ -376,7 +417,7 @@ function swoole_get_vm_status()
  * @return object|false Return the specified object back; return FALSE when no object found or when error happens.
  * @since 4.8.1
  */
-function swoole_get_object_by_handle(int $handle)
+function swoole_get_object_by_handle(int $handle): object|false
 {
 }
 
@@ -393,11 +434,19 @@ function swoole_name_resolver_remove(NameResolver $ns): bool
 }
 
 /**
+ * Adds a file descriptor to the event loop and watches it for readability and/or writability.
+ *
+ * @param mixed $fd The descriptor to watch: an int file descriptor, a stream or socket resource, a
+ *                  \Swoole\Coroutine\Socket, or an object exposing one of those.
+ * @param callable|null $read_callback Called when $fd becomes readable. Required when $events includes SWOOLE_EVENT_READ.
+ * @param callable|null $write_callback Called when $fd becomes writable. Required when $events includes SWOOLE_EVENT_WRITE.
  * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
+ * @return int|false Returns the file descriptor being watched on success, or false on failure (e.g. an unrecognized
+ *                   $fd, a descriptor that is already being watched, or a missing callback for a requested event).
  * @alias This function is an alias of method \Swoole\Event::add().
  * @see \Swoole\Event::add()
  */
-function swoole_event_add(mixed $fd, ?callable $read_callback = null, ?callable $write_callback = null, int $events = SWOOLE_EVENT_READ): bool
+function swoole_event_add(mixed $fd, ?callable $read_callback = null, ?callable $write_callback = null, int $events = SWOOLE_EVENT_READ): int|false
 {
 }
 
@@ -446,7 +495,7 @@ function swoole_event_dispatch(): bool
  * @see \Swoole\Event::defer()
  * @see \swoole_timer_after() Add a timer that only runs once after the specified number of milliseconds.
  */
-function swoole_event_defer(callable $callback)
+function swoole_event_defer(callable $callback): bool
 {
 }
 

@@ -102,11 +102,12 @@ class Response
      *
      * @alias This method has an alias of \Swoole\Http\Response::setCookie().
      * @param Cookie|string $name_or_object The name of the cookie as a string, or a Cookie object.
-     *                            Only string values were accepted before Swoole 6.0.0.
+     *                                      Only string values were accepted before Swoole 6.0.0.
      * @param bool $partitioned Specifies whether the cookie should be stored using partitioned storage.
      *                          Available since Swoole 6.0.0; prior versions did not support partitioned storage for cookies.
      * @see \Swoole\Http\Response::setCookie()
      * @see \Swoole\Http\Response::rawcookie()
+     * @see \Swoole\Http\Cookie
      */
     public function cookie(Cookie|string $name_or_object, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = '', bool $partitioned = false): bool
     {
@@ -117,10 +118,11 @@ class Response
      *
      * @alias Alias of method \Swoole\Http\Response::cookie().
      * @param Cookie|string $name_or_object The name of the cookie as a string, or a Cookie object.
-     *                            Only string values were accepted before Swoole 6.0.0.
+     *                                      Only string values were accepted before Swoole 6.0.0.
      * @param bool $partitioned Specifies whether the cookie should be stored using partitioned storage.
      *                          Available since Swoole 6.0.0; prior versions did not support partitioned storage for cookies.
      * @see \Swoole\Http\Response::cookie()
+     * @see \Swoole\Http\Cookie
      * @since 4.4.0
      */
     public function setCookie(Cookie|string $name_or_object, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = '', bool $partitioned = false): bool
@@ -134,14 +136,15 @@ class Response
      * urlencoded when set.
      *
      * @alias This method has an alias of \Swoole\Http\Response::setRawCookie().
-     * @param Cookie|string $name The name of the cookie as a string, or a Cookie object.
-     *                            Only string values were accepted before Swoole 6.0.0.
+     * @param Cookie|string $name_or_object The name of the cookie as a string, or a Cookie object.
+     *                                      Only string values were accepted before Swoole 6.0.0.
      * @param bool $partitioned Specifies whether the cookie should be stored using partitioned storage.
      *                          Available since Swoole 6.0.0; prior versions did not support partitioned storage for cookies.
      * @see \Swoole\Http\Response::setRawCookie()
      * @see \Swoole\Http\Response::cookie()
+     * @see \Swoole\Http\Cookie
      */
-    public function rawcookie(Cookie|string $name, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = '', bool $partitioned = false): bool
+    public function rawcookie(Cookie|string $name_or_object, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = '', bool $partitioned = false): bool
     {
     }
 
@@ -150,6 +153,7 @@ class Response
      *
      * @alias Alias of method \Swoole\Http\Response::rawcookie().
      * @see \Swoole\Http\Response::rawcookie()
+     * @see \Swoole\Http\Cookie
      * @since 6.0.0
      */
     public function setRawCookie(Cookie|string $name_or_object, string $value = '', int $expires = 0, string $path = '/', string $domain = '', bool $secure = false, bool $httponly = false, string $samesite = '', string $priority = '', bool $partitioned = false): bool

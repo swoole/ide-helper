@@ -14,7 +14,7 @@ namespace Swoole\Server;
  * $server->on('WorkerError', function (Swoole\Server $serv, Swoole\Server\StatusInfo $info) {
  *   var_dump($info);
  * });
- * <pre>
+ * </pre>
  */
 class StatusInfo
 {

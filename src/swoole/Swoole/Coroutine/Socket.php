@@ -44,11 +44,23 @@ class Socket
     public string $errMsg = '';
 
     /**
+     * Internal bookkeeping used when this object is exposed to PHP's own sockets extension; not meant to be read or
+     * written by application code.
+     *
+     * This property exists only when Swoole is built with support for PHP's sockets extension (i.e., the sockets
+     * extension is available and Swoole is compiled with the "--enable-sockets" configuration option).
+     *
      * @since 5.1.0
      */
     public $__ext_sockets_nonblock = false;
 
     /**
+     * Internal bookkeeping used when this object is exposed to PHP's own sockets extension; not meant to be read or
+     * written by application code.
+     *
+     * This property exists only when Swoole is built with support for PHP's sockets extension (i.e., the sockets
+     * extension is available and Swoole is compiled with the "--enable-sockets" configuration option).
+     *
      * @since 5.1.0
      */
     public $__ext_sockets_timeout = 0;

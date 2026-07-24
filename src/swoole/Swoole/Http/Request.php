@@ -62,6 +62,18 @@ class Request
     {
     }
 
+    /**
+     * Get the whole raw HTTP request as received on the wire, i.e., the request line and headers followed by the body.
+     *
+     * This differs from getContent()/rawContent(), which return the request body only. It works for HTTP/1.x requests
+     * only; on an HTTP/2 request it fails with a warning and returns FALSE, because HTTP/2 has no equivalent single raw
+     * byte stream.
+     *
+     * @return string|false Return the raw request data; return an empty string when no data is available; return FALSE
+     *                      on error, or when called on an HTTP/2 request.
+     * @see \Swoole\Http\Request::getContent()
+     * @see \Swoole\Http\Request::rawContent()
+     */
     public function getData(): string|false
     {
     }
@@ -100,6 +112,12 @@ class Request
     {
     }
 
+    /**
+     * Get the HTTP request method (e.g., "GET", "POST").
+     *
+     * @return string|false Return the request method in uppercase; return FALSE when the request has already been
+     *                      finished or is otherwise unavailable.
+     */
     public function getMethod(): string|false
     {
     }

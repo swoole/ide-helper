@@ -315,6 +315,28 @@ define('SWOOLE_IPC_PREEMPTIVE', 3);
 define('SWOOLE_IOV_MAX', 1024);
 
 /*
+ * Working modes for the io_uring engine that backs Swoole's asynchronous file operations.
+ *
+ * They are used as the value of the "iouring_flag" option of function swoole_async_set(), which selects how the
+ * io_uring instance is set up to pick up new I/O requests:
+ *   - SWOOLE_IOURING_DEFAULT: the default mode; the kernel is told about newly queued requests through a system call.
+ *   - SWOOLE_IOURING_SQPOLL: a dedicated kernel thread watches the request queue on its own, so requests can usually
+ *     be submitted without a system call, at the cost of keeping that thread running. Its value mirrors the kernel's
+ *     IORING_SETUP_SQPOLL setup flag.
+ *
+ * These two constants are available only when Swoole is installed with the "--enable-iouring" configuration option
+ * included (which additionally requires the liburing library to be present).
+ *
+ * @see swoole_async_set()
+ * @see https://man7.org/linux/man-pages/man2/io_uring_setup.2.html io_uring_setup(2)
+ * @since v6.0.0
+ */
+#ifdef SW_USE_IOURING
+define('SWOOLE_IOURING_DEFAULT', 0);
+define('SWOOLE_IOURING_SQPOLL', 2); // Mirrors the kernel's IORING_SETUP_SQPOLL flag.
+#endif
+
+/*
  * Types of supported locks in Swoole.
  *
  * @see \Swoole\Lock

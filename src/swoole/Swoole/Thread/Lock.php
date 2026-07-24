@@ -13,16 +13,23 @@ namespace Swoole\Thread;
  * This class is a thread-safe version of the \Swoole\Lock class. For more information, see the documentation for the
  * \Swoole\Lock class.
  *
+ * @not-serializable Objects of this class cannot be serialized.
  * @see \Swoole\Lock For inter-process locking when ZTS is not enabled.
  * @see \Swoole\Coroutine\Lock To use locks accross coroutines when ZTS is not enabled.
  * @since 6.0.0
  */
 final class Lock
 {
-    public const RWLOCK = SWOOLE_RWLOCK;
-
     public const MUTEX = SWOOLE_MUTEX;
 
+    /**
+     * This constant is defined only when the platform provides read-write lock support.
+     */
+    public const RWLOCK = SWOOLE_RWLOCK;
+
+    /**
+     * This constant is defined only when the platform provides spinlock support.
+     */
     public const SPINLOCK = SWOOLE_SPINLOCK;
 
     public int $errCode = 0;

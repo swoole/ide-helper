@@ -21,6 +21,18 @@ class Process
 
     public const PIPE_WRITE = 4;
 
+    /**
+     * The file descriptor of the process's own end of the pipe used to exchange data with the other side. It holds the
+     * master end's descriptor in the process where the object is created, and the worker end's descriptor inside the
+     * child process.
+     *
+     * It's only set after the process has a pipe, i.e., after method \Swoole\Process::start() is called successfully
+     * (and the process was created with a pipe, which is the default).
+     *
+     * @readonly
+     * @see \Swoole\Process::start()
+     * @see \Swoole\Process::exportSocket()
+     */
     public int $pipe;
 
     /**
@@ -28,6 +40,7 @@ class Process
      *
      * It's only set when method \Swoole\Process::useQueue() is called successfully.
      *
+     * @readonly
      * @see \Swoole\Process::useQueue()
      * @see \Swoole\Process::$msgQueueKey
      * @see https://www.man7.org/linux/man-pages/man2/msgget.2.html
@@ -42,6 +55,7 @@ class Process
      *
      * It's only set when method \Swoole\Process::useQueue() is called successfully.
      *
+     * @readonly
      * @see \Swoole\Process::useQueue()
      * @see \Swoole\Process::$msgQueueId
      * @see https://www.man7.org/linux/man-pages/man3/ftok.3.html

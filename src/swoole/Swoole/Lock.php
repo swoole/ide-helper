@@ -121,11 +121,12 @@ class Lock
     /**
      * Lock the lock for reading.
      *
-     * This method works only for read-write locks (when the lock type is \Swoole\Lock::SWOOLE_RWLOCK). For other types
+     * This method works only for read-write locks (when the lock type is \Swoole\Lock::RWLOCK). For other types
      * of locks, it works the same as method \Swoole\Lock::lock().
      *
-     * A process may hold multiple concurrent read locks on read-write locks. If so, the process must perform matching
-     * unlocks (that is, it must call method \Swoole\Lock::lock_read() n times).
+     * A process may hold multiple concurrent read locks on read-write locks (that is, it may call method
+     * \Swoole\Lock::lock_read() n times). If so, the process must perform matching unlocks (that is, it must call
+     * method \Swoole\Lock::unlock() n times).
      *
      * If the lock is already acquired through method \Swoole\Lock::lock() or \Swoole\Lock::trylock(), this method will
      * block until the lock is released.
@@ -141,7 +142,7 @@ class Lock
     /**
      * Lock the lock for reading in a non-blocking way.
      *
-     * This method works only for read-write locks (when the lock type is \Swoole\Lock::SWOOLE_RWLOCK). For other types
+     * This method works only for read-write locks (when the lock type is \Swoole\Lock::RWLOCK). For other types
      * of locks, it works the same as method \Swoole\Lock::trylock().
      *
      * This method returns immediately even if the lock is not acquired. Thus, the caller should check the return value

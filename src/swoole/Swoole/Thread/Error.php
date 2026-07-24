@@ -16,6 +16,8 @@ class Error
 {
     /**
      * Error code. Default is 0.
+     *
+     * @readonly
      */
     public int $code = 0;
 }

@@ -22,7 +22,11 @@ class Request
     public bool $pipeline = false;
 
     /**
+     * When TRUE, a pipelined (streamed) request is read piece by piece with
+     * \Swoole\Coroutine\Http2\Client::read() instead of being buffered until the whole response ends.
+     *
      * @since 5.1.0
+     * @see \Swoole\Coroutine\Http2\Client::read()
      */
-    public $usePipelineRead = false;
+    public bool $usePipelineRead = false;
 }

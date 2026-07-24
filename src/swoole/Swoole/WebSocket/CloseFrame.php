@@ -11,7 +11,7 @@ class CloseFrame extends Frame
      */
     public int $opcode = SWOOLE_WEBSOCKET_OPCODE_CLOSE;
 
-    public int $code = WEBSOCKET_CLOSE_NORMAL;
+    public int $code = SWOOLE_WEBSOCKET_CLOSE_NORMAL;
 
     public string $reason = '';
 }
