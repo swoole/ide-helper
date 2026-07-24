@@ -34,17 +34,17 @@ checks both run through the `jakzal/phpqa` Docker image.
 
 Check coding style (dry run, matches CI):
 ```bash
-docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.3-alpine php-cs-fixer fix --dry-run
+docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine php-cs-fixer fix --dry-run
 ```
 
 Auto-fix coding style:
 ```bash
-docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.3-alpine php-cs-fixer fix
+docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine php-cs-fixer fix
 ```
 
-Check PHP syntax across supported versions (CI runs this for 8.1, 8.2, 8.3, and 8.4):
+Check PHP syntax across supported versions (CI runs this for 8.1, 8.2, 8.3, 8.4, and 8.5):
 ```bash
-docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.4-alpine phplint src
+docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine phplint src
 ```
 
 There is no test suite — correctness here means "the stub's signature/docblock matches upstream Swoole," not
