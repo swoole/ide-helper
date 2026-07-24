@@ -52,6 +52,10 @@ class System
     }
 
     /**
+     * Resolve a host name into a list of IPv4/IPv6 addresses.
+     *
+     * Please check documentation of method \Swoole\Coroutine::getaddrinfo() for more details.
+     *
      * @alias This method has an alias of \Swoole\Coroutine::getaddrinfo().
      * @see \Swoole\Coroutine::getaddrinfo()
      */

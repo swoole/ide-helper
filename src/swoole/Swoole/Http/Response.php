@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Swoole\Http;
 
+use Swoole\Coroutine\Socket;
 use Swoole\WebSocket\Frame;
 
 /**
@@ -61,6 +62,34 @@ class Response
     {
     }
 
+    /**
+     * Check if the Response object is still writable.
+     *
+     * The Response object is still writable unless
+     *   - the server has finished processing the request and sending the response, or
+     *   - the underlying HTTP connection has been detached.
+     *
+     * Once the Response object is not writable anymore, every method writing to the response (e.g., initHeader(),
+     * header(), trailer(), status(), write(), sendfile(), redirect(), and end()) fails and returns FALSE.
+     *
+     * @see \Swoole\Http\Response::end()
+     * @see \Swoole\Http\Response::detach()
+     * @since 4.6.0
+     *
+     * @example
+     * <pre>
+     * $server = new \Swoole\Http\Server('0.0.0.0', 9501);
+     *
+     * $server->on('request', function (\Swoole\Http\Request $request, \Swoole\Http\Response $response) {
+     *   var_dump($response->isWritable()); // true
+     *   $response->end('OK');
+     *   var_dump($response->isWritable()); // false
+     *   $response->setStatusCode(403);     // This won't work; the method call returns FALSE.
+     * });
+     *
+     * $server->start();
+     * </pre>
+     */
     public function isWritable(): bool
     {
     }
@@ -130,7 +159,9 @@ class Response
     /**
      * Set HTTP status code.
      *
-     * @param int $http_code HTTP status code.
+     * @param int $http_code HTTP status code. For an HTTP/1.x response, a reason phrase must be given as well when the
+     *                       status code is not one of the codes known to Swoole; otherwise the status line falls back
+     *                       to "200 OK". For an HTTP/2 response, the status code is always sent as is.
      * @param string $reason The reason phrase to be used with the provided status code. Optional.
      * @return bool Return TRUE on success, or FALSE when failed (e.g., if the HTTP connection has been closed or detached).
      * @alias This method has an alias of \Swoole\Http\Response::setStatusCode().
@@ -143,7 +174,9 @@ class Response
     /**
      * Set HTTP status code.
      *
-     * @param int $http_code HTTP status code.
+     * @param int $http_code HTTP status code. For an HTTP/1.x response, a reason phrase must be given as well when the
+     *                       status code is not one of the codes known to Swoole; otherwise the status line falls back
+     *                       to "200 OK". For an HTTP/2 response, the status code is always sent as is.
      * @param string $reason The reason phrase to be used with the provided status code. Optional.
      * @return bool Return TRUE on success, or FALSE when failed (e.g., if the HTTP connection has been closed or detached).
      * @alias Alias of method \Swoole\Http\Response::status().
@@ -212,10 +245,56 @@ class Response
     {
     }
 
+    /**
+     * Send a chunk of the response body to the client using chunked transfer encoding.
+     *
+     * The first call sends the HTTP headers with header "Transfer-Encoding: chunked" included; each call (including
+     * the first one) sends one chunk of the response body. Content compression is turned off as soon as this method
+     * is used. Call method Response::end() afterwards to finish the response.
+     *
+     * Unlike method Response::end(), which sends the whole response body in one single write, this method allows
+     * sending a response body of any size; each chunk itself is still subject to server option "buffer_output_size"
+     * (or "output_buffer_size").
+     *
+     * @param string $content The chunk of data to be sent. It must not be empty.
+     * @return bool Return TRUE on success, or FALSE when failed.
+     * @see \Swoole\Http\Response::end()
+     * @see \Swoole\Constant::OPTION_BUFFER_OUTPUT_SIZE
+     * @see \Swoole\Constant::OPTION_OUTPUT_BUFFER_SIZE
+     */
     public function write(string $content): bool
     {
     }
 
+    /**
+     * Send the HTTP response to the client, and finish processing the request.
+     *
+     * The end() method can be called once only. To send data to the client multiple times, call the method write() instead.
+     *
+     * If the end() method has never been called when the Response object is destructed, and the response hasn't been
+     * detached, Swoole finishes the response automatically, as if end() were called with no content. In that case,
+     * status code 500 is used when no status code has been set explicitly.
+     *
+     * If the request doesn't allow the connection to be kept alive (e.g., an HTTP/1.0 request without header
+     * "Connection: keep-alive", or a request carrying header "Connection: close"), the connection is closed after the
+     * response is sent.
+     *
+     * The response body is sent in one single write; for a server running in SWOOLE_PROCESS mode, its size is limited
+     * by option "buffer_output_size" (or "output_buffer_size") of the server, which defaults to 4294967295 bytes. If
+     * the content is larger than the buffer size, the end() method will return FALSE. There are a few solutions to
+     * address the issue:
+     *   - Put the content in a file, and use method Response::sendfile() instead.
+     *   - Send the content as chunks using method Response::write().
+     *   - Set option "buffer_output_size" (or "output_buffer_size") of the server to a larger value.
+     *
+     * @param string|null $content The content to be sent to the client. If method Response::write() has been called
+     *                             before, the content is sent as the last chunk of the response body.
+     * @return bool Return TRUE on success, or FALSE when failed.
+     * @see \Swoole\Http\Response::sendfile()
+     * @see \Swoole\Http\Response::write()
+     * @see \Swoole\Constant::OPTION_BUFFER_OUTPUT_SIZE
+     * @see \Swoole\Constant::OPTION_OUTPUT_BUFFER_SIZE
+     */
     public function end(?string $content = null): bool
     {
     }
@@ -224,34 +303,111 @@ class Response
     {
     }
 
+    /**
+     * Redirect the client to another URL.
+     *
+     * This method sets HTTP header "Location", then calls method Response::end() internally. Therefore, the response
+     * is finished after this call, and methods like Response::write() and Response::end() won't work anymore.
+     *
+     * @param string $location The redirect location.
+     * @param int $http_code HTTP status code. Default is 302.
+     * @return bool Returns true on success or false on failure.
+     * @see \Swoole\Http\Response::end()
+     * @see \Swoole\Http\Response::isWritable()
+     */
     public function redirect(string $location, int $http_code = 302): bool
     {
     }
 
+    /**
+     * Detach the underlying HTTP connection from the Response object.
+     *
+     * Once detached, the Response object is not writable anymore, and Swoole neither sends the response (not even when
+     * the Response object is destructed) nor closes the connection. The connection is left open, so that the response
+     * can be sent later on, and somewhere else, by
+     *   - creating a new Response object bound to the same connection using method Response::create(),
+     *   - sending raw data over the connection using method Server::send(), or
+     *   - sending raw data over the \Swoole\Coroutine\Socket object held by property $socket (coroutine HTTP servers).
+     *
+     * @return bool Return TRUE on success, or FALSE when the response has been finished or detached already.
+     * @see \Swoole\Http\Response::create()
+     * @see \Swoole\Http\Response::isWritable()
+     * @see \Swoole\Server::send()
+     */
     public function detach(): bool
     {
     }
 
+    /**
+     * Create a Response object bound to an existing connection.
+     *
+     * This method is used together with method Response::detach(), to send the HTTP response of a detached connection
+     * from somewhere else (e.g., from a task worker). It can be called in the following ways:
+     *   - \Swoole\Http\Response::create(\Swoole\Server $server, int $fd);
+     *   - \Swoole\Http\Response::create(\Swoole\Coroutine\Socket $socket);
+     *   - \Swoole\Http\Response::create([\Swoole\Server $server, \Swoole\Http\Request $request], int $fd);
+     *   - \Swoole\Http\Response::create([\Swoole\Coroutine\Socket $socket, \Swoole\Http\Request $request]);
+     *   - \Swoole\Http\Response::create(int $fd);
+     *
+     * When a \Swoole\Http\Request object is given, the new Response object is bound to the HTTP context of that
+     * request; otherwise a brand-new HTTP context is created, with keep-alive turned on.
+     *
+     * @param int|array|object $server A \Swoole\Server object, a \Swoole\Coroutine\Socket object, one of the two
+     *                                 paired with a \Swoole\Http\Request object as a two-element array, or the session
+     *                                 ID of a connection of the current server. Passing an object of any other type
+     *                                 triggers a warning and makes the method call fail.
+     * @param int $fd Session ID of the connection. It is required when a \Swoole\Server object is given, and must
+     *                reference an established connection of that server; it is ignored when a
+     *                \Swoole\Coroutine\Socket object is given, since the file descriptor is read from the socket.
+     * @return Response|false The HTTP response object created, or false on failure.
+     * @see \Swoole\Http\Response::detach()
+     * @see \Swoole\Server::send()
+     */
     public static function create(int|array|object $server = -1, int $fd = -1): Response|false
     {
     }
 
     /**
-     * Upgrade the HTTP server connection to the WebSocket protocol by performing a handshake with the server.
+     * Upgrade the HTTP connection to the WebSocket protocol by performing a handshake with the client.
+     *
+     * This method is supported by coroutine HTTP servers only; it fails on asynchronous HTTP servers.
      *
      * @return bool Returns true on success or false on failure.
+     * @see \Swoole\Http\Response::push()
+     * @see \Swoole\Http\Response::recv()
      * @since 4.4.0
      */
     public function upgrade(): bool
     {
     }
 
+    /**
+     * Send data to the client over the attached WebSocket connection.
+     *
+     * This method works only when the connection has been upgraded to the WebSocket protocol using method
+     * Response::upgrade(), which in turn is supported by coroutine HTTP servers only.
+     *
+     * @param Frame|string $data Data to be sent to the client. When a \Swoole\WebSocket\Frame object is given,
+     *                           parameters $opcode and $flags are ignored, and the properties of the frame are used
+     *                           instead.
+     * @param int $opcode Type of the WebSocket frame, defined as SWOOLE_WEBSOCKET_OPCODE_* constants. It defaults to
+     *                    SWOOLE_WEBSOCKET_OPCODE_TEXT, and can't be greater than SWOOLE_WEBSOCKET_OPCODE_PONG.
+     * @param int $flags A bitmask of the SWOOLE_WEBSOCKET_FLAG_* constants. It defaults to SWOOLE_WEBSOCKET_FLAG_FIN,
+     *                   marking the frame as the final fragment of a message.
+     * @return bool Return TRUE on success, or FALSE when failed.
+     * @see \Swoole\Http\Response::upgrade()
+     * @see \Swoole\WebSocket\Frame
+     * @since 4.4.0
+     */
     public function push(Frame|string $data, int $opcode = SWOOLE_WEBSOCKET_OPCODE_TEXT, int $flags = SWOOLE_WEBSOCKET_FLAG_FIN): bool
     {
     }
 
     /**
      * Receive data from the attached WebSocket connection.
+     *
+     * Like method Response::push(), this method works only when the connection has been upgraded to the WebSocket
+     * protocol using method Response::upgrade().
      *
      * @param float $timeout Timeout in seconds. -1 means never timeout; 0 means to use the default value of option "socket_read_timeout".
      * @return Frame|string|false

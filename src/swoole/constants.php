@@ -280,7 +280,29 @@ define('SWOOLE_IPC_UNIXSOCK', 1); // IPC socket (aka Unix domain socket).
 define('SWOOLE_IPC_MSGQUEUE', 2); // IPC using message queues.
 define('SWOOLE_IPC_SOCKET', 3); // Network socket.
 
-define('SWOOLE_IPC_UNSOCK', SWOOLE_IPC_UNIXSOCK);
+/*
+ * Constants in this section are task IPC modes, used as value of server setting "task_ipc_mode" to define how worker
+ * processes deliver tasks to task workers.
+ *
+ * There are 4 task IPC modes, ranged from 1 to 4, but only 3 of them have a matching PHP constant:
+ *   - 1 (SWOOLE_IPC_UNSOCK): the default mode; tasks are delivered over Unix domain sockets.
+ *   - 2 (SWOOLE_IPC_MSGQUEUE): tasks are delivered over a System V message queue, with each task addressed to one
+ *     specific task worker chosen by the dispatcher.
+ *   - 3 (SWOOLE_IPC_PREEMPTIVE): tasks are delivered over the very same System V message queue used in mode 2, except
+ *     that tasks are not addressed to any specific task worker; instead, whichever task worker becomes idle first
+ *     takes the next task off the queue.
+ *   - 4: tasks are delivered over a stream socket (a Unix domain socket of type SOCK_STREAM, listening on file
+ *     /tmp/swoole.task.<master process id>.sock) instead of a message queue. This mode has no PHP constant defined
+ *     for it; the numeric value 4 has to be used directly.
+ *
+ * Note that constant SWOOLE_IPC_PREEMPTIVE happens to share the value 3 with constant SWOOLE_IPC_SOCKET defined
+ * above, but the two belong to different sets of constants and are not interchangeable.
+ *
+ * The two message-queue-based modes (2 and 3) cannot be used together with server setting "task_enable_coroutine".
+ *
+ * @see SWOOLE_IPC_MSGQUEUE
+ */
+define('SWOOLE_IPC_UNSOCK', 1); // Default.
 define('SWOOLE_IPC_PREEMPTIVE', 3);
 
 /*
@@ -427,6 +449,27 @@ define('SWOOLE_HOOK_TLS', 64); // 2^6
 define('SWOOLE_HOOK_STREAM_FUNCTION', 128);  // 2^7
 // Runtime hook flag SWOOLE_HOOK_STREAM_SELECT is deprecated in Swoole 4.4.0. It's kept for backward compatibility only.
 define('SWOOLE_HOOK_STREAM_SELECT', SWOOLE_HOOK_STREAM_FUNCTION);
+/*
+ * When enabled, runtime hook flag SWOOLE_HOOK_FILE replaces the plain files wrapper from PHP with the one from Swoole,
+ * making blocking file system operations on local files coroutine-friendly. The whole wrapper is replaced, which
+ * covers:
+ *   - opening, reading and writing files: fopen(), fread(), fgets(), fgetc(), fwrite(), fputs(), fseek(), ftell(),
+ *     feof(), fflush(), flock(), fclose(), file(), readfile(), file_get_contents(), file_put_contents(), copy(), and
+ *     class \SplFileObject.
+ *   - reading file information: stat(), lstat(), file_exists(), is_file(), is_dir(), is_readable(), is_writable(),
+ *     filesize(), filemtime(), and the other file information functions.
+ *   - reading directories: opendir(), readdir(), closedir(), scandir(), and class \DirectoryIterator.
+ *   - modifying the file system: unlink(), rename(), mkdir(), rmdir(), touch(), chmod(), chown(), and chgrp().
+ *
+ * Files loaded through include, include_once, require, and require_once are deliberately left out; they are always
+ * read using the original blocking implementation from PHP.
+ *
+ * By default the underlying file operations are carried out in a thread pool (function swoole_async_set() is used to
+ * size that pool), or through io_uring when Swoole is installed with option "--enable-iouring" included.
+ *
+ * @see swoole_async_set()
+ * @see SWOOLE_HOOK_STDIO
+ */
 define('SWOOLE_HOOK_FILE', 256); // 2^8
 /*
  * Runtime hook flag SWOOLE_HOOK_SLEEP makes the following PHP functions coroutine-friendly:
@@ -535,6 +578,21 @@ define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192); // 2^13
  * @see \Socket
  */
 define('SWOOLE_HOOK_SOCKETS', 16384); // 2^14
+/*
+ * When enabled, runtime hook flag SWOOLE_HOOK_STDIO replaces the standard I/O stream operations in PHP with those
+ * from Swoole, making reads and writes on the following streams coroutine-friendly:
+ *   - STDIN, STDOUT, and STDERR, together with their php://stdin, php://stdout, and php://stderr equivalents.
+ *   - the pipes returned by popen() and proc_open().
+ *
+ * A read or write only yields the current coroutine when the underlying file descriptor is pollable (a pipe, a
+ * socket, or a character device such as a terminal); on a regular file it falls back to a blocking read or write.
+ *
+ * This flag is separate from SWOOLE_HOOK_FILE and does not overlap with it: SWOOLE_HOOK_FILE replaces the wrapper
+ * used to reach files on the file system, while SWOOLE_HOOK_STDIO replaces the operations used on streams that PHP
+ * itself opens from a file descriptor. Either flag can be enabled without the other.
+ *
+ * @see SWOOLE_HOOK_FILE
+ */
 define('SWOOLE_HOOK_STDIO', 32768); // 2^15
 /*
  * Runtime hook flag SWOOLE_HOOK_PDO_PGSQL makes the PDO_PGSQL driver coroutine-friendly. This flag is available only

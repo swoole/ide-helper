@@ -80,11 +80,43 @@ class Client
     {
     }
 
+    /**
+     * Receive a response from the server.
+     *
+     * Frames that don't complete a response (SETTINGS, PING, WINDOW_UPDATE, PUSH_PROMISE, and frames belonging to an
+     * unknown or already closed stream) are handled internally and don't make this method return; the method keeps
+     * waiting for the next frame instead.
+     *
+     * @param float $timeout The maximum time to wait for a response (in seconds).
+     *                       - > 0: The timeout value in seconds.
+     *                       - < 0: No timeout.
+     *                       - 0 (the default): Use the read timeout configured on the underlying socket, which is 60
+     *                       seconds unless changed through option "timeout" of method \Swoole\Coroutine\Http2\Client::set().
+     * @return Response|false Returns a Response object, or FALSE in the following cases:
+     *                        - The connection is not established yet, or has been closed already. Property $errCode is
+     *                        set to SWOOLE_ERROR_CLIENT_NO_CONNECTION in this case.
+     *                        - No complete frame is received within the given timeout, or reading from the socket fails
+     *                        (e.g., because the server closed the connection).
+     *                        - A GOAWAY frame is received. The connection gets closed, and properties $errCode, $errMsg
+     *                        and $serverLastStreamId are updated based on the content of the frame.
+     *                        - A received frame can't be handled, e.g., when sending back a SETTINGS/PING
+     *                        acknowledgement or a WINDOW_UPDATE frame fails, or when the payload of a gzip-compressed
+     *                        DATA frame can't be decompressed.
+     *                        Properties $errCode and $errMsg are updated in all the cases above.
+     * @see \Swoole\Coroutine\Http2\Client::read()
+     */
     public function recv(float $timeout = 0): Response|false
     {
     }
 
     /**
+     * Read a response from the server in pipeline mode.
+     *
+     * This method behaves the same as method \Swoole\Coroutine\Http2\Client::recv(), except that it returns a Response
+     * object as soon as a piece of a pipelined (streamed) response is available, instead of waiting for the whole
+     * response to end. Property $pipeline of the returned Response object tells if more pieces are still to come.
+     *
+     * @see \Swoole\Coroutine\Http2\Client::recv()
      * @since 4.5.0
      */
     public function read(float $timeout = 0): Response|false

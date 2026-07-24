@@ -51,6 +51,45 @@ function swoole_async_dns_lookup_coro(string $domain_name, float $timeout = 60, 
 {
 }
 
+/**
+ * Sets global runtime settings. It has to be called before the event loop is created; otherwise a fatal error is
+ * raised.
+ *
+ * Besides the settings listed below, this function also accepts the global settings and the asynchronous I/O settings
+ * shared with method \Swoole\Coroutine::set(), e.g., "log_file", "log_level", "dns_server", "socket_timeout",
+ * "aio_core_worker_num", and "aio_worker_num".
+ *
+ * @param array $settings Runtime settings. The following settings are supported:
+ *                        - \Swoole\Constant::OPTION_ENABLE_SIGNALFD: whether to handle signals through signalfd
+ *                        instead of a plain signal handler. Enabled by default on systems providing signalfd.
+ *                        - \Swoole\Constant::OPTION_WAIT_SIGNAL: whether a registered signal listener keeps the event
+ *                        loop alive; when disabled (the default), the event loop exits even if there are signal
+ *                        listeners left waiting.
+ *                        - \Swoole\Constant::OPTION_DNS_CACHE_REFRESH_TIME: lifetime in seconds of an entry in the DNS
+ *                        cache used by function swoole_async_dns_lookup_coro(). Defaults to 60.
+ *                        - \Swoole\Constant::OPTION_THREAD_NUM: alias of setting
+ *                        \Swoole\Constant::OPTION_MIN_THREAD_NUM.
+ *                        - \Swoole\Constant::OPTION_MIN_THREAD_NUM: number of threads kept alive in the asynchronous
+ *                        I/O thread pool (the pool used for hooked file operations, DNS lookups, etc.). Defaults to
+ *                        the number of CPU cores.
+ *                        - \Swoole\Constant::OPTION_MAX_THREAD_NUM: maximum number of threads the asynchronous I/O
+ *                        thread pool may grow to when under load.
+ *                        - \Swoole\Constant::OPTION_SOCKET_DONTWAIT: when enabled, a write on an asynchronous client
+ *                        socket fails right away once its output buffer is full, instead of waiting for the buffer
+ *                        to drain. Disabled by default.
+ *                        - \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM: when enabled, a DNS lookup returns a randomly
+ *                        picked address out of all the addresses resolved, instead of the first one. Disabled by
+ *                        default.
+ *                        - \Swoole\Constant::OPTION_USE_ASYNC_RESOLVER: kept for backward compatibility only. The
+ *                        value is still accepted and stored, but has not been read anywhere in Swoole since the old
+ *                        (non-coroutine) async I/O module was removed in Swoole 4.3.0.
+ *                        - \Swoole\Constant::OPTION_ENABLE_COROUTINE: whether the built-in coroutine support is
+ *                        enabled. Enabled by default; disabling it turns off automatic coroutine creation in
+ *                        callbacks.
+ *
+ * @see \Swoole\Coroutine::set()
+ * @see SWOOLE_HOOK_FILE
+ */
 function swoole_async_set(array $settings): void
 {
 }
@@ -193,6 +232,28 @@ function swoole_hashcode(string $data, int $type = 0): int|false
 }
 
 /**
+ * Adds a MIME type to the list of MIME types known to Swoole, unless the given file name suffix is registered already.
+ *
+ * The swoole_mime_type_*() functions manage one single process-wide list of file name suffixes and their MIME types.
+ * That list is used in three places in Swoole:
+ * 1. serving static files: unless the request URL matches one of the paths configured in server setting
+ *    "static_handler_locations", the static file handler refuses to serve a file whose suffix is not on the list. The
+ *    matching MIME type is then used as the value of HTTP header "Content-Type" of the response.
+ * 2. method \Swoole\Http\Response::sendfile(): when HTTP header "Content-Type" is not set on the response already,
+ *    the MIME type of the file being sent is used as the value of that header.
+ * 3. method \Swoole\Coroutine\Http\Client::addFile(): when no content type is passed to the method, the MIME type of
+ *    the file being uploaded is used as the content type of that part of the request.
+ *
+ * @param string $suffix The file name suffix, without a leading dot, e.g., "json". It has to be given in lower case:
+ *                       lookups lowercase the suffix taken from the file name, so a suffix registered in upper case
+ *                       is never matched.
+ * @param string $mime_type The MIME type of the suffix, e.g., "application/json".
+ * @return bool Returns TRUE when the MIME type is added, FALSE when the suffix is registered already. Use function
+ *              swoole_mime_type_set() instead to overwrite an existing entry.
+ * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/servers/http1.php
+ * @see \Swoole\Http\Response::sendfile()
+ * @see \Swoole\Coroutine\Http\Client::addFile()
+ * @see swoole_mime_type_set()
  * @since 4.5.0
  */
 function swoole_mime_type_add(string $suffix, string $mime_type): bool
@@ -200,6 +261,9 @@ function swoole_mime_type_add(string $suffix, string $mime_type): bool
 }
 
 /**
+ * Sets the MIME type of a file name suffix, overwriting the existing entry if there is one.
+ *
+ * @see swoole_mime_type_add() Description of the list of MIME types managed by the swoole_mime_type_*() functions.
  * @since 4.5.0
  */
 function swoole_mime_type_set(string $suffix, string $mime_type): void
@@ -207,6 +271,10 @@ function swoole_mime_type_set(string $suffix, string $mime_type): void
 }
 
 /**
+ * Checks if the suffix of the given file name has a MIME type registered.
+ *
+ * @param string $filename A file name, e.g., "/var/www/index.html". Only its suffix is taken into account.
+ * @see swoole_mime_type_add() Description of the list of MIME types managed by the swoole_mime_type_*() functions.
  * @since 4.5.0
  */
 function swoole_mime_type_exists(string $filename): bool
@@ -214,6 +282,10 @@ function swoole_mime_type_exists(string $filename): bool
 }
 
 /**
+ * Removes a file name suffix and its MIME type from the list.
+ *
+ * @return bool Returns TRUE on success, FALSE when the suffix is not on the list.
+ * @see swoole_mime_type_add() Description of the list of MIME types managed by the swoole_mime_type_*() functions.
  * @since 4.5.0
  */
 function swoole_mime_type_delete(string $suffix): bool
@@ -221,8 +293,13 @@ function swoole_mime_type_delete(string $suffix): bool
 }
 
 /**
+ * Gets the MIME type registered for the suffix of the given file name.
+ *
+ * @param string $filename A file name, e.g., "/var/www/index.html". Only its suffix is taken into account.
+ * @return string Returns the MIME type registered, or "application/octet-stream" when the suffix is not on the list.
  * @alias This function has an alias function swoole_get_mime_type().
  * @see swoole_get_mime_type()
+ * @see swoole_mime_type_add() Description of the list of MIME types managed by the swoole_mime_type_*() functions.
  * @since 4.5.0
  */
 function swoole_mime_type_get(string $filename): string
@@ -237,6 +314,13 @@ function swoole_get_mime_type(string $filename): string
 {
 }
 
+/**
+ * Gets all the MIME types registered.
+ *
+ * @return array Returns a list of MIME types. Only the MIME types are returned; the file name suffixes they are
+ *               registered for are not included in the returned list.
+ * @see swoole_mime_type_add() Description of the list of MIME types managed by the swoole_mime_type_*() functions.
+ */
 function swoole_mime_type_list(): array
 {
 }

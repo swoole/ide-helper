@@ -70,7 +70,8 @@ class Coroutine
     /**
      * Check if a coroutine exists or not.
      *
-     * @param int $cid Coroutine ID. If specified as 0, ID of current coroutine will be used.
+     * @param int $cid Coroutine ID. Unlike most other methods of this class, 0 is not treated as the ID of current
+     *                 coroutine here; since coroutine IDs start from 1, FALSE is always returned when 0 is given.
      * @return bool Returns true if the coroutine exists, or false if not.
      */
     public static function exists(int $cid): bool
@@ -90,8 +91,10 @@ class Coroutine
      *
      * Please note that this method can not cancel the execution of current coroutine.
      *
-     * @param int $cid Coroutine ID. If specified as 0, ID of current coroutine will be used.
-     * @return bool Returns true on success, or false on failure. Use function \swoole_last_error() to get the error code when failed.
+     * @param int $cid Coroutine ID. Unlike most other methods of this class, 0 is not treated as the ID of current
+     *                 coroutine here; since coroutine IDs start from 1, FALSE is always returned when 0 is given.
+     * @return bool Returns true on success, or false on failure. Use function \swoole_last_error() to get the error
+     *              code when failed, e.g., SWOOLE_ERROR_CO_NOT_EXISTS when the given coroutine doesn't exist.
      * @since 4.7.0
      */
     public static function cancel(int $cid): bool
@@ -104,8 +107,18 @@ class Coroutine
      * This method is similar to class \Swoole\Coroutine\WaitGroup and \Swoole\Coroutine\Barrier. They are different
      * implementations of the same functionality.
      *
-     * @param array $cid_array An array of coroutines.
-     * @return bool TRUE if succeeds; otherwise FALSE.
+     * @param array $cid_array An array of coroutine IDs. IDs of coroutines that don't exist any more (e.g., because the
+     *                         coroutines have finished already) are skipped silently.
+     * @param float $timeout The maximum time to wait for the coroutines to finish (in seconds). If specified as 0 or a
+     *                       negative number (which is the default), it waits indefinitely until all the given
+     *                       coroutines have finished.
+     * @return bool TRUE if all the given coroutines finished in time; otherwise FALSE. Use function
+     *              \swoole_last_error() to get the error code when failed. Here are the possible error codes:
+     *              - SWOOLE_ERROR_INVALID_PARAMS: $cid_array is empty, or none of the given coroutines exists.
+     *              - SWOOLE_ERROR_WRONG_OPERATION: $cid_array contains the ID of the calling coroutine itself.
+     *              - SWOOLE_ERROR_CO_HAS_BEEN_BOUND: One of the given coroutines is being waited on somewhere else already.
+     *              - SWOOLE_ERROR_CO_TIMEDOUT: The given coroutines didn't all finish within the given timeout.
+     *              - SWOOLE_ERROR_CO_CANCELED: The calling coroutine was cancelled while waiting.
      * @see \Swoole\Coroutine\WaitGroup
      * @see \Swoole\Coroutine\Barrier
      * @since 4.8.0
@@ -173,9 +186,10 @@ class Coroutine
      *
      * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
      * @return int|false There are three possible return values:
-     *                   - > 1: ID of the "parent" coroutine from which current coroutine was created.
-     *                   - -1: If current coroutine is created from a non-coroutine context.
-     *                   - FALSE: If the method is called from a non-coroutine context.
+     *                   - >= 1: ID of the "parent" coroutine from which the specified coroutine was created.
+     *                   - -1: If the specified coroutine is created from a non-coroutine context.
+     *                   - FALSE: If the specified coroutine doesn't exist, which includes the case where the method is
+     *                   called with no argument (or with 0) from a non-coroutine context.
      */
     public static function getPcid(int $cid = 0): int|false
     {
@@ -279,10 +293,47 @@ class Coroutine
     {
     }
 
+    /**
+     * Allow the preemptive scheduler to interrupt the current coroutine.
+     *
+     * The preemptive scheduler forces a coroutine to yield once it has occupied the CPU for more than 10 milliseconds
+     * without doing any I/O, so that a CPU-intensive coroutine can not block all the other coroutines running in the
+     * same process. Every newly created coroutine allows preemption by default; this method only makes sense after
+     * method \Swoole\Coroutine::disableScheduler() has been called in the same coroutine.
+     *
+     * The preemptive scheduler itself has to be turned on globally first, either through ini directive
+     * "swoole.enable_preemptive_scheduler", or through runtime option "enable_preemptive_scheduler" (see method
+     * \Swoole\Coroutine::set()). Otherwise, no coroutine gets preempted no matter what this method returns.
+     *
+     * To understand how it works, please check examples under section "CPU-intensive job scheduling" of repository [deminy/swoole-by-examples](https://github.com/deminy/swoole-by-examples).
+     *
+     * @return bool TRUE if preemption was disabled for the current coroutine and is now enabled; FALSE if it is enabled
+     *              already, or if the method is called from a non-coroutine context.
+     * @see \Swoole\Coroutine::disableScheduler()
+     * @see \Swoole\Coroutine::set() Runtime option "enable_preemptive_scheduler" turns on the preemptive scheduler.
+     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/scheduling/mixed.php
+     * @since 4.4.0
+     */
     public static function enableScheduler(): bool
     {
     }
 
+    /**
+     * Stop the preemptive scheduler from interrupting the current coroutine.
+     *
+     * Once called, the current coroutine is never forced to yield by the preemptive scheduler; it keeps the CPU until
+     * it finishes, does I/O, or yields explicitly. This affects the calling coroutine only, and can be reverted by
+     * method \Swoole\Coroutine::enableScheduler().
+     *
+     * To understand how it works, please check examples under section "CPU-intensive job scheduling" of repository [deminy/swoole-by-examples](https://github.com/deminy/swoole-by-examples).
+     *
+     * @return bool TRUE if preemption was enabled for the current coroutine and is now disabled; FALSE if it is
+     *              disabled already, or if the method is called from a non-coroutine context.
+     * @see \Swoole\Coroutine::enableScheduler()
+     * @see \Swoole\Coroutine::set() Runtime option "enable_preemptive_scheduler" turns on the preemptive scheduler.
+     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/scheduling/mixed.php
+     * @since 4.4.0
+     */
     public static function disableScheduler(): bool
     {
     }
@@ -423,9 +474,24 @@ class Coroutine
     }
 
     /**
+     * Resolve a host name into a list of IPv4/IPv6 addresses.
+     *
+     * This method is a coroutine-friendly wrapper of the C function getaddrinfo(3): the actual lookup is executed in a
+     * thread pool so that the calling coroutine doesn't block the process. Unlike method
+     * \Swoole\Coroutine::gethostbyname(), it returns all the resolved addresses instead of a single one, and it doesn't
+     * cache the result.
+     *
+     * @param string $domain The host name to be resolved. It can't be an empty string.
      * @param int $family The type of address to resolve. Should be either AF_INET or AF_INET6.
+     * @param int $socktype The socket type to resolve for, e.g., SOCK_STREAM or SOCK_DGRAM.
+     * @param int $protocol The protocol to resolve for, e.g., STREAM_IPPROTO_TCP or STREAM_IPPROTO_UDP.
+     * @param string|null $service The service name or port number to resolve, as accepted by getaddrinfo(3).
+     * @param float $timeout The timeout for domain resolving (in seconds). No timeout if it's not greater than 0.
+     * @return array|false Returns a list of resolved IP addresses (at most 16 of them) on success, or FALSE on failure.
+     *                     Use function \swoole_last_error() to get the error code when failed.
      *
      * @see \Swoole\Coroutine::gethostbyname()
+     * @see https://man7.org/linux/man-pages/man3/getaddrinfo.3.html The C function getaddrinfo(3) wrapped by this method.
      *
      * @alias Alias of method \Swoole\Coroutine\System::getaddrinfo().
      * @see \Swoole\Coroutine\System::getaddrinfo()
