@@ -85,14 +85,6 @@ you rely on it, but it has consistently been:
 PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION}).
 ```
 
-For every release *this agent* creates, append the following note, verbatim, after that line:
-
-```
-
-This release targets a specific Swoole release. It is not published as a pre-release, and it is not marked as the
-latest release of this project.
-```
-
 Leave the release title/name empty — that's the convention the most recent releases (checked above) follow. Publish
 against the tag you already pushed in Step 1 (don't let the tool create its own tag, since that wouldn't get the
 annotated message from Step 1):
