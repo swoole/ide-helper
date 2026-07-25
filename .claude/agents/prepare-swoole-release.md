@@ -107,7 +107,11 @@ Go through the diff and identify every PHP-visible class, method, function, prop
 changed, or removed. Focus on:
 - New/changed/removed `PHP_METHOD`/`PHP_FUNCTION` entries and their arginfo (signature changes, new optional
   parameters, changed defaults, changed return types).
-- New/changed/removed `zend_declare_property_*` calls (new/removed public properties, and check readonly-ness).
+- New/changed/removed `zend_declare_property_*` calls (new/removed properties of any visibility, and check
+  readonly-ness) — don't scope this search to public properties only; a new `private`/`protected` property still
+  needs its own docblock.
+- New/changed/removed `zend_declare_class_constant_*` calls (class constants) — easy to miss since they don't show
+  up in a method-table diff the way methods/properties do, but they need the same docblock treatment.
 - New/changed/removed `SW_REGISTER_LONG_CONSTANT`/`SW_REGISTER_STRING_CONSTANT` calls in `constants.php`'s source of
   truth (mainly `ext-src/php_swoole.cc`, `ext-src/swoole_server.cc`, `ext-src/swoole_runtime.cc`, etc.).
 - Behavioral changes to existing methods that don't change the signature but do change documented behavior (these
@@ -147,8 +151,11 @@ time rather than relying on this summary from memory, since it's a living list n
 - Changed method/function arguments → don't silently update the signature; add a comment showing what it looked
   like before and what it looks like now.
 - Completeness/typing baseline → every property/parameter/return you touch needs an accurate native type
-  declaration and at least a one-line docblock description; every parameter needs a `@param` tag, every non-`void`
-  return needs an `@return` tag. Don't leave a symbol under-documented just because its name/signature isn't what
+  declaration; every property, class constant, method, and function you touch needs at least a one-line docblock
+  description regardless of visibility (only the native-type requirement is scoped to public properties); every
+  parameter needs a `@param` tag, every non-`void` return needs an `@return` tag. A docblock made up of only `@tag`
+  lines and/or a bare `{@inheritDoc}` does not satisfy the description requirement — write a real descriptive
+  sentence of the symbol's own. Don't leave a symbol under-documented just because its name/signature isn't what
   changed in this release.
 - Inline type declarations must be valid PHP 8.1 syntax (this project's minimum supported version) — never use a
   standalone `true`/`false`/`null` type or a DNF type like `(A&B)|C` inline (PHP 8.2+ only). When full accuracy

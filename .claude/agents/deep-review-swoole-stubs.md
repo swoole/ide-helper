@@ -140,15 +140,29 @@ memory of what you already looked at: grep the file for the failure patterns abo
 grep -n '^\s*public \$\w\+\s*\(;\|=\)' path/to/File.php   # untyped PUBLIC properties (no type between `public` and `$name`)
 grep -n '^\s*\(public\|protected\|private\)\s.*\$\w\+\s*\(;\|=\)' path/to/File.php   # every property, ANY visibility — count them
 grep -n -B2 '^\s*\(public\|protected\|private\)\s.*\$\w\+\s*\(;\|=\)' path/to/File.php | grep -c '/\*\*'  # rough property-docblock-coverage check — compare this count against the count from the line above; a mismatch usually means a `private`/`protected` property (easy to overlook since it's not covered by the untyped-PUBLIC-property check) has no docblock at all
+grep -n '^\s*\(\(public\|protected\|private\)\s\+\)\?const\s\+\w\+' path/to/File.php   # every class constant, ANY visibility (including implicit-public, no keyword) — count them
+grep -n -B2 '^\s*\(\(public\|protected\|private\)\s\+\)\?const\s\+\w\+' path/to/File.php | grep -c '/\*\*'  # rough constant-docblock-coverage check — same comparison as the property check above; class constants are easy to forget entirely since neither of the property checks above covers them
 grep -n -B2 '^\s*public function\|^\s*function ' path/to/File.php | grep -c '/\*\*'  # rough method-docblock-coverage check
 grep -n -B1 '^\(final \|abstract \)*class \|^interface \|^trait ' path/to/File.php   # locate the class/interface/trait docblock; open it and confirm it has an actual descriptive sentence, not just `@since`/`@not-serializable`/other tags with no description
+grep -n '{@inheritDoc}' path/to/File.php   # every use of {@inheritDoc} — open each one and confirm the docblock ALSO has real descriptive prose of its own, not just this tag plus @see/@param/@return/etc.
 ```
 If any check surfaces something you haven't already verified against source, go back and fix it before moving on —
-don't let a file get checked off with known gaps. In particular, don't assume the untyped-PUBLIC-property check above
-is sufficient on its own: CLAUDE.md's native-type rule is scoped to public properties, but its one-line-docblock-
-description requirement applies to **every** property regardless of visibility — a `private`/`protected` property
-with no docblock is just as much a gap as an undocumented public one, and it's the one most likely to slip past a
-self-check pass that only looks for `public $`.
+don't let a file get checked off with known gaps. Two failure modes are easy to miss even after running the checks
+above:
+- **Undocumented class constants.** Neither property check above covers `const` declarations, so it's easy to
+  document every property and method on a class and still leave its constants untouched — check them explicitly,
+  and don't assume the untyped-PUBLIC-property check is a stand-in for this. CLAUDE.md's native-type rule is scoped
+  to public properties, but its one-line-docblock-description requirement applies to **every** property AND
+  constant regardless of visibility — an undocumented `private`/`protected` property or constant is just as much a
+  gap as an undocumented public one.
+- **A docblock that exists but is annotations-only.** The coverage checks above only confirm a `/**` block is
+  present *somewhere* above a symbol — they say nothing about whether it actually documents anything. A docblock
+  consisting only of `@tag` lines (`@param`, `@return`, `@see`, `@readonly`, `@since`, etc.) and/or a bare
+  `{@inheritDoc}` with no descriptive sentence of its own does **not** count as documented, for a class, a method, a
+  function, a property, or a constant — the same "tags-only" failure the class-docblock check above looks for
+  applies to every symbol type, not just classes. Read every docblock you touch or verify and ask "if I only had
+  this text and no tags, would I still know what this does?" — if not, it's incomplete, even if `{@inheritDoc}` or a
+  `@see` link is technically present and even if the file's per-symbol docblock *counts* line up.
 
 # Step 3: fix what you find
 

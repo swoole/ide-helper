@@ -73,13 +73,18 @@ conventions consistently — they are what every existing file already follows a
 - **Completeness and typing is the baseline, not a special case.** A symbol existing in the stub isn't enough —
   every public property must carry a native PHP type declaration that accurately reflects what swoole-src actually
   stores there (nullable/union types where applicable; never leave a bare, untyped `public $x;` just because the
-  underlying C property is loosely typed or populated dynamically), and every property/method/function needs at
-  least a one-line docblock description, even when nothing else about it warrants a special tag. Likewise, every
+  underlying C property is loosely typed or populated dynamically), and every property, class constant, method, and
+  function needs at least a one-line docblock description, even when nothing else about it warrants a special tag —
+  this description requirement applies regardless of visibility (`public`, `protected`, or `private`); only the
+  native-type requirement above is scoped to public properties. A docblock made up of only `@tag` lines (`@param`,
+  `@return`, `@see`, `@alias`, `@readonly`, `@since`, etc.) and/or a bare `{@inheritDoc}` does **not** satisfy this
+  requirement — `{@inheritDoc}` tells a reader nothing without also opening the parent, so there must be an actual
+  descriptive sentence of the symbol's own, even when `{@inheritDoc}` or other tags are present too. Likewise, every
   method/function parameter needs a matching `@param` tag (type + description) and every non-`void` return needs an
   `@return` tag (type + description) — a native type declaration on the signature is not a substitute for the
-  PHPDoc tag, since the tag is what carries the description. When reviewing a file, treat an undocumented or
-  untyped-but-present member exactly like a missing one: it still needs to be fixed, not skipped because "it's
-  already there."
+  PHPDoc tag, since the tag is what carries the description. When reviewing a file, treat an undocumented,
+  annotations-only, or untyped-but-present member exactly like a missing one: it still needs to be fixed, not
+  skipped because "it's already there."
 - **Inline type declarations must be valid PHP 8.1 syntax.** This project supports PHP 8.1+ (see the syntax-check
   command above, run against 8.1 through 8.5), so a native type declaration that only PHP 8.2+ understands — a
   standalone `true`/`false`/`null` type, or a DNF (disjunctive normal form) type like `(A&B)|C` — would break on the
