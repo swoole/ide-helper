@@ -112,6 +112,9 @@ class System
      * @return array Returns an array with the following fields in it, mostly measured in filesystem blocks:
      *               "bsize", "frsize", "blocks", "bfree", "bavail", "files", "ffree", "favail", "fsid", "flag", and "namemax".
      *               For example, multiplying "bavail" by "frsize" gives the disk space (in bytes) available to unprivileged users.
+     * @throws \ValueError When $path is an empty string or contains null bytes. (Before Swoole 6.2.1, such a path
+     *                     was passed through to the underlying system call and simply produced no useful result;
+     *                     since Swoole 6.2.1, it is rejected upfront with a \ValueError instead.)
      * @see https://man7.org/linux/man-pages/man3/statvfs.3.html The C function statvfs(3) wrapped by this method.
      * @alias This method has an alias of \Swoole\Coroutine::statvfs().
      * @see \Swoole\Coroutine::statvfs()
@@ -132,6 +135,9 @@ class System
      *                  Swoole with the same value as LOCK_EX) can be used interchangeably here.
      * @return string|false Returns the content of the file on success, or FALSE on failure (e.g., when the file
      *                      doesn't exist or is not readable).
+     * @throws \ValueError When $filename is an empty string or contains null bytes. (Before Swoole 6.2.1, an empty
+     *                     filename simply made the method fail with FALSE returned; since Swoole 6.2.1, such
+     *                     filenames are rejected upfront with a \ValueError instead.)
      * @see https://www.php.net/file_get_contents The built-in PHP function \file_get_contents(), which serves a similar purpose but may block the whole process.
      * @see FILE_LOCK
      * @see \Swoole\Coroutine::readFile()
@@ -147,6 +153,11 @@ class System
      * The file is written in a thread pool so that the calling coroutine yields until the write finishes, without
      * blocking the process. By default, existing content in the file is replaced.
      *
+     * Since Swoole 6.2.1, this method refuses to write through symbolic links: if $filename itself is a symbolic
+     * link, the method fails and FALSE is returned. (Under the hood, the file is opened with the O_NOFOLLOW flag,
+     * which guards against symlink-based attacks where a link is planted at a writable path to trick the process
+     * into overwriting an unintended file.)
+     *
      * @param string $filename Path of the file to write to.
      * @param string $fileContent The content to write to the file.
      * @param int $flags A bitmask made of the following constants (same as in the built-in PHP function \file_put_contents()):
@@ -154,8 +165,13 @@ class System
      *                   - LOCK_EX: Acquire an exclusive lock on the file while writing to it. Since Swoole 6.1.2,
      *                   constant FILE_LOCK (registered by Swoole with the same value as LOCK_EX) can be used
      *                   interchangeably here.
-     * @return int|false Returns the number of bytes written on success, or FALSE on failure.
+     * @return int|false Returns the number of bytes written on success, or FALSE on failure (e.g., when the file
+     *                   can't be opened for writing, or, since Swoole 6.2.1, when $filename is a symbolic link).
+     * @throws \ValueError When $filename is an empty string or contains null bytes. (Before Swoole 6.2.1, an empty
+     *                     filename simply made the method fail with FALSE returned; since Swoole 6.2.1, such
+     *                     filenames are rejected upfront with a \ValueError instead.)
      * @see https://www.php.net/file_put_contents The built-in PHP function \file_put_contents(), which serves a similar purpose but may block the whole process.
+     * @see https://man7.org/linux/man-pages/man2/open.2.html The C function open(2), where the O_NOFOLLOW flag used by this method since Swoole 6.2.1 is documented.
      * @see FILE_LOCK
      * @see \Swoole\Coroutine::writeFile()
      * @alias This method has an alias of \Swoole\Coroutine::writeFile().

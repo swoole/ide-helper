@@ -264,11 +264,17 @@ function swoole_init_default_remote_object_server(): void
     if ($proc === false) {
         throw new RuntimeException('failed to start remote object server');
     }
-    $rc = proc_close($proc);
-    if ($rc !== 0) {
-        $output = stream_get_contents($pipes[1]) . stream_get_contents($pipes[2]);
-        throw new RuntimeException("failed to start remote object server: exit code {$rc}, output: " . $output);
+    $status = proc_get_status($proc);
+    if (!$status['running'] or !$status['pid']) {
+        throw new RuntimeException('failed to start remote object server');
     }
+
+    $exitStatus = Swoole\Coroutine\System::waitpid($status['pid']);
+    if ($exitStatus['code'] !== 0) {
+        $output = stream_get_contents($pipes[1]) . stream_get_contents($pipes[2]);
+        throw new RuntimeException("failed to start remote object server: exit code {$exitStatus['code']}, output: " . $output);
+    }
+    proc_close($proc);
 
     $wait_ready_fn();
     flock($lock_handle, LOCK_UN);
