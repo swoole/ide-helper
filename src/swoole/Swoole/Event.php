@@ -195,7 +195,9 @@ class Event
      * event loop being run for you at shutdown: either wrap the code in function \Swoole\Coroutine\run(), or call
      * method \Swoole\Event::wait() yourself at the end of the script.
      *
+     * @alias This method has an alias function \swoole_event_rshutdown() (since Swoole 6.2.0).
      * @deprecated 4.6.0 Use function \Swoole\Coroutine\run(), or call method \Swoole\Event::wait() explicitly, instead.
+     * @see \swoole_event_rshutdown()
      * @see \Swoole\Coroutine\run()
      * @see \Swoole\Event::wait()
      */

@@ -75,24 +75,27 @@ class Client
     }
 
     /**
-     * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
-     * option "--enable-openssl" included).
+     * Before Swoole 6.2.0, this method was available only when Swoole was installed with configuration option
+     * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
+     * available.
      */
     public function enableSSL(): bool
     {
     }
 
     /**
-     * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
-     * option "--enable-openssl" included).
+     * Before Swoole 6.2.0, this method was available only when Swoole was installed with configuration option
+     * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
+     * available.
      */
     public function getPeerCert(): string|false
     {
     }
 
     /**
-     * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
-     * option "--enable-openssl" included).
+     * Before Swoole 6.2.0, this method was available only when Swoole was installed with configuration option
+     * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
+     * available.
      */
     public function verifyPeerCert(bool $allow_self_signed = false): bool
     {

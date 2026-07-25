@@ -187,10 +187,12 @@ class Client
      *
      * @param string $host The host name or IP address of the server. It must not be empty.
      * @param int $port The port of the server.
-     * @param bool $ssl Whether to use SSL/TLS encryption. This option is available only when OpenSSL support is
-     *                  enabled (i.e., when Swoole is installed with configuration option "--enable-openssl" included).
-     * @throws \Swoole\Coroutine\Http\Client\Exception When the host is empty, or when SSL/TLS is requested but Swoole
-     *                                                 is installed without OpenSSL support.
+     * @param bool $ssl Whether to use SSL/TLS encryption. Before Swoole 6.2.0, this option was available only when
+     *                  Swoole was installed with configuration option "--enable-openssl" included; since Swoole
+     *                  6.2.0, OpenSSL support is always built in, so this option is always available.
+     * @throws \Swoole\Coroutine\Http\Client\Exception When the host is empty. Before Swoole 6.2.0, it was also
+     *                                                 thrown when SSL/TLS was requested but Swoole was installed
+     *                                                 without OpenSSL support.
      */
     public function __construct(string $host, int $port = 0, bool $ssl = false)
     {
@@ -508,8 +510,9 @@ class Client
     /**
      * Get the SSL/TLS certificate of the server.
      *
-     * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
-     * option "--enable-openssl" included).
+     * Before Swoole 6.2.0, this method was available only when Swoole was installed with configuration option
+     * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
+     * available.
      *
      * @return string|false Return the certificate of the server in PEM format; return FALSE when the client is not
      *                      connected, or when the server has no certificate.

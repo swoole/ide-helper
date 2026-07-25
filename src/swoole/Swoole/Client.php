@@ -117,8 +117,9 @@ class Client
     /**
      * Enable SSL encryption on the connection.
      *
-     * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
-     * option "--enable-openssl" included).
+     * Before Swoole 6.2.0, this method was available only when Swoole was installed with configuration option
+     * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
+     * available.
      *
      * @param callable|null $onSslReady Callback function to be executed when SSL handshake is successful.
      *                                  Added in v6.0.0 for child class Swoole\Async\Client only. It has no effect on this class.
@@ -129,16 +130,18 @@ class Client
     }
 
     /**
-     * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
-     * option "--enable-openssl" included).
+     * Before Swoole 6.2.0, this method was available only when Swoole was installed with configuration option
+     * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
+     * available.
      */
     public function getPeerCert(): bool|string
     {
     }
 
     /**
-     * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
-     * option "--enable-openssl" included).
+     * Before Swoole 6.2.0, this method was available only when Swoole was installed with configuration option
+     * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
+     * available.
      */
     public function verifyPeerCert(): bool
     {

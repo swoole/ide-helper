@@ -106,6 +106,9 @@ class Coroutine
      * Please note that this method can not cancel the execution of current coroutine.
      *
      * A coroutine that is busy with a file operation can not be cancelled; trying to force it may crash the process.
+     * As an exception, since Swoole 6.2.0, when Swoole is installed with the "--enable-iouring" configuration option
+     * (so that file operations go through io_uring, a Linux facility for asynchronous I/O), such operations can be
+     * cancelled like any other.
      *
      * The signature of this method changed in Swoole 6.1.0:
      *   - before: public static function cancel(int $cid): bool
@@ -168,6 +171,41 @@ class Coroutine
      * @since 4.8.0
      */
     public static function join(array $cid_array, float $timeout = -1): bool
+    {
+    }
+
+    /**
+     * Set a limit on how long the current coroutine may keep running.
+     *
+     * Once the given number of seconds has passed, a \Swoole\Coroutine\TimeoutException is thrown inside the current
+     * coroutine (if it is still running by then), which the coroutine can catch to clean up before it stops; if the
+     * exception is not caught, the coroutine is terminated. The coroutine is terminated even if it is in a state that
+     * normally can not be cancelled. E.g.,
+     *
+     * ```php
+     * Swoole\Coroutine\run(function () {
+     *     try {
+     *         Swoole\Coroutine::setTimeLimit(1.0);
+     *         while (true) {
+     *             Swoole\Coroutine::sleep(0.1);
+     *         }
+     *     } catch (Swoole\Coroutine\TimeoutException $e) {
+     *         echo "time limit exceeded; releasing resources here\n";
+     *     }
+     * });
+     * ```
+     *
+     * This method must be called inside a coroutine, and the limit applies to the calling coroutine only.
+     *
+     * @param float $timeout The time limit in seconds. Although the parameter accepts a float, as of Swoole 6.2.0 the
+     *                       fractional part is dropped internally, so the limit is effectively whole seconds (e.g.,
+     *                       1.5 behaves like 1). When 0 is given, no limit is set and FALSE is returned.
+     * @return bool Returns TRUE when the time limit is set, or FALSE when $timeout is 0.
+     * @see \Swoole\Coroutine\TimeoutException
+     * @see \Swoole\Coroutine::cancel()
+     * @since 6.2.0
+     */
+    public static function setTimeLimit(float $timeout): bool
     {
     }
 

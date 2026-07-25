@@ -75,8 +75,9 @@ class Client extends \Swoole\Client
     /**
      * Enable SSL encryption on the connection.
      *
-     * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
-     * option "--enable-openssl" included).
+     * Before Swoole 6.2.0, this method was available only when Swoole was installed with configuration option
+     * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
+     * available.
      *
      * {@inheritDoc}
      * @param callable|null $onSslReady Callback function to be executed when the SSL handshake is successful. Although

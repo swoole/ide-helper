@@ -33,6 +33,10 @@ class Request
      * "request_uri", "path_info", "query_string", "request_time", "server_protocol", "remote_addr", and "remote_port".
      * It's similar to the superglobal $_SERVER in PHP.
      *
+     * Since Swoole 6.2.0, when the request is handled by a Swoole HTTP server, the array also contains a
+     * "server_addr" entry: the IP address of the server side of the connection (i.e., the local address the client
+     * connected to).
+     *
      * It's NULL until the request has been parsed.
      */
     public ?array $server = null;

@@ -113,6 +113,7 @@ class Helper
         'message_queue_key'           => true,
         'bootstrap'                   => true,
         'init_arguments'              => true,
+        'url_rewrite_rules'           => true,
     ];
 
     public const PORT_OPTIONS = [

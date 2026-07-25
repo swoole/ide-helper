@@ -230,21 +230,33 @@ function swoole_set_process_name(string $process_name): bool
 }
 
 /**
- * Gets the IPv4 addresses of the network interfaces on the machine.
+ * Gets the IP addresses of the network interfaces on the machine.
  *
- * Interfaces that are down, the loopback address 127.0.0.1, and IPv6 addresses are not included in the result.
+ * Interfaces that are down and loopback addresses (e.g., 127.0.0.1 and ::1) are not included in the result. Only
+ * addresses of the requested address family are returned.
  *
- * @return array Returns an array mapping each network interface name to its IPv4 address, e.g.,
+ * The signature of this function changed in Swoole 6.2.0:
+ *   - before: function swoole_get_local_ip(): array
+ *   - now:    function swoole_get_local_ip(int $family = AF_INET): array
+ *
+ * Before Swoole 6.2.0, only IPv4 addresses could be returned.
+ *
+ * @param int $family The address family to return addresses of: AF_INET (the default) for IPv4 addresses, or
+ *                    AF_INET6 for IPv6 addresses.
+ * @return array Returns an array mapping each network interface name to its IP address, e.g.,
  *               ["eth0" => "192.168.1.5"]. If the network interfaces cannot be read, a warning is raised and false is
  *               returned instead.
  * @see swoole_get_local_mac()
  */
-function swoole_get_local_ip(): array
+function swoole_get_local_ip(int $family = AF_INET): array
 {
 }
 
 /**
  * Gets the MAC (hardware) addresses of the network interfaces on the machine.
+ *
+ * Since Swoole 6.2.0, loopback interfaces are excluded from the result, and the function works properly on macOS
+ * (before Swoole 6.2.0 it could return no or wrong results there).
  *
  * @return array Returns an array mapping each network interface name to its MAC address in the form
  *               "XX:XX:XX:XX:XX:XX", e.g., ["eth0" => "02:42:AC:11:00:02"]. On systems where the information cannot
@@ -739,6 +751,28 @@ function swoole_event_wait(): void
  * @see swoole_event_wait()
  */
 function swoole_event_exit(): void
+{
+}
+
+/**
+ * Run the event loop while the PHP request shuts down.
+ *
+ * This function is registered as a shutdown function automatically when the event loop is created; it's not meant to
+ * be called directly. Running the event loop from a shutdown function this way is deprecated and triggers an
+ * E_DEPRECATED error ("Event::wait() in shutdown function is deprecated"). To avoid the error, don't rely on the
+ * event loop being run for you at shutdown: either wrap the code in function \Swoole\Coroutine\run(), or call method
+ * \Swoole\Event::wait() yourself at the end of the script.
+ *
+ * @alias This function is an alias of method \Swoole\Event::rshutdown().
+ * @deprecated 6.2.0 Use function \Swoole\Coroutine\run(), or call method \Swoole\Event::wait() explicitly, instead.
+ *             (This function was added in Swoole 6.2.0 already deprecated: it only exists because Swoole registers it
+ *             as the shutdown function that used to be registered as \Swoole\Event::rshutdown().)
+ * @see \Swoole\Event::rshutdown()
+ * @see \Swoole\Coroutine\run()
+ * @see \Swoole\Event::wait()
+ * @since 6.2.0
+ */
+function swoole_event_rshutdown(): void
 {
 }
 
@@ -1711,5 +1745,81 @@ function swoole_parse_str(string $string): array
  * @since 6.1.0
  */
 function swoole_hash(string $data, string $algo, bool $binary = false, array $options = []): string
+{
+}
+
+/**
+ * Report memory allocations that look like leaks, then start a new detection round.
+ *
+ * This function is part of Swoole's built-in tracer. It works only when ini option "swoole.leak_detection" is turned
+ * on (off by default); otherwise calling it does nothing. When leak detection is on, Swoole keeps track of every
+ * memory allocation made through PHP's memory manager during the request, along with the place in PHP code where it
+ * happened. Each call to this function prints, for every allocation site that still holds at least $threshold live
+ * (not yet freed) allocations, the total number of bytes held, the number of allocations, and a PHP backtrace of the
+ * allocation site; the printed sites are then reset, so a site is only reported again if it keeps accumulating new
+ * allocations. Call it periodically (e.g., from a timer) and watch for sites that show up round after round — those
+ * are likely leaking, e.g.,
+ *
+ * ```php
+ * // Run with: php -d swoole.leak_detection=On app.php
+ * Swoole\Timer::tick(10_000, function () {
+ *     swoole_tracer_leak_detect();
+ * });
+ * ```
+ *
+ * @param int $threshold Minimum number of live allocations an allocation site must hold to be reported.
+ * @see swoole_tracer_prof_begin()
+ * @see swoole_tracer_prof_end()
+ * @since 6.2.0
+ */
+function swoole_tracer_leak_detect(int $threshold = 64): void
+{
+}
+
+/**
+ * Start profiling PHP function calls.
+ *
+ * This function is part of Swoole's built-in tracer. It works only when ini option "swoole.profile" is turned on (off
+ * by default). Once started, Swoole records the start time and duration of every userland (PHP-defined) function and
+ * method call, in every coroutine, until swoole_tracer_prof_end() is called to write the recorded data to a file,
+ * e.g.,
+ *
+ * ```php
+ * // Run with: php -d swoole.profile=On app.php
+ * swoole_tracer_prof_begin(['root_path' => __DIR__]);
+ * // ... the code to profile ...
+ * swoole_tracer_prof_end('/tmp/profile.json');
+ * ```
+ *
+ * @param array|null $options Optional settings. Currently one option is supported:
+ *                            - "root_path" (string): a directory prefix to strip from the file paths recorded for
+ *                            each function call, so the report shows paths relative to your project root instead of
+ *                            absolute ones.
+ * @return bool Returns true when profiling is started, or false when profiling is unavailable (ini option
+ *              "swoole.profile" is off) or already started.
+ * @see swoole_tracer_prof_end()
+ * @since 6.2.0
+ */
+function swoole_tracer_prof_begin(?array $options = null): bool
+{
+}
+
+/**
+ * Stop profiling and write the recorded data to a file.
+ *
+ * This function ends a profiling session started with swoole_tracer_prof_begin() and writes everything recorded so
+ * far to the given file as JSON, in the Trace Event Format used by VizTracer. The resulting file can be inspected
+ * visually with VizTracer's "vizviewer" tool, or with any other viewer that understands the Trace Event Format (e.g.,
+ * Perfetto).
+ *
+ * @param string $output_file Path of the file to write the profiling report to. An existing file is overwritten.
+ * @return bool Returns true when the report is written successfully, or false when no profiling session is active
+ *              (ini option "swoole.profile" is off, or swoole_tracer_prof_begin() was not called) or the file cannot
+ *              be written.
+ * @see swoole_tracer_prof_begin()
+ * @see https://github.com/gaogaotiantian/viztracer VizTracer
+ * @since 6.2.0
+ */
+function swoole_tracer_prof_end(string $output_file): bool
 {
 }

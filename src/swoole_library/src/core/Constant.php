@@ -104,7 +104,7 @@ class Constant
      *
      * This one works the same as option "socket_send_timeout", but has higher priority.
      *
-     * @see \Swoole\Constant::OPTION_SOCKET_SEND_TIMEOUT
+     * @see Constant::OPTION_SOCKET_SEND_TIMEOUT
      */
     public const OPTION_SOCKET_WRITE_TIMEOUT = 'socket_write_timeout';
 
@@ -113,7 +113,7 @@ class Constant
      *
      * This one works the same as option "socket_write_timeout", but has lower priority.
      *
-     * @see \Swoole\Constant::OPTION_SOCKET_WRITE_TIMEOUT
+     * @see Constant::OPTION_SOCKET_WRITE_TIMEOUT
      */
     public const OPTION_SOCKET_SEND_TIMEOUT = 'socket_send_timeout';
 
@@ -122,7 +122,7 @@ class Constant
      *
      * This one works the same as option "socket_recv_timeout", but has higher priority.
      *
-     * @see \Swoole\Constant::OPTION_SOCKET_RECV_TIMEOUT
+     * @see Constant::OPTION_SOCKET_RECV_TIMEOUT
      */
     public const OPTION_SOCKET_READ_TIMEOUT = 'socket_read_timeout';
 
@@ -131,7 +131,7 @@ class Constant
      *
      * This one works the same as option "socket_read_timeout", but has lower priority.
      *
-     * @see \Swoole\Constant::OPTION_SOCKET_READ_TIMEOUT
+     * @see Constant::OPTION_SOCKET_READ_TIMEOUT
      */
     public const OPTION_SOCKET_RECV_TIMEOUT = 'socket_recv_timeout';
 
@@ -139,15 +139,15 @@ class Constant
      * Default socket read/write timeout in seconds.
      *
      * This one has the highest priority than the other read/write timeout options:
-     * - \Swoole\Constant::OPTION_SOCKET_WRITE_TIMEOUT
-     * - \Swoole\Constant::OPTION_SOCKET_SEND_TIMEOUT
-     * - \Swoole\Constant::OPTION_SOCKET_READ_TIMEOUT
-     * - \Swoole\Constant::OPTION_SOCKET_RECV_TIMEOUT
+     * - Constant::OPTION_SOCKET_WRITE_TIMEOUT
+     * - Constant::OPTION_SOCKET_SEND_TIMEOUT
+     * - Constant::OPTION_SOCKET_READ_TIMEOUT
+     * - Constant::OPTION_SOCKET_RECV_TIMEOUT
      *
-     * @see \Swoole\Constant::OPTION_SOCKET_SEND_TIMEOUT
-     * @see \Swoole\Constant::OPTION_SOCKET_WRITE_TIMEOUT
-     * @see \Swoole\Constant::OPTION_SOCKET_RECV_TIMEOUT
-     * @see \Swoole\Constant::OPTION_SOCKET_READ_TIMEOUT
+     * @see Constant::OPTION_SOCKET_SEND_TIMEOUT
+     * @see Constant::OPTION_SOCKET_WRITE_TIMEOUT
+     * @see Constant::OPTION_SOCKET_RECV_TIMEOUT
+     * @see Constant::OPTION_SOCKET_READ_TIMEOUT
      */
     public const OPTION_SOCKET_TIMEOUT = 'socket_timeout';
 
@@ -190,6 +190,11 @@ class Constant
 
     public const OPTION_ENABLE_SIGNALFD = 'enable_signalfd';
 
+    /**
+     * @since 6.1.0
+     */
+    public const OPTION_ENABLE_KQUEUE = 'enable_kqueue';
+
     public const OPTION_WAIT_SIGNAL = 'wait_signal';
 
     public const OPTION_DNS_CACHE_REFRESH_TIME = 'dns_cache_refresh_time';
@@ -200,6 +205,9 @@ class Constant
 
     public const OPTION_MAX_THREAD_NUM = 'max_thread_num';
 
+    /**
+     * @removed 6.1.0
+     */
     public const OPTION_SOCKET_DONTWAIT = 'socket_dontwait';
 
     public const OPTION_DNS_LOOKUP_RANDOM = 'dns_lookup_random';
@@ -439,6 +447,11 @@ class Constant
     public const OPTION_HTTP_INDEX_FILES = 'http_index_files';
 
     public const OPTION_STATIC_HANDLER_LOCATIONS = 'static_handler_locations';
+
+    /**
+     * @since 6.2.0
+     */
+    public const OPTION_URL_REWRITE_RULES = 'url_rewrite_rules';
 
     public const OPTION_INPUT_BUFFER_SIZE = 'input_buffer_size';
 

@@ -53,6 +53,10 @@ class Runtime
      * Since Swoole 6.1.6, the SWOOLE_HOOK_SOCKETS flag is silently dropped from the given flags when the PHP "sockets"
      * extension is not loaded, since the socket_*() functions that the flag hooks come from that extension.
      *
+     * Similarly, since Swoole 6.2.0, the SWOOLE_HOOK_NET_FUNCTION and SWOOLE_HOOK_MONGODB flags are silently dropped
+     * from the given flags when Swoole Library is disabled (ini option "swoole.enable_library" turned off), since
+     * their replacement implementations come from Swoole Library.
+     *
      * @param int $flags Enable given runtime hooks, or disable all hooks if 0 is passed.
      * @return bool true on success or false on failure
      * @see \Swoole\Runtime::enableCoroutine()

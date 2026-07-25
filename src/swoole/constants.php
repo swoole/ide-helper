@@ -9,13 +9,13 @@ declare(strict_types=1);
  * source code (it kept reporting 60103, the value from Swoole 6.1.3), and Swoole 6.1.5 corrected it straight to
  * 60105. Keep this in mind when comparing against SWOOLE_VERSION_ID to detect Swoole 6.1.4.
  *
- * @see https://github.com/swoole/swoole-src/blob/v6.1.7/include/swoole_version.h#L26
+ * @see https://github.com/swoole/swoole-src/blob/v6.2.0/include/swoole_version.h#L26
  */
-define('SWOOLE_VERSION', '6.1.7');
-define('SWOOLE_VERSION_ID', 60107);
+define('SWOOLE_VERSION', '6.2.0');
+define('SWOOLE_VERSION_ID', 60200);
 define('SWOOLE_MAJOR_VERSION', 6);
-define('SWOOLE_MINOR_VERSION', 1);
-define('SWOOLE_RELEASE_VERSION', 7);
+define('SWOOLE_MINOR_VERSION', 2);
+define('SWOOLE_RELEASE_VERSION', 0);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
@@ -304,7 +304,17 @@ define('SWOOLE_TRACE_CO_PGSQL', 4294967296); // 2^32; @since 5.1.0
 define('SWOOLE_TRACE_CO_ODBC', 8589934592); // 2^33; @since 5.1.0
 define('SWOOLE_TRACE_CO_ORACLE', 17179869184); // 2^34; @since 5.1.0
 define('SWOOLE_TRACE_CO_SQLITE', 34359738368); // 2^35; @since 5.1.2
-define('SWOOLE_TRACE_THREAD', 68719476736); // 2^36; @since 6.1.0
+define('SWOOLE_TRACE_CO_FIREBIRD', 68719476736); // 2^36; @since 6.2.0
+define('SWOOLE_TRACE_CO_SSH2', 137438953472); // 2^37; @since 6.2.0
+/*
+ * Trace log type for threads.
+ *
+ * Note: the value of this constant changed in Swoole 6.2.0. In Swoole 6.1.x it was 68719476736 (2^36); since Swoole
+ * 6.2.0 that value belongs to SWOOLE_TRACE_CO_FIREBIRD, and SWOOLE_TRACE_THREAD is 1099511627776 (2^40) instead.
+ *
+ * @since 6.1.0
+ */
+define('SWOOLE_TRACE_THREAD', 1099511627776); // 2^40
 define('SWOOLE_TRACE_ALL', 9223372036854775807); // 2^63 - 1
 
 // Log levels.
@@ -887,13 +897,6 @@ define('SWOOLE_HOOK_CURL', 2048); // 2^11
  */
 define('SWOOLE_HOOK_NATIVE_CURL', 4096); // 2^12
 /*
- * Runtime hook flag SWOOLE_HOOK_BLOCKING_FUNCTION makes the following PHP functions coroutine-friendly by replacing them internally:
- *   - gethostbyname(): replaced with method Swoole\Coroutine::gethostbyname() internally.
- *   - exec(): replaced with function swoole_exec() from Swoole Library internally.
- *   - shell_exec(): replaced with function swoole_shell_exec() from Swoole Library internally.
- */
-define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192); // 2^13
-/*
  * Runtime hook flag SWOOLE_HOOK_SOCKETS makes the following PHP functions coroutine-friendly by replacing them
  * internally with functions from Swoole Library:
  *   - socket_create(): replaced with function swoole_socket_create().
@@ -979,6 +982,55 @@ define('SWOOLE_HOOK_PDO_ORACLE', 262144); // 2^18
  */
 define('SWOOLE_HOOK_PDO_SQLITE', 524288); // 2^19
 /*
+ * Runtime hook flag SWOOLE_HOOK_PDO_FIREBIRD makes the PDO_FIREBIRD driver coroutine-friendly. This flag is available
+ * only when Swoole is installed with option "--with-swoole-firebird" included.
+ *
+ * @since 6.2.0
+ */
+define('SWOOLE_HOOK_PDO_FIREBIRD', 1048576); // 2^20
+/*
+ * Runtime hook flag SWOOLE_HOOK_NET_FUNCTION makes the following networking-related PHP functions coroutine-friendly
+ * by replacing them internally:
+ *   - gethostbyname(): replaced with method Swoole\Coroutine::gethostbyname().
+ *   - gethostbynamel(): replaced with function swoole_gethostbynamel() from Swoole Library.
+ *   - gethostbyaddr(): replaced with function swoole_gethostbyaddr() from Swoole Library.
+ *   - mail(): replaced with function swoole_mail() from Swoole Library.
+ *   - dns_check_record() and checkdnsrr(): replaced with functions swoole_dns_check_record() and swoole_checkdnsrr()
+ *     from Swoole Library.
+ *   - dns_get_mx() and getmxrr(): replaced with functions swoole_dns_get_mx() and swoole_getmxrr() from Swoole Library.
+ *   - dns_get_record(): replaced with function swoole_dns_get_record() from Swoole Library.
+ *
+ * Most of the replacement functions above don't perform the work in the current process; they forward the call to a
+ * small helper server that Swoole Library starts on demand (using class Swoole\RemoteObject\Server), so that the
+ * original blocking implementation runs elsewhere while the current coroutine only waits for the result.
+ *
+ * Before Swoole 6.2.0, the gethostbyname() replacement was part of the (now removed) runtime hook flag
+ * SWOOLE_HOOK_BLOCKING_FUNCTION; the exec() and shell_exec() replacements that flag also provided were dropped in
+ * Swoole 6.2.0 and are no longer available through any hook flag.
+ *
+ * This flag only takes effect when Swoole Library is enabled (ini option "swoole.enable_library", on by default); it
+ * is silently dropped from the requested hook flags otherwise.
+ *
+ * @since 6.2.0
+ * @see \Swoole\Coroutine::gethostbyname()
+ */
+define('SWOOLE_HOOK_NET_FUNCTION', 2097152); // 2^21
+/*
+ * Runtime hook flag SWOOLE_HOOK_MONGODB makes MongoDB operations coroutine-friendly. When enabled, it registers class
+ * Swoole\MongoDB\Client (from Swoole Library) under the alias "MongoDB\Client", unless a class with that name already
+ * exists. The Swoole\MongoDB\Client class is a proxy: it forwards MongoDB operations to a small helper server that
+ * Swoole Library starts on demand (using class Swoole\RemoteObject\Server), so that the blocking MongoDB driver runs
+ * elsewhere while the current coroutine only waits for the result.
+ *
+ * Unlike most other hook flags, this flag is NOT included in SWOOLE_HOOK_ALL; it must be enabled explicitly.
+ *
+ * This flag only takes effect when Swoole Library is enabled (ini option "swoole.enable_library", on by default); it
+ * is silently dropped from the requested hook flags otherwise.
+ *
+ * @since 6.2.0
+ */
+define('SWOOLE_HOOK_MONGODB', 4194304); // 2^22
+/*
  * There are two different hook flags for PHP's cURL functions:
  *   - SWOOLE_HOOK_CURL: Implemented by replacing PHP's cURL functions internally with swoole_curl_*() functions from Swoole Library.
  *   - SWOOLE_HOOK_NATIVE_CURL (recommended): Implemented using libcurl (the curl library).
@@ -988,12 +1040,16 @@ define('SWOOLE_HOOK_PDO_SQLITE', 524288); // 2^19
  * When Swoole is installed with option "--enable-swoole-curl" included, SWOOLE_HOOK_ALL also enables SWOOLE_HOOK_NATIVE_CURL;
  * otherwise, it enables SWOOLE_HOOK_CURL.
  *
+ * Since Swoole 6.2.0, SWOOLE_HOOK_ALL also excludes SWOOLE_HOOK_MONGODB, which must be enabled explicitly.
+ *
  * Class Swoole\Coroutine\Curl\Exception is defined only when option "--enable-swoole-curl" is included during installation.
+ *
+ * @see SWOOLE_HOOK_MONGODB
  */
 if (class_exists(Swoole\Coroutine\Curl\Exception::class)) { // When Swoole is installed with option "--enable-swoole-curl" included.
-    define('SWOOLE_HOOK_ALL', 0x7FFFFFFF ^ SWOOLE_HOOK_CURL);
+    define('SWOOLE_HOOK_ALL', 0x7FFFFFFF & ~SWOOLE_HOOK_CURL & ~SWOOLE_HOOK_MONGODB);
 } else {
-    define('SWOOLE_HOOK_ALL', 0x7FFFFFFF ^ SWOOLE_HOOK_NATIVE_CURL);
+    define('SWOOLE_HOOK_ALL', 0x7FFFFFFF & ~SWOOLE_HOOK_NATIVE_CURL & ~SWOOLE_HOOK_MONGODB);
 }
 
 /*
@@ -1223,10 +1279,11 @@ define('SWOOLE_TIMER_MAX_MS', 9223372036854775807);
 define('SWOOLE_TIMER_MAX_SEC', (float) (SWOOLE_TIMER_MAX_MS / 1000));
 
 /*
- * Constants in this section are available only when OpenSSL support is enabled (i.e., when Swoole is installed with
- * configuration option "--enable-openssl" included).
+ * Constants in this section are for SSL/TLS support. Before Swoole 6.2.0, they were available only when Swoole was
+ * installed with configuration option "--enable-openssl" included; since Swoole 6.2.0, that option is gone and
+ * OpenSSL support is always built in, so these constants are always available (except for the ones tied to a
+ * specific SSL/TLS protocol version, which still depend on the OpenSSL library Swoole was compiled against).
  */
-#ifdef SW_USE_OPENSSL
 define('SWOOLE_SSL', 512); // 2^9
 define('SWOOLE_SSLv3_METHOD', 1);
 define('SWOOLE_SSLv3_SERVER_METHOD', 2);
@@ -1282,4 +1339,3 @@ define('SWOOLE_SSL_TLSv1_3', 64);
 #ifdef SW_SUPPORT_DTLS
 define('SWOOLE_SSL_DTLS', 128);
 #endif
-#endif /* SW_USE_OPENSSL */

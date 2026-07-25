@@ -7,6 +7,13 @@ namespace Swoole\Coroutine\Http;
 use Swoole\Coroutine\Socket;
 
 /**
+ * A coroutine-style HTTP server.
+ *
+ * Since Swoole 6.2.0, when Swoole is installed with the "--enable-uring-socket" configuration option (which in turn
+ * requires the "--enable-iouring" or "--with-liburing-dir" option), the sockets of this server are driven by
+ * io_uring, a Linux facility for asynchronous I/O that can reduce the number of system calls needed per request. This
+ * changes nothing in how the server is used from PHP.
+ *
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has an alias of "\Co\Http\Server" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Http\Server
@@ -70,13 +77,14 @@ final class Server
      *                     use a path prefixed with "unix:" (e.g., "unix:///tmp/server.sock").
      * @param int $port The port to listen on. When 0 (the default) is given for a TCP server, a random port is picked
      *                  by the operating system; check property $port for the actual port used.
-     * @param bool $ssl Whether to enable SSL/TLS encryption. This option is available only when OpenSSL support is
-     *                  enabled (i.e., when Swoole is installed with configuration option "--enable-openssl" included).
+     * @param bool $ssl Whether to enable SSL/TLS encryption. Before Swoole 6.2.0, this option was available only
+     *                  when Swoole was installed with configuration option "--enable-openssl" included; since Swoole
+     *                  6.2.0, OpenSSL support is always built in, so this option is always available.
      * @param bool $reuse_port Whether to allow multiple server processes to listen on the same port (socket option
      *                         SO_REUSEPORT).
-     * @throws \Swoole\Exception When the host is empty, when SSL/TLS is requested but Swoole is installed without
-     *                           OpenSSL support, or when the server fails to bind to or listen on the given host and
-     *                           port.
+     * @throws \Swoole\Exception When the host is empty, or when the server fails to bind to or listen on the given
+     *                           host and port. Before Swoole 6.2.0, it was also thrown when SSL/TLS was requested but
+     *                           Swoole was installed without OpenSSL support.
      */
     public function __construct(string $host, int $port = 0, bool $ssl = false, bool $reuse_port = false)
     {

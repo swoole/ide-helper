@@ -102,7 +102,7 @@ function deadlock_check()
     "\n {$hr1}",
     "\n  [FATAL ERROR]: all coroutines (count: {$count}) are asleep - deadlock!",
     "\n {$hr1}",
-    "\n ";
+    "\n";
 
     // print all coroutine backtraces
     $options = Coroutine::getOptions();
