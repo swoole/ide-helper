@@ -5,11 +5,11 @@ declare(strict_types=1);
 /*
  * Swoole version information.
  */
-define('SWOOLE_VERSION', '6.1.2');
-define('SWOOLE_VERSION_ID', 60102);
+define('SWOOLE_VERSION', '6.1.3');
+define('SWOOLE_VERSION_ID', 60103);
 define('SWOOLE_MAJOR_VERSION', 6);
 define('SWOOLE_MINOR_VERSION', 1);
-define('SWOOLE_RELEASE_VERSION', 2);
+define('SWOOLE_RELEASE_VERSION', 3);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
@@ -344,8 +344,12 @@ define('SWOOLE_IPC_SOCKET', 3); // Network socket.
  * above, but the two belong to different sets of constants and are not interchangeable.
  *
  * The two message-queue-based modes (2 and 3) cannot be used together with server setting "task_enable_coroutine".
+ * Also, since Swoole 6.1.3, using either of them on a system where System V message queues are not available (e.g.,
+ * when Swoole was built on a platform without that feature) makes method \Swoole\Server::set() raise a fatal error,
+ * instead of failing later at runtime.
  *
  * @see SWOOLE_IPC_MSGQUEUE
+ * @see \Swoole\Server::set()
  */
 define('SWOOLE_IPC_UNSOCK', 1); // Default.
 define('SWOOLE_IPC_PREEMPTIVE', 3);

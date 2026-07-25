@@ -94,7 +94,9 @@ class Pool
      *     onWorkerStart is where the code of a worker process runs.
      *   - SWOOLE_IPC_UNIXSOCK (1): IPC over UNIX domain sockets. Messages are delivered to a specific worker process
      *     through method \Swoole\Process\Pool::sendMessage().
-     *   - SWOOLE_IPC_MSGQUEUE (2): IPC over a System V message queue identified by parameter $msgqueue_key.
+     *   - SWOOLE_IPC_MSGQUEUE (2): IPC over a System V message queue identified by parameter $msgqueue_key. Since
+     *     Swoole 6.1.3, this mode fails with a warning on systems where System V message queues are not available
+     *     (e.g., when Swoole was built on a platform without that feature).
      *   - SWOOLE_IPC_SOCKET (3): IPC over a network socket. Method \Swoole\Process\Pool::listen() is used to listen on
      *     a port, and method \Swoole\Process\Pool::write() to send data back to the client.
      *

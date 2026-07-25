@@ -1179,22 +1179,6 @@ function swoole_native_curl_multi_setopt(CurlMultiHandle $multi_handle, int $opt
 }
 
 /**
- * The coroutine version of PHP's cURL function curl_multi_strerror().
- *
- * This function is available only when PHP is 8.4 or above and Swoole is installed with option "--enable-swoole-curl"
- * included. Don't use this function directly; always use the corresponding PHP's cURL function instead.
- *
- * @param int $error_code One of the CURLM_* error codes.
- * @return string|null Returns a text description of the given error code, or null when the error code is unknown.
- * @see curl_multi_strerror()
- * @see https://www.php.net/curl_multi_strerror
- * @since 6.0.0
- */
-function swoole_native_curl_multi_strerror(int $error_code): ?string
-{
-}
-
-/**
  * The coroutine version of PHP's cURL function curl_pause().
  *
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
@@ -1258,22 +1242,6 @@ function swoole_native_curl_setopt(CurlHandle $handle, int $option, mixed $value
 }
 
 /**
- * The coroutine version of PHP's cURL function curl_strerror().
- *
- * This function is available only when PHP is 8.4 or above and Swoole is installed with option "--enable-swoole-curl"
- * included. Don't use this function directly; always use the corresponding PHP's cURL function instead.
- *
- * @param int $error_code One of the CURLE_* error codes.
- * @return string|null Returns a text description of the given error code, or null when the error code is unknown.
- * @see curl_strerror()
- * @see https://www.php.net/curl_strerror
- * @since 6.0.0
- */
-function swoole_native_curl_strerror(int $error_code): ?string
-{
-}
-
-/**
  * The coroutine version of PHP's cURL function curl_unescape().
  *
  * This function is available only when Swoole is installed with option "--enable-swoole-curl" included. Don't use this
@@ -1292,9 +1260,9 @@ function swoole_native_curl_unescape(CurlHandle $handle, string $string): string
 /**
  * The coroutine version of PHP's cURL function curl_upkeep().
  *
- * This function is available only when PHP is 8.4 or above, Swoole is installed with option "--enable-swoole-curl"
- * included, and libcurl is 7.62.0 or above. Don't use this function directly; always use the corresponding PHP's cURL
- * function instead.
+ * This function is available only when PHP is 8.2 or above, Swoole is installed with option "--enable-swoole-curl"
+ * included, and libcurl is 7.62.0 or above. Before Swoole 6.1.3, it required PHP 8.4 or above. Don't use this function
+ * directly; always use the corresponding PHP's cURL function instead.
  *
  * @param CurlHandle $handle The cURL handle.
  * @return bool Returns true on success, or false on failure.
@@ -1303,21 +1271,6 @@ function swoole_native_curl_unescape(CurlHandle $handle, string $string): string
  * @since 6.0.0
  */
 function swoole_native_curl_upkeep(CurlHandle $handle): bool
-{
-}
-
-/**
- * The coroutine version of PHP's cURL function curl_version().
- *
- * This function is available only when PHP is 8.4 or above and Swoole is installed with option "--enable-swoole-curl"
- * included. Don't use this function directly; always use the corresponding PHP's cURL function instead.
- *
- * @return array|false Returns an associative array with information about the cURL version in use, or false on failure.
- * @see curl_version()
- * @see https://www.php.net/curl_version
- * @since 6.0.0
- */
-function swoole_native_curl_version(): array|false
 {
 }
 
