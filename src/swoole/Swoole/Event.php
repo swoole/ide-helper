@@ -191,10 +191,13 @@ class Event
      *
      * This method is registered as a shutdown function automatically when the event loop is created; it's not meant
      * to be called directly. Running the event loop from a shutdown function this way is deprecated and triggers an
-     * E_DEPRECATED error ("Event::wait() in shutdown function is deprecated").
+     * E_DEPRECATED error ("Event::wait() in shutdown function is deprecated"). To avoid the error, don't rely on the
+     * event loop being run for you at shutdown: either wrap the code in function \Swoole\Coroutine\run(), or call
+     * method \Swoole\Event::wait() yourself at the end of the script.
      *
-     * @deprecated 4.6.0 Use function \Swoole\Coroutine\run() instead.
+     * @deprecated 4.6.0 Use function \Swoole\Coroutine\run(), or call method \Swoole\Event::wait() explicitly, instead.
      * @see \Swoole\Coroutine\run()
+     * @see \Swoole\Event::wait()
      */
     public static function rshutdown(): void
     {

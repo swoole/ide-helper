@@ -738,7 +738,14 @@ define('SWOOLE_HOOK_TLS', 64); // 2^6
  *   - stream_socket_pair()
  */
 define('SWOOLE_HOOK_STREAM_FUNCTION', 128);  // 2^7
-// Runtime hook flag SWOOLE_HOOK_STREAM_SELECT is deprecated in Swoole 4.4.0. It's kept for backward compatibility only.
+/*
+ * Runtime hook flag SWOOLE_HOOK_STREAM_SELECT is the former name of SWOOLE_HOOK_STREAM_FUNCTION, kept around only so
+ * that older code keeps working. It has exactly the same value as SWOOLE_HOOK_STREAM_FUNCTION, so the two can be used
+ * interchangeably.
+ *
+ * @deprecated 4.4.0 Use constant SWOOLE_HOOK_STREAM_FUNCTION instead.
+ * @see SWOOLE_HOOK_STREAM_FUNCTION
+ */
 define('SWOOLE_HOOK_STREAM_SELECT', SWOOLE_HOOK_STREAM_FUNCTION);
 /*
  * When enabled, runtime hook flag SWOOLE_HOOK_FILE replaces the plain files wrapper from PHP with the one from Swoole,
@@ -982,6 +989,15 @@ define('SWOOLE_DISPATCH_IDLE_WORKER', 3);
 define('SWOOLE_DISPATCH_IPMOD', 4);
 define('SWOOLE_DISPATCH_UIDMOD', 5);
 define('SWOOLE_DISPATCH_USERFUNC', 6);
+/*
+ * The dispatch mode this constant used to select was dropped from Swoole in version 5.0.3; only the constant itself is
+ * still defined, so that older code referring to it keeps working. Setting it as the server's "dispatch_mode" option no
+ * longer has a dispatch mode of its own behind it, and the server falls back to handing each request to whichever
+ * worker process is idle, i.e., it behaves the same as SWOOLE_DISPATCH_IDLE_WORKER.
+ *
+ * @deprecated 5.0.3 Use constant SWOOLE_DISPATCH_IDLE_WORKER (or another dispatch mode that suits the server) instead.
+ * @see SWOOLE_DISPATCH_IDLE_WORKER
+ */
 define('SWOOLE_DISPATCH_STREAM', 7);
 define('SWOOLE_DISPATCH_CO_CONN_LB', 8);
 define('SWOOLE_DISPATCH_CO_REQ_LB', 9);
