@@ -137,11 +137,18 @@ For each real symbol you find, check five things against the stub:
 Before marking a file/area `[x]` in the progress file, do one mechanical self-check pass so you don't rely purely on
 memory of what you already looked at: grep the file for the failure patterns above, e.g.
 ```bash
-grep -n '^\s*public \$\w\+\s*\(;\|=\)' path/to/File.php   # untyped properties (no type between `public` and `$name`)
-grep -n -B2 '^\s*public function\|^\s*function ' path/to/File.php | grep -c '/\*\*'  # rough docblock-coverage check
+grep -n '^\s*public \$\w\+\s*\(;\|=\)' path/to/File.php   # untyped PUBLIC properties (no type between `public` and `$name`)
+grep -n '^\s*\(public\|protected\|private\)\s.*\$\w\+\s*\(;\|=\)' path/to/File.php   # every property, ANY visibility — count them
+grep -n -B2 '^\s*\(public\|protected\|private\)\s.*\$\w\+\s*\(;\|=\)' path/to/File.php | grep -c '/\*\*'  # rough property-docblock-coverage check — compare this count against the count from the line above; a mismatch usually means a `private`/`protected` property (easy to overlook since it's not covered by the untyped-PUBLIC-property check) has no docblock at all
+grep -n -B2 '^\s*public function\|^\s*function ' path/to/File.php | grep -c '/\*\*'  # rough method-docblock-coverage check
+grep -n -B1 '^\(final \|abstract \)*class \|^interface \|^trait ' path/to/File.php   # locate the class/interface/trait docblock; open it and confirm it has an actual descriptive sentence, not just `@since`/`@not-serializable`/other tags with no description
 ```
-If either check surfaces something you haven't already verified against source, go back and fix it before moving
-on — don't let a file get checked off with known gaps.
+If any check surfaces something you haven't already verified against source, go back and fix it before moving on —
+don't let a file get checked off with known gaps. In particular, don't assume the untyped-PUBLIC-property check above
+is sufficient on its own: CLAUDE.md's native-type rule is scoped to public properties, but its one-line-docblock-
+description requirement applies to **every** property regardless of visibility — a `private`/`protected` property
+with no docblock is just as much a gap as an undocumented public one, and it's the one most likely to slip past a
+self-check pass that only looks for `public $`.
 
 # Step 3: fix what you find
 
