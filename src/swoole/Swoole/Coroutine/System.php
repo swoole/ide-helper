@@ -128,12 +128,14 @@ class System
      *
      * @param string $filename Path of the file to read.
      * @param int $flag Either 0 (the default) or constant LOCK_EX. When LOCK_EX is passed, an exclusive lock is
-     *                  acquired on the file while reading it.
+     *                  acquired on the file while reading it. Since Swoole 6.1.2, constant FILE_LOCK (registered by
+     *                  Swoole with the same value as LOCK_EX) can be used interchangeably here.
      * @return string|false Returns the content of the file on success, or FALSE on failure (e.g., when the file
      *                      doesn't exist or is not readable).
      * @see https://www.php.net/file_get_contents The built-in PHP function \file_get_contents(), which serves a similar purpose but may block the whole process.
-     * @alias This method has an alias of \Swoole\Coroutine::readFile().
+     * @see FILE_LOCK
      * @see \Swoole\Coroutine::readFile()
+     * @alias This method has an alias of \Swoole\Coroutine::readFile().
      */
     public static function readFile(string $filename, int $flag = 0): string|false
     {
@@ -149,11 +151,14 @@ class System
      * @param string $fileContent The content to write to the file.
      * @param int $flags A bitmask made of the following constants (same as in the built-in PHP function \file_put_contents()):
      *                   - FILE_APPEND: Append the content to the end of the file instead of replacing existing content.
-     *                   - LOCK_EX: Acquire an exclusive lock on the file while writing to it.
+     *                   - LOCK_EX: Acquire an exclusive lock on the file while writing to it. Since Swoole 6.1.2,
+     *                   constant FILE_LOCK (registered by Swoole with the same value as LOCK_EX) can be used
+     *                   interchangeably here.
      * @return int|false Returns the number of bytes written on success, or FALSE on failure.
      * @see https://www.php.net/file_put_contents The built-in PHP function \file_put_contents(), which serves a similar purpose but may block the whole process.
-     * @alias This method has an alias of \Swoole\Coroutine::writeFile().
+     * @see FILE_LOCK
      * @see \Swoole\Coroutine::writeFile()
+     * @alias This method has an alias of \Swoole\Coroutine::writeFile().
      */
     public static function writeFile(string $filename, string $fileContent, int $flags = 0): int|false
     {

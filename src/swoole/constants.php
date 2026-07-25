@@ -5,11 +5,11 @@ declare(strict_types=1);
 /*
  * Swoole version information.
  */
-define('SWOOLE_VERSION', '6.1.1');
-define('SWOOLE_VERSION_ID', 60101);
+define('SWOOLE_VERSION', '6.1.2');
+define('SWOOLE_VERSION_ID', 60102);
 define('SWOOLE_MAJOR_VERSION', 6);
 define('SWOOLE_MINOR_VERSION', 1);
-define('SWOOLE_RELEASE_VERSION', 1);
+define('SWOOLE_RELEASE_VERSION', 2);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
@@ -95,6 +95,18 @@ define('SWOOLE_KEEP', 4096);  // 2^12
 // Read/Write events of sockets.
 define('SWOOLE_EVENT_READ', 512);   // 2^9
 define('SWOOLE_EVENT_WRITE', 1024); // 2^10
+
+/*
+ * File locking flag for methods \Swoole\Coroutine\System::readFile() and \Swoole\Coroutine\System::writeFile().
+ *
+ * When included in the flags passed to either method, an exclusive lock is held on the file while it is being read or
+ * written, so that other processes locking the same file cannot read or write it at the same time. The constant has
+ * the same value as the built-in PHP constant LOCK_EX, and the two can be used interchangeably in those methods.
+ *
+ * @see \Swoole\Coroutine\System::readFile()
+ * @see \Swoole\Coroutine\System::writeFile()
+ */
+define('FILE_LOCK', 2); // @since 6.1.2
 
 /*
  * Error types. They are used as value of the second parameter of function swoole_strerror(int $errno, int $error_type).
@@ -787,6 +799,14 @@ define('SWOOLE_HOOK_STREAM_SELECT', SWOOLE_HOOK_STREAM_FUNCTION);
  *
  * By default the underlying file operations are carried out in a thread pool (function swoole_async_set() is used to
  * size that pool), or through io_uring when Swoole is installed with option "--enable-iouring" included.
+ *
+ * Since Swoole 6.1.2, the same coroutine-friendly file operations can also be requested for one specific file at a
+ * time, without enabling this hook flag globally: prefix the file path with the "async.file://" stream protocol
+ * (registered by Swoole), e.g.,
+ *
+ * ```php
+ * $content = file_get_contents('async.file:///path/to/file.txt');
+ * ```
  *
  * @see swoole_async_set()
  * @see SWOOLE_HOOK_STDIO

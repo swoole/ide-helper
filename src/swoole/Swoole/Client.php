@@ -170,7 +170,9 @@ class Client
      *
      * This method is available only when Swoole is installed with option "--enable-sockets" included.
      *
-     * @return \Socket|false Returns a Socket object on success; otherwise FALSE.
+     * @return \Socket|false Returns a Socket object on success; otherwise FALSE. Since Swoole 6.1.2, the returned
+     *                       Socket object holds a duplicate of the underlying socket handle instead of the original
+     *                       one, so closing the returned Socket object no longer affects the socket held by Swoole.
      */
     public function getSocket(): \Socket|false
     {

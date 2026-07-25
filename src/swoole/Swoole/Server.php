@@ -392,8 +392,8 @@ class Server
      * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server\Port::on()
      * @see \Swoole\Server::getCallback()
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.1/ext-src/swoole_server.cc#L50
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.1/ext-src/swoole_server_port.cc#L33
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.2/ext-src/swoole_server.cc#L50
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.2/ext-src/swoole_server_port.cc#L33
      */
     public function on(string $event_name, callable $callback): bool
     {
@@ -504,7 +504,9 @@ class Server
      * Check if a connection exists.
      *
      * @param int $fd The connection file descriptor.
-     * @return bool Returns true if the connection exists, or false if the connection does not exist or has been closed.
+     * @return bool Returns true if the connection exists, or false if the connection does not exist or has been
+     *              closed. Since Swoole 6.1.2, false is also returned while the connection is still in the process of
+     *              being closed (previously, true was returned until the connection was fully closed).
      * @alias This method has an alias of \Swoole\Server::exist().
      * @see \Swoole\Server::exist()
      */
@@ -516,7 +518,9 @@ class Server
      * Check if a connection exists.
      *
      * @param int $fd The connection file descriptor.
-     * @return bool Returns true if the connection exists, or false if the connection does not exist or has been closed.
+     * @return bool Returns true if the connection exists, or false if the connection does not exist or has been
+     *              closed. Since Swoole 6.1.2, false is also returned while the connection is still in the process of
+     *              being closed (previously, true was returned until the connection was fully closed).
      * @alias Alias of method \Swoole\Server::exists().
      * @see \Swoole\Server::exists()
      */
@@ -901,7 +905,7 @@ class Server
      * @see \Swoole\Server::protect()
      * @see \Swoole\Constant::OPTION_HEARTBEAT_IDLE_TIME
      * @see \Swoole\Constant::OPTION_HEARTBEAT_CHECK_INTERVAL
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.1/ext-src/swoole_server.cc#L3033 The actual default value of parameter $ifCloseConnection
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.2/ext-src/swoole_server.cc#L3033 The actual default value of parameter $ifCloseConnection
      */
     public function heartbeat(bool $ifCloseConnection = false): array|false
     {
@@ -1198,7 +1202,9 @@ class Server
      * @param int $port Port number. Use the primary port (the first port of property \Swoole\Server::$ports) if not
      *                  passed in or passed in as 0. The behavior is undefined when the server is not listening on the
      *                  given port.
-     * @return \Socket|false Returns a Socket object on success; otherwise FALSE.
+     * @return \Socket|false Returns a Socket object on success; otherwise FALSE. Since Swoole 6.1.2, the returned
+     *                       Socket object holds a duplicate of the underlying socket handle instead of the original
+     *                       one, so closing the returned Socket object no longer affects the socket held by Swoole.
      * @see \Swoole\Server\Port::getSocket()
      */
     public function getSocket(int $port = 0): \Socket|false

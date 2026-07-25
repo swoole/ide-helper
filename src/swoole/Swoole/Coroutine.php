@@ -608,7 +608,8 @@ class Coroutine
      * Please check documentation of method \Swoole\Coroutine\System::readFile() for more details.
      *
      * @param string $filename Path of the file to read.
-     * @param int $flag Either 0 (the default) or constant LOCK_EX (to acquire an exclusive lock on the file while reading it).
+     * @param int $flag Either 0 (the default) or constant LOCK_EX (to acquire an exclusive lock on the file while
+     *                  reading it). Since Swoole 6.1.2, constant FILE_LOCK can be used in place of LOCK_EX.
      * @return string|false Returns the content of the file on success, or FALSE on failure.
      * @alias Alias of method \Swoole\Coroutine\System::readFile().
      * @see \Swoole\Coroutine\System::readFile()
@@ -624,7 +625,8 @@ class Coroutine
      *
      * @param string $filename Path of the file to write to.
      * @param string $fileContent The content to write to the file.
-     * @param int $flags A bitmask made of constants FILE_APPEND and LOCK_EX, same as in the built-in PHP function \file_put_contents().
+     * @param int $flags A bitmask made of constants FILE_APPEND and LOCK_EX, same as in the built-in PHP function
+     *                   \file_put_contents(). Since Swoole 6.1.2, constant FILE_LOCK can be used in place of LOCK_EX.
      * @return int|false Returns the number of bytes written on success, or FALSE on failure.
      * @alias Alias of method \Swoole\Coroutine\System::writeFile().
      * @see \Swoole\Coroutine\System::writeFile()
