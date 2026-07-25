@@ -160,6 +160,12 @@ class Cookie
     /**
      * Serialize the cookie into the value of a "Set-Cookie" header.
      *
+     * Note that prior to Swoole 6.1.7, when the cookie had an empty value (i.e., a deletion cookie meant to make the
+     * browser drop the cookie right away), the serialized string left out the path, domain, secure, HttpOnly,
+     * SameSite, Priority, and Partitioned attributes; this was fixed in Swoole 6.1.7. The fix matters because a
+     * browser only removes a cookie when the path and domain of the deletion cookie match those the cookie was
+     * originally set with.
+     *
      * @return string|false Return the serialized cookie string; return FALSE when serialization fails — because the
      *                      cookie has no name, an attribute (name, value, path, or domain) contains illegal
      *                      characters, or the expiration year is greater than 9999 — in which case the object is also

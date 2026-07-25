@@ -60,6 +60,12 @@ class Lock
      * $lock->lock(LOCK_EX | LOCK_NB);    // Never wait; return immediately (what trylock() used to do).
      * ```
      *
+     * When Swoole can't ask the operating system to signal it once the lock is released (which requires Linux io_uring
+     * support), a waiting coroutine instead re-checks the lock periodically, doubling the pause between checks each
+     * time. Prior to Swoole 6.1.7, this pause grew without limit, so under contention a coroutine could take
+     * increasingly long to notice that the lock had been freed; since Swoole 6.1.7, the pause between checks is capped
+     * at 0.1 second.
+     *
      * @param int $operation What kind of lock to acquire, as described above.
      * @return bool TRUE when the lock was acquired, FALSE otherwise (the lock was held by another coroutine and LOCK_NB
      *              was used, or the method was called outside of a coroutine).
