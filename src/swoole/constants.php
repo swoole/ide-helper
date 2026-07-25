@@ -9,13 +9,13 @@ declare(strict_types=1);
  * source code (it kept reporting 60103, the value from Swoole 6.1.3), and Swoole 6.1.5 corrected it straight to
  * 60105. Keep this in mind when comparing against SWOOLE_VERSION_ID to detect Swoole 6.1.4.
  *
- * @see https://github.com/swoole/swoole-src/blob/v6.1.8/include/swoole_version.h#L26
+ * @see https://github.com/swoole/swoole-src/blob/v6.1.9/include/swoole_version.h#L26
  */
-define('SWOOLE_VERSION', '6.1.8');
-define('SWOOLE_VERSION_ID', 60108);
+define('SWOOLE_VERSION', '6.1.9');
+define('SWOOLE_VERSION_ID', 60109);
 define('SWOOLE_MAJOR_VERSION', 6);
 define('SWOOLE_MINOR_VERSION', 1);
-define('SWOOLE_RELEASE_VERSION', 8);
+define('SWOOLE_RELEASE_VERSION', 9);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
