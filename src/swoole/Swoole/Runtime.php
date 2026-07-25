@@ -4,6 +4,18 @@ declare(strict_types=1);
 
 namespace Swoole;
 
+/**
+ * Class for managing Swoole's runtime hooks.
+ *
+ * Runtime hooks transparently replace PHP's blocking, built-in functionality (e.g., function sleep(), file and
+ * stream operations, and database extensions like PDO and mysqli) with coroutine-friendly implementations, so that
+ * existing synchronous code can run inside coroutines without blocking the whole process. Which parts of PHP get
+ * hooked is controlled by the SWOOLE_HOOK_* flags (e.g., SWOOLE_HOOK_ALL, SWOOLE_HOOK_TCP, SWOOLE_HOOK_SLEEP),
+ * passed to method enableCoroutine() or setHookFlags().
+ *
+ * @see \Swoole\Runtime::enableCoroutine()
+ * @see \Swoole\Runtime::setHookFlags()
+ */
 class Runtime
 {
     /**

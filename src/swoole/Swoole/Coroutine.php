@@ -8,8 +8,18 @@ use Swoole\Coroutine\Context;
 use Swoole\Coroutine\Iterator;
 
 /**
+ * The core class for creating and managing coroutines.
+ *
+ * Coroutines are lightweight threads of execution managed by Swoole in user space: creating one is cheap, and huge
+ * numbers of them can run concurrently within a single process. Whenever a coroutine performs a blocking I/O
+ * operation (through Swoole's coroutine-aware APIs or hooked PHP functions), it's automatically suspended and other
+ * coroutines keep running; it resumes once the I/O result is ready. This class provides static methods to create
+ * coroutines (method create()), inspect and control them (e.g., methods getCid(), yield(), resume(), cancel()), and
+ * configure coroutine behavior (method set()).
+ *
  * @alias This class has an alias of "\co" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \co
+ * @see \Swoole\Runtime::enableCoroutine()
  */
 class Coroutine
 {

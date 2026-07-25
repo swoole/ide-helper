@@ -84,64 +84,117 @@ class Port
     public Iterator $connections;
 
     /**
-     * @var callable
+     * Callback for the "Connect" event, fired when a new connection is established on the port.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server\Port::on()
      */
     private $onConnect;
 
     /**
-     * @var callable
+     * Callback for the "Receive" event, fired when data is received on a (stream-type) connection of the port.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server\Port::on()
      */
     private $onReceive;
 
     /**
-     * @var callable
+     * Callback for the "Close" event, fired when a connection of the port is closed.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server\Port::on()
      */
     private $onClose;
 
     /**
-     * @var callable
+     * Callback for the "Packet" event, fired when a UDP packet is received on the port.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server\Port::on()
      */
     private $onPacket;
 
     /**
-     * @var callable
+     * Callback for the "BufferFull" event, fired when the output buffer of a connection of the port gets full.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server\Port::on()
      */
     private $onBufferFull;
 
     /**
-     * @var callable
+     * Callback for the "BufferEmpty" event, fired when the output buffer of a connection of the port is drained.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server\Port::on()
      */
     private $onBufferEmpty;
 
     /**
-     * @var callable
+     * Callback for the "Request" event, fired when a complete HTTP request is received on the port (HTTP servers only).
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server\Port::on()
      */
     private $onRequest;
 
     /**
-     * @var callable
+     * Callback for the "Handshake" event, fired to take over the WebSocket handshake on the port (WebSocket servers
+     * only).
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server\Port::on()
      */
     private $onHandshake;
 
     /**
-     * @var callable
+     * Callback for the "Open" event, fired when a WebSocket handshake on the port has completed (WebSocket servers
+     * only).
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server\Port::on()
      */
     private $onOpen;
 
     /**
-     * @var callable
+     * Callback for the "Message" event, fired when a WebSocket data frame is received on the port (WebSocket servers
+     * only).
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server\Port::on()
      */
     private $onMessage;
 
     /**
-     * @var callable
+     * Callback for the "Disconnect" event, fired when a connection closes before completing a WebSocket handshake
+     * (WebSocket servers only).
+     * NULL until registered through method on().
+     *
+     * @var callable|null
      * @since 4.7.0
+     * @see \Swoole\Server\Port::on()
      */
     private $onDisconnect;
 
     /**
-     * @var callable
+     * Callback for the "BeforeHandshakeResponse" event, fired before the built-in WebSocket handshake response is sent
+     * (WebSocket servers only).
+     * NULL until registered through method on().
+     *
+     * @var callable|null
      * @since 5.0.3
+     * @see \Swoole\Server\Port::on()
      */
     private $onBeforeHandshakeResponse;
 

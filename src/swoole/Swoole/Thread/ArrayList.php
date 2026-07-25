@@ -20,6 +20,12 @@ final class ArrayList implements \ArrayAccess, \Countable
      */
     public int $id = 0;
 
+    /**
+     * Constructor. It can only be called once per object; calling it a second time throws an \Error.
+     *
+     * @param array|null $array Optional initial values of the list. It must be a "list"-style array (with
+     *                          consecutive integer keys starting from 0), otherwise an \Error is thrown.
+     */
     public function __construct(?array $array = null)
     {
     }
@@ -60,18 +66,50 @@ final class ArrayList implements \ArrayAccess, \Countable
     {
     }
 
+    /**
+     * Find the first element equal to the given value.
+     *
+     * @param mixed $value The value to search for.
+     * @return int Index of the first matching element. Despite the declared return type, NULL is returned when no
+     *             element matches.
+     */
     public function find(mixed $value): int
     {
     }
 
+    /**
+     * Atomically increase the numeric value stored at the given index.
+     *
+     * When the index equals the current size of the list (or NULL is given as the index), a new element is appended
+     * to the list with $value as its initial value.
+     *
+     * @param mixed $key Index of the element to update.
+     * @param mixed $value The amount to add. The default value is 1.
+     * @return mixed The new value of the element (an integer, or a float when the stored value is a float).
+     * @throws \Swoole\Exception When the index is out of range.
+     */
     public function incr(mixed $key, mixed $value = 1): mixed
     {
     }
 
+    /**
+     * Atomically decrease the numeric value stored at the given index.
+     *
+     * When the index equals the current size of the list (or NULL is given as the index), a new element is appended
+     * to the list with the negated amount (-$value) as its initial value.
+     *
+     * @param mixed $key Index of the element to update.
+     * @param mixed $value The amount to subtract. The default value is 1.
+     * @return mixed The new value of the element (an integer, or a float when the stored value is a float).
+     * @throws \Swoole\Exception When the index is out of range.
+     */
     public function decr(mixed $key, mixed $value = 1): mixed
     {
     }
 
+    /**
+     * Remove all elements from the list.
+     */
     public function clean(): void
     {
     }
@@ -85,6 +123,11 @@ final class ArrayList implements \ArrayAccess, \Countable
     {
     }
 
+    /**
+     * Get all elements of the list as a plain (non-shared) PHP array.
+     *
+     * @return array All elements of the list.
+     */
     public function toArray(): array
     {
     }

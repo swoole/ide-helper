@@ -5,7 +5,16 @@ declare(strict_types=1);
 namespace Swoole;
 
 /**
+ * Synchronous (blocking) TCP/UDP/Unix-socket client.
+ *
+ * This class provides a blocking-mode network client that can talk to a remote server over TCP, UDP, or Unix domain
+ * sockets, with optional SSL/TLS encryption. Each I/O method blocks the current process until it finishes; for
+ * non-blocking I/O inside coroutines, use class \Swoole\Coroutine\Client instead. The client also supports
+ * persistent connections: when the socket type includes the SWOOLE_KEEP flag, the underlying connection is kept
+ * open and reused across multiple objects (and even multiple requests) within the same process.
+ *
  * @not-serializable Objects of this class cannot be serialized.
+ * @see \Swoole\Coroutine\Client
  */
 class Client
 {
@@ -23,12 +32,32 @@ class Client
 
     public const SHUT_WR = 1;
 
+    /**
+     * Error code of the last failed operation.
+     *
+     * The value is a C error number (errno) or a Swoole error code; it can be turned into a human-readable message
+     * with function swoole_strerror().
+     *
+     * @see \swoole_strerror()
+     */
     public int $errCode = 0;
 
+    /**
+     * File descriptor of the underlying socket, or -1 when the client is not connected.
+     */
     public int $sock = -1;
 
+    /**
+     * TRUE if the current connection is a reused persistent connection (i.e., the socket type includes the
+     * SWOOLE_KEEP flag and an existing pooled connection was picked up by the connect() call instead of a new one
+     * being established); otherwise FALSE.
+     */
     public bool $reuse = false;
 
+    /**
+     * Number of times the underlying persistent connection has been reused. It stays 0 for non-persistent
+     * connections.
+     */
     public int $reuseCount = 0;
 
     /**
@@ -55,8 +84,20 @@ class Client
      */
     public int $type;
 
+    /**
+     * Optional name of the client, as passed to the constructor.
+     *
+     * For persistent connections (socket type including the SWOOLE_KEEP flag), the name is part of the key used to
+     * look up pooled connections, so clients created with different names never share the same persistent
+     * connection. The property is unset when no name was given.
+     */
     public string $id;
 
+    /**
+     * Client settings set through method set(). The property is unset until set() is called for the first time.
+     *
+     * @see \Swoole\Client::set()
+     */
     public array $setting;
 
     /**
@@ -81,6 +122,7 @@ class Client
     /**
      * Set options of the client object before connecting to a remote server.
      *
+     * @param array $settings Client settings, merged into any settings passed to previous calls of this method.
      * @return bool TRUE if succeeds; otherwise FALSE.
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
@@ -90,26 +132,99 @@ class Client
         return true;
     }
 
+    /**
+     * Connect to a remote server.
+     *
+     * For persistent connections (socket type including the SWOOLE_KEEP flag), an existing pooled connection to the
+     * same server is reused when available; in that case property $reuse is set to TRUE.
+     *
+     * @param string $host Server host name or IP address (or socket path for Unix domain sockets). Host names are
+     *                     resolved automatically.
+     * @param int $port Server port. Not needed for Unix domain sockets.
+     * @param float $timeout Connection timeout in seconds. Default: 0.5 seconds.
+     * @param int $sock_flag Extra connection flag. For TCP sockets, a non-zero value makes the connect call
+     *                       non-blocking; for UDP sockets, a value of 1 binds the socket to the remote address so
+     *                       that only packets from that address are received.
+     * @return bool TRUE if the connection is established (or a pooled connection is reused); otherwise FALSE, with
+     *              property $errCode updated accordingly.
+     * @see \Swoole\Client::$reuse
+     * @see \Swoole\Client::$errCode
+     */
     public function connect(string $host, int $port = 0, float $timeout = 0.5, int $sock_flag = 0): bool
     {
     }
 
+    /**
+     * Receive data from the remote server.
+     *
+     * When the "open_eof_check" or "open_length_check" setting is enabled, a complete protocol packet is returned
+     * regardless of the $size parameter; otherwise, at most $size bytes of whatever data is available are returned.
+     *
+     * @param int $size Maximum number of bytes to receive.
+     * @param int $flag Receive flags. It can be a bitwise OR of class constants like Client::MSG_WAITALL or
+     *                  Client::MSG_PEEK; a value of 1 is treated as Client::MSG_WAITALL (block until exactly $size
+     *                  bytes have been received).
+     * @return string|false The data received. An empty string is returned when the server closes the connection,
+     *                      and FALSE is returned on error (with property $errCode updated accordingly).
+     * @see \Swoole\Client::MSG_WAITALL
+     * @see \Swoole\Client::MSG_PEEK
+     */
     public function recv(int $size = 65536, int $flag = 0): string|false
     {
     }
 
+    /**
+     * Send data to the remote server.
+     *
+     * @param string $data The data to send. It cannot be empty.
+     * @param int $flag Send flags, e.g., class constant Client::MSG_OOB for out-of-band data.
+     * @return int|false Number of bytes sent, or FALSE on error (with property $errCode updated accordingly).
+     * @see \Swoole\Client::MSG_OOB
+     */
     public function send(string $data, int $flag = 0): int|false
     {
     }
 
+    /**
+     * Send a file to the remote server.
+     *
+     * This method works on stream-type sockets only (TCP or Unix stream sockets); it cannot be used on UDP sockets.
+     *
+     * @param string $filename Path of the file to send. It cannot be empty.
+     * @param int $offset Offset in bytes from where to start reading the file. Default: 0 (the beginning of the file).
+     * @param int $length Number of bytes to send. Default: 0 (until the end of the file).
+     * @return bool TRUE if the whole file (or requested portion) is sent; otherwise FALSE, with property $errCode
+     *              updated accordingly.
+     */
     public function sendfile(string $filename, int $offset = 0, int $length = 0): bool
     {
     }
 
+    /**
+     * Send a UDP packet to the given address, without establishing a connection first.
+     *
+     * This method is for UDP-type sockets only.
+     *
+     * @param string $ip IP address (or socket path for Unix datagram sockets) of the target host.
+     * @param int $port Port of the target host. Ignored for Unix datagram sockets.
+     * @param string $data The data to send. It cannot be empty.
+     * @return bool TRUE if the packet is sent; otherwise FALSE, with property $errCode updated accordingly.
+     */
     public function sendto(string $ip, int $port, string $data): bool
     {
     }
 
+    /**
+     * Shut down part or all of a full-duplex connection, like what PHP function stream_socket_shutdown() does.
+     *
+     * @param int $how One of the class constants Client::SHUT_RD (disable further receiving), Client::SHUT_WR
+     *                 (disable further sending), or Client::SHUT_RDWR (disable both).
+     * @return bool TRUE if succeeds; otherwise FALSE.
+     * @see \Swoole\Client::SHUT_RD
+     * @see \Swoole\Client::SHUT_WR
+     * @see \Swoole\Client::SHUT_RDWR
+     * @see https://www.php.net/stream_socket_shutdown
+     */
     public function shutdown(int $how): bool
     {
     }
@@ -130,18 +245,27 @@ class Client
     }
 
     /**
+     * Get the SSL certificate presented by the remote server.
+     *
      * Before Swoole 6.2.0, this method was available only when Swoole was installed with configuration option
      * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
      * available.
+     *
+     * @return bool|string The peer certificate in PEM format, or FALSE if there is no established SSL connection or
+     *                     the certificate cannot be retrieved.
      */
     public function getPeerCert(): bool|string
     {
     }
 
     /**
+     * Verify the SSL certificate presented by the remote server.
+     *
      * Before Swoole 6.2.0, this method was available only when Swoole was installed with configuration option
      * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
      * available.
+     *
+     * @return bool TRUE if the peer certificate passes verification; otherwise FALSE.
      */
     public function verifyPeerCert(): bool
     {
@@ -156,14 +280,36 @@ class Client
     {
     }
 
+    /**
+     * Get the local host and port of the client socket.
+     *
+     * @return array|false An array with two keys ("host" and "port") describing the local end of the connection, or
+     *                     FALSE on error (with property $errCode updated accordingly).
+     */
     public function getsockname(): array|false
     {
     }
 
+    /**
+     * Get the host and port of the remote end of the connection.
+     *
+     * @return array|false An array with two keys ("host" and "port") describing the remote end of the connection,
+     *                     or FALSE on error (with property $errCode updated accordingly).
+     */
     public function getpeername(): array|false
     {
     }
 
+    /**
+     * Close the connection.
+     *
+     * For persistent connections (socket type including the SWOOLE_KEEP flag), the underlying connection is by
+     * default returned to the in-process connection pool for later reuse instead of being closed; pass TRUE to
+     * force it to actually close.
+     *
+     * @param bool $force Whether to force-close the connection even if it's a healthy persistent connection.
+     * @return bool TRUE if succeeds; otherwise FALSE.
+     */
     public function close(bool $force = false): bool
     {
     }

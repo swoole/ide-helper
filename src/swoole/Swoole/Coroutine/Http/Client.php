@@ -8,6 +8,14 @@ use Swoole\Coroutine\Socket;
 use Swoole\WebSocket\Frame;
 
 /**
+ * Coroutine-friendly HTTP/1.x and WebSocket client.
+ *
+ * This class provides an HTTP client to be used inside coroutines: every request method suspends only the current
+ * coroutine while waiting for the response, letting other coroutines keep running. It supports HTTPS, chunked and
+ * compressed responses, file uploads and downloads, keeping the connection alive across requests, and upgrading the
+ * connection to the WebSocket protocol (methods upgrade()/push()/recv()). The response of the last request is
+ * exposed through properties like $statusCode, $headers, and $body.
+ *
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has an alias of "\Co\Http\Client" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Http\Client

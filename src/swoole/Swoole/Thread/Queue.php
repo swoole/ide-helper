@@ -29,6 +29,9 @@ final class Queue implements \Countable
      */
     public const NOTIFY_ALL = 2;
 
+    /**
+     * Constructor. It can only be called once per object; calling it a second time throws an \Error.
+     */
     public function __construct()
     {
     }

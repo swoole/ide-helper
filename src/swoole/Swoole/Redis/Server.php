@@ -5,7 +5,17 @@ declare(strict_types=1);
 namespace Swoole\Redis;
 
 /**
+ * A server that speaks the Redis protocol.
+ *
+ * This class makes it easy to build a custom server that any Redis client can talk to: it parses incoming Redis
+ * commands automatically, dispatches each command to the handler function registered for it with method
+ * setHandler(), and provides method format() to build protocol-compliant replies (strings, integers, errors, lists,
+ * maps, etc.). Everything else — ports, event callbacks, server options — works the same as in the parent class
+ * \Swoole\Server.
+ *
  * @not-serializable Objects of this class cannot be serialized.
+ * @see \Swoole\Redis\Server::setHandler()
+ * @see \Swoole\Redis\Server::format()
  */
 class Server extends \Swoole\Server
 {

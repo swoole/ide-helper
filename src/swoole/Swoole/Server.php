@@ -202,75 +202,135 @@ class Server
     public string $bootstrap = '';
 
     /**
-     * @var callable
+     * Callback for the "Start" event, fired in the master process when the server starts.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server::on()
      */
     private $onStart;
 
     /**
-     * @var callable
+     * Callback for the "BeforeShutdown" event, fired right before the server shuts down.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
      * @since 4.8.0
+     * @see \Swoole\Server::on()
      */
     private $onBeforeShutdown;
 
     /**
-     * @var callable
+     * Callback for the "Shutdown" event, fired when the server shuts down.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server::on()
      */
     private $onShutdown;
 
     /**
-     * @var callable
+     * Callback for the "WorkerStart" event, fired when a worker (or task worker) process starts.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server::on()
      */
     private $onWorkerStart;
 
     /**
-     * @var callable
+     * Callback for the "WorkerStop" event, fired when a worker (or task worker) process stops normally.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server::on()
      */
     private $onWorkerStop;
 
     /**
-     * @var callable
+     * Callback for the "BeforeReload" event, fired in the manager process before all worker processes are reloaded.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
      * @since 4.5.0
+     * @see \Swoole\Server::on()
      */
     private $onBeforeReload;
 
     /**
-     * @var callable
+     * Callback for the "AfterReload" event, fired in the manager process after all worker processes have been reloaded.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
      * @since 4.5.0
+     * @see \Swoole\Server::on()
      */
     private $onAfterReload;
 
     /**
-     * @var callable
+     * Callback for the "WorkerExit" event, fired repeatedly in a worker process after the server asks it to exit (only
+     * when option "reload_async" is enabled).
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server::on()
      */
     private $onWorkerExit;
 
     /**
-     * @var callable
+     * Callback for the "WorkerError" event, fired in the manager process when a worker (or task worker) process
+     * terminates abnormally.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server::on()
      */
     private $onWorkerError;
 
     /**
-     * @var callable
+     * Callback for the "Task" event, fired in a task worker process when a task is received.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server::on()
      */
     private $onTask;
 
     /**
-     * @var callable
+     * Callback for the "Finish" event, fired in a worker process when a task worker finishes a task and returns a
+     * result.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server::on()
      */
     private $onFinish;
 
     /**
-     * @var callable
+     * Callback for the "ManagerStart" event, fired when the manager process starts.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server::on()
      */
     private $onManagerStart;
 
     /**
-     * @var callable
+     * Callback for the "ManagerStop" event, fired when the manager process stops.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server::on()
      */
     private $onManagerStop;
 
     /**
-     * @var callable
+     * Callback for the "PipeMessage" event, fired in a worker (or task worker) process when it receives a message sent
+     * by method sendMessage().
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Server::on()
      */
     private $onPipeMessage;
 

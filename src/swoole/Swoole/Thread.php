@@ -131,10 +131,29 @@ final class Thread
     {
     }
 
+    /**
+     * Get the ID of the current thread (the thread the call is made from).
+     *
+     * The ID is the one assigned by the threading library (pthreads); it's unique among running threads of the
+     * process, but may be reused after a thread finishes. To get the thread ID assigned by the operating system,
+     * use method getNativeId() instead.
+     *
+     * @return int ID of the current thread.
+     * @see \Swoole\Thread::getNativeId()
+     * @see \Swoole\Thread::$id
+     */
     public static function getId(): int
     {
     }
 
+    /**
+     * Get information about the threading environment of the process.
+     *
+     * @return array An array with three keys: "is_main_thread" (whether the call is made from the main thread),
+     *               "is_shutdown" (whether the thread system is shutting down), and "thread_num" (the number of
+     *               threads currently running, including the main thread).
+     * @see \Swoole\Thread::activeCount()
+     */
     public static function getInfo(): array
     {
     }
@@ -217,6 +236,17 @@ final class Thread
     {
     }
 
+    /**
+     * Get the operating-system-level ID of the current thread (the thread the call is made from).
+     *
+     * Unlike the ID returned by method getId(), this is the identifier the operating system itself uses for the
+     * thread — e.g., the value of the gettid() system call on Linux — which is what shows up in system tools like
+     * `top` or `ps`.
+     *
+     * @return int Native (operating-system-level) ID of the current thread.
+     * @see \Swoole\Thread::getId()
+     * @see https://man7.org/linux/man-pages/man2/gettid.2.html
+     */
     public static function getNativeId(): int
     {
     }

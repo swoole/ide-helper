@@ -5,6 +5,15 @@ declare(strict_types=1);
 namespace Swoole\Coroutine;
 
 /**
+ * A channel for communication between coroutines, similar to channels in the Go programming language.
+ *
+ * A channel is a fixed-capacity, first-in-first-out queue that coroutines use to pass values to each other: one
+ * coroutine pushes values in, another pops them out. When the channel is full, push() suspends the current
+ * coroutine until room becomes available; when it's empty, pop() suspends the current coroutine until a value
+ * arrives. This makes channels the primary building block for producer-consumer patterns, connection pools, and
+ * other coordination between coroutines. Channels only work between coroutines within the same process; they cannot
+ * be used across processes.
+ *
  * @template TData
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has two aliases: \chan and \Co\Channel (when directive "swoole.use_shortname" is not explicitly turned off).

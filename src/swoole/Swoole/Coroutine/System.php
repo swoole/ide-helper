@@ -5,6 +5,14 @@ declare(strict_types=1);
 namespace Swoole\Coroutine;
 
 /**
+ * Coroutine-friendly versions of common system operations.
+ *
+ * This class provides static methods that perform system-level operations — e.g., DNS lookups (gethostbyname(),
+ * dnsLookup()), timers (sleep()), executing shell commands (exec()), reading/writing file descriptors, and waiting
+ * for child processes or signals (wait(), waitPid(), waitSignal(), waitEvent()) — in a coroutine-friendly way:
+ * instead of blocking the whole process like their plain PHP counterparts, they suspend only the current coroutine,
+ * letting other coroutines keep running in the meantime.
+ *
  * @alias This class has an alias of "\Co\System" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\System
  */

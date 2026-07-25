@@ -192,7 +192,11 @@ class Process
     public ?int $id = null;
 
     /**
-     * @var callable The callback function of the process.
+     * The callback function of the process, as passed to the constructor. It's executed inside the child process
+     * once the child process is started.
+     *
+     * @var callable
+     * @see \Swoole\Process::__construct()
      */
     private $callback;
 

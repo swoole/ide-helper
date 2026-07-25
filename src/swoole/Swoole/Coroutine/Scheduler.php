@@ -5,6 +5,21 @@ declare(strict_types=1);
 namespace Swoole\Coroutine;
 
 /**
+ * A scheduler for running a set of coroutines to completion.
+ *
+ * The scheduler collects coroutines added through methods add() and parallel(), then runs them all inside an event
+ * loop when method start() is called; start() doesn't return until every coroutine (and everything they spawned)
+ * has finished. It's the coroutine counterpart of starting a server: a convenient way to write standalone
+ * coroutine-based scripts, e.g.,
+ *
+ * ```php
+ * $scheduler = new Swoole\Coroutine\Scheduler();
+ * $scheduler->add(function () {
+ *     echo file_get_contents('https://www.example.com/'); // Non-blocking inside a coroutine (with hooks enabled).
+ * });
+ * $scheduler->start();
+ * ```
+ *
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has an alias of "\Co\Scheduler" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Scheduler

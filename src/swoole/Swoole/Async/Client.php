@@ -5,22 +5,86 @@ declare(strict_types=1);
 namespace Swoole\Async;
 
 /**
+ * Asynchronous (event-driven) TCP/UDP/Unix-socket client.
+ *
+ * This class provides a callback-style network client: instead of blocking, methods like connect() register the
+ * operation with the event loop and return immediately, and results are delivered later through the event callbacks
+ * registered with method on() (e.g., "connect", "receive", "close", "error"). It's the asynchronous counterpart of
+ * the synchronous client \Swoole\Client, which it extends. In coroutine-style code, prefer
+ * \Swoole\Coroutine\Client instead.
+ *
+ * Before Swoole 6.0.0, this class was provided by the separate ext-async extension; it has been part of Swoole
+ * itself since 6.0.0.
+ *
  * @since 6.0.0
+ * @see \Swoole\Client
+ * @see \Swoole\Coroutine\Client
+ * @see \Swoole\Async\Client::on()
  */
 class Client extends \Swoole\Client
 {
+    /**
+     * Callback for the "connect" event, fired when the connection to the server has been established.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Async\Client::on()
+     */
     private $onConnect;
 
+    /**
+     * Callback for the "error" event, fired when the connection attempt fails.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Async\Client::on()
+     */
     private $onError;
 
+    /**
+     * Callback for the "receive" event, fired when data is received from the server.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Async\Client::on()
+     */
     private $onReceive;
 
+    /**
+     * Callback for the "close" event, fired when the connection is closed.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Async\Client::on()
+     */
     private $onClose;
 
+    /**
+     * Callback for the "bufferFull" event, fired when the send buffer is full.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Async\Client::on()
+     */
     private $onBufferFull;
 
+    /**
+     * Callback for the "bufferEmpty" event, fired when the send buffer has been drained.
+     * NULL until registered through method on().
+     *
+     * @var callable|null
+     * @see \Swoole\Async\Client::on()
+     */
     private $onBufferEmpty;
 
+    /**
+     * Callback fired when the SSL handshake has completed successfully.
+     * Unlike the other callbacks, it's registered through the $onSslReady parameter of method enableSSL(), not
+     * through method on(). NULL until enableSSL() is called.
+     *
+     * @var callable|null
+     * @see \Swoole\Async\Client::enableSSL()
+     */
     private $onSSLReady;
 
     /**
@@ -44,10 +108,32 @@ class Client extends \Swoole\Client
     {
     }
 
+    /**
+     * Temporarily stop receiving data from the connection.
+     *
+     * The connection is taken out of the event loop's read watch list, so the "receive" callback stops firing until
+     * method wakeup() is called. This can be used to apply backpressure when data comes in faster than it can be
+     * processed.
+     *
+     * @return bool TRUE if succeeds; otherwise FALSE (e.g., when the client is not connected, or receiving is
+     *              already stopped).
+     * @alias This method has an alias of \Swoole\Async\Client::pause().
+     * @see \Swoole\Async\Client::pause()
+     * @see \Swoole\Async\Client::wakeup()
+     */
     public function sleep(): bool
     {
     }
 
+    /**
+     * Resume receiving data from the connection, undoing an earlier sleep() call.
+     *
+     * @return bool TRUE if succeeds; otherwise FALSE (e.g., when the client is not connected, or receiving is not
+     *              stopped).
+     * @alias This method has an alias of \Swoole\Async\Client::resume().
+     * @see \Swoole\Async\Client::resume()
+     * @see \Swoole\Async\Client::sleep()
+     */
     public function wakeup(): bool
     {
     }
@@ -89,6 +175,13 @@ class Client extends \Swoole\Client
     {
     }
 
+    /**
+     * Check if the client is connected or not.
+     *
+     * {@inheritDoc}
+     *
+     * @return bool TRUE if the client is connected; otherwise FALSE.
+     */
     public function isConnected(): bool
     {
     }

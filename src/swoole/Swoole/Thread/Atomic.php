@@ -20,34 +20,100 @@ namespace Swoole\Thread;
  */
 final class Atomic
 {
+    /**
+     * Constructor. It can only be called once per object; calling it a second time throws an \Error.
+     *
+     * @param int $value The initial value of the counter. The default value is 0. It shouldn't be a negative number.
+     */
     public function __construct(int $value = 0)
     {
     }
 
+    /**
+     * Atomically adds a value to the counter.
+     *
+     * @param int $add_value The value to be added to the counter. The default value is 1. It shouldn't be a negative number.
+     * @return int The new value of the counter.
+     */
     public function add(int $add_value = 1): int
     {
     }
 
+    /**
+     * Atomically subtracts a value from the counter.
+     *
+     * @param int $sub_value The value to be subtracted from the counter. The default value is 1. It shouldn't be a negative number.
+     * @return int The new value of the counter.
+     */
     public function sub(int $sub_value = 1): int
     {
     }
 
+    /**
+     * Get the current value of the counter.
+     *
+     * @return int The current value of the counter.
+     */
     public function get(): int
     {
     }
 
+    /**
+     * Set the value of the counter.
+     *
+     * @param int $value The new value of the counter. It shouldn't be a negative number.
+     */
     public function set(int $value): void
     {
     }
 
+    /**
+     * Block the current thread until it's woken up by another thread or the timeout expires.
+     *
+     * Before using this method, the counter must be either 0 or 1, otherwise the behavior is undefined.
+     *   - When the counter is 0, the current thread will be put into a blocking state.
+     *   - When the counter is 1, it means the thread doesn't need to wait; the method returns true immediately.
+     *
+     * WARNING: This method blocks the whole thread, not just the current coroutine.
+     *
+     * @param float $timeout The timeout in seconds.
+     *                       > 0: The thread will be woken up after the specified number of seconds (or by another thread).
+     *                       <= 0: No timeout. The thread will resume execution only when woken up by another thread.
+     * @return bool Returns true if no need to wait or woken up by another thread; otherwise returns false.
+     * @see \Swoole\Thread\Atomic::wakeup()
+     */
     public function wait(float $timeout = 1): bool
     {
     }
 
+    /**
+     * Wake up one or more threads that are blocked by method \Swoole\Thread\Atomic::wait().
+     *
+     * Before using this method, the counter must be either 0 or 1, otherwise the behavior is undefined.
+     *   - When the counter is 0, it means there are no threads blocked; the method returns true immediately.
+     *   - When the counter is 1, it means there are some threads blocked; the method wakes up (some of) them and returns true.
+     *
+     * There is no guarantee about which threads are awoken.
+     *
+     * @param int $count The number of threads to wake up.
+     * @return bool Returns true if the counter is 0 or the method wakes up at least one thread; otherwise returns false.
+     * @see \Swoole\Thread\Atomic::wait()
+     */
     public function wakeup(int $count = 1): bool
     {
     }
 
+    /**
+     * Atomically compare and set the value of the counter.
+     *
+     * For example, assuming current value of the counter is 10,
+     *   - $atomic->cmpset(11, 20); // This will not change the value of the counter.
+     *   - $atomic->cmpset(10, 20); // This will set the value to 20.
+     *
+     * @param int $cmp_value The value to be compared with the current value of the counter.
+     * @param int $new_value The new value of the counter. It shouldn't be a negative number.
+     * @return bool True if the value of the counter was changed, false otherwise.
+     */
     public function cmpset(int $cmp_value, int $new_value): bool
     {
     }
