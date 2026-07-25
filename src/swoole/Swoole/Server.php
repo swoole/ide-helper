@@ -392,8 +392,8 @@ class Server
      * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server\Port::on()
      * @see \Swoole\Server::getCallback()
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.0/ext-src/swoole_server.cc#L50
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.0/ext-src/swoole_server_port.cc#L33
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.1/ext-src/swoole_server.cc#L50
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.1/ext-src/swoole_server_port.cc#L33
      */
     public function on(string $event_name, callable $callback): bool
     {
@@ -901,7 +901,7 @@ class Server
      * @see \Swoole\Server::protect()
      * @see \Swoole\Constant::OPTION_HEARTBEAT_IDLE_TIME
      * @see \Swoole\Constant::OPTION_HEARTBEAT_CHECK_INTERVAL
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.0/ext-src/swoole_server.cc#L3033 The actual default value of parameter $ifCloseConnection
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.1/ext-src/swoole_server.cc#L3033 The actual default value of parameter $ifCloseConnection
      */
     public function heartbeat(bool $ifCloseConnection = false): array|false
     {
