@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 /*
  * Swoole version information.
+ *
+ * Note: the value of constant SWOOLE_VERSION_ID is not a typo. Swoole 6.1.4 didn't update it in the source code, so
+ * the extension itself still reports 60103 (the value from Swoole 6.1.3) instead of the expected 60104.
+ *
+ * @see https://github.com/swoole/swoole-src/blob/v6.1.4/include/swoole_version.h#L26
  */
-define('SWOOLE_VERSION', '6.1.3');
+define('SWOOLE_VERSION', '6.1.4');
 define('SWOOLE_VERSION_ID', 60103);
 define('SWOOLE_MAJOR_VERSION', 6);
 define('SWOOLE_MINOR_VERSION', 1);
-define('SWOOLE_RELEASE_VERSION', 3);
+define('SWOOLE_RELEASE_VERSION', 4);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
