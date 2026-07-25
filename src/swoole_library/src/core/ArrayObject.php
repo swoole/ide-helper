@@ -83,7 +83,7 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
 
     public function valid(): bool
     {
-        return array_key_exists($this->key(), $this->array);
+        return $this->key() !== null;
     }
 
     /**
