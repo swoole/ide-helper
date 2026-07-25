@@ -840,6 +840,14 @@ class Server
      *
      * This method can be called from worker processes.
      *
+     * In the SWOOLE_PROCESS mode, before Swoole 6.2.0 this method sent the SIGTERM signal directly to the master
+     * process, which failed silently when the calling worker process ran as a different, non-privileged system user
+     * (set through server options "user"/"group") than the master process. Since Swoole 6.2.0, the request is instead
+     * delivered as a message through the internal pipe connecting the worker to the reactor, which then signals the
+     * master process itself; this makes the method work regardless of which system user the worker runs as. The
+     * SWOOLE_BASE mode and the SWOOLE_THREAD mode are unaffected, since they have no separate master process to signal
+     * this way.
+     *
      * @return bool TRUE on success, FALSE on failure.
      */
     public function shutdown(): bool

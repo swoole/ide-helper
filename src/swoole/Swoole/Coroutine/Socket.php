@@ -514,7 +514,12 @@ class Socket
      * @param int $opt_name The option to set, e.g., SO_REUSEADDR or SO_LINGER.
      * @param mixed $opt_value The value to set the option to: an integer for most options, or an array for structured
      *                         options (e.g., ["l_onoff" => ..., "l_linger" => ...] for SO_LINGER, or ["sec" => ...,
-     *                         "usec" => ...] for SO_RCVTIMEO and SO_SNDTIMEO).
+     *                         "usec" => ...] for SO_RCVTIMEO and SO_SNDTIMEO). Since Swoole 6.2.0, for SO_LINGER,
+     *                         SO_RCVTIMEO, and SO_SNDTIMEO, this value must actually be an array (or an object, whose
+     *                         public properties are read instead): a TypeError is thrown otherwise, instead of it being
+     *                         silently coerced as before. For SO_LINGER specifically, "l_onoff" and "l_linger" must each
+     *                         be between 0 and 65535; a ValueError is thrown otherwise, instead of the value being
+     *                         silently truncated as before.
      * @return bool Returns TRUE on success, or FALSE on failure.
      * @see https://www.php.net/socket_set_option The PHP function \socket_set_option(), which this method mirrors.
      * @see \Swoole\Coroutine\Socket::getOption()

@@ -838,6 +838,10 @@ define('SWOOLE_HOOK_FILE', 256); // 2^8
  *   - usleep()
  *   - time_nanosleep()
  *   - time_sleep_until()
+ *
+ * Since Swoole 6.2.0, passing an invalid argument to these hooked functions (e.g., a negative number of seconds) makes
+ * them throw a ValueError, matching plain PHP's own behavior; before 6.2.0, they raised an E_WARNING and returned FALSE
+ * instead.
  */
 define('SWOOLE_HOOK_SLEEP', 512); // 2^9
 /*

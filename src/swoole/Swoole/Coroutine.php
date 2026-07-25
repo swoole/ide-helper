@@ -262,6 +262,13 @@ class Coroutine
      *               - coroutine_num: Number of active coroutines.
      *               - coroutine_peak_num: Peak number of active coroutines.
      *               - coroutine_last_cid: ID of the most recently created coroutine.
+     *               - iouring_task_num: Since Swoole 6.2.0, number of in-flight io_uring tasks on the current thread.
+     *               Present only when Swoole is installed with the "--enable-iouring" configuration option and an
+     *               io_uring instance has been created on the current thread.
+     *               - iouring_sq_usage_percent: Since Swoole 6.2.0, how full the io_uring submission queue is, as a
+     *               whole-number percentage from 0 to 100. Same availability as iouring_task_num.
+     *               - iouring_waiting_task_num: Since Swoole 6.2.0, number of tasks waiting for room in the io_uring
+     *               submission queue because it's currently full. Same availability as iouring_task_num.
      */
     public static function stats(): array
     {
