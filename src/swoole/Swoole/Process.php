@@ -425,7 +425,12 @@ class Process
      *
      * @return bool|int Returns the process ID of the child process (a positive integer) on success. It returns
      *                  false, with an E_WARNING level error thrown out, when the process has been started already
-     *                  (and is still alive), or when the operating system fails to fork a new process.
+     *                  (and is still alive). Before Swoole 6.1.8, the method could also return false when the
+     *                  operating system failed to create the child process; since Swoole 6.1.8, that failure is no
+     *                  longer surfaced to the caller: Swoole logs a warning, waits for one second, and tries again,
+     *                  repeating until the child process is created. In other words, the method now blocks (retrying
+     *                  once per second) instead of returning false when the system is temporarily unable to create
+     *                  new processes (e.g., when it runs out of memory or reaches its process limit).
      * @see \Swoole\Process::__construct()
      * @see \Swoole\Process::wait()
      * @see \Swoole\Process::$pid
