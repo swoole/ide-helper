@@ -277,6 +277,11 @@ class Response
     /**
      * Set an HTTP header.
      *
+     * Note: since Swoole 6.1.5, setting the "Content-Encoding" header manually turns off Swoole's automatic
+     * compression of the response body entirely; the server assumes you have already compressed (encoded) the
+     * response body yourself to match the declared encoding. Before 6.1.5, automatic compression was skipped only
+     * when the "Content-Encoding" header was set to an empty string.
+     *
      * @param string $key Name of the header.
      * @param string|array $value Value(s) of the header. When an array is given, the header is sent multiple times,
      *                            once for each value in the array.
@@ -292,6 +297,11 @@ class Response
 
     /**
      * Set an HTTP header.
+     *
+     * Note: since Swoole 6.1.5, setting the "Content-Encoding" header manually turns off Swoole's automatic
+     * compression of the response body entirely; the server assumes you have already compressed (encoded) the
+     * response body yourself to match the declared encoding. Before 6.1.5, automatic compression was skipped only
+     * when the "Content-Encoding" header was set to an empty string.
      *
      * @param string $key Name of the header.
      * @param string|array $value Value(s) of the header. When an array is given, the header is sent multiple times,
