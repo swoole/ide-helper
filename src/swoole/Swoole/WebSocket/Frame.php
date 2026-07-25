@@ -14,6 +14,18 @@ class Frame implements \Stringable
 
     public int $flags = SWOOLE_WEBSOCKET_FLAG_FIN;
 
+    /**
+     * Whether this frame is the final piece of a message, i.e., whether property $data carries a complete message.
+     *
+     * When a WebSocket message is split into several frames, only the last frame of the message has this property set
+     * to TRUE. Frames returned by \Swoole\Http\Response::recv() and \Swoole\Coroutine\Http\Client::recv() always carry
+     * a complete, automatically reassembled message, so this property is always TRUE on them. Note: in Swoole 6.1.0
+     * through 6.1.5, this property was incorrectly left FALSE on frames reassembled from several smaller frames by
+     * those two methods; this was fixed in Swoole 6.1.6.
+     *
+     * @see \Swoole\Coroutine\Http\Client::recv()
+     * @see \Swoole\Http\Response::recv()
+     */
     public bool $finish;
 
     public function __toString(): string

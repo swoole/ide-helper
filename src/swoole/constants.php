@@ -9,13 +9,13 @@ declare(strict_types=1);
  * source code (it kept reporting 60103, the value from Swoole 6.1.3), and Swoole 6.1.5 corrected it straight to
  * 60105. Keep this in mind when comparing against SWOOLE_VERSION_ID to detect Swoole 6.1.4.
  *
- * @see https://github.com/swoole/swoole-src/blob/v6.1.5/include/swoole_version.h#L26
+ * @see https://github.com/swoole/swoole-src/blob/v6.1.6/include/swoole_version.h#L26
  */
-define('SWOOLE_VERSION', '6.1.5');
-define('SWOOLE_VERSION_ID', 60105);
+define('SWOOLE_VERSION', '6.1.6');
+define('SWOOLE_VERSION_ID', 60106);
 define('SWOOLE_MAJOR_VERSION', 6);
 define('SWOOLE_MINOR_VERSION', 1);
-define('SWOOLE_RELEASE_VERSION', 5);
+define('SWOOLE_RELEASE_VERSION', 6);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
@@ -894,7 +894,7 @@ define('SWOOLE_HOOK_NATIVE_CURL', 4096); // 2^12
  */
 define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192); // 2^13
 /*
- * Runtime hook flag SWOOLE_HOOK_BLOCKING_FUNCTION makes the following PHP functions coroutine-friendly by replacing them
+ * Runtime hook flag SWOOLE_HOOK_SOCKETS makes the following PHP functions coroutine-friendly by replacing them
  * internally with functions from Swoole Library:
  *   - socket_create(): replaced with function swoole_socket_create().
  *   - socket_create_listen(): replaced with function swoole_socket_create_listen().
@@ -925,8 +925,13 @@ define('SWOOLE_HOOK_BLOCKING_FUNCTION', 8192); // 2^13
  *
  * When enabled, it also makes class \Swoole\Coroutine\Socket a child class of built-in PHP class \Socket.
  *
+ * The functions listed above come from the PHP "sockets" extension, so this hook has no effect unless that extension
+ * is loaded. Since Swoole 6.1.6, this flag is silently dropped from the requested hook flags when the "sockets"
+ * extension is not loaded (e.g., passing SWOOLE_HOOK_ALL then behaves like SWOOLE_HOOK_ALL without SWOOLE_HOOK_SOCKETS).
+ *
  * @see \Swoole\Coroutine\Socket
  * @see \Socket
+ * @see \Swoole\Runtime::setHookFlags()
  */
 define('SWOOLE_HOOK_SOCKETS', 16384); // 2^14
 /*

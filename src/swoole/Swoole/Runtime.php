@@ -50,6 +50,9 @@ class Runtime
      * been created; calls made from a child thread, or after child threads exist, fail and return false with a warning
      * logged. Before 6.1.3, such calls were partially applied instead of rejected.
      *
+     * Since Swoole 6.1.6, the SWOOLE_HOOK_SOCKETS flag is silently dropped from the given flags when the PHP "sockets"
+     * extension is not loaded, since the socket_*() functions that the flag hooks come from that extension.
+     *
      * @param int $flags Enable given runtime hooks, or disable all hooks if 0 is passed.
      * @return bool true on success or false on failure
      * @see \Swoole\Runtime::enableCoroutine()
