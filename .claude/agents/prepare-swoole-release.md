@@ -88,14 +88,15 @@ of the real, runnable PHP source of the `swoole/library` package (the code that 
 it by wholesale replacement, not by diffing/editing individual files:
 
 1. Remove the existing `src/swoole_library` folder in this project entirely.
-2. Fetch the matching `vTARGET_VERSION` tag from `https://github.com/swoole/library`.
-3. Copy that package's `src/` folder into `src/swoole_library/src/` in this project — i.e., the library's own
-   `src/core/...`, `src/__init__.php`, `src/alias.php`, `src/alias_ns.php`, `src/functions.php`, etc. all land at
-   `src/swoole_library/src/...` here — **except** these four paths, which must NOT be copied over:
-   - `src/ext`
-   - `src/std`
-   - `src/constants.php`
-   - `src/vendor_init.php`
+2. Fetch the matching `vTARGET_VERSION` tag from `https://github.com/swoole/library`, and find the list of files to
+   be copied from file `https://github.com/swoole/library/blob/vTARGET_VERSION/src/__init__.php`. Treat that file as
+   a PHP script: it returns an array, and the list of files to copy is in field `files` of that array (paths
+   relative to the library's `src/` folder). Don't reuse a `files` list remembered from a previous version — the
+   list changes between releases, which is exactly why it must be read fresh from the target tag's own
+   `__init__.php` every time.
+3. Copy the listed files into `src/swoole_library/src/` in this project, preserving their relative paths (e.g. the
+   library's `src/core/StringObject.php` lands at `src/swoole_library/src/core/StringObject.php` here). Copy ONLY
+   the files in the `files` list — nothing else.
 
 Do not hand-modify anything under `src/swoole_library/` afterward — if something there looks wrong, that's an
 upstream `swoole/library` concern, not something to patch locally in this repo.
@@ -208,6 +209,6 @@ agent.
 
 Summarize: the current → target version bump, which files you touched and why (tie each back to a specific
 swoole-src change), the version constants you bumped, confirmation that `src/swoole_library/` was replaced from the
-matching `swoole/library` release (and that the four excluded paths were left out), confirmation that the
-style/syntax checks passed, and the branch/commit you left the work on. Flag anything you couldn't fully verify
-rather than guessing.
+matching `swoole/library` release (with the file list taken from that release's own `src/__init__.php` manifest),
+confirmation that the style/syntax checks passed, and the branch/commit you left the work on. Flag anything you
+couldn't fully verify rather than guessing.
