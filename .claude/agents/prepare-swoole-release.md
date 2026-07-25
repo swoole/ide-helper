@@ -112,6 +112,9 @@ changed, or removed. Focus on:
 - Behavioral changes to existing methods that don't change the signature but do change documented behavior (these
   need their docblock prose updated even though nothing in the PHP signature moves).
 - New/removed classes entirely.
+- Symbols newly flagged as deprecated in the target version — e.g. a new `php_error_docref(..., E_DEPRECATED, ...)`
+  call added to an otherwise-unchanged method, or the target version's own release notes/changelog calling out a
+  deprecation — where swoole-src still exports the symbol but now discourages its use.
 
 For each one, find (or create) the corresponding stub under `src/swoole/` — `Swoole/**` mirrors the `Swoole\...`
 namespace, `constants.php` holds `SWOOLE_*` defines, `functions.php` holds global `swoole_*()` functions,
@@ -135,6 +138,11 @@ SWOOLE_EXTRA_VERSION   // empty string '' for a stable release
 For every stub you touch, apply the "Stub-writing conventions" from CLAUDE.md — re-read that section fresh each
 time rather than relying on this summary from memory, since it's a living list new conventions get added to:
 - New class/method/function/constant → `@since X.Y.Z` tag (or trailing `// @since X.Y.Z` for `define()` constants).
+- Newly deprecated but still-present class/method/function/constant → `@deprecated X.Y.Z <what to use instead>` tag
+  (same placement rule as `@since`: a PHPDoc tag, or trailing `// @deprecated X.Y.Z ...` for `define()` constants),
+  plus a `@see` tag pointing at the replacement. Use this PHPDoc tag, not PHP 8.4's native `#[\Deprecated]`
+  attribute (this project's minimum supported version is 8.1). Only use this when swoole-src still exports the
+  symbol — if the target version actually removed it, that's the "Removed" rule below instead, not this one.
 - Changed method/function arguments → don't silently update the signature; add a comment showing what it looked
   like before and what it looks like now.
 - Completeness/typing baseline → every property/parameter/return you touch needs an accurate native type

@@ -19,12 +19,12 @@ against the matching swoole-src release, fixing whatever's missing, incomplete, 
 
 Read this repository's `CLAUDE.md` (at the repo root) in full before doing anything else — especially the
 "Stub-writing conventions" section. That section is your complete checklist for what a correct stub looks like
-(`@since`, `@readonly`, `@alias`/`@see` pairing, `@not-serializable`, `@pseudocode-included`, `{@inheritDoc}` for a
-re-listed inherited method, grouping same-type PHPDoc tags together, Markdown-fenced example code instead of
-`@example`, complete and accurately-typed properties/parameters/returns using only PHP-8.1-compatible native types,
-build-flag-gated symbols, cross-referencing, and — above everything else — writing for a PHP developer, not a C
-developer). It's a living checklist — re-read it each session rather than relying on memory of a prior run, since
-new conventions get added to it over time.
+(`@since`, `@deprecated`/`@see` pairing, `@readonly`, `@alias`/`@see` pairing, `@not-serializable`,
+`@pseudocode-included`, `{@inheritDoc}` for a re-listed inherited method, grouping same-type PHPDoc tags together,
+Markdown-fenced example code instead of `@example`, complete and accurately-typed properties/parameters/returns
+using only PHP-8.1-compatible native types, build-flag-gated symbols, cross-referencing, and — above everything
+else — writing for a PHP developer, not a C developer). It's a living checklist — re-read it each session rather
+than relying on memory of a prior run, since new conventions get added to it over time.
 
 **Scope: `src/swoole/` only** (`constants.php`, `functions.php`, `shortnames.php`, `Swoole/**`). Do not touch
 `src/swoole_library/` — that's a verbatim copy of real PHP source synced by wholesale replacement, not a stub, and
@@ -114,8 +114,14 @@ against the stub line by line. Concretely:
   the actual `--enable-*`/`--with-*` option name and description rather than guessing the phrasing, and document the
   requirement following the existing pattern (see `\Swoole\Thread\Atomic` or the `SWOOLE_HOOK_PDO_*` constants in
   CLAUDE.md for the exact phrasing convention).
+- **Deprecated-but-still-present symbols**: watch for a symbol that swoole-src still exports but flags as
+  deprecated — e.g. a `php_error_docref(..., E_DEPRECATED, ...)` call in its implementation, or upstream's own
+  docs/changelog calling it out — and confirm the stub carries the `@deprecated X.Y.Z <replacement>` + `@see` pair
+  per CLAUDE.md (see `Swoole\Event::rshutdown()` for the existing example). Don't confuse this with a symbol
+  swoole-src has actually removed (check five, below) — a still-exported-but-deprecated symbol keeps its stub and
+  gets `@deprecated` added; only a genuinely removed one gets deleted.
 
-For each real symbol you find, check four things against the stub:
+For each real symbol you find, check five things against the stub:
 1. **Missing** — swoole-src has it, the stub doesn't. Add it.
 2. **Present but wrong/hard to read** — fix it, following every applicable convention from CLAUDE.md.
 3. **Present but incompletely documented or typed** — this is the easiest failure mode to accidentally skip, because
@@ -123,7 +129,10 @@ For each real symbol you find, check four things against the stub:
    accurate native type declaration (properties, parameters, returns), a `@param` tag per parameter, an `@return`
    tag for every non-`void` return, and at least a one-line description. Treat this exactly like a missing symbol —
    fix it, don't leave it for "later."
-4. **Present in stub but gone from swoole-src** — delete it outright. Don't deprecate it or leave a stale stub.
+4. **Deprecated in swoole-src but missing `@deprecated` in the stub** — swoole-src still exports the symbol but
+   flags it deprecated (runtime `E_DEPRECATED`, or upstream docs/changelog), and the stub doesn't say so yet. Add
+   the `@deprecated X.Y.Z <replacement>` + `@see` pair per CLAUDE.md. The symbol stays — only its docblock changes.
+5. **Present in stub but gone from swoole-src** — delete it outright. Don't deprecate it or leave a stale stub.
 
 Before marking a file/area `[x]` in the progress file, do one mechanical self-check pass so you don't rely purely on
 memory of what you already looked at: grep the file for the failure patterns above, e.g.

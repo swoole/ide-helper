@@ -91,6 +91,17 @@ conventions consistently — they are what every existing file already follows a
 - **New class/method/function/constant**: add an `@since X.Y.Z` tag (see existing usage in `functions.php` and
   `constants.php` for the exact placement — as a PHPDoc tag for methods/functions/classes, or as a trailing
   `// @since X.Y.Z` line comment for `define()` constants).
+- **Deprecated but still-present class/method/function/constant**: when swoole-src still exports a symbol but flags
+  it as deprecated (e.g., it triggers an `E_DEPRECATED` notice at runtime, or upstream's own docs/changelog call it
+  deprecated), add a `@deprecated X.Y.Z <what to use instead>` tag — same placement rule as `@since` (a PHPDoc tag
+  for classes/methods/functions, or a trailing `// @deprecated X.Y.Z ...` line comment for `define()` constants) —
+  plus a `@see` tag pointing at the replacement, so a reader lands on the alternative regardless of which symbol they
+  open first (see `Swoole\Event::rshutdown()` for an existing example). Use the PHPDoc tag, not PHP 8.4's native
+  `#[\Deprecated]` attribute: like the standalone-type/DNF constructs above, that attribute isn't understood by this
+  project's minimum supported version (PHP 8.1), while the PHPDoc tag is version-independent and already understood
+  by every IDE/tool this project targets. This is distinct from the "Removed" rule below: only mark something
+  `@deprecated` while swoole-src still exports it — once swoole-src actually removes the symbol, delete the stub
+  outright instead of leaving a deprecated stub behind.
 - **Changed method/function arguments**: don't just silently update the signature — add a comment documenting what
   the signature looked like before and what it looks like now, so readers can see the history at a glance.
 - **Non-serializable classes**: add `@not-serializable Objects of this class cannot be serialized.` in the class-level
