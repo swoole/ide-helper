@@ -32,6 +32,8 @@ namespace Swoole\Http;
 class Cookie
 {
     /**
+     * Create a new, empty cookie object, to be filled in afterwards using the fluent with*() methods.
+     *
      * @param bool $encode Whether the cookie value should be urlencoded when the cookie is serialized. Passing FALSE
      *                     keeps the value verbatim, matching the behavior of \Swoole\Http\Response::rawcookie().
      */

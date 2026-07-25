@@ -18,7 +18,10 @@ namespace Swoole\WebSocket;
 class CloseFrame extends Frame
 {
     /**
-     * {@inheritdoc}
+     * Opcode of the frame. On close frames it defaults to SWOOLE_WEBSOCKET_OPCODE_CLOSE, the opcode marking a frame
+     * as a connection-close frame, instead of the parent class's default of SWOOLE_WEBSOCKET_OPCODE_TEXT.
+     *
+     * @see \Swoole\WebSocket\Frame::$opcode
      */
     public int $opcode = SWOOLE_WEBSOCKET_OPCODE_CLOSE;
 

@@ -18,18 +18,57 @@ namespace Swoole;
  */
 class Client
 {
+    /**
+     * Flag for methods send() and recv(): process out-of-band (urgent) data.
+     *
+     * @see \Swoole\Client::send()
+     * @see \Swoole\Client::recv()
+     */
     public const MSG_OOB = 1;
 
+    /**
+     * Flag for method recv(): peek at the incoming data without removing it from the receive buffer, so that a
+     * subsequent recv() call returns the same data again.
+     *
+     * @see \Swoole\Client::recv()
+     */
     public const MSG_PEEK = 2;
 
+    /**
+     * Flag for method recv(): make this single call non-blocking, returning immediately even if no data is
+     * available yet.
+     *
+     * @see \Swoole\Client::recv()
+     */
     public const MSG_DONTWAIT = 64;
 
+    /**
+     * Flag for method recv(): block until the full requested number of bytes has been received, instead of
+     * returning whatever data happens to be available.
+     *
+     * @see \Swoole\Client::recv()
+     */
     public const MSG_WAITALL = 256;
 
+    /**
+     * Option for method shutdown(): disable both further receiving and further sending on the connection.
+     *
+     * @see \Swoole\Client::shutdown()
+     */
     public const SHUT_RDWR = 2;
 
+    /**
+     * Option for method shutdown(): disable further receiving on the connection.
+     *
+     * @see \Swoole\Client::shutdown()
+     */
     public const SHUT_RD = 0;
 
+    /**
+     * Option for method shutdown(): disable further sending on the connection.
+     *
+     * @see \Swoole\Client::shutdown()
+     */
     public const SHUT_WR = 1;
 
     /**
@@ -101,14 +140,22 @@ class Client
     public array $setting;
 
     /**
+     * Create a new client object of the given socket type.
+     *
+     * The constructor only stores the socket type (and optional name); the actual socket is not created until
+     * method connect() is called.
+     *
      * @param int $type Socket type. Please check comments on property $type for more details.
-     * @param bool $async Whether to enable asynchronous I/O or not. Since v4.4.8, this class supports synchronous I/O (in blocking mode) only.
+     * @param bool $async Whether to enable asynchronous I/O or not. Since v4.4.8, this class supports synchronous I/O (in blocking mode) only; passing TRUE throws an \Error.
+     * @param string $id Optional name of the client, stored in property $id. For persistent connections (socket type including the SWOOLE_KEEP flag), the name is part of the key used to look up pooled connections.
+     * @see \Swoole\Client::connect()
+     * @see \Swoole\Client::$id
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
     public function __construct(int $type, bool $async = SWOOLE_SOCK_SYNC, string $id = '')
     {
         if ($async) {
-            throw new \Error('Please install the ext-async extension, and use class Swoole\Async\Client instead.');
+            throw new \Error('The $async parameter is not supported');
         }
 
         // Here are some statements to validate the $type.

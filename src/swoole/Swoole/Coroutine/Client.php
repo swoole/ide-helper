@@ -22,12 +22,46 @@ namespace Swoole\Coroutine;
  */
 class Client
 {
+    /**
+     * Socket flag for processing out-of-band (urgent) data.
+     *
+     * Note that, unlike in class \Swoole\Client, none of the methods of this class accepts a flags parameter; the
+     * constant exists on this class only to mirror \Swoole\Client::MSG_OOB for API compatibility.
+     *
+     * @see \Swoole\Client::MSG_OOB
+     */
     public const MSG_OOB = 1;
 
+    /**
+     * Socket flag for peeking at incoming data without removing it from the receive buffer.
+     *
+     * Note that, unlike in class \Swoole\Client, none of the methods of this class accepts a flags parameter; the
+     * constant exists on this class only to mirror \Swoole\Client::MSG_PEEK for API compatibility. To peek at
+     * incoming data with this class, use method peek(), which applies this flag internally.
+     *
+     * @see \Swoole\Client::MSG_PEEK
+     * @see \Swoole\Coroutine\Client::peek()
+     */
     public const MSG_PEEK = 2;
 
+    /**
+     * Socket flag for making a single receive call non-blocking.
+     *
+     * Note that, unlike in class \Swoole\Client, none of the methods of this class accepts a flags parameter; the
+     * constant exists on this class only to mirror \Swoole\Client::MSG_DONTWAIT for API compatibility.
+     *
+     * @see \Swoole\Client::MSG_DONTWAIT
+     */
     public const MSG_DONTWAIT = 64;
 
+    /**
+     * Socket flag for blocking until the full requested number of bytes has been received.
+     *
+     * Note that, unlike in class \Swoole\Client, none of the methods of this class accepts a flags parameter; the
+     * constant exists on this class only to mirror \Swoole\Client::MSG_WAITALL for API compatibility.
+     *
+     * @see \Swoole\Client::MSG_WAITALL
+     */
     public const MSG_WAITALL = 256;
 
     /**

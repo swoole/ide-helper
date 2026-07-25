@@ -24,6 +24,10 @@ namespace Swoole;
 class Atomic
 {
     /**
+     * Create a new atomic counter, initialized to the given value.
+     *
+     * The counter is allocated in shared memory, so it can be shared among processes forked afterwards.
+     *
      * @param int $value The initial value of the counter. The default value is 0. It shouldn't be a negative number.
      */
     public function __construct(int $value = 0)

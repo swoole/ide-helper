@@ -85,6 +85,9 @@ class Client
     public int $port = 0;
 
     /**
+     * Whether the connection to the server is made over TLS/SSL, as requested through the constructor's $open_ssl
+     * parameter.
+     *
      * @since 4.4.0
      */
     public bool $ssl = false;
@@ -99,6 +102,11 @@ class Client
     public int $serverLastStreamId = 0;
 
     /**
+     * Create a new HTTP/2 client for the given server.
+     *
+     * The constructor only stores the connection details in properties $host, $port, and $ssl; the actual connection
+     * is not established until method connect() is called.
+     *
      * @param string $host The target host to connect to.
      * @param int $port The target port to connect to. Defaults to 80.
      * @param bool $open_ssl Whether to establish the connection over TLS/SSL. Before Swoole 6.2.0, setting this to

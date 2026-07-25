@@ -439,6 +439,10 @@ function swoole_mime_type_get(string $filename): string
 }
 
 /**
+ * Gets the MIME type registered for the suffix of the given file name.
+ *
+ * @param string $filename A file name, e.g., "/var/www/index.html". Only its suffix is taken into account.
+ * @return string Returns the MIME type registered, or "application/octet-stream" when the suffix is not on the list.
  * @alias This function is an alias of function swoole_mime_type_get().
  * @see swoole_mime_type_get()
  */

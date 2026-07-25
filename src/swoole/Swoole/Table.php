@@ -307,6 +307,13 @@ class Table implements \Iterator, \Countable
     }
 
     /**
+     * Delete a row from the table.
+     *
+     * This method is an alias of method \Swoole\Table::del(); please check that method for details, including a
+     * warning about deleting rows while traversing the table.
+     *
+     * @param string $key The key of the row. Only the first 63 bytes of the key are used.
+     * @return bool Returns TRUE on success, FALSE if the key doesn't exist.
      * @alias Alias of method \Swoole\Table::del().
      * @see \Swoole\Table::del()
      */
@@ -327,6 +334,12 @@ class Table implements \Iterator, \Countable
     }
 
     /**
+     * Check if a row exists or not in the table.
+     *
+     * This method is an alias of method \Swoole\Table::exists().
+     *
+     * @param string $key The key of the row. Only the first 63 bytes of the key are used.
+     * @return bool TRUE if the row exists, FALSE otherwise.
      * @alias Alias of method \Swoole\Table::exists().
      * @see \Swoole\Table::exists()
      */
@@ -468,6 +481,13 @@ class Table implements \Iterator, \Countable
     }
 
     /**
+     * Rewind the table's built-in iterator back to the first row, so that a new foreach loop over the table starts
+     * from the beginning.
+     *
+     * The row found is copied into a buffer private to the iterator (with the row's lock held while copying);
+     * methods \Swoole\Table::current(), \Swoole\Table::key(), and \Swoole\Table::valid() then read from that
+     * private copy.
+     *
      * @see \Iterator::rewind()
      * @see https://www.php.net/manual/en/iterator.rewind.php
      * {@inheritDoc}
@@ -477,6 +497,10 @@ class Table implements \Iterator, \Countable
     }
 
     /**
+     * Check if the table's built-in iterator currently points at a valid row, i.e., whether the traversal has more
+     * rows to visit.
+     *
+     * @return bool TRUE if the iterator points at a valid row; FALSE once the traversal has moved past the last row.
      * @see \Iterator::valid()
      * @see https://www.php.net/manual/en/iterator.valid.php
      * {@inheritDoc}
@@ -486,6 +510,12 @@ class Table implements \Iterator, \Countable
     }
 
     /**
+     * Advance the table's built-in iterator to the next row.
+     *
+     * The row found is copied into a buffer private to the iterator (with the row's lock held while copying);
+     * methods \Swoole\Table::current(), \Swoole\Table::key(), and \Swoole\Table::valid() then read from that
+     * private copy.
+     *
      * @see \Iterator::next()
      * @see https://www.php.net/manual/en/iterator.next.php
      * {@inheritDoc}
@@ -495,7 +525,10 @@ class Table implements \Iterator, \Countable
     }
 
     /**
-     * @return TRow
+     * Get the row the table's built-in iterator currently points at.
+     *
+     * @return TRow The current row, as an associative array mapping column names to column values; NULL is returned
+     *              once the traversal has moved past the last row.
      * @see \Iterator::current()
      * @see https://www.php.net/manual/en/iterator.current.php
      * {@inheritDoc}
@@ -505,6 +538,10 @@ class Table implements \Iterator, \Countable
     }
 
     /**
+     * Get the key of the row the table's built-in iterator currently points at.
+     *
+     * @return string|null The key of the current row; NULL is returned once the traversal has moved past the last
+     *                     row.
      * @see \Iterator::key()
      * @see https://www.php.net/manual/en/iterator.key.php
      * {@inheritDoc}

@@ -86,14 +86,27 @@ class Server extends \Swoole\Server
     /**
      * Set a handler (a callback function) to process a given Redis command.
      *
-     * @return bool TRUE on success, or FALSE on failure.
+     * @param string $command Name of the Redis command to handle (e.g., "GET" or "SET"). Command names are matched
+     *                        case-insensitively, and each command can only have one handler (registering a second
+     *                        handler for the same command replaces the first one).
+     * @param callable $callback The callback function processing the command. It's called with the session ID of the
+     *                           connection and an array of the command's arguments, and its return value (a reply
+     *                           built with method format()) is sent back to the client.
+     * @return bool TRUE on success, or FALSE on failure (e.g., when the command name is empty or too long).
+     * @see \Swoole\Redis\Server::getHandler()
+     * @see \Swoole\Redis\Server::format()
      */
     public function setHandler(string $command, callable $callback): bool
     {
     }
 
     /**
+     * Get the handler (callback function) registered for a given Redis command through method setHandler().
+     *
+     * @param string $command Name of the Redis command (e.g., "GET" or "SET"). Command names are matched
+     *                        case-insensitively.
      * @return callable|null Returns the callback function if defined, otherwise NULL.
+     * @see \Swoole\Redis\Server::setHandler()
      */
     public function getHandler(string $command): ?callable
     {
@@ -110,6 +123,13 @@ class Server extends \Swoole\Server
      *                  - \Swoole\Redis\Server::STRING
      *                  - \Swoole\Redis\Server::SET
      *                  - \Swoole\Redis\Server::MAP
+     * @param mixed $value The value to put in the reply. What it should hold depends on parameter $type (see the
+     *                     comments on the individual constants); it can be omitted for reply types
+     *                     \Swoole\Redis\Server::NIL and \Swoole\Redis\Server::ERROR (for the latter, a default
+     *                     error message is used).
+     * @return string|false The reply encoded in the Redis protocol, ready to be sent back with method
+     *                      \Swoole\Server::send(); or FALSE when the reply cannot be built (e.g., when $type is not
+     *                      one of the constants listed above, or $value doesn't match the reply type).
      */
     public static function format(int $type, mixed $value = null): string|false
     {

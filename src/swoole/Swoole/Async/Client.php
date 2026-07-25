@@ -88,7 +88,14 @@ class Client extends \Swoole\Client
     private $onSSLReady;
 
     /**
+     * Create a new asynchronous client object of the given socket type.
+     *
+     * The constructor only stores the socket type (and makes sure the process has an event loop to register the
+     * client with later); the actual socket is not created until method connect() is called. Unlike the parent
+     * class's constructor, it takes neither an $async nor an $id parameter.
+     *
      * @param int $type Socket type. Please check comments on property \Swoole\Client::$type for more details.
+     * @see \Swoole\Async\Client::connect()
      */
     public function __construct(int $type)
     {
@@ -187,7 +194,17 @@ class Client extends \Swoole\Client
     }
 
     /**
+     * Close the connection, causing the "close" event callback registered via method on() to fire.
+     *
+     * Unlike in the parent class, the $force parameter has no effect here: it's accepted only for signature
+     * compatibility, and the connection is always actually closed (asynchronous clients don't support persistent
+     * connections).
+     *
      * {@inheritDoc}
+     *
+     * @param bool $force Ignored by this class.
+     * @return bool TRUE if succeeds; otherwise FALSE (e.g., when the client is not connected).
+     * @see \Swoole\Async\Client::on()
      */
     public function close(bool $force = false): bool
     {

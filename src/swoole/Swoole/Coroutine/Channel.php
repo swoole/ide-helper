@@ -42,6 +42,11 @@ class Channel
     public int $errCode = SWOOLE_CHANNEL_OK;
 
     /**
+     * Create a new channel of the given capacity.
+     *
+     * The channel is stored in memory local to the current process, which is why channels only work between
+     * coroutines within the same process.
+     *
      * @param int $size Size of the channel. This indicates the maximum number of elements that can be stored in the channel. It has to be greater than 0.
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
@@ -80,14 +85,21 @@ class Channel
     }
 
     /**
+     * Check if the channel is empty, i.e., whether a pop() call would have to wait for an element to arrive.
+     *
      * @return bool Returns true if the channel is empty, false otherwise.
+     * @see \Swoole\Coroutine\Channel::pop()
      */
     public function isEmpty(): bool
     {
     }
 
     /**
+     * Check if the channel is full (the number of queued elements has reached the channel capacity), i.e., whether a
+     * push() call would have to wait for room to become available.
+     *
      * @return bool Returns true if the channel is full, false otherwise.
+     * @see \Swoole\Coroutine\Channel::push()
      */
     public function isFull(): bool
     {
@@ -129,6 +141,8 @@ class Channel
     }
 
     /**
+     * Get the number of elements currently queued in the channel.
+     *
      * @return int Number of elements in the channel.
      */
     public function length(): int

@@ -42,6 +42,13 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * Restart the iteration from the beginning of the server's connection list.
+     *
+     * This method only resets the internal position; the actual search for the first established connection is
+     * performed by the following \Swoole\Connection\Iterator::valid() call (a foreach loop calls the two in that
+     * order automatically).
+     *
+     * @see \Swoole\Connection\Iterator::valid()
      * @see \Iterator::rewind()
      * @see https://www.php.net/manual/en/iterator.rewind.php
      * {@inheritDoc}
@@ -51,6 +58,13 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * Move the iteration on to the next connection.
+     *
+     * This method only advances the internal position; the actual search for the next established connection is
+     * performed by the following \Swoole\Connection\Iterator::valid() call (a foreach loop calls the two in that
+     * order automatically).
+     *
+     * @see \Swoole\Connection\Iterator::valid()
      * @see \Iterator::next()
      * @see https://www.php.net/manual/en/iterator.next.php
      * {@inheritDoc}
@@ -92,6 +106,16 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * Check if the iteration has more connections to visit, i.e., whether an established connection can be found at
+     * or after the current position.
+     *
+     * This is the method that does the actual scanning: starting from the current position, it skips over
+     * connections that are not fully established (and, when the object was accessed through property
+     * \Swoole\Server\Port::$connections, connections belonging to other ports of the server), and positions the
+     * iterator on the first established connection found.
+     *
+     * @return bool TRUE if an established connection was found; FALSE once the iteration has moved past the last
+     *              one.
      * @see \Iterator::valid()
      * @see https://www.php.net/manual/en/iterator.valid.php
      * {@inheritDoc}

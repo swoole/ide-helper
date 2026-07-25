@@ -73,6 +73,16 @@ class Frame implements \Stringable
     }
 
     /**
+     * Encode data into a WebSocket frame, as a binary string ready to be written to a socket.
+     *
+     * This method is an alias of method \Swoole\WebSocket\Server::pack(); please check that method for details.
+     *
+     * @param Frame|string $data The data to encode. Pass a \Swoole\WebSocket\Frame object to control every detail of
+     *                           the frame, in which case parameters $opcode and $flags are ignored.
+     * @param int $opcode Type of the frame, telling the receiver how to interpret the data. Swoole defines the opcodes
+     *                    of the WebSocket protocol as SWOOLE_WEBSOCKET_OPCODE_* constants.
+     * @param int $flags Frame flags, as a bitmask of the SWOOLE_WEBSOCKET_FLAG_* constants.
+     * @return string The encoded frame.
      * @alias Alias of method \Swoole\WebSocket\Server::pack().
      * @see \Swoole\WebSocket\Server::pack()
      */
@@ -81,6 +91,12 @@ class Frame implements \Stringable
     }
 
     /**
+     * Decode a binary WebSocket frame back into a \Swoole\WebSocket\Frame object.
+     *
+     * This method is an alias of method \Swoole\WebSocket\Server::unpack(); please check that method for details.
+     *
+     * @param string $data The encoded frame to decode, as produced by method pack().
+     * @return Frame The decoded frame.
      * @alias Alias of method \Swoole\WebSocket\Server::unpack().
      * @see \Swoole\WebSocket\Server::unpack()
      */

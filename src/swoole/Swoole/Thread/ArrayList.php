@@ -16,6 +16,9 @@ namespace Swoole\Thread;
 final class ArrayList implements \ArrayAccess, \Countable
 {
     /**
+     * Although Swoole declares this property (as a read-only property), it is never assigned anywhere in the Swoole
+     * source code, so it always holds its default value of 0.
+     *
      * @readonly
      */
     public int $id = 0;
@@ -31,6 +34,11 @@ final class ArrayList implements \ArrayAccess, \Countable
     }
 
     /**
+     * Get the element stored at the given index, i.e., what reading `$list[$key]` returns.
+     *
+     * @param mixed $key Index of the element. It must be an integer (or a value convertible to one).
+     * @return mixed The element stored at the given index.
+     * @throws \Swoole\Exception When the index is out of range.
      * @see \ArrayAccess::offsetGet()
      * @see https://www.php.net/manual/en/arrayaccess.offsetget.php
      * {@inheritDoc}
@@ -40,6 +48,11 @@ final class ArrayList implements \ArrayAccess, \Countable
     }
 
     /**
+     * Check if the given index exists in the list, i.e., what `isset($list[$key])` returns.
+     *
+     * @param mixed $key Index to check for. It must be an integer (or a value convertible to one).
+     * @return bool TRUE if the index exists (i.e., it's between 0 and the size of the list minus one); otherwise
+     *              FALSE.
      * @see \ArrayAccess::offsetExists()
      * @see https://www.php.net/manual/en/arrayaccess.offsetexists.php
      * {@inheritDoc}
@@ -49,6 +62,13 @@ final class ArrayList implements \ArrayAccess, \Countable
     }
 
     /**
+     * Store an element at the given index, i.e., what writing `$list[$key] = $value` (or `$list[] = $value`) does.
+     *
+     * @param mixed $key Index to store the element at. It must be an integer (or a value convertible to one) between
+     *                   0 and the current size of the list; when it equals the size of the list (or NULL is given,
+     *                   as in `$list[] = $value`), the element is appended to the end of the list.
+     * @param mixed $value The element to store.
+     * @throws \Swoole\Exception When the index is out of range (greater than the current size of the list).
      * @see \ArrayAccess::offsetSet()
      * @see https://www.php.net/manual/en/arrayaccess.offsetset.php
      * {@inheritDoc}
@@ -58,6 +78,10 @@ final class ArrayList implements \ArrayAccess, \Countable
     }
 
     /**
+     * Remove the element at the given index, i.e., what `unset($list[$key])` does. The elements after it are shifted
+     * down by one position, so the list stays a gapless, consecutively-indexed list.
+     *
+     * @param mixed $key Index of the element to remove. It must be an integer (or a value convertible to one).
      * @see \ArrayAccess::offsetUnset()
      * @see https://www.php.net/manual/en/arrayaccess.offsetunset.php
      * {@inheritDoc}
@@ -115,6 +139,9 @@ final class ArrayList implements \ArrayAccess, \Countable
     }
 
     /**
+     * Get the number of elements in the list, i.e., what `count($list)` returns.
+     *
+     * @return int Number of elements in the list.
      * @see \Countable::count()
      * @see https://www.php.net/manual/en/countable.count.php
      * {@inheritDoc}

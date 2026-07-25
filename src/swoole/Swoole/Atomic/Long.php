@@ -24,6 +24,10 @@ namespace Swoole\Atomic;
 class Long
 {
     /**
+     * Create a new atomic counter, initialized to the given value.
+     *
+     * The counter is allocated in shared memory, so it can be shared among processes forked afterwards.
+     *
      * @param int $value The initial value of the counter. The default value is 0.
      */
     public function __construct(int $value = 0)

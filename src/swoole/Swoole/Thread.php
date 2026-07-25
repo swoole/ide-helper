@@ -23,12 +23,45 @@ final class Thread
      */
     public const HARDWARE_CONCURRENCY = 12;
 
+    /**
+     * Name of the thread API PHP was built with, as reported by PHP's thread-safety layer (TSRM).
+     *
+     * The value is platform-dependent: it's "POSIX Threads" on Linux and macOS (the value shown in this stub), or
+     * "Windows Threads" on Windows.
+     */
     public const API_NAME = 'POSIX Threads';
 
+    /**
+     * Scheduling policy for methods \Swoole\Thread::setPriority() and \Swoole\Thread::getPriority(): the operating
+     * system's standard time-sharing policy, which is the default for regular threads.
+     *
+     * @see \Swoole\Thread::setPriority()
+     * @see \Swoole\Thread::getPriority()
+     * @see https://man7.org/linux/man-pages/man7/sched.7.html
+     */
     public const SCHED_OTHER = 0;
 
+    /**
+     * Scheduling policy for methods \Swoole\Thread::setPriority() and \Swoole\Thread::getPriority(): the
+     * first-in-first-out real-time policy, under which a thread keeps running until it blocks or a higher-priority
+     * thread becomes runnable. Using it usually requires elevated (root) privileges.
+     *
+     * @see \Swoole\Thread::setPriority()
+     * @see \Swoole\Thread::getPriority()
+     * @see https://man7.org/linux/man-pages/man7/sched.7.html
+     */
     public const SCHED_FIFO = 1;
 
+    /**
+     * Scheduling policy for methods \Swoole\Thread::setPriority() and \Swoole\Thread::getPriority(): the round-robin
+     * real-time policy, which behaves like Thread::SCHED_FIFO except that each thread is only allowed to run for a
+     * limited time slice before the next thread of the same priority gets a turn. Using it usually requires elevated
+     * (root) privileges.
+     *
+     * @see \Swoole\Thread::setPriority()
+     * @see \Swoole\Thread::getPriority()
+     * @see https://man7.org/linux/man-pages/man7/sched.7.html
+     */
     public const SCHED_RR = 2;
 
     /**

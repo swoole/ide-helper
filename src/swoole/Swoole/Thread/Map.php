@@ -25,6 +25,10 @@ final class Map implements \ArrayAccess, \Countable
     }
 
     /**
+     * Get the value stored under the given key, i.e., what reading `$map[$key]` returns.
+     *
+     * @param mixed $key Key of the entry (a string or an integer).
+     * @return mixed The value stored under the given key, or NULL when the key doesn't exist.
      * @see \ArrayAccess::offsetGet()
      * @see https://www.php.net/manual/en/arrayaccess.offsetget.php
      * {@inheritDoc}
@@ -34,6 +38,10 @@ final class Map implements \ArrayAccess, \Countable
     }
 
     /**
+     * Check if the given key exists in the map, i.e., what `isset($map[$key])` returns.
+     *
+     * @param mixed $key Key to check for (a string or an integer).
+     * @return bool TRUE if the key exists; otherwise FALSE.
      * @see \ArrayAccess::offsetExists()
      * @see https://www.php.net/manual/en/arrayaccess.offsetexists.php
      * {@inheritDoc}
@@ -43,6 +51,11 @@ final class Map implements \ArrayAccess, \Countable
     }
 
     /**
+     * Store a value under the given key, i.e., what writing `$map[$key] = $value` does. Any value already stored
+     * under the same key is replaced.
+     *
+     * @param mixed $key Key of the entry (a string or an integer).
+     * @param mixed $value The value to store.
      * @see \ArrayAccess::offsetSet()
      * @see https://www.php.net/manual/en/arrayaccess.offsetset.php
      * {@inheritDoc}
@@ -52,6 +65,10 @@ final class Map implements \ArrayAccess, \Countable
     }
 
     /**
+     * Remove the entry stored under the given key, i.e., what `unset($map[$key])` does. Nothing happens when the
+     * key doesn't exist.
+     *
+     * @param mixed $key Key of the entry to remove (a string or an integer).
      * @see \ArrayAccess::offsetUnset()
      * @see https://www.php.net/manual/en/arrayaccess.offsetunset.php
      * {@inheritDoc}
@@ -71,6 +88,9 @@ final class Map implements \ArrayAccess, \Countable
     }
 
     /**
+     * Get the number of entries in the map, i.e., what `count($map)` returns.
+     *
+     * @return int Number of entries in the map.
      * @see \Countable::count()
      * @see https://www.php.net/manual/en/countable.count.php
      * {@inheritDoc}
