@@ -33,9 +33,16 @@ namespace Swoole;
  * 1. use channels instead (before Swoole 6.0.1).
  * 2. use class \Swoole\Coroutine\Lock instead (since Swoole 6.0.1).
  *
+ * Since Swoole 6.1.0, this class exposes only three methods, __construct(), lock(), and unlock(), and the way locks are
+ * acquired now mirrors PHP's built-in flock() function: which kind of lock you want, and whether the call may block, are
+ * both expressed through the $operation argument of method \Swoole\Lock::lock(). Methods lockwait(), trylock(),
+ * lock_read(), and trylock_read() were removed in that release; see method \Swoole\Lock::lock() for how to express what
+ * each of them used to do.
+ *
  * @see \Swoole\Thread\Lock Use this instead when PHP is compiled with Zend Thread Safety (ZTS) enabled.
  * @see \Swoole\Coroutine\Lock Use this instead when using locks accross coroutines.
  * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/deadlocks/swoole-lock.php
+ * @see https://www.php.net/manual/en/function.flock.php The built-in PHP function that method \Swoole\Lock::lock() is modeled after.
  * @not-serializable Objects of this class cannot be serialized.
  */
 class Lock
@@ -59,6 +66,9 @@ class Lock
      */
     public const SPINLOCK = SWOOLE_SPINLOCK;
 
+    /**
+     * The error code of the last operation. It is set to 0 if the last operation was successful.
+     */
     public int $errCode = 0;
 
     /**
@@ -77,89 +87,48 @@ class Lock
     }
 
     /**
-     * Lock the lock.
+     * Acquire the lock.
      *
-     * If the lock is already acquired by another process, this method will block until the lock is released.
+     * The signature of this method changed in Swoole 6.1.0:
+     *   - before: public function lock(): bool
+     *   - now:    public function lock(int $operation = LOCK_EX, float $timeout = -1): bool
      *
-     * @return bool TRUE on success, FALSE on failure.
-     * @see \Swoole\Lock::lockwait()
-     * @see \Swoole\Lock::trylock()
+     * Parameter $operation is built from the same constants PHP's built-in flock() function uses:
+     *   - LOCK_EX: an exclusive lock, meaning no one else may hold the lock at the same time. This is the default.
+     *   - LOCK_SH: a shared lock, meaning several holders may hold it at once. This only makes a difference for
+     *     read-write locks (\Swoole\Lock::RWLOCK); other lock types treat it the same as LOCK_EX.
+     *   - LOCK_NB: added to either of the above (e.g., LOCK_EX | LOCK_NB) to make the call return right away instead of
+     *     waiting when the lock isn't available. Parameter $timeout is ignored in this case.
+     *
+     * The two new parameters cover everything the removed methods lockwait(), trylock(), lock_read(), and
+     * trylock_read() used to do, e.g.,
+     *
+     * ```php
+     * $lock = new Swoole\Lock();
+     * $lock->lock();                     // Wait as long as needed (what lock() did before Swoole 6.1.0).
+     * $lock->lock(LOCK_EX, 0.5);         // Give up after 0.5 seconds (what lockwait() used to do).
+     * $lock->lock(LOCK_EX | LOCK_NB);    // Never wait; return immediately (what trylock() used to do).
+     * $lock->lock(LOCK_SH);              // Wait for a shared lock (what lock_read() used to do).
+     * $lock->lock(LOCK_SH | LOCK_NB);    // Try for a shared lock without waiting (what trylock_read() used to do).
+     * ```
+     *
+     * @param int $operation What kind of lock to acquire, as described above.
+     * @param float $timeout How long to wait for the lock, in seconds. Any value that is not greater than 0 (such as
+     *                       the default -1) means wait as long as it takes.
+     * @return bool TRUE when the lock was acquired, FALSE otherwise (the lock was held by someone else and either
+     *              parameter $timeout expired or LOCK_NB was used).
+     * @see \Swoole\Lock::unlock()
+     * @see https://www.php.net/manual/en/function.flock.php
      */
-    public function lock(): bool
+    public function lock(int $operation = LOCK_EX, float $timeout = -1): bool
     {
     }
 
     /**
-     * Lock the lock with a timeout. If the lock is already locked, it waits for the lock to be released until the
-     * specified timeout expires. When the timeout expires and the lock cannot be acquired, it returns FALSE.
+     * Release the lock.
      *
-     * This method can be used only for mutex locks (when the lock type is \Swoole\Lock::MUTEX).
-     *
-     * @param float $timeout Wait time, in seconds. Default to 1 second.
-     * @return bool TRUE on success, FALSE on failure or timeout expired.
+     * @return bool TRUE on success, FALSE on failure.
      * @see \Swoole\Lock::lock()
-     * @see \Swoole\Lock::trylock()
-     */
-    public function lockwait(float $timeout = 1.0): bool
-    {
-    }
-
-    /**
-     * Lock the lock in a non-blocking way.
-     *
-     * This method returns immediately even if the lock is not acquired. Thus, the caller should check the return value
-     * to see if the lock is acquired or not.
-     *
-     * @return bool TRUE on success, FALSE on failure.
-     * @see \Swoole\Lock::lock()
-     * @see \Swoole\Lock::lockwait()
-     */
-    public function trylock(): bool
-    {
-    }
-
-    /**
-     * Lock the lock for reading.
-     *
-     * This method works only for read-write locks (when the lock type is \Swoole\Lock::RWLOCK). For other types
-     * of locks, it works the same as method \Swoole\Lock::lock().
-     *
-     * A process may hold multiple concurrent read locks on read-write locks (that is, it may call method
-     * \Swoole\Lock::lock_read() n times). If so, the process must perform matching unlocks (that is, it must call
-     * method \Swoole\Lock::unlock() n times).
-     *
-     * If the lock is already acquired through method \Swoole\Lock::lock() or \Swoole\Lock::trylock(), this method will
-     * block until the lock is released.
-     *
-     * @return bool TRUE on success, FALSE on failure.
-     * @see \Swoole\Lock::trylock_read()
-     * @see \Swoole\Lock::lock()
-     */
-    public function lock_read(): bool
-    {
-    }
-
-    /**
-     * Lock the lock for reading in a non-blocking way.
-     *
-     * This method works only for read-write locks (when the lock type is \Swoole\Lock::RWLOCK). For other types
-     * of locks, it works the same as method \Swoole\Lock::trylock().
-     *
-     * This method returns immediately even if the lock is not acquired. Thus, the caller should check the return value
-     * to see if the lock is acquired or not.
-     *
-     * @return bool TRUE on success, FALSE on failure.
-     * @see \Swoole\Lock::lock_read()
-     * @see \Swoole\Lock::trylock()
-     */
-    public function trylock_read(): bool
-    {
-    }
-
-    /**
-     * Unlock the lock.
-     *
-     * @return bool TRUE on success, FALSE on failure.
      */
     public function unlock(): bool
     {

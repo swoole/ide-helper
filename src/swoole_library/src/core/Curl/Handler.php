@@ -630,7 +630,13 @@ final class Handler implements \Stringable
                 $this->readFunction = $value;
                 break;
             case CURLOPT_WRITEFUNCTION:
-                $this->writeFunction = $value;
+                if (SWOOLE_VERSION_ID >= 50100) {
+                    $this->clientOptions[Constant::OPTION_WRITE_FUNC] = function ($client, $data) use ($value) {
+                        return $value($this, $data);
+                    };
+                } else {
+                    $this->writeFunction = $value;
+                }
                 break;
             case CURLOPT_NOPROGRESS:
                 $this->noProgress = $value;
@@ -867,11 +873,14 @@ final class Handler implements \Stringable
                 $headerContent .= $row;
             }
             foreach ($client->headers as $k => $v) {
-                $row = "{$k}: {$v}\r\n";
-                if ($cb) {
-                    $cb($this, $row);
+                $list = is_array($v) ? $v : [$v];
+                foreach ($list as $_v) {
+                    $row = "{$k}: {$_v}\r\n";
+                    if ($cb) {
+                        $cb($this, $row);
+                    }
+                    $headerContent .= $row;
                 }
-                $headerContent .= $row;
             }
             $headerContent .= "\r\n";
             $this->info['header_size'] = strlen($headerContent);

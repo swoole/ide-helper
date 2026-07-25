@@ -105,13 +105,43 @@ class Coroutine
      *
      * Please note that this method can not cancel the execution of current coroutine.
      *
+     * A coroutine that is busy with a file operation can not be cancelled; trying to force it may crash the process.
+     *
+     * The signature of this method changed in Swoole 6.1.0:
+     *   - before: public static function cancel(int $cid): bool
+     *   - now:    public static function cancel(int $cid, bool $throw_exception = false): bool
+     *
+     * Passing TRUE for the new parameter lets the target coroutine clean up after itself, e.g.,
+     *
+     * ```php
+     * $cid = Swoole\Coroutine::create(function () {
+     *     try {
+     *         while (true) {
+     *             Swoole\Coroutine::sleep(0.1);
+     *         }
+     *     } catch (Swoole\Coroutine\CanceledException $e) {
+     *         echo "cancelled; releasing resources here\n";
+     *     }
+     * });
+     * Swoole\Coroutine::sleep(0.3);
+     * Swoole\Coroutine::cancel($cid, true);
+     * ```
+     *
      * @param int $cid Coroutine ID. Unlike most other methods of this class, 0 is not treated as the ID of current
      *                 coroutine here; since coroutine IDs start from 1, FALSE is always returned when 0 is given.
+     * @param bool $throw_exception When TRUE, a \Swoole\Coroutine\CanceledException is thrown inside the target
+     *                              coroutine, which the coroutine can catch to clean up before it stops. The coroutine
+     *                              is terminated even if it is in a state that normally can not be cancelled. When
+     *                              FALSE (the default), the coroutine is simply cancelled without an exception, and
+     *                              this method returns FALSE if the coroutine happens to be in a state that can not be
+     *                              cancelled.
      * @return bool Returns true on success, or false on failure. Use function \swoole_last_error() to get the error
-     *              code when failed, e.g., SWOOLE_ERROR_CO_NOT_EXISTS when the given coroutine doesn't exist.
+     *              code when failed, e.g., SWOOLE_ERROR_CO_NOT_EXISTS when the given coroutine doesn't exist, or
+     *              SWOOLE_ERROR_CO_CANCELED when the coroutine has already been cancelled this way.
+     * @see \Swoole\Coroutine\CanceledException
      * @since 4.7.0
      */
-    public static function cancel(int $cid): bool
+    public static function cancel(int $cid, bool $throw_exception = false): bool
     {
     }
 

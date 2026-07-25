@@ -326,12 +326,46 @@ class Response
     /**
      * Send a PING frame to the remote peer to check that the connection is still alive.
      *
-     * This method works only when the HTTP/2 protocol is used.
+     * This method works on HTTP/2 connections and, since Swoole 6.1.0, on WebSocket connections as well. On any other
+     * kind of connection it fails with an E_WARNING level error.
      *
-     * @return bool Return TRUE on success; return FALSE when failed, or when the connection is not an HTTP/2 connection.
+     * The signature of this method changed in Swoole 6.1.0:
+     *   - before: public function ping(): bool
+     *   - now:    public function ping(string $data = ''): bool
+     *
+     * @param string $data Payload to put in the PING frame, which the remote peer is expected to echo back in its PONG
+     *                     frame. It is used on WebSocket connections only, and is ignored on HTTP/2 connections.
+     * @return bool Return TRUE on success; return FALSE when failed, or when the connection is neither an HTTP/2 nor a
+     *              WebSocket connection.
+     * @see \Swoole\Http\Response::disconnect()
      * @see \Swoole\Coroutine\Http2\Client::ping()
      */
-    public function ping(): bool
+    public function ping(string $data = ''): bool
+    {
+    }
+
+    /**
+     * Close a WebSocket connection by sending a close frame to the client first.
+     *
+     * Unlike method \Swoole\Http\Response::close(), which drops the underlying connection right away, this method
+     * performs the closing handshake the WebSocket protocol asks for: it tells the client why the connection is going
+     * away, and only then closes it. The connection is closed regardless of whether the close frame could be sent.
+     *
+     * This method works only on a WebSocket connection served by \Swoole\Coroutine\Http\Server; it fails with an
+     * E_WARNING level error otherwise.
+     *
+     * @param int $code Close status code telling the client why the connection is being closed. Swoole defines the
+     *                  status codes of the WebSocket protocol as SWOOLE_WEBSOCKET_CLOSE_* constants.
+     * @param string $reason A short, human-readable explanation of why the connection is being closed.
+     * @return bool Return TRUE on success, or FALSE when failed (e.g., the connection is not a WebSocket connection,
+     *              or the close frame could not be sent).
+     * @see \Swoole\Http\Response::close()
+     * @see \Swoole\Http\Response::ping()
+     * @see \Swoole\WebSocket\Server::disconnect()
+     * @see SWOOLE_WEBSOCKET_CLOSE_NORMAL
+     * @since 6.1.0
+     */
+    public function disconnect(int $code = SWOOLE_WEBSOCKET_CLOSE_NORMAL, string $reason = ''): bool
     {
     }
 

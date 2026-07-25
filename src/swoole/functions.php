@@ -1320,3 +1320,443 @@ function swoole_native_curl_upkeep(CurlHandle $handle): bool
 function swoole_native_curl_version(): array|false
 {
 }
+
+/*
+ * The functions below belong to the "stdext" (standard library extension) module, added in Swoole 6.1.0. They are
+ * available only when Swoole is installed with the "--enable-swoole-stdext" configuration option, which is an
+ * experimental feature that swoole-cli turns on by default.
+ *
+ * The module lets you call methods directly on plain PHP values — strings, arrays, and stream resources — instead of
+ * going through the matching str_*() or array_*() function, e.g.:
+ *
+ *     $text = 'Hello Swoole';
+ *     echo $text->lower()->replace('swoole', 'php'); // "hello php"
+ *
+ * Most of those methods simply forward to the PHP function of the same purpose. A handful of them, however, need the
+ * value being operated on to come first in the argument list, which is not how the corresponding PHP function is
+ * declared; the swoole_*() functions below are the re-ordered variants used for those cases, and they can be called
+ * on their own as regular functions too.
+ */
+
+/**
+ * Dispatch a method call made on an array value to the function that implements it.
+ *
+ * This function is what makes an expression like $array->keys() work: Swoole rewrites such a call into a call to this
+ * function. Don't call it directly.
+ *
+ * @param mixed ...$args The array the method was called on, the method name, and the arguments passed to the method.
+ * @return mixed Whatever the underlying function returns.
+ * @see swoole_call_string_method()
+ * @see swoole_call_stream_method()
+ * @since 6.1.0
+ */
+function swoole_call_array_method(mixed ...$args): mixed
+{
+}
+
+/**
+ * Dispatch a method call made on a string value to the function that implements it.
+ *
+ * This function is what makes an expression like $string->lower() work: Swoole rewrites such a call into a call to this
+ * function. Don't call it directly.
+ *
+ * @param mixed ...$args The string the method was called on, the method name, and the arguments passed to the method.
+ * @return mixed Whatever the underlying function returns.
+ * @see swoole_call_array_method()
+ * @see swoole_call_stream_method()
+ * @since 6.1.0
+ */
+function swoole_call_string_method(mixed ...$args): mixed
+{
+}
+
+/**
+ * Dispatch a method call made on a stream resource to the function that implements it.
+ *
+ * This function is what makes an expression like fopen('/tmp/test.log', 'r')->read(1024) work: Swoole rewrites such a
+ * call into a call to this function. Don't call it directly.
+ *
+ * @param mixed ...$args The stream the method was called on, the method name, and the arguments passed to the method.
+ * @return mixed Whatever the underlying function returns.
+ * @see swoole_call_array_method()
+ * @see swoole_call_string_method()
+ * @since 6.1.0
+ */
+function swoole_call_stream_method(mixed ...$args): mixed
+{
+}
+
+/**
+ * Search an array for a value and return the first key holding it.
+ *
+ * Same as PHP's array_search(), except that the array comes first, which is what backs the $array->search() method.
+ *
+ * @param array $array The array to search in.
+ * @param mixed $value The value to search for.
+ * @param bool $strict Compare types as well as values (===) instead of comparing loosely (==).
+ * @return string|int|false The key of the first matching element, or false when the value is not found.
+ * @see array_search()
+ * @see https://www.php.net/array_search
+ * @since 6.1.0
+ */
+function swoole_array_search(array $array, mixed $value, bool $strict = false): string|int|false
+{
+}
+
+/**
+ * Check whether an array contains a value.
+ *
+ * Same as PHP's in_array(), except that the array comes first, which is what backs the $array->contains() method.
+ *
+ * @param array $array The array to search in.
+ * @param mixed $needle The value to search for.
+ * @param bool $strict Compare types as well as values (===) instead of comparing loosely (==).
+ * @return bool True when the value is found in the array, or false otherwise.
+ * @see in_array()
+ * @see https://www.php.net/in_array
+ * @since 6.1.0
+ */
+function swoole_array_contains(array $array, mixed $needle, bool $strict = false): bool
+{
+}
+
+/**
+ * Join the elements of an array into a single string.
+ *
+ * Same as PHP's implode(), except that the array comes first, which is what backs the $array->join() method.
+ *
+ * @param array $array The array of values to join.
+ * @param string $separator The string to put between two consecutive values.
+ * @return string The joined string.
+ * @see implode()
+ * @see https://www.php.net/implode
+ * @since 6.1.0
+ */
+function swoole_array_join(array $array, string $separator): string
+{
+}
+
+/**
+ * Check whether a key exists in an array.
+ *
+ * Same as PHP's array_key_exists(), except that the array comes first, which is what backs the $array->keyExists()
+ * method.
+ *
+ * @param array $array The array to look in.
+ * @param resource|string|int|float|bool|null $key The key to look for. No native type declaration is used for this
+ *                                                 parameter because it accepts a resource, which PHP has no type
+ *                                                 declaration for.
+ * @return bool True when the key exists in the array, or false otherwise.
+ * @see array_key_exists()
+ * @see https://www.php.net/array_key_exists
+ * @since 6.1.0
+ */
+function swoole_array_key_exists(array $array, $key): bool
+{
+}
+
+/**
+ * Apply a callback to every element of one or more arrays.
+ *
+ * Same as PHP's array_map(), except that the first array comes first, which is what backs the $array->map() method.
+ *
+ * @param array $array The array to walk over.
+ * @param callable|null $callback The callback to run for each element. When null is given with several arrays, the
+ *                                arrays are zipped together into an array of arrays instead.
+ * @param array ...$arrays Further arrays to walk over in parallel.
+ * @return array An array holding the results, one per element.
+ * @see array_map()
+ * @see https://www.php.net/array_map
+ * @since 6.1.0
+ */
+function swoole_array_map(array $array, ?callable $callback, array ...$arrays): array
+{
+}
+
+/**
+ * Check whether an array is a typed array, and optionally whether it carries a particular type definition.
+ *
+ * @param array $array The array to check.
+ * @param string $typeDef The type definition the array is expected to carry, in the same notation function
+ *                        \swoole_typed_array() accepts (e.g., "<int, string>"). When left empty, any typed array
+ *                        passes the check.
+ * @return bool True when the array is a typed array (carrying the given type definition, if one is given), or false
+ *              otherwise.
+ * @see swoole_typed_array()
+ * @since 6.1.0
+ */
+function swoole_array_is_typed(array $array, string $typeDef = ''): bool
+{
+}
+
+/**
+ * Check whether an array holds no elements.
+ *
+ * This backs the $array->isEmpty() method.
+ *
+ * @param array $array The array to check.
+ * @return bool True when the array holds no elements, or false otherwise.
+ * @see swoole_str_is_empty()
+ * @since 6.1.0
+ */
+function swoole_array_is_empty(array $array): bool
+{
+}
+
+/**
+ * Create a typed array: an array that rejects keys or values of the wrong type.
+ *
+ * A typed array is still an ordinary PHP array, so it can be passed anywhere an array is expected; Swoole only checks
+ * the types when something is written into it, throwing a \TypeError when the check fails, e.g.,
+ *
+ * ```php
+ * $array = swoole_typed_array('<int, string>');
+ * $array[1000] = 'hello'; // Fine.
+ * $array[2000] = 2025;    // Throws a \TypeError, since 2025 is not a string.
+ * ```
+ *
+ * When the "swoole.use_shortname" ini directive is on, this function is also available under the shorter name
+ * typed_array().
+ *
+ * @param string $typeDef The type definition, written between angle brackets. Give both a key type and a value type
+ *                        separated by a comma (e.g., "<int, string>" for a map), or just a value type (e.g.,
+ *                        "<string>") for a list. The key type must be "int" or "string"; the value type may also be a
+ *                        class name, or a nested type definition such as "<int, <string>>".
+ * @param array|null $initArray Values to fill the new typed array with. Each of them is type-checked as it goes in.
+ * @return array The new typed array.
+ * @throws \Error When the type definition is malformed or names a class that doesn't exist.
+ * @throws \TypeError When one of the initial values doesn't match the type definition.
+ * @see swoole_array_is_typed()
+ * @see typed_array()
+ * @alias This function has an alias function typed_array(), available when directive "swoole.use_shortname" is not
+ *        explicitly turned off.
+ * @since 6.1.0
+ */
+function swoole_typed_array(string $typeDef, ?array $initArray = null): array
+{
+}
+
+/**
+ * Split a string into an array by a delimiter.
+ *
+ * Same as PHP's explode(), except that the string comes first, which is what backs the $string->split() method.
+ *
+ * @param string $string The string to split.
+ * @param string $delimiter The delimiter to split the string on. It must not be empty.
+ * @param int $limit The maximum number of pieces to return; the last piece then holds the rest of the string. A
+ *                   negative value drops that many pieces from the end instead.
+ * @return array The pieces of the string.
+ * @see explode()
+ * @see https://www.php.net/explode
+ * @since 6.1.0
+ */
+function swoole_str_split(string $string, string $delimiter, int $limit = PHP_INT_MAX): array
+{
+}
+
+/**
+ * Check whether a string holds no characters.
+ *
+ * This backs the $string->isEmpty() method.
+ *
+ * @param string $string The string to check.
+ * @return bool True when the string is empty (""), or false otherwise. Note that a string such as "0" is not empty
+ *              here, unlike what PHP's empty() would say about it.
+ * @see swoole_array_is_empty()
+ * @since 6.1.0
+ */
+function swoole_str_is_empty(string $string): bool
+{
+}
+
+/**
+ * Replace all occurrences of one or more search strings in a string.
+ *
+ * Same as PHP's str_replace(), except that the subject comes first, which is what backs the $string->replace() method.
+ * Unlike str_replace(), it takes a single string as the subject and returns a string.
+ *
+ * @param string $subject The string to search and replace in.
+ * @param array|string $search The value(s) to search for.
+ * @param array|string $replace The replacement value(s).
+ * @return string The string with the replacements made.
+ * @see swoole_str_ireplace()
+ * @see str_replace()
+ * @see https://www.php.net/str_replace
+ * @since 6.1.0
+ */
+function swoole_str_replace(string $subject, array|string $search, array|string $replace): string
+{
+}
+
+/**
+ * Replace all occurrences of one or more search strings in a string, ignoring case.
+ *
+ * Same as PHP's str_ireplace(), except that the subject comes first, which is what backs the $string->iReplace()
+ * method. Unlike str_ireplace(), it takes a single string as the subject and returns a string.
+ *
+ * @param string $subject The string to search and replace in.
+ * @param array|string $search The value(s) to search for, matched case-insensitively.
+ * @param array|string $replace The replacement value(s).
+ * @return string The string with the replacements made.
+ * @see swoole_str_replace()
+ * @see str_ireplace()
+ * @see https://www.php.net/str_ireplace
+ * @since 6.1.0
+ */
+function swoole_str_ireplace(string $subject, array|string $search, array|string $replace): string
+{
+}
+
+/**
+ * Replace all occurrences of one or more search strings in every string of an array.
+ *
+ * Same as PHP's str_replace(), except that the array of subjects comes first, which is what backs the
+ * $array->replaceStr() method.
+ *
+ * @param array $subjects The strings to search and replace in.
+ * @param array|string $search The value(s) to search for.
+ * @param array|string $replace The replacement value(s).
+ * @return array The strings with the replacements made, keeping the keys of the input array.
+ * @see swoole_array_ireplace_str()
+ * @see str_replace()
+ * @see https://www.php.net/str_replace
+ * @since 6.1.0
+ */
+function swoole_array_replace_str(array $subjects, array|string $search, array|string $replace): array
+{
+}
+
+/**
+ * Replace all occurrences of one or more search strings in every string of an array, ignoring case.
+ *
+ * Same as PHP's str_ireplace(), except that the array of subjects comes first, which is what backs the
+ * $array->iReplaceStr() method.
+ *
+ * @param array $subjects The strings to search and replace in.
+ * @param array|string $search The value(s) to search for, matched case-insensitively.
+ * @param array|string $replace The replacement value(s).
+ * @return array The strings with the replacements made, keeping the keys of the input array.
+ * @see swoole_array_replace_str()
+ * @see str_ireplace()
+ * @see https://www.php.net/str_ireplace
+ * @since 6.1.0
+ */
+function swoole_array_ireplace_str(array $subjects, array|string $search, array|string $replace): array
+{
+}
+
+/**
+ * Match a string against a regular expression and return the captured groups.
+ *
+ * This backs the $string->match() method. It differs from PHP's preg_match() in two ways: the subject comes first, and
+ * the captured groups are returned directly instead of being written into a by-reference parameter.
+ *
+ * @param string $string The string to match against.
+ * @param string $pattern The regular expression, delimiters included (e.g., "/^a(b+)c$/i").
+ * @param int $flags Flags controlling how the captured groups are reported, e.g., PREG_OFFSET_CAPTURE or
+ *                   PREG_UNMATCHED_AS_NULL.
+ * @param int $offset Byte offset in the string to start searching from.
+ * @return array|false The captured groups of the first match, or an empty array when there is no match; false when the
+ *                     regular expression could not be compiled.
+ * @see swoole_str_match_all()
+ * @see preg_match()
+ * @see https://www.php.net/preg_match
+ * @since 6.1.0
+ */
+function swoole_str_match(string $string, string $pattern, int $flags = 0, int $offset = 0): array|false
+{
+}
+
+/**
+ * Match a string against a regular expression repeatedly and return all the captured groups.
+ *
+ * This backs the $string->matchAll() method. It differs from PHP's preg_match_all() in two ways: the subject comes
+ * first, and the captured groups are returned directly instead of being written into a by-reference parameter.
+ *
+ * @param string $string The string to match against.
+ * @param string $pattern The regular expression, delimiters included (e.g., "/a(b+)c/i").
+ * @param int $flags Flags controlling how the captured groups are ordered and reported, e.g., PREG_PATTERN_ORDER or
+ *                   PREG_SET_ORDER.
+ * @param int $offset Byte offset in the string to start searching from.
+ * @return array|false The captured groups of all the matches, or an empty array when there is no match; false when the
+ *                     regular expression could not be compiled.
+ * @see swoole_str_match()
+ * @see preg_match_all()
+ * @see https://www.php.net/preg_match_all
+ * @since 6.1.0
+ */
+function swoole_str_match_all(string $string, string $pattern, int $flags = 0, int $offset = 0): array|false
+{
+}
+
+/**
+ * Decode a JSON string into PHP values, turning JSON objects into associative arrays.
+ *
+ * This backs the $string->jsonDecode() method. It is PHP's json_decode() with the $associative argument fixed to true.
+ *
+ * @param string $string The JSON string to decode.
+ * @param int $depth Maximum nesting depth allowed while decoding. It must be greater than 0.
+ * @param int $flags Bitmask of JSON_* decoding flags, e.g., JSON_THROW_ON_ERROR or JSON_BIGINT_AS_STRING.
+ * @return mixed The decoded value, or null when the string could not be decoded.
+ * @see swoole_str_json_decode_to_object()
+ * @see json_decode()
+ * @see https://www.php.net/json_decode
+ * @since 6.1.0
+ */
+function swoole_str_json_decode(string $string, int $depth = 512, int $flags = 0): mixed
+{
+}
+
+/**
+ * Decode a JSON string into PHP values, turning JSON objects into \stdClass objects.
+ *
+ * This backs the $string->jsonDecodeToObject() method. It is PHP's json_decode() with the $associative argument fixed
+ * to false.
+ *
+ * @param string $string The JSON string to decode.
+ * @param int $depth Maximum nesting depth allowed while decoding. It must be greater than 0.
+ * @param int $flags Bitmask of JSON_* decoding flags, e.g., JSON_THROW_ON_ERROR or JSON_BIGINT_AS_STRING.
+ * @return mixed The decoded value, or null when the string could not be decoded.
+ * @see swoole_str_json_decode()
+ * @see json_decode()
+ * @see https://www.php.net/json_decode
+ * @since 6.1.0
+ */
+function swoole_str_json_decode_to_object(string $string, int $depth = 512, int $flags = 0): mixed
+{
+}
+
+/**
+ * Parse a URL-encoded query string into an array.
+ *
+ * This backs the $string->parseStr() method. It differs from PHP's parse_str() in that the result is returned instead
+ * of being written into a by-reference parameter.
+ *
+ * @param string $string The query string to parse, e.g., "a=1&b[]=2&b[]=3".
+ * @return array The parsed variables.
+ * @see parse_str()
+ * @see https://www.php.net/parse_str
+ * @since 6.1.0
+ */
+function swoole_parse_str(string $string): array
+{
+}
+
+/**
+ * Calculate the hash of a string.
+ *
+ * Same as PHP's hash(), except that the data comes first, which is what backs the $string->hash() method.
+ *
+ * @param string $data The data to hash.
+ * @param string $algo Name of the hashing algorithm to use, e.g., "md5", "sha256", or any other name returned by
+ *                     PHP's hash_algos().
+ * @param bool $binary Return the hash as raw binary data (true) instead of lowercase hexadecimal digits (false).
+ * @param array $options Options for the few algorithms that take any, e.g., ['seed' => 42] for the MurmurHash family.
+ * @return string The calculated hash.
+ * @see hash()
+ * @see https://www.php.net/hash
+ * @since 6.1.0
+ */
+function swoole_hash(string $data, string $algo, bool $binary = false, array $options = []): string
+{
+}

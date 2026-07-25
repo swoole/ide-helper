@@ -59,6 +59,35 @@ class Process
     public const PIPE_WRITE = 4;
 
     /**
+     * Option for the $pipe_type parameter of the constructor: create the process without a pipe, so the two processes
+     * have no built-in channel to exchange data through.
+     *
+     * @see \Swoole\Process::__construct()
+     * @since 6.1.0
+     */
+    public const PIPE_TYPE_NONE = 0;
+
+    /**
+     * Option for the $pipe_type parameter of the constructor: use a stream typed pipe, i.e., a pair of connected
+     * SOCK_STREAM Unix domain sockets. Data written into it arrives as a continuous stream of bytes with no message
+     * boundaries, so the reading side may have to piece messages back together itself.
+     *
+     * @see \Swoole\Process::__construct()
+     * @since 6.1.0
+     */
+    public const PIPE_TYPE_STREAM = 1;
+
+    /**
+     * Option for the $pipe_type parameter of the constructor: use a datagram typed pipe, i.e., a pair of connected
+     * SOCK_DGRAM Unix domain sockets. Each write is delivered as one self-contained message, so the reading side gets
+     * back exactly what was written, one message per read.
+     *
+     * @see \Swoole\Process::__construct()
+     * @since 6.1.0
+     */
+    public const PIPE_TYPE_DGRAM = 2;
+
+    /**
      * The file descriptor of the process's own end of the pipe used to exchange data with the other side. It holds the
      * master end's descriptor in the process where the object is created, and the worker end's descriptor inside the
      * child process.
@@ -185,10 +214,12 @@ class Process
      *                                        by the child process from STDIN. When enabled, a stream typed pipe is
      *                                        used implicitly, overriding parameter $pipe_type.
      * @param int $pipe_type Type of the pipe created for exchanging data between the current process and the child
-     *                       process: 0 (no pipe is created), 1 (a stream typed pipe, i.e., a pair of connected
-     *                       SOCK_STREAM Unix domain sockets), or 2 (a datagram typed pipe, i.e., a pair of connected
-     *                       SOCK_DGRAM Unix domain sockets). The default value is declared as constant SOCK_DGRAM,
-     *                       whose value (2 on Linux and macOS) matches the numbering of the pipe types.
+     *                       process. Since Swoole 6.1.0 there are named constants for the three accepted values:
+     *                       \Swoole\Process::PIPE_TYPE_NONE (0, no pipe is created),
+     *                       \Swoole\Process::PIPE_TYPE_STREAM (1, a pair of connected SOCK_STREAM Unix domain
+     *                       sockets), and \Swoole\Process::PIPE_TYPE_DGRAM (2, a pair of connected SOCK_DGRAM Unix
+     *                       domain sockets). The default value is declared as constant SOCK_DGRAM, whose value (2 on
+     *                       Linux and macOS) matches the numbering of the pipe types.
      * @param bool $enable_coroutine Enable coroutine support in the child process or not. When enabled, an event loop
      *                               is created in the child process and the callback function runs inside a
      *                               coroutine; the child process quits once the callback function has returned and
@@ -298,12 +329,18 @@ class Process
      *
      * An E_WARNING level error is thrown out when the process doesn't have a pipe.
      *
+     * The signature of this method changed in Swoole 6.1.0:
+     *   - before: public function setBlocking(bool $blocking): void
+     *   - now:    public function setBlocking(bool $blocking): bool
+     *
      * @param bool $blocking Put the pipe in blocking mode (true) or non-blocking mode (false).
+     * @return bool Returns true on success or false on failure. It also returns false, with an E_WARNING level error
+     *              thrown out, when the process doesn't have a pipe.
      * @see \Swoole\Process::setTimeout()
      * @see \Swoole\Process::read()
      * @see \Swoole\Process::write()
      */
-    public function setBlocking(bool $blocking): void
+    public function setBlocking(bool $blocking): bool
     {
     }
 

@@ -111,8 +111,8 @@ class Helper
         'output_buffer_size'          => true,
         'buffer_output_size'          => true,
         'message_queue_key'           => true,
-        'init_arguments'              => true,
         'bootstrap'                   => true,
+        'init_arguments'              => true,
     ];
 
     public const PORT_OPTIONS = [
@@ -158,6 +158,8 @@ class Helper
         'ssl_verify_peer'                => true,
         'ssl_allow_self_signed'          => true,
         'ssl_client_cert_file'           => true,
+        'ssl_cafile'                     => true,
+        'ssl_capath'                     => true,
         'ssl_verify_depth'               => true,
         'ssl_prefer_server_ciphers'      => true,
         'ssl_ciphers'                    => true,
@@ -171,6 +173,9 @@ class Helper
         'aio_worker_num'         => true,
         'aio_max_wait_time'      => true,
         'aio_max_idle_time'      => true,
+        'iouring_entries'        => true,
+        'iouring_workers'        => true,
+        'iouring_flag'           => true,
         'enable_signalfd'        => true,
         'wait_signal'            => true,
         'dns_cache_refresh_time' => true,
@@ -181,9 +186,6 @@ class Helper
         'dns_lookup_random'      => true,
         'use_async_resolver'     => true,
         'enable_coroutine'       => true,
-        'iouring_entries'        => true,
-        'iouring_workers'        => true,
-        'iouring_flag'           => true,
     ];
 
     public const COROUTINE_OPTIONS = [
@@ -197,7 +199,6 @@ class Helper
         'name_resolver'               => true,
         'dns_cache_expire'            => true,
         'dns_cache_capacity'          => true,
-        'max_concurrency'             => true,
     ];
 
     public const HELPER_OPTIONS = [

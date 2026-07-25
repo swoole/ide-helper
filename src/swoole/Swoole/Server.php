@@ -392,8 +392,8 @@ class Server
      * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server\Port::on()
      * @see \Swoole\Server::getCallback()
-     * @see https://github.com/swoole/swoole-src/blob/v6.0.2/ext-src/swoole_server.cc#L53
-     * @see https://github.com/swoole/swoole-src/blob/v6.0.2/ext-src/swoole_server_port.cc#L33
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.0/ext-src/swoole_server.cc#L50
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.0/ext-src/swoole_server_port.cc#L33
      */
     public function on(string $event_name, callable $callback): bool
     {
@@ -852,12 +852,20 @@ class Server
      * callback returns. Any other worker process is stopped by sending signal SIGTERM to it. In the SWOOLE_THREAD
      * mode, a shutdown message is delivered to the target worker thread instead.
      *
+     * The signature of this method changed in Swoole 6.1.0:
+     *   - before: public function stop(int $workerId = -1, bool $waitEvent = false): bool
+     *   - now:    public function stop(int $workerId = -1): bool
+     *
+     * The second parameter $waitEvent was dropped. To let a worker process finish the events already queued in its
+     * event loop before it exits, turn on server option "reload_async" through method \Swoole\Server::set() instead.
+     *
      * @param int $workerId ID of the worker process to stop. By default (-1), the current worker process is stopped.
-     * @param bool $waitEvent This parameter takes effect only when stopping the current worker process from within itself. When false, the worker process exits right away; when true, it exits only after all the events already queued in its event loop (e.g., data waiting to be sent out) have been processed.
      * @return bool Returns true on success. Returns false on failure, e.g., the server is not running yet, or the worker ID given is invalid.
      * @see \Swoole\Server::shutdown()
+     * @see \Swoole\Server::set()
+     * @see \Swoole\Constant::OPTION_RELOAD_ASYNC
      */
-    public function stop(int $workerId = -1, bool $waitEvent = false): bool
+    public function stop(int $workerId = -1): bool
     {
     }
 
@@ -893,7 +901,7 @@ class Server
      * @see \Swoole\Server::protect()
      * @see \Swoole\Constant::OPTION_HEARTBEAT_IDLE_TIME
      * @see \Swoole\Constant::OPTION_HEARTBEAT_CHECK_INTERVAL
-     * @see https://github.com/swoole/swoole-src/blob/v6.0.2/ext-src/swoole_server.cc#L3018 The actual default value of parameter $ifCloseConnection
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.0/ext-src/swoole_server.cc#L3033 The actual default value of parameter $ifCloseConnection
      */
     public function heartbeat(bool $ifCloseConnection = false): array|false
     {

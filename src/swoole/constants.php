@@ -5,11 +5,11 @@ declare(strict_types=1);
 /*
  * Swoole version information.
  */
-define('SWOOLE_VERSION', '6.0.2');
-define('SWOOLE_VERSION_ID', 60002);
+define('SWOOLE_VERSION', '6.1.0');
+define('SWOOLE_VERSION_ID', 60100);
 define('SWOOLE_MAJOR_VERSION', 6);
-define('SWOOLE_MINOR_VERSION', 0);
-define('SWOOLE_RELEASE_VERSION', 2);
+define('SWOOLE_MINOR_VERSION', 1);
+define('SWOOLE_RELEASE_VERSION', 0);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
@@ -60,6 +60,15 @@ define('SWOOLE_SOCK_UDP6', 4);
 define('SWOOLE_SOCK_UNIX_STREAM', 5);
 define('SWOOLE_SOCK_UNIX_DGRAM', 6);
 
+/*
+ * Next two constants are for raw sockets, which let a program read and write network packets itself instead of letting
+ * the operating system build them. Creating a raw socket normally requires root privileges.
+ *
+ * @see https://man7.org/linux/man-pages/man7/raw.7.html
+ */
+define('SWOOLE_SOCK_RAW', 7); // @since 6.1.0
+define('SWOOLE_SOCK_RAW6', 8); // @since 6.1.0
+
 // Simple aliases of socket types.
 define('SWOOLE_TCP', SWOOLE_SOCK_TCP);
 define('SWOOLE_UDP', SWOOLE_SOCK_UDP);
@@ -67,6 +76,8 @@ define('SWOOLE_TCP6', SWOOLE_SOCK_TCP6);
 define('SWOOLE_UDP6', SWOOLE_SOCK_UDP6);
 define('SWOOLE_UNIX_STREAM', SWOOLE_SOCK_UNIX_STREAM);
 define('SWOOLE_UNIX_DGRAM', SWOOLE_SOCK_UNIX_DGRAM);
+define('SWOOLE_RAW', SWOOLE_SOCK_RAW); // @since 6.1.0
+define('SWOOLE_RAW6', SWOOLE_SOCK_RAW6); // @since 6.1.0
 
 /*
  * Socket flags. They can be used in conjunction with socket types to modify the behavior of socket connections.
@@ -113,6 +124,7 @@ define('SWOOLE_ERROR_NOT_THREAD_SAFETY', 601); // @since 6.0.0
 define('SWOOLE_ERROR_FILE_NOT_EXIST', 700);
 define('SWOOLE_ERROR_FILE_TOO_LARGE', 701);
 define('SWOOLE_ERROR_FILE_EMPTY', 702);
+define('SWOOLE_ERROR_DIR_NOT_EXIST', 703); // @since 6.1.0
 define('SWOOLE_ERROR_DNSLOOKUP_DUPLICATE_REQUEST', 710);
 define('SWOOLE_ERROR_DNSLOOKUP_RESOLVE_FAILED', 711);
 define('SWOOLE_ERROR_DNSLOOKUP_RESOLVE_TIMEOUT', 712);
@@ -121,7 +133,12 @@ define('SWOOLE_ERROR_DNSLOOKUP_NO_SERVER', 714);
 define('SWOOLE_ERROR_BAD_IPV6_ADDRESS', 720);
 define('SWOOLE_ERROR_UNREGISTERED_SIGNAL', 721);
 define('SWOOLE_ERROR_BAD_HOST_ADDR', 722); // @since 6.0.0
-define('SWOOLE_ERROR_EVENT_SOCKET_REMOVED', 800);
+define('SWOOLE_ERROR_BAD_PORT', 723); // @since 6.1.0
+define('SWOOLE_ERROR_BAD_SOCKET_TYPE', 724); // @since 6.1.0
+define('SWOOLE_ERROR_EVENT_REMOVE_FAILED', 800); // @since 6.1.0
+define('SWOOLE_ERROR_EVENT_ADD_FAILED', 801); // @since 6.1.0
+define('SWOOLE_ERROR_EVENT_UPDATE_FAILED', 802); // @since 6.1.0
+define('SWOOLE_ERROR_EVENT_UNKNOWN_DATA', 803); // @since 6.1.0
 define('SWOOLE_ERROR_SESSION_CLOSED_BY_SERVER', 1001);
 define('SWOOLE_ERROR_SESSION_CLOSED_BY_CLIENT', 1002);
 define('SWOOLE_ERROR_SESSION_CLOSING', 1003);
@@ -140,6 +157,8 @@ define('SWOOLE_ERROR_SSL_BAD_CLIENT', 1015);
 define('SWOOLE_ERROR_SSL_BAD_PROTOCOL', 1016);
 define('SWOOLE_ERROR_SSL_RESET', 1017);
 define('SWOOLE_ERROR_SSL_HANDSHAKE_FAILED', 1018);
+define('SWOOLE_ERROR_SSL_CREATE_CONTEXT_FAILED', 1019); // @since 6.1.0
+define('SWOOLE_ERROR_SSL_CREATE_SESSION_FAILED', 1020); // @since 6.1.0
 define('SWOOLE_ERROR_PACKAGE_LENGTH_TOO_LARGE', 1201);
 define('SWOOLE_ERROR_PACKAGE_LENGTH_NOT_FOUND', 1202);
 define('SWOOLE_ERROR_DATA_LENGTH_TOO_LARGE', 1203);
@@ -152,17 +171,20 @@ define('SWOOLE_ERROR_HTTP2_STREAM_NO_HEADER', 3002);
 define('SWOOLE_ERROR_HTTP2_STREAM_NOT_FOUND', 3003);
 define('SWOOLE_ERROR_HTTP2_STREAM_IGNORE', 3004);
 define('SWOOLE_ERROR_HTTP2_SEND_CONTROL_FRAME_FAILED', 3005);
+define('SWOOLE_ERROR_HTTP2_INTERNAL_ERROR', 3006); // @since 6.1.0
 define('SWOOLE_ERROR_AIO_BAD_REQUEST', 4001);
 define('SWOOLE_ERROR_AIO_CANCELED', 4002);
 define('SWOOLE_ERROR_AIO_TIMEOUT', 4003);
 define('SWOOLE_ERROR_CLIENT_NO_CONNECTION', 5001);
 define('SWOOLE_ERROR_SOCKET_CLOSED', 6001);
 define('SWOOLE_ERROR_SOCKET_POLL_TIMEOUT', 6002);
+define('SWOOLE_ERROR_SOCKET_NOT_EXISTS', 6003); // @since 6.1.0
 define('SWOOLE_ERROR_SOCKS5_UNSUPPORT_VERSION', 7001);
 define('SWOOLE_ERROR_SOCKS5_UNSUPPORT_METHOD', 7002);
 define('SWOOLE_ERROR_SOCKS5_AUTH_FAILED', 7003);
 define('SWOOLE_ERROR_SOCKS5_SERVER_ERROR', 7004);
 define('SWOOLE_ERROR_SOCKS5_HANDSHAKE_FAILED', 7005);
+define('SWOOLE_ERROR_SOCKS5_CONNECT_FAILED', 7006); // @since 6.1.0
 define('SWOOLE_ERROR_HTTP_PROXY_HANDSHAKE_ERROR', 7101);
 define('SWOOLE_ERROR_HTTP_INVALID_PROTOCOL', 7102);
 define('SWOOLE_ERROR_HTTP_PROXY_HANDSHAKE_FAILED', 7103);
@@ -264,6 +286,7 @@ define('SWOOLE_TRACE_CO_PGSQL', 4294967296); // 2^32; @since 5.1.0
 define('SWOOLE_TRACE_CO_ODBC', 8589934592); // 2^33; @since 5.1.0
 define('SWOOLE_TRACE_CO_ORACLE', 17179869184); // 2^34; @since 5.1.0
 define('SWOOLE_TRACE_CO_SQLITE', 34359738368); // 2^35; @since 5.1.2
+define('SWOOLE_TRACE_THREAD', 68719476736); // 2^36; @since 6.1.0
 define('SWOOLE_TRACE_ALL', 9223372036854775807); // 2^63 - 1
 
 // Log levels.
@@ -1080,12 +1103,18 @@ define('SWOOLE_WEBSOCKET_STATUS_CONNECTION', 1);
 define('SWOOLE_WEBSOCKET_STATUS_HANDSHAKE', 2);
 define('SWOOLE_WEBSOCKET_STATUS_ACTIVE', 3);
 define('SWOOLE_WEBSOCKET_STATUS_CLOSING', 4);
-// Next five constants are kept for backward compatibility.
+/*
+ * Next six constants are kept for backward compatibility.
+ *
+ * The last one means the handshake between the client and the server failed, so the connection never became a working
+ * WebSocket connection. Unlike the other five, it has no counterpart carrying the "SWOOLE_" prefix.
+ */
 define('WEBSOCKET_STATUS_CONNECTION', SWOOLE_WEBSOCKET_STATUS_CONNECTION);
 define('WEBSOCKET_STATUS_HANDSHAKE', SWOOLE_WEBSOCKET_STATUS_HANDSHAKE);
 define('WEBSOCKET_STATUS_FRAME', SWOOLE_WEBSOCKET_STATUS_ACTIVE);
 define('WEBSOCKET_STATUS_ACTIVE', SWOOLE_WEBSOCKET_STATUS_ACTIVE);
 define('WEBSOCKET_STATUS_CLOSING', SWOOLE_WEBSOCKET_STATUS_CLOSING);
+define('WEBSOCKET_STATUS_HANDSHAKE_FAILED', 5); // @since 6.1.0
 
 // WebSocket opcodes.
 // @see https://datatracker.ietf.org/doc/html/rfc6455#section-11.8 WebSocket Opcode Registry

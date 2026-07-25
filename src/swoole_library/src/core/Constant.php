@@ -89,21 +89,69 @@ class Constant
 
     public const OPTION_DNS_SERVER = 'dns_server';
 
+    /**
+     * Socket DNS timeout in seconds.
+     */
     public const OPTION_SOCKET_DNS_TIMEOUT = 'socket_dns_timeout';
 
+    /**
+     * Default socket connect timeout in seconds.
+     */
     public const OPTION_SOCKET_CONNECT_TIMEOUT = 'socket_connect_timeout';
 
+    /**
+     * Default socket write timeout in seconds.
+     *
+     * This one works the same as option "socket_send_timeout", but has higher priority.
+     *
+     * @see \Swoole\Constant::OPTION_SOCKET_SEND_TIMEOUT
+     */
     public const OPTION_SOCKET_WRITE_TIMEOUT = 'socket_write_timeout';
 
+    /**
+     * Default socket write timeout in seconds.
+     *
+     * This one works the same as option "socket_write_timeout", but has lower priority.
+     *
+     * @see \Swoole\Constant::OPTION_SOCKET_WRITE_TIMEOUT
+     */
     public const OPTION_SOCKET_SEND_TIMEOUT = 'socket_send_timeout';
 
+    /**
+     * Default socket read timeout in seconds.
+     *
+     * This one works the same as option "socket_recv_timeout", but has higher priority.
+     *
+     * @see \Swoole\Constant::OPTION_SOCKET_RECV_TIMEOUT
+     */
     public const OPTION_SOCKET_READ_TIMEOUT = 'socket_read_timeout';
 
+    /**
+     * Default socket read timeout in seconds.
+     *
+     * This one works the same as option "socket_read_timeout", but has lower priority.
+     *
+     * @see \Swoole\Constant::OPTION_SOCKET_READ_TIMEOUT
+     */
     public const OPTION_SOCKET_RECV_TIMEOUT = 'socket_recv_timeout';
 
-    public const OPTION_SOCKET_BUFFER_SIZE = 'socket_buffer_size';
-
+    /**
+     * Default socket read/write timeout in seconds.
+     *
+     * This one has the highest priority than the other read/write timeout options:
+     * - \Swoole\Constant::OPTION_SOCKET_WRITE_TIMEOUT
+     * - \Swoole\Constant::OPTION_SOCKET_SEND_TIMEOUT
+     * - \Swoole\Constant::OPTION_SOCKET_READ_TIMEOUT
+     * - \Swoole\Constant::OPTION_SOCKET_RECV_TIMEOUT
+     *
+     * @see \Swoole\Constant::OPTION_SOCKET_SEND_TIMEOUT
+     * @see \Swoole\Constant::OPTION_SOCKET_WRITE_TIMEOUT
+     * @see \Swoole\Constant::OPTION_SOCKET_RECV_TIMEOUT
+     * @see \Swoole\Constant::OPTION_SOCKET_READ_TIMEOUT
+     */
     public const OPTION_SOCKET_TIMEOUT = 'socket_timeout';
+
+    public const OPTION_SOCKET_BUFFER_SIZE = 'socket_buffer_size';
 
     public const OPTION_HTTP2_HEADER_TABLE_SIZE = 'http2_header_table_size';
 
