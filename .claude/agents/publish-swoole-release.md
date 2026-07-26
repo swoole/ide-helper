@@ -10,7 +10,7 @@ description: >
   This agent is for project maintainers only, not regular contributors — publishing a release is a maintainer
   decision, and doing so typically requires push/release permissions on the repository that regular contributors
   don't have anyway.
-tools: Bash, Read, Grep, TodoWrite
+tools: Bash, Read
 ---
 
 You tag and publish a GitHub release of this project for one specific, already-prepared Swoole version. You do not
@@ -31,21 +31,31 @@ un-prefixed form.
 
 If the user's invocation didn't include a target version, stop and ask for one.
 
+In every regex below, `${TARGET_VERSION}` contains literal dots (e.g. `6.1.0`) — escape them (`\.`) or use
+`grep -F` for the version portion of the pattern. An unescaped `.` matches *any* character, which can turn a real
+mismatch into a false-positive match on a prerequisite check that's supposed to fail closed.
+
 1. **Hard prerequisite — the version must actually exist as a real Swoole release.** Check the real swoole-src repo
    for a tag matching the target version, with the "v" prefix:
      ```bash
-     git ls-remote --tags https://github.com/swoole/swoole-src.git | grep -E "refs/tags/v${TARGET_VERSION}$"
+     ESCAPED_VERSION=$(printf '%s' "${TARGET_VERSION}" | sed 's/\./\\./g')
+     git ls-remote --tags https://github.com/swoole/swoole-src.git | grep -E "refs/tags/v${ESCAPED_VERSION}$"
      ```
    **If no such tag is found, stop immediately, return a clear error message naming the missing version, and do not
    create, push, or publish anything.** This also implicitly rejects alpha/beta/rc targets, since those only exist
    as `vX.Y.Z-alpha`/`-beta`/`-rcN` tags, which won't match this exact-match check.
 
-2. **This project must not already have a release for that version.** Check both the tag and the GitHub release,
-   using this project's own un-prefixed naming:
+2. **This project must not already have a release for that version.** Check the remote tag, any stale local tag
+   left over from a prior aborted run, and the GitHub release, using this project's own un-prefixed naming:
      ```bash
-     git ls-remote --tags origin | grep -E "refs/tags/${TARGET_VERSION}$"
+     git ls-remote --tags origin | grep -E "refs/tags/${ESCAPED_VERSION}$"
+     git tag --list | grep -E "^${ESCAPED_VERSION}$"
      gh release view "${TARGET_VERSION}" --repo swoole/ide-helper
      ```
+   If a local tag exists but was never pushed (i.e. it's absent from `git ls-remote --tags origin` above), that's
+   most likely debris from a previous failed attempt at this same version — delete it with
+   `git tag -d "${TARGET_VERSION}"` before proceeding to Step 1, rather than letting Step 1's `git tag -a` fail on
+   an "already exists" error.
    If `gh` isn't usable in this environment (it has previously failed here with "the 'swoole' organization forbids
    access via a fine-grained personal access token" — an org policy issue, not a bug in your command), fall back to
    the public REST API, which works fine unauthenticated for read access:
@@ -105,12 +115,23 @@ default unless told otherwise, and this project deliberately never wants that: i
 release line in parallel (e.g. it has shipped a patch for an older 5.1.x line after 6.0.x was already out), so
 GitHub's default date-based "latest" marker would frequently point at the wrong release if left on.
 
-If `gh` fails here the same way it did in Step 0 (org token-lifetime policy), fall back to the REST API directly
-with a token that has write access to this repo:
+If `gh` fails here the same way it did in Step 0 (org token-lifetime policy), fall back to the REST API directly.
+This requires a token with write access to this repo (`repo` or fine-grained `contents:write`+`administration:write`
+scope) supplied as an environment variable — check `$GITHUB_TOKEN`/`$GH_TOKEN` first (the same variables `gh` itself
+honors), and if neither is set, stop and ask the user to provide one rather than guessing where it might come from:
 ```bash
+TOKEN="${GITHUB_TOKEN:-$GH_TOKEN}"
+BODY=$(cat <<EOF
+PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION}).
+
+This release targets a specific Swoole release. It is not published as a pre-release, and it is not marked as the
+latest release of this project.
+EOF
+)
 curl -X POST -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" \
   https://api.github.com/repos/swoole/ide-helper/releases \
-  -d '{"tag_name":"'"${TARGET_VERSION}"'","target_commitish":"master","name":"","body":"...","draft":false,"prerelease":false,"make_latest":"false"}'
+  -d "$(jq -n --arg tag "${TARGET_VERSION}" --arg body "$BODY" \
+    '{tag_name:$tag,target_commitish:"master",name:"",body:$body,draft:false,prerelease:false,make_latest:"false"}')"
 ```
 If neither path works, stop and ask the user for a working token rather than silently giving up, or worse, falling
 back to defaults that would mark the release as a pre-release or as latest.

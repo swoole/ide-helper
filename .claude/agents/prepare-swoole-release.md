@@ -30,7 +30,7 @@ reader already knows C/POSIX internals.
 If the user's invocation didn't include a specific target Swoole version (e.g. just "prepare the next release"),
 stop and ask for one — do not guess or default to "whatever the latest tag is" silently.
 
-Two hard constraints apply to the target version, and you must verify both before doing any real work:
+Three hard constraints apply to the target version, and you must verify all of them before doing any real work:
 
 1. **The target version must be newer than the version this project currently supports.** Determine the current
    version from this repo's own git tags — they mirror Swoole's version numbers (e.g. `6.0.2`). Run:
@@ -65,10 +65,11 @@ found on swoole-src / swoole/library) and stop. Do not modify any files.
 # Step 1: get the two Swoole revisions to diff, cheaply
 
 You don't need a full clone of swoole-src to diff two tags — `git diff` only needs both commits' trees present
-locally, not shared ancestry. This is much faster for a large C repo:
+locally, not shared ancestry. This is much faster for a large C repo. `/tmp/swoole-diff` may already exist from a
+prior invocation (a different version pair, or a stale/partial fetch) — reset it rather than reusing it as-is:
 
 ```bash
-mkdir -p /tmp/swoole-diff && cd /tmp/swoole-diff
+rm -rf /tmp/swoole-diff && mkdir -p /tmp/swoole-diff && cd /tmp/swoole-diff
 git init -q
 git remote add origin https://github.com/swoole/swoole-src.git
 git fetch --depth 1 origin tag vCURRENT_VERSION
@@ -88,12 +89,13 @@ of the real, runnable PHP source of the `swoole/library` package (the code that 
 it by wholesale replacement, not by diffing/editing individual files:
 
 1. Remove the existing `src/swoole_library` folder in this project entirely.
-2. Fetch the matching `vTARGET_VERSION` tag from `https://github.com/swoole/library`, and find the list of files to
-   be copied from file `https://github.com/swoole/library/blob/vTARGET_VERSION/src/__init__.php`. Treat that file as
-   a PHP script: it returns an array, and the list of files to copy is in field `files` of that array (paths
-   relative to the library's `src/` folder). Don't reuse a `files` list remembered from a previous version — the
-   list changes between releases, which is exactly why it must be read fresh from the target tag's own
-   `__init__.php` every time.
+2. Fetch the matching `vTARGET_VERSION` tag from `https://github.com/swoole/library` (shallow clone that single tag,
+   the same way Step 1 fetches swoole-src tags — a plain `WebFetch` of the raw file also works if you only need
+   `__init__.php` itself: `https://raw.githubusercontent.com/swoole/library/vTARGET_VERSION/src/__init__.php`).
+   Read `src/__init__.php` from that tag and find the list of files to be copied. Treat that file as a PHP script:
+   it returns an array, and the list of files to copy is in field `files` of that array (paths relative to the
+   library's `src/` folder). Don't reuse a `files` list remembered from a previous version — the list changes
+   between releases, which is exactly why it must be read fresh from the target tag's own `__init__.php` every time.
 3. Copy the listed files into `src/swoole_library/src/` in this project, preserving their relative paths (e.g. the
    library's `src/core/StringObject.php` lands at `src/swoole_library/src/core/StringObject.php` here). Copy ONLY
    the files in the `files` list — nothing else.
@@ -140,47 +142,26 @@ SWOOLE_EXTRA_VERSION   // empty string '' for a stable release
 
 # Step 4: apply the edits, following this project's conventions exactly
 
-For every stub you touch, apply the "Stub-writing conventions" from CLAUDE.md — re-read that section fresh each
-time rather than relying on this summary from memory, since it's a living list new conventions get added to:
-- New class/method/function/constant → `@since X.Y.Z` tag (or trailing `// @since X.Y.Z` for `define()` constants).
-- Newly deprecated but still-present class/method/function/constant → `@deprecated X.Y.Z <what to use instead>` tag
-  (same placement rule as `@since`: a PHPDoc tag, or trailing `// @deprecated X.Y.Z ...` for `define()` constants),
-  plus a `@see` tag pointing at the replacement. Use this PHPDoc tag, not PHP 8.4's native `#[\Deprecated]`
-  attribute (this project's minimum supported version is 8.1). Only use this when swoole-src still exports the
-  symbol — if the target version actually removed it, that's the "Removed" rule below instead, not this one.
-- Changed method/function arguments → don't silently update the signature; add a comment showing what it looked
+For every stub you touch, apply the full "Stub-writing conventions" section from CLAUDE.md — re-read it fresh from
+the file each time rather than from memory of a prior run, since it's a living list new conventions get added to
+over time, and a summary here would only drift out of sync with it. That section is your complete checklist:
+`@since`/`@deprecated`+`@see` pairing, `@alias`+`@see` pairing, `@not-serializable`, `@readonly`,
+`@pseudocode-included`, `{@inheritDoc}` for re-listed inherited methods, Markdown-fenced example code instead of
+`@example`, the completeness/typing baseline (accurate native types on touched properties/parameters/returns,
+matching `@param`/`@return` tags, a real one-line description for every property/constant/method/function you touch
+regardless of visibility — tags-only or bare `{@inheritDoc}` docblocks don't count), the PHP-8.1-only inline-type
+constraint (no standalone `true`/`false`/`null` or DNF types), build-flag-gated symbol documentation, tag grouping,
+and cross-referencing.
+
+Beyond that general checklist, a version bump specifically also requires:
+- **`@see` tags pointing at a specific swoole-src line for the previously supported version** — update both the tag
+  and the line number for the new release; the referenced line routinely moves even when unchanged conceptually.
+- **Changed method/function arguments** — don't silently update the signature; add a comment showing what it looked
   like before and what it looks like now.
-- Completeness/typing baseline → every property/parameter/return you touch needs an accurate native type
-  declaration; every property, class constant, method, and function you touch needs at least a one-line docblock
-  description regardless of visibility (only the native-type requirement is scoped to public properties); every
-  parameter needs a `@param` tag, every non-`void` return needs an `@return` tag. A docblock made up of only `@tag`
-  lines and/or a bare `{@inheritDoc}` does not satisfy the description requirement — write a real descriptive
-  sentence of the symbol's own. Don't leave a symbol under-documented just because its name/signature isn't what
-  changed in this release.
-- Inline type declarations must be valid PHP 8.1 syntax (this project's minimum supported version) — never use a
-  standalone `true`/`false`/`null` type or a DNF type like `(A&B)|C` inline (PHP 8.2+ only). When full accuracy
-  needs one of those, fall back to the closest 8.1-compatible native type (or omit the native type) and put the
-  precise type in `@param`/`@return` instead.
-- Removed class/method/function/constant → delete it outright. Do not deprecate or leave a stale stub behind.
-- Non-serializable classes → `@not-serializable Objects of this class cannot be serialized.`
-- Readonly properties → `@readonly` tag.
-- Methods explainable via pseudocode → a real PHP implementation in the body, annotated with
-  `@pseudocode-included ...` (see CLAUDE.md for the exact wording).
-- Sample/usage code in a docblock → a Markdown fenced ` ```php ... ``` ` block inline in the description (leading
-  into it with "e.g.,"), not the `@example` tag — `@example` is meant for a separate example file this repo doesn't
-  have, and won't render with syntax highlighting the way a fenced block does.
-- Symbols gated behind a build option (`--enable-*`/`--with-*`) → document the requirement plainly, following the
-  existing phrasing pattern for this (see `\Swoole\Thread\Atomic` or the `SWOOLE_HOOK_PDO_*` constants).
-- Aliases → `@alias` + `@see` on *both* sides of the pair, worded appropriately for each side.
-- Inherited method explicitly re-listed in a child class → add `{@inheritDoc}` in its docblock.
-- Group same-type PHPDoc tags together within a comment block, rather than interleaving different tag types
-  (e.g. all `@see` tags together, then all `@alias` tags together).
-- `@see` tags pointing at a specific line of swoole-src source for the *previously* supported version → update both
-  the tag and the line number for the new release (the referenced line routinely moves even when unchanged
-  conceptually).
-- Cross-reference related symbols with `@see` generally.
-- Above all: write for a PHP developer. Simple, correct, and complete beats exhaustive C-level detail nobody asked
-  for; when C-level detail is genuinely necessary for accuracy, explain it in plain words and cite a reference.
+- **Newly deprecated but still-present symbols** in this diff specifically — add `@deprecated X.Y.Z <replacement>` +
+  `@see` per CLAUDE.md's convention. Only when swoole-src still exports the symbol; if the target version actually
+  removed it, that's CLAUDE.md's "Removed" rule instead (delete outright).
+- **New symbols in this diff** — add `@since X.Y.Z`.
 
 Method/function bodies stay empty (`{ }`) — this is a pure stub repository, no real logic. The two exceptions are
 files under `src/swoole_library/` (a verbatim copy of real runnable PHP, updated by copying files over, not by hand

@@ -38,9 +38,10 @@ highest stable tag in this repo's own git history, cross-checked against `src/sw
 don't, flag it and pick the one `SWOOLE_VERSION` actually reflects (that's what the shipped stubs claim to be).
 
 Fetch the *same* version's tag from swoole-src (no version bump — you're reviewing what's already meant to be
-supported):
+supported). `/tmp/swoole-review` may already exist from a prior session and could be checked out to a different
+(stale) tag, so reset it rather than assuming it's already what you need:
 ```bash
-mkdir -p /tmp/swoole-review && cd /tmp/swoole-review
+rm -rf /tmp/swoole-review && mkdir -p /tmp/swoole-review && cd /tmp/swoole-review
 git init -q && git remote add origin https://github.com/swoole/swoole-src.git
 git fetch --depth 1 origin tag v${CURRENT_VERSION}
 git checkout v${CURRENT_VERSION}
@@ -50,14 +51,21 @@ Never open or trust any `.stub.php` file anywhere in this clone (e.g. under `ext
 
 # Step 1: build (or resume) a progress-tracked checklist
 
-Given the scope here — 61 class files plus `constants.php` (~900 lines) and `functions.php` (~935 lines) — don't
-attempt this in one uninterrupted pass with no record of where you are. Maintain a plain-text progress file at
-`temp/deep-review-progress.md` in this repo's working tree (`temp/` is gitignored — it's a scratch tracking file,
-never something to commit): one line per file/symbol-group, marked `[ ]` pending, `[~]` in progress, or `[x]` done
-with a one-line note (date/commit or a short "clean" / "fixed N issues" summary). If that file already exists when
-you start, READ IT FIRST and resume from the first non-`[x]` entry instead of starting over. If it doesn't exist
-yet, create it — and the `temp/` folder if that doesn't exist either — seeded with the full priority-ordered list
-below.
+Given the scope here — 60+ class files (run `find src/swoole/Swoole -name '*.php' | wc -l` for the exact, current
+count; don't trust a remembered number, since new classes get added over time) plus `constants.php` (~900 lines) and
+`functions.php` (~935 lines) — don't attempt this in one uninterrupted pass with no record of where you are.
+Maintain a plain-text progress file at `temp/deep-review-progress.md` in this repo's working tree (`temp/` is
+gitignored — it's a scratch tracking file, never something to commit): one line per file/symbol-group, marked `[ ]`
+pending, `[~]` in progress, or `[x]` done with a one-line note (date/commit or a short "clean" / "fixed N issues"
+summary). If that file already exists when you start, READ IT FIRST and resume from the first non-`[x]` entry
+instead of starting over. If it doesn't exist yet, create it — and the `temp/` folder if that doesn't exist either —
+seeded with the full priority-ordered list below.
+
+The priority list below enumerates known files as of when this agent was last updated — treat it as a starting
+point, not a guaranteed-complete inventory. Before seeding a brand-new progress file, diff it against the real tree
+(`find src/swoole/Swoole -name '*.php'`, plus `constants.php`/`functions.php`/`shortnames.php`) and append any file
+that exists on disk but isn't listed below — under tier 5 if you can't tell where else it fits — so a class added
+since this agent was last updated doesn't silently get skipped.
 
 Priority order (most-commonly-used first — adjust if you learn something changes this, but don't skip ahead just
 because a later tier looks more interesting):
