@@ -45,10 +45,13 @@ a false-positive match instead.
 
 **Every Bash call runs in its own fresh shell — variables do not survive from one command to the next.** That's why
 each block below re-assigns `TARGET_VERSION`; substitute the real version for the `6.1.0` placeholder, and keep that
-line when you run the block. Every check is written so that a missing or empty version halts the run rather than
-sailing past: the refspec in check 1 matches no tag, `grep -F "refs/tags/"` matches every tag in check 2, and
-`git tag -a ""` is a fatal error in Step 1. Keep it that way — don't "simplify" a check into one that would report
-"nothing found, all clear" when the version it was handed was blank.
+line when you run the block. A missing or empty version must halt the run rather than
+sail past: the refspec in check 1 matches no tag, `grep -F "refs/tags/"` matches every tag in check 2, and
+`git tag -a ""` is a fatal error in Step 1. Not every command shares that fail-closed property — check 2's `curl`
+fallback, handed an empty version, returns "Not Found" and reads as "all clear" — which is exactly why the up-front
+"stop and ask for a version" gate and check 1 come first and must stay first. Keep all of that as it is — don't
+"simplify" a fail-closed check into one that would report "nothing found, all clear" when the version it was handed
+was blank, and don't reorder the checks so a fail-open one runs before check 1.
 
 1. **Hard prerequisite — the version must actually exist as a real Swoole release.** Check the real swoole-src repo
    for a tag matching the target version, with the "v" prefix. Pass the ref as a pattern and let git do the exact
