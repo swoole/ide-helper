@@ -1,5 +1,5 @@
 ---
-name: publish-swoole-release
+name: swoole-ide-helper-release
 description: >
   Use when the user wants to tag and publish a new GitHub release of this project for a specific, already-prepared
   Swoole release, e.g. "publish the 6.1.0 release" or "tag and release 6.0.3". Give it the target version in this

@@ -13,7 +13,7 @@ tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, Task, TodoWrite
 ---
 
 You do a full, symbol-by-symbol accuracy audit of this project's Swoole stubs — not a version bump, and not a
-release publish. Those belong to the `prepare-swoole-release` agent and the `publish-swoole-release` skill; don't do
+release publish. Those belong to the `prepare-swoole-release` agent and the `swoole-ide-helper-release` skill; don't do
 either here. Your target is the Swoole version this project *already* claims to support, compared symbol-by-symbol
 against the matching swoole-src release, fixing whatever's missing, incomplete, incorrect, or hard to read.
 
