@@ -30,6 +30,8 @@ final class Scheduler
     /**
      * Add a task (implemented in the callback).
      *
+     * @param callable $func The callback function to run as a new coroutine once method start() is called.
+     * @param mixed ...$params Arguments passed to the callback function when it starts running.
      * @return false|void Returns FALSE if the scheduler has already been started; otherwise nothing returns.
      * @see \Swoole\Coroutine\Scheduler::start()
      * @see \Swoole\Coroutine\Scheduler::parallel()
@@ -41,6 +43,9 @@ final class Scheduler
     /**
      * Add multiple tasks (implemented in the callback).
      *
+     * @param int $n Number of coroutines to create, each of them running the same callback function.
+     * @param callable $func The callback function to run in each of the coroutines once method start() is called.
+     * @param mixed ...$params Arguments passed to the callback function when it starts running.
      * @return false|void Returns FALSE if the scheduler has already been started; otherwise nothing returns.
      * @see \Swoole\Coroutine\Scheduler::start()
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
@@ -55,6 +60,7 @@ final class Scheduler
     /**
      * To set runtime configurations of coroutines.
      *
+     * @param array $settings An array of runtime options, e.g., "max_coroutine", "hook_flags", "socket_timeout", "enable_preemptive_scheduler", etc.
      * @alias This method is an alias of method \Swoole\Coroutine::set().
      * @see \Swoole\Coroutine::set()
      */
@@ -65,9 +71,12 @@ final class Scheduler
     /**
      * To get runtime configurations of coroutines.
      *
+     * @return array|null Returns an array of the runtime options previously set through method
+     *                    \Swoole\Coroutine\Scheduler::set() (or \Swoole\Coroutine::set()), or NULL if no options
+     *                    have been set yet.
      * @alias This method is an alias of method \Swoole\Coroutine::getOptions().
      * @see \Swoole\Coroutine::getOptions()
-     * @since Swoole 4.6.0
+     * @since 4.6.0
      */
     public function getOptions(): ?array
     {
@@ -79,7 +88,9 @@ final class Scheduler
      * For each task, Swoole creates a new coroutine to run its callback function. The scheduler will wait for all the
      * coroutines to finish.
      *
-     * @return bool Returns TRUE if all the coroutines have finished successfully; otherwise returns FALSE.
+     * @return bool Returns TRUE once the event loop has finished and all the coroutines are done. Returns FALSE if
+     *              the scheduler has been started already, if the event loop fails to initialize, or if no task has
+     *              been added through method add() or parallel().
      * @see \Swoole\Coroutine\Scheduler::add()
      * @see \Swoole\Coroutine\Scheduler::parallel()
      */

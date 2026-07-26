@@ -178,11 +178,10 @@ class Process
      * Besides identifying the process, the ID also determines the message type used by methods \Swoole\Process::push()
      * and \Swoole\Process::pop().
      *
-     * Please note that although a process created directly in PHP (through "new \Swoole\Process(...)" followed by a
-     * method call to \Swoole\Process::start()) has an ID internally, assigned as described above, this property is not
-     * populated for it: the property stays NULL, and the internal ID is only observable indirectly (e.g., through the
-     * message type used by methods \Swoole\Process::push() and \Swoole\Process::pop()). The property is populated only
-     * in the \Swoole\Server::addProcess() and \Swoole\Process\Pool::getProcess() cases described above.
+     * The property is populated as soon as the object is constructed: for a process created directly in PHP (through
+     * "new \Swoole\Process(...)"), it already holds the internally assigned ID described above right after the
+     * constructor returns, before method \Swoole\Process::start() is even called. It's overwritten later on in the
+     * \Swoole\Server::addProcess() and \Swoole\Process\Pool::getProcess() cases described above.
      *
      * @readonly
      * @see \Swoole\Process::useQueue()
@@ -487,9 +486,10 @@ class Process
      * from its own end of the pipe. By default the method blocks until data is available.
      *
      * @param int $size Maximum number of bytes to read.
-     * @return string|false Returns the data read on success; returns false on failure, with an E_WARNING level error
-     *                      thrown out when the process doesn't have a pipe or when the read fails (unless the read
-     *                      was interrupted by a signal).
+     * @return string|false Returns the data read on success; returns false, with an E_WARNING level error thrown out,
+     *                      when the process doesn't have a pipe. It also returns false, without any error raised, when
+     *                      the read itself fails (e.g., when the pipe is in non-blocking mode and no data is
+     *                      available).
      * @see \Swoole\Process::write()
      * @see \Swoole\Process::setBlocking()
      * @see \Swoole\Process::setTimeout()
@@ -732,7 +732,10 @@ class Process
      * This method is available only on some operating systems that support CPU affinity. It's not available on Windows
      * or macOS.
      *
-     * @param array<int> $cpu_settings
+     * @param array<int> $cpu_settings IDs of the CPU cores the process is allowed to run on, starting from 0. The
+     *                                 array can't be empty, can't hold more elements than the number of CPU cores, and
+     *                                 can't hold an ID beyond the last CPU core; otherwise FALSE is returned (with an
+     *                                 E_WARNING level error thrown out, except for an empty array).
      * @return bool TRUE on success, or FALSE on failure.
      * @see https://linux.die.net/man/2/sched_setaffinity
      */
@@ -746,7 +749,9 @@ class Process
      * This method is available only on some operating systems that support CPU affinity. It's not available on Windows
      * or macOS.
      *
-     * @return array<int> An array of integers representing the affinity mask of current process.
+     * @return array<int> An array of integers representing the affinity mask of current process. Despite the return
+     *                    type declared, FALSE is returned at run time (with an E_WARNING level error thrown out) when
+     *                    the underlying system call fails.
      * @see https://linux.die.net/man/2/sched_getaffinity
      */
     public static function getAffinity(): array

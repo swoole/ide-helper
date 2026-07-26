@@ -19,7 +19,9 @@ use Swoole\Connection\Iterator;
  *
  * @see \Swoole\Server::$ports
  * @see \Swoole\Server::listen()
- * @not-serializable Objects of this class cannot be serialized.
+ * @not-serializable Objects of this class cannot be serialized, unless PHP is compiled with Zend Thread Safety (ZTS)
+ *                   enabled and Swoole is installed with the "--enable-swoole-thread" configuration option, in
+ *                   which case they are serializable so that they can be handed over to worker threads.
  */
 class Port
 {
@@ -237,7 +239,7 @@ class Port
     /**
      * Register a callback function for an event on the port.
      *
-     * Only port events can be registered here (as of Swoole 6.0.2 there are 12 of them; please check method
+     * Only port events can be registered here (as of Swoole 6.2.2 there are 12 of them; please check method
      * \Swoole\Server::on() for the complete list); server events must be registered on the server object itself. This
      * method can only be called before the server is started.
      *

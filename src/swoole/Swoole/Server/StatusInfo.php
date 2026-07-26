@@ -6,13 +6,21 @@ namespace Swoole\Server;
 
 /**
  * When an event worker process or a task worker process crashes, an onWorkerError event will be triggered in the manager
- * process, with a StatusInfo object as the second parameter. The StatusInfo object can be used to log the issue and
- * send out alerts. e.g.,
+ * process.
+ *
+ * A StatusInfo object is passed to the onWorkerError callback as the second argument when option
+ * \Swoole\Constant::OPTION_EVENT_OBJECT is enabled on the server. Otherwise, the same information is passed to the
+ * callback as four separate arguments (the worker ID, the process ID of the worker process, the exit code, and the
+ * signal number; the raw process status held by property $status is not passed along in that form). Either way, the
+ * information can be used to log the issue and send out alerts. e.g.,
  * ```php
- * $server->on('WorkerError', function (Swoole\Server $serv, Swoole\Server\StatusInfo $info) {
- *   var_dump($info);
+ * $server->set([\Swoole\Constant::OPTION_EVENT_OBJECT => true]);
+ * $server->on('WorkerError', function (\Swoole\Server $server, \Swoole\Server\StatusInfo $info) {
+ *     var_dump($info);
  * });
  * ```
+ *
+ * @see \Swoole\Constant::OPTION_EVENT_OBJECT
  */
 class StatusInfo
 {

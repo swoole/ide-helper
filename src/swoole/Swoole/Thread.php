@@ -97,6 +97,8 @@ final class Thread
      * @param string $script_file Path to the PHP script file that will be executed in the thread.
      * @param mixed ...$args List of arguments to pass to the PHP script file.
      *                       Inside the thread created, these arguments can be accessed via method Thread::getArguments().
+     * @throws Exception When $script_file is an empty string, or when the operating system fails to create the new
+     *                   thread.
      * @see Thread::getArguments()
      */
     public function __construct(string $script_file, mixed ...$args)
@@ -106,6 +108,7 @@ final class Thread
     /**
      * Check if this thread is still running or not.
      *
+     * @return bool TRUE if the thread is still running, or FALSE if it has finished its execution.
      * @since 6.0.2
      */
     public function isAlive(): bool
@@ -137,6 +140,9 @@ final class Thread
 
     /**
      * Get the exit status of this thread.
+     *
+     * @return int Exit status of the thread. It stays 0 while the thread is still running, and holds the exit status
+     *             of the thread's PHP script once the thread has finished.
      */
     public function getExitStatus(): int
     {
@@ -158,6 +164,8 @@ final class Thread
      *
      * The arguments are the same as the ones passed to the constructor of the thread, excluding the script file.
      *
+     * @return array|null List of arguments passed to the constructor of the thread, or NULL when the current thread
+     *                    wasn't created with extra arguments (e.g., when the call is made from the main thread).
      * @see Thread::__construct()
      */
     public static function getArguments(): ?array
@@ -194,6 +202,7 @@ final class Thread
     /**
      * Get the number of threads that are still running, i.e., not yet finished their execution.
      *
+     * @return int Number of threads currently running, including the main thread.
      * @since 6.0.2
      */
     public static function activeCount(): int
@@ -210,9 +219,9 @@ final class Thread
     }
 
     /**
-     * Set the name of the thread.
+     * Set the name of the current thread (the thread the call is made from).
      *
-     * @param string $name The name of the thread.
+     * @param string $name The new name of the thread.
      * @return bool TRUE on success, or FALSE on failure.
      * @see https://linux.die.net/man/3/pthread_setname_np
      */
@@ -221,12 +230,12 @@ final class Thread
     }
 
     /**
-     * Set CPU affinity of a thread.
+     * Set CPU affinity of the current thread (the thread the call is made from).
      *
      * This method is available only on some operating systems that support CPU affinity. It's not available on Windows
      * or macOS.
      *
-     * @param array<int> $cpu_settings
+     * @param array<int> $cpu_settings IDs of the CPU cores the thread is allowed to run on, starting from 0.
      * @return bool TRUE on success, or FALSE on failure.
      * @see https://linux.die.net/man/3/pthread_setaffinity_np
      */
@@ -235,12 +244,14 @@ final class Thread
     }
 
     /**
-     * Get CPU affinity of a thread.
+     * Get CPU affinity of the current thread (the thread the call is made from).
      *
      * This method is available only on some operating systems that support CPU affinity. It's not available on Windows
      * or macOS.
      *
-     * @return array<int> An array of integers representing the affinity mask of current thread.
+     * @return array<int> An array of integers representing the affinity mask of current thread. Despite the return
+     *                    type declared, FALSE is returned at run time (with an E_WARNING level error thrown out) when
+     *                    the underlying system call fails.
      * @see https://linux.die.net/man/3/pthread_getaffinity_np
      */
     public static function getAffinity(): array
@@ -248,8 +259,13 @@ final class Thread
     }
 
     /**
-     * set scheduling policy and priority of a thread.
+     * Set scheduling policy and priority of the current thread (the thread the call is made from).
      *
+     * Note that, as of Swoole 6.2.2, leaving parameter $policy out makes Swoole ask the operating system for an
+     * invalid scheduling policy, so the call always fails; pass both parameters explicitly.
+     *
+     * @param int $priority The new scheduling priority. What counts as a valid value depends on the scheduling policy.
+     * @param int $policy The scheduling policy to use. It should be one of the \Swoole\Thread::SCHED_* constants.
      * @return bool Returns true on success or false on failure.
      * @see \Swoole\Thread::getPriority()
      * @see https://linux.die.net/man/3/pthread_setschedparam
@@ -259,9 +275,12 @@ final class Thread
     }
 
     /**
-     * Get scheduling policy and parameters of a thread.
+     * Get scheduling policy and priority of the current thread (the thread the call is made from).
      *
      * @return array{policy: int, priority: int} An array containing the scheduling policy and priority of the thread.
+     *                                           Despite the return type declared, FALSE is returned at run time (with
+     *                                           an E_WARNING level error thrown out) when the underlying system call
+     *                                           fails.
      * @see \Swoole\Thread::setPriority()
      * @see https://linux.die.net/man/3/pthread_getschedparam
      */

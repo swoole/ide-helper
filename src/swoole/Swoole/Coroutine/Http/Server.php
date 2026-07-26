@@ -117,7 +117,7 @@ final class Server
      * @param callable $callback The callback function to handle the HTTP requests. It is called with two parameters: a
      *                           \Swoole\Http\Request object and a \Swoole\Http\Response object.
      * @return bool Return true on success. Return false on failure.
-     *              Before Swoole v6.0.0, it returns void.
+     *              Before Swoole 6.0.0, it returns void.
      * @see \Swoole\Http\Request
      * @see \Swoole\Http\Response
      */
@@ -155,7 +155,7 @@ final class Server
      * handlers. This method is used internally by method Server::start(); it runs in a separate coroutine, one for
      * each connection.
      *
-     * @param Socket $conn The socket object of the incoming connection. Added since Swoole v5.1.0.
+     * @param Socket $conn The socket object of the incoming connection. Added since Swoole 5.1.0.
      * @see \Swoole\Coroutine\Http\Server::start()
      */
     private function onAccept(Socket $conn): void

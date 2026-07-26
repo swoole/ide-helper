@@ -44,7 +44,8 @@ class Request
     /**
      * The cookies parsed from the request.
      *
-     * It's null if option 'parse_cookie' is set to FALSE when creating the Request object. e.g.,
+     * It's NULL when the request carries no cookies, or if option 'parse_cookie' is set to FALSE when creating the
+     * Request object. e.g.,
      * ```php
      * $request = Request::create(['parse_cookie' => false]);
      * $request->parse($data);
@@ -63,16 +64,23 @@ class Request
     /**
      * The files uploaded with the request (via multipart/form-data), like the superglobal $_FILES in PHP.
      *
-     * It's NULL when the request contains no uploaded file, or if option 'parse_files' is set to FALSE when creating
-     * the Request object.
+     * It's NULL when the request contains no uploaded file. Option 'parse_files' of method Request::create() doesn't
+     * stop this property from being populated; it only controls whether files uploaded under array-style field names
+     * (e.g., "files[]") get restructured into nested arrays the way the superglobal $_FILES does.
+     *
+     * @see \Swoole\Http\Request::create()
      */
     public ?array $files = null;
 
     /**
      * The form data submitted in the request body, like the superglobal $_POST in PHP.
      *
-     * It's NULL when the request body contains no form data, or if option 'parse_body' is set to FALSE when creating
-     * the Request object.
+     * It's NULL when the request body contains no form data. Option 'parse_body' of method Request::create() applies
+     * to urlencoded bodies (Content-Type "application/x-www-form-urlencoded") only: with the option set to FALSE, such
+     * bodies aren't parsed into this property. Form fields submitted as "multipart/form-data" end up in this property
+     * either way.
+     *
+     * @see \Swoole\Http\Request::create()
      */
     public ?array $post = null;
 
@@ -130,12 +138,12 @@ class Request
      *
      * @param array $options The options for the Request object. Only the following options are supported:
      *                       - 'parse_cookie' (boolean; default is TRUE): To parse the cookies or not.
-     *                       - 'parse_body' (boolean; default is TRUE): To parse the HTTP body or not.
-     *                       - 'parse_files' (boolean; default is TRUE): To parse the uploaded files or not.
+     *                       - 'parse_body' (boolean; default is TRUE): To parse urlencoded form data in the request body (Content-Type "application/x-www-form-urlencoded") into property $post or not. Form fields submitted as "multipart/form-data" are parsed regardless of this option.
+     *                       - 'parse_files' (boolean; default is TRUE): To restructure files uploaded under array-style field names (e.g., "files[]") into nested arrays in property $files (the way the superglobal $_FILES does) or not. Uploaded files are processed and listed in property $files either way.
      *                       - 'upload_tmp_dir' (string; default is "/tmp"): The temporary directory to store the uploaded files.
      *                       - 'enable_compression' (boolean; default is TRUE if Swoole is installed with zlib/Brotli/zstd, otherwise FALSE): To enable HTTP compression or not.
      *                       - 'compression_level' (integer): Compression level. 1-9 are supported. The higher the level, the better the compression, but the more CPU it will consume. The default is 1.
-     *                       - 'websocket_compression' (boolean; default is TRUE if zlib extension is enabled, otherwise FALSE): To enable WebSocket compression or not. This is for WebSocket requests only.
+     *                       - 'websocket_compression' (boolean; default is FALSE): To allow compressing data transferred over the WebSocket connection (once the request completes a WebSocket handshake) or not. This option exists only when Swoole is compiled with zlib support.
      * @return Request The HTTP request object created. Feed it raw request data using method Request::parse().
      * @see \Swoole\Http\Request::parse()
      * @since 4.6.0
@@ -151,8 +159,10 @@ class Request
      * to check if the whole request has been received.
      *
      * @param string $data The raw HTTP request data (or a piece of it) to parse.
-     * @return int|false Return the parsed length of the data; return FALSE when error happens, or when the request has
-     *                   already been fully received.
+     * @return int|false Return the number of bytes successfully parsed; when the data given is malformed, this can be
+     *                   less than the length of the data. Return FALSE when the whole request has been received
+     *                   already, or when the method is called on a Request object that wasn't created by method
+     *                   \Swoole\Http\Request::create().
      * @see \Swoole\Http\Request::isCompleted()
      * @since 4.6.0
      */

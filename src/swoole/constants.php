@@ -207,9 +207,9 @@ define('SWOOLE_ERROR_HTTP_PROXY_HANDSHAKE_ERROR', 7101);
 define('SWOOLE_ERROR_HTTP_INVALID_PROTOCOL', 7102);
 define('SWOOLE_ERROR_HTTP_PROXY_HANDSHAKE_FAILED', 7103);
 define('SWOOLE_ERROR_HTTP_PROXY_BAD_RESPONSE', 7104);
-define('SWOOLE_ERROR_HTTP_CONFLICT_HEADER', 7105); // @since v5.0.3
-define('SWOOLE_ERROR_HTTP_CONTEXT_UNAVAILABLE', 7106); // @since v5.1.2
-define('SWOOLE_ERROR_HTTP_COOKIE_UNAVAILABLE', 7107); // @since v6.0.0
+define('SWOOLE_ERROR_HTTP_CONFLICT_HEADER', 7105); // @since 5.0.3
+define('SWOOLE_ERROR_HTTP_CONTEXT_UNAVAILABLE', 7106); // @since 5.1.2
+define('SWOOLE_ERROR_HTTP_COOKIE_UNAVAILABLE', 7107); // @since 6.0.0
 define('SWOOLE_ERROR_WEBSOCKET_BAD_CLIENT', 8501);
 define('SWOOLE_ERROR_WEBSOCKET_BAD_OPCODE', 8502);
 define('SWOOLE_ERROR_WEBSOCKET_UNCONNECTED', 8503);
@@ -231,8 +231,8 @@ define('SWOOLE_ERROR_SERVER_CONNECT_FAIL', 9011);
 define('SWOOLE_ERROR_SERVER_INVALID_COMMAND', 9012);
 define('SWOOLE_ERROR_SERVER_IS_NOT_REGULAR_FILE', 9013);
 define('SWOOLE_ERROR_SERVER_SEND_TO_WOKER_TIMEOUT', 9014);
-define('SWOOLE_ERROR_SERVER_INVALID_CALLBACK', 9015); // @since v6.0.0
-define('SWOOLE_ERROR_SERVER_UNRELATED_THREAD', 9016); // @since v6.0.0
+define('SWOOLE_ERROR_SERVER_INVALID_CALLBACK', 9015); // @since 6.0.0
+define('SWOOLE_ERROR_SERVER_UNRELATED_THREAD', 9016); // @since 6.0.0
 define('SWOOLE_ERROR_SERVER_WORKER_EXIT_TIMEOUT', 9101);
 define('SWOOLE_ERROR_SERVER_WORKER_ABNORMAL_PIPE_DATA', 9102);
 define('SWOOLE_ERROR_SERVER_WORKER_UNPROCESSED_DATA', 9103);
@@ -394,7 +394,7 @@ define('SWOOLE_IOV_MAX', 1024);
  *
  * @see swoole_async_set()
  * @see https://man7.org/linux/man-pages/man2/io_uring_setup.2.html io_uring_setup(2)
- * @since v6.0.0
+ * @since 6.0.0
  */
 #ifdef SW_USE_IOURING
 define('SWOOLE_IOURING_DEFAULT', 0);
@@ -735,8 +735,20 @@ define('AI_CANONIDN', 128); // Convert the returned canonical name back from ASC
 define('AI_NUMERICSERV', 1024); // The service must be given as a numeric port string; no service name lookup is performed.
 #endif
 
-define('SWOOLE_MSGQUEUE_ORIENT', 1); // @since v5.0.3
-define('SWOOLE_MSGQUEUE_BALANCE', 2); // @since v5.0.3
+/*
+ * Modes of the System V message queue used for inter-process messaging in class \Swoole\Process. They are used as
+ * value of the second parameter of method \Swoole\Process::useQueue():
+ *   - SWOOLE_MSGQUEUE_BALANCE: the default mode. Method \Swoole\Process::pop() takes the first message off the
+ *     queue, no matter which process pushed it.
+ *   - SWOOLE_MSGQUEUE_ORIENT: messages are labeled with the worker ID of the pushing process, and method
+ *     \Swoole\Process::pop() only takes messages whose label matches the worker ID of the popping process.
+ *
+ * @see \Swoole\Process::useQueue()
+ * @see \Swoole\Process::push()
+ * @see \Swoole\Process::pop()
+ */
+define('SWOOLE_MSGQUEUE_ORIENT', 1); // @since 5.0.3
+define('SWOOLE_MSGQUEUE_BALANCE', 2); // @since 5.0.3
 
 /*
  * Coroutine-related constants.
@@ -1080,7 +1092,7 @@ define('SOCKET_ECANCELED', 125);
  * @see https://man7.org/linux/man-pages/man7/tcp.7.html tcp(7)
  * @see \Swoole\Coroutine\Socket::getOption()
  */
-define('TCP_INFO', 11); // @since v6.0.0
+define('TCP_INFO', 11); // @since 6.0.0
 
 /*
  * Constants in this section are used in Swoole servers.
@@ -1091,7 +1103,7 @@ define('SWOOLE_BASE', 1);
 define('SWOOLE_PROCESS', 2);
 // Constant SWOOLE_THREAD is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is
 // installed with the "--enable-swoole-thread" configuration option.
-define('SWOOLE_THREAD', 3); // @since v6.0.0
+define('SWOOLE_THREAD', 3); // @since 6.0.0
 
 // Types of processes in Swoole server that handle commands.
 define('SWOOLE_SERVER_COMMAND_MASTER', 2); // 2^1
@@ -1177,7 +1189,7 @@ define('SWOOLE_HTTP2_ERROR_COMPRESSION_ERROR', 9);
 define('SWOOLE_HTTP2_ERROR_CONNECT_ERROR', 10);
 define('SWOOLE_HTTP2_ERROR_ENHANCE_YOUR_CALM', 11);
 define('SWOOLE_HTTP2_ERROR_INADEQUATE_SECURITY', 12);
-define('SWOOLE_HTTP2_ERROR_HTTP_1_1_REQUIRED', 13); // Added in Swoole 5.0.1.
+define('SWOOLE_HTTP2_ERROR_HTTP_1_1_REQUIRED', 13); // @since 5.0.1
 
 // WebSocket flags.
 define('SWOOLE_WEBSOCKET_FLAG_FIN', 1);
@@ -1240,9 +1252,9 @@ define('SWOOLE_WEBSOCKET_CLOSE_POLICY_ERROR', 1008);
 define('SWOOLE_WEBSOCKET_CLOSE_MESSAGE_TOO_BIG', 1009);
 define('SWOOLE_WEBSOCKET_CLOSE_EXTENSION_MISSING', 1010);
 define('SWOOLE_WEBSOCKET_CLOSE_SERVER_ERROR', 1011);
-define('SWOOLE_WEBSOCKET_CLOSE_CLOSE_SERVICE_RESTART', 1012); // @since v5.1.2
-define('SWOOLE_WEBSOCKET_CLOSE_TRY_AGAIN_LATER', 1013); // @since v5.1.2
-define('SWOOLE_WEBSOCKET_CLOSE_BAD_GATEWAY', 1014); // @since v5.1.2
+define('SWOOLE_WEBSOCKET_CLOSE_CLOSE_SERVICE_RESTART', 1012); // @since 5.1.2
+define('SWOOLE_WEBSOCKET_CLOSE_TRY_AGAIN_LATER', 1013); // @since 5.1.2
+define('SWOOLE_WEBSOCKET_CLOSE_BAD_GATEWAY', 1014); // @since 5.1.2
 define('SWOOLE_WEBSOCKET_CLOSE_TLS', 1015);
 // Next twelve constants are kept for backward compatibility.
 define('WEBSOCKET_CLOSE_NORMAL', SWOOLE_WEBSOCKET_CLOSE_NORMAL);
@@ -1256,9 +1268,9 @@ define('WEBSOCKET_CLOSE_POLICY_ERROR', SWOOLE_WEBSOCKET_CLOSE_POLICY_ERROR);
 define('WEBSOCKET_CLOSE_MESSAGE_TOO_BIG', SWOOLE_WEBSOCKET_CLOSE_MESSAGE_TOO_BIG);
 define('WEBSOCKET_CLOSE_EXTENSION_MISSING', SWOOLE_WEBSOCKET_CLOSE_EXTENSION_MISSING);
 define('WEBSOCKET_CLOSE_SERVER_ERROR', SWOOLE_WEBSOCKET_CLOSE_SERVER_ERROR);
-define('WEBSOCKET_CLOSE_CLOSE_SERVICE_RESTART', SWOOLE_WEBSOCKET_CLOSE_CLOSE_SERVICE_RESTART); // @since v5.1.2
-define('WEBSOCKET_CLOSE_TRY_AGAIN_LATER', SWOOLE_WEBSOCKET_CLOSE_TRY_AGAIN_LATER); // @since v5.1.2
-define('WEBSOCKET_CLOSE_BAD_GATEWAY', SWOOLE_WEBSOCKET_CLOSE_BAD_GATEWAY); // @since v5.1.2
+define('WEBSOCKET_CLOSE_CLOSE_SERVICE_RESTART', SWOOLE_WEBSOCKET_CLOSE_CLOSE_SERVICE_RESTART); // @since 5.1.2
+define('WEBSOCKET_CLOSE_TRY_AGAIN_LATER', SWOOLE_WEBSOCKET_CLOSE_TRY_AGAIN_LATER); // @since 5.1.2
+define('WEBSOCKET_CLOSE_BAD_GATEWAY', SWOOLE_WEBSOCKET_CLOSE_BAD_GATEWAY); // @since 5.1.2
 define('WEBSOCKET_CLOSE_TLS', SWOOLE_WEBSOCKET_CLOSE_TLS);
 
 /*

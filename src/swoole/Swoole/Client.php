@@ -121,23 +121,23 @@ class Client
      *   - SWOOLE_SOCK_TCP | SWOOLE_KEEP
      *   - SWOOLE_SOCK_TCP | SWOOLE_KEEP | SWOOLE_SSL
      */
-    public int $type;
+    public int $type = 0;
 
     /**
      * Optional name of the client, as passed to the constructor.
      *
      * For persistent connections (socket type including the SWOOLE_KEEP flag), the name is part of the key used to
      * look up pooled connections, so clients created with different names never share the same persistent
-     * connection. The property is unset when no name was given.
+     * connection. The property is NULL when no name was given.
      */
-    public string $id;
+    public ?string $id = null;
 
     /**
-     * Client settings set through method set(). The property is unset until set() is called for the first time.
+     * Client settings set through method set(). The property is NULL until set() is called for the first time.
      *
      * @see \Swoole\Client::set()
      */
-    public array $setting;
+    public ?array $setting = null;
 
     /**
      * Create a new client object of the given socket type.
@@ -164,6 +164,17 @@ class Client
         if (!empty($id)) {
             $this->id = $id;
         }
+    }
+
+    /**
+     * The destructor.
+     *
+     * There is no need to call this method directly. If the client still holds a live connection when the object is
+     * destroyed, the connection is closed automatically (a persistent connection is returned to the in-process
+     * connection pool instead).
+     */
+    public function __destruct()
+    {
     }
 
     /**
@@ -216,7 +227,7 @@ class Client
      * @see \Swoole\Client::MSG_WAITALL
      * @see \Swoole\Client::MSG_PEEK
      */
-    public function recv(int $size = 65536, int $flag = 0): string|false
+    public function recv(int $size = 65535, int $flag = 0): string|false
     {
     }
 
@@ -283,8 +294,11 @@ class Client
      * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
      * available.
      *
-     * @param callable|null $onSslReady Callback function to be executed when SSL handshake is successful.
-     *                                  Added in v6.0.0 for child class Swoole\Async\Client only. It has no effect on this class.
+     * @param callable|null $onSslReady Callback function to be executed when SSL handshake is successful. The
+     *                                  parameter exists since Swoole 6.0.0 for signature compatibility with child
+     *                                  class \Swoole\Async\Client only; passing any value to it here (even NULL)
+     *                                  makes this method throw a \Swoole\Exception, since synchronous clients don't
+     *                                  support the callback.
      * @return bool TRUE if SSL handshake is successful; otherwise FALSE.
      */
     public function enableSSL(?callable $onSslReady = null): bool
@@ -298,10 +312,10 @@ class Client
      * "--enable-openssl" included; since Swoole 6.2.0, OpenSSL support is always built in, so this method is always
      * available.
      *
-     * @return bool|string The peer certificate in PEM format, or FALSE if there is no established SSL connection or
-     *                     the certificate cannot be retrieved.
+     * @return string|false The peer certificate in PEM format, or FALSE if there is no established SSL connection or
+     *                      the certificate cannot be retrieved.
      */
-    public function getPeerCert(): bool|string
+    public function getPeerCert(): string|false
     {
     }
 

@@ -22,6 +22,9 @@ class Server extends \Swoole\Server
     /**
      * To return an ERR reply from the Redis server.
      *
+     * When used as the 1st parameter "$type" in method \Swoole\Redis\Server::format(), the 2nd parameter "$value"
+     * should be an error message; when it's omitted, the default error message "ERR" is used.
+     *
      * @see \Swoole\Redis\Server::format()
      */
     public const ERROR = 0;
@@ -38,6 +41,9 @@ class Server extends \Swoole\Server
 
     /**
      * To return a Status reply from the Redis server.
+     *
+     * When used as the 1st parameter "$type" in method \Swoole\Redis\Server::format(), the 2nd parameter "$value"
+     * should be a short status message; when it's omitted, the default status message "OK" is used.
      *
      * @see \Swoole\Redis\Server::format()
      */
@@ -92,7 +98,9 @@ class Server extends \Swoole\Server
      * @param callable $callback The callback function processing the command. It's called with the session ID of the
      *                           connection and an array of the command's arguments, and its return value (a reply
      *                           built with method format()) is sent back to the client.
-     * @return bool TRUE on success, or FALSE on failure (e.g., when the command name is empty or too long).
+     * @return bool TRUE on success. Note that failures don't show up as a FALSE return value: an empty command name,
+     *              or one of 64 bytes or longer, aborts the script with a fatal error, while a $callback that isn't
+     *              actually callable makes the method fail with a warning raised and NULL returned.
      * @see \Swoole\Redis\Server::getHandler()
      * @see \Swoole\Redis\Server::format()
      */
@@ -125,11 +133,17 @@ class Server extends \Swoole\Server
      *                  - \Swoole\Redis\Server::MAP
      * @param mixed $value The value to put in the reply. What it should hold depends on parameter $type (see the
      *                     comments on the individual constants); it can be omitted for reply types
-     *                     \Swoole\Redis\Server::NIL and \Swoole\Redis\Server::ERROR (for the latter, a default
-     *                     error message is used).
+     *                     \Swoole\Redis\Server::NIL, \Swoole\Redis\Server::ERROR, and
+     *                     \Swoole\Redis\Server::STATUS (for the latter two, the default messages "ERR" and "OK"
+     *                     are used respectively).
      * @return string|false The reply encoded in the Redis protocol, ready to be sent back with method
-     *                      \Swoole\Server::send(); or FALSE when the reply cannot be built (e.g., when $type is not
-     *                      one of the constants listed above, or $value doesn't match the reply type).
+     *                      \Swoole\Server::send(); or FALSE when the reply can't be built. Note that every such
+     *                      failure throws the exception below at the same time, so in practice a failure surfaces as
+     *                      an exception rather than as a FALSE return value.
+     * @throws \Swoole\Exception When $type is not one of the constants listed above, when $value is omitted for a
+     *                           reply type that needs one, when a string value is longer than 512 MB, or when $value
+     *                           isn't an array for reply types \Swoole\Redis\Server::SET and
+     *                           \Swoole\Redis\Server::MAP.
      */
     public static function format(int $type, mixed $value = null): string|false
     {

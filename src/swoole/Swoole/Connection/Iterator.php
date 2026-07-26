@@ -176,6 +176,8 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     /**
      * This method doesn't do anything. DON'T use it.
      *
+     * @param mixed $fd Session ID of the connection. It is ignored by this method.
+     * @param mixed $value The value to set. It is ignored by this method.
      * @see \ArrayAccess::offsetSet()
      * @see https://www.php.net/manual/en/arrayaccess.offsetset.php
      * {@inheritDoc}
@@ -187,6 +189,7 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
     /**
      * This method doesn't do anything. DON'T use it.
      *
+     * @param mixed $fd Session ID of the connection. It is ignored by this method.
      * @see \ArrayAccess::offsetUnset()
      * @see https://www.php.net/manual/en/arrayaccess.offsetunset.php
      * {@inheritDoc}

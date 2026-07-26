@@ -8,7 +8,7 @@ namespace Swoole\Server;
  * A Packet object carries a datagram received on a UDP/UDP6 port, or on a UNIX datagram socket, of a Swoole server.
  *
  * It is passed to the onPacket callback as the second argument when option \Swoole\Constant::OPTION_EVENT_OBJECT is
- * enabled on the server. Otherwise, the same information is passed to the callback as three separate arguments: the
+ * enabled on the server. Otherwise, the same information is passed to the callback as two separate arguments: the
  * received data, and an array holding the rest of the fields below.
  *
  * @see \Swoole\Constant::OPTION_EVENT_OBJECT

@@ -108,7 +108,7 @@ class Client
      *
      * This is a private property before Swoole 5.0.2.
      */
-    public ?Socket $socket;
+    public ?Socket $socket = null;
 
     /**
      * Constructor.
@@ -119,6 +119,16 @@ class Client
      * @throws \TypeError When an unknown socket type is given.
      */
     public function __construct(int $type)
+    {
+    }
+
+    /**
+     * The destructor.
+     *
+     * There is no need to call this method directly; it does nothing on its own. The underlying socket is closed
+     * internally when the object is destroyed.
+     */
+    public function __destruct()
     {
     }
 
@@ -337,10 +347,11 @@ class Client
      *
      * The returned object refers to the same underlying connection as the client itself.
      *
-     * @return Socket|false The underlying socket object, or FALSE on failure.
+     * @return Socket|null The underlying socket object, or NULL if the client has no socket yet (before the first
+     *                     connect() call, or after the connection has been closed).
      * @see \Swoole\Coroutine\Socket
      */
-    public function exportSocket(): Socket|false
+    public function exportSocket(): ?Socket
     {
     }
 }

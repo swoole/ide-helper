@@ -72,17 +72,20 @@ final class Atomic
      *
      * Before using this method, the counter must be either 0 or 1, otherwise the behavior is undefined.
      *   - When the counter is 0, the current thread will be put into a blocking state.
-     *   - When the counter is 1, it means the thread doesn't need to wait; the method returns true immediately.
+     *   - When the counter is 1, it means the thread doesn't need to wait; the method resets the counter back to 0
+     *     (consuming the pending wake-up signal) and returns true immediately.
      *
      * WARNING: This method blocks the whole thread, not just the current coroutine.
      *
      * @param float $timeout The timeout in seconds.
      *                       > 0: The thread will be woken up after the specified number of seconds (or by another thread).
      *                       <= 0: No timeout. The thread will resume execution only when woken up by another thread.
-     * @return bool Returns true if no need to wait or woken up by another thread; otherwise returns false.
+     * @return bool Returns true if there was no need to wait, or if the thread was woken up by another thread and
+     *              managed to consume the wake-up signal; returns false if the timeout expired, or if another thread
+     *              consumed the wake-up signal first.
      * @see \Swoole\Thread\Atomic::wakeup()
      */
-    public function wait(float $timeout = 1): bool
+    public function wait(float $timeout = 1.0): bool
     {
     }
 
@@ -90,13 +93,16 @@ final class Atomic
      * Wake up one or more threads that are blocked by method \Swoole\Thread\Atomic::wait().
      *
      * Before using this method, the counter must be either 0 or 1, otherwise the behavior is undefined.
-     *   - When the counter is 0, it means there are no threads blocked; the method returns true immediately.
-     *   - When the counter is 1, it means there are some threads blocked; the method wakes up (some of) them and returns true.
+     *   - When the counter is 0, there may be threads blocked; the method sets the counter to 1 and wakes up (up to
+     *     $count of) them. It returns true whether or not any thread was actually blocked.
+     *   - When the counter is 1, it means an earlier wake-up signal hasn't been consumed yet; the method does nothing
+     *     and returns true immediately.
      *
      * There is no guarantee about which threads are awoken.
      *
      * @param int $count The number of threads to wake up.
-     * @return bool Returns true if the counter is 0 or the method wakes up at least one thread; otherwise returns false.
+     * @return bool Returns true in practice, whether or not any thread was actually woken up; it returns false only
+     *              when the underlying wake-up operation fails at the operating system level.
      * @see \Swoole\Thread\Atomic::wait()
      */
     public function wakeup(int $count = 1): bool

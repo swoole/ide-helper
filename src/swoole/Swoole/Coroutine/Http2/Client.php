@@ -61,11 +61,12 @@ class Client
     public ?array $setting = null;
 
     /**
-     * The socket object of the client.
+     * The underlying socket object of the client. It stays NULL until method connect() succeeds, and goes back to
+     * NULL once the connection is closed.
      *
      * @since 5.0.2
      */
-    public ?Socket $socket;
+    public ?Socket $socket = null;
 
     /**
      * TRUE while the client is connected to the server (set by a successful connect() call and cleared when the
@@ -93,7 +94,8 @@ class Client
     public bool $ssl = false;
 
     /**
-     * ID of the last stream that the client has received from the server to shutdown the connection.
+     * ID of the last stream the server processed (or was still going to process) before shutting the connection down,
+     * as reported in the GOAWAY frame received from the server.
      *
      * This property is only set when a GOAWAY frame is received from the server.
      *
@@ -107,6 +109,8 @@ class Client
      * The constructor only stores the connection details in properties $host, $port, and $ssl; the actual connection
      * is not established until method connect() is called.
      *
+     * A \Swoole\Coroutine\Http2\Client\Exception is thrown when $host is an empty string.
+     *
      * @param string $host The target host to connect to.
      * @param int $port The target port to connect to. Defaults to 80.
      * @param bool $open_ssl Whether to establish the connection over TLS/SSL. Before Swoole 6.2.0, setting this to
@@ -116,6 +120,16 @@ class Client
      *                       is always built in, so this option is always supported.
      */
     public function __construct(string $host, int $port = 80, bool $open_ssl = false)
+    {
+    }
+
+    /**
+     * Destructor of the client.
+     *
+     * There is no need to call this method directly. The underlying connection is closed automatically when the client
+     * object is destroyed.
+     */
+    public function __destruct()
     {
     }
 
@@ -209,9 +223,10 @@ class Client
     /**
      * Receive a response from the server.
      *
-     * Frames that don't complete a response (SETTINGS, PING, WINDOW_UPDATE, PUSH_PROMISE, and frames belonging to an
-     * unknown or already closed stream) are handled internally and don't make this method return; the method keeps
-     * waiting for the next frame instead.
+     * Frames that don't complete a response (SETTINGS, PING, WINDOW_UPDATE, PUSH_PROMISE, RST_STREAM, and frames
+     * belonging to an unknown or already closed stream) are handled internally and don't make this method return; the
+     * method keeps waiting for the next frame instead. Note that this covers streams the server terminates: when an
+     * RST_STREAM frame arrives, the affected stream is discarded quietly and no response is handed back for it.
      *
      * @param float $timeout The maximum time to wait for a response (in seconds).
      *                       - > 0: The timeout value in seconds.
@@ -242,6 +257,10 @@ class Client
      * object as soon as a piece of a pipelined (streamed) response is available, instead of waiting for the whole
      * response to end. Property $pipeline of the returned Response object tells if more pieces are still to come.
      *
+     * @param float $timeout The maximum time to wait for a response (in seconds). Please check method
+     *                       \Swoole\Coroutine\Http2\Client::recv() for what the values mean.
+     * @return Response|false Returns a Response object, or FALSE on failure. Please check method
+     *                        \Swoole\Coroutine\Http2\Client::recv() for the exact failure cases.
      * @see \Swoole\Coroutine\Http2\Client::recv()
      * @since 4.5.0
      */
@@ -278,7 +297,9 @@ class Client
      *
      * Any streams still active on the connection are discarded.
      *
-     * @return bool TRUE if the connection was open and is now closed; FALSE if there was no open connection.
+     * @return bool TRUE if the connection was open and is now closed; otherwise FALSE (e.g., when there was no open
+     *              connection, or when the underlying socket fails to close), with properties $errCode and $errMsg
+     *              updated accordingly.
      */
     public function close(): bool
     {

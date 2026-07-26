@@ -19,9 +19,11 @@ class Event
      *
      * The event loop of the process is created implicitly when this method is called, if it doesn't exist yet.
      *
-     * @param mixed $fd The descriptor to watch: an int file descriptor, a stream or socket resource, or an object of
-     *                  class \Swoole\Coroutine\Socket, \Swoole\Client, or \Swoole\Process (in which case the pipe of
-     *                  the process is watched).
+     * @param mixed $fd The descriptor to watch: an int file descriptor, a stream resource, or an object of class
+     *                  \Swoole\Coroutine\Socket, \Swoole\Client, or \Swoole\Process (in which case the pipe of
+     *                  the process is watched). When Swoole is compiled with sockets extension support (the
+     *                  "--enable-sockets" configuration option), a \Socket object of the PHP sockets extension works
+     *                  here too.
      * @param callable|null $read_callback Called with $fd as its only argument when $fd becomes readable. Required
      *                                     when $events includes SWOOLE_EVENT_READ.
      * @param callable|null $write_callback Called with $fd as its only argument when $fd becomes writable. Required
@@ -70,7 +72,10 @@ class Event
      *                                     is passed, the read callback registered before remains in use.
      * @param callable|null $write_callback Called with $fd as its only argument when $fd becomes writable. When null
      *                                      is passed, the write callback registered before remains in use.
-     * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
+     * @param int $events The events to watch from now on: a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both
+     *                    (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE). Unlike the two callbacks, this is always applied as
+     *                    given, so leaving it at its default of 0 stops the descriptor from being watched for either
+     *                    readability or writability.
      * @return bool Returns true on success. It returns false, with an E_WARNING level error thrown out, when the
      *              event loop doesn't exist, when $fd is unrecognized or not being watched, or when no callback is
      *              available for one of the events in $events.
@@ -138,10 +143,13 @@ class Event
      *
      * The event loop of the process is created implicitly when this method is called, if it doesn't exist yet.
      *
-     * @param callable|null $callback The callback function. When null is passed, the end-of-round callback registered
-     *                                before is removed ($before is ignored in this case).
-     * @param bool $before Execute the callback function at the beginning of each round, instead of at the end.
-     * @return bool Returns true on success; returns false when $callback is null but there is no callback to remove.
+     * @param callable|null $callback The callback function. When null is passed, the callback registered before is
+     *                                removed instead: the end-of-round one when $before is false, or the
+     *                                beginning-of-round one when $before is true.
+     * @param bool $before Execute the callback function at the beginning of each round, instead of at the end. When
+     *                     $callback is null, this parameter selects which of the two callbacks to remove.
+     * @return bool Returns true on success; returns false when $callback is null but there is no callback of the
+     *              selected kind to remove.
      * @alias This method has an alias function \swoole_event_cycle().
      * @see \swoole_event_cycle()
      */

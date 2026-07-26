@@ -55,10 +55,13 @@ class Request
     public bool $pipeline = false;
 
     /**
-     * When TRUE, a pipelined (streamed) request is read piece by piece with
-     * \Swoole\Coroutine\Http2\Client::read() instead of being buffered until the whole response ends.
+     * When TRUE, the response to this request is handed back piece by piece as its data arrives — by method
+     * \Swoole\Coroutine\Http2\Client::recv() as well as by \Swoole\Coroutine\Http2\Client::read() — instead of
+     * being buffered until the whole response ends. This only makes a difference for responses the server streams
+     * over multiple DATA frames.
      *
      * @since 5.1.0
+     * @see \Swoole\Coroutine\Http2\Client::recv()
      * @see \Swoole\Coroutine\Http2\Client::read()
      */
     public bool $usePipelineRead = false;

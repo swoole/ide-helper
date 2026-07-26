@@ -21,8 +21,11 @@ final class Barrier
     /**
      * Initializes a new barrier with a specified thread count.
      *
+     * The constructor can only be called once per object; calling it a second time throws an \Error.
+     *
      * @param int $count The number of threads required to meet at the barrier before they can proceed.
-     *                   This value must be greater than 0.
+     *                   This value must be greater than 1.
+     * @throws \Swoole\Exception When $count is less than 2.
      */
     public function __construct(int $count)
     {

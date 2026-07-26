@@ -20,9 +20,11 @@ namespace Swoole\WebSocket;
 class Frame implements \Stringable
 {
     /**
-     * File descriptor of the WebSocket connection that the frame was received from. It's set on frames passed to
-     * the "message" event callback of a WebSocket server, and stays 0 on frames created in PHP code or received by
-     * client-side methods.
+     * File descriptor of the WebSocket connection that the frame was received from.
+     *
+     * It's set on frames passed to the "message" event callback of a WebSocket server, and on frames returned by
+     * methods \Swoole\Http\Response::recv() and \Swoole\Coroutine\Http\Client::recv(), where it holds the file
+     * descriptor of the underlying socket. It stays 0 on frames created in PHP code or decoded with method unpack().
      */
     public int $fd = 0;
 
@@ -55,10 +57,13 @@ class Frame implements \Stringable
      * through 6.1.5, this property was incorrectly left FALSE on frames reassembled from several smaller frames by
      * those two methods; this was fixed in Swoole 6.1.6.
      *
+     * On a frame created in PHP code, this property starts out as NULL, in which case the sending methods fall back to
+     * the SWOOLE_WEBSOCKET_FLAG_FIN bit of property $flags to decide whether the frame ends the message.
+     *
      * @see \Swoole\Coroutine\Http\Client::recv()
      * @see \Swoole\Http\Response::recv()
      */
-    public bool $finish;
+    public ?bool $finish = null;
 
     /**
      * Get the binary WebSocket encoding of the frame, ready to be written to a raw socket.
@@ -82,7 +87,8 @@ class Frame implements \Stringable
      * @param int $opcode Type of the frame, telling the receiver how to interpret the data. Swoole defines the opcodes
      *                    of the WebSocket protocol as SWOOLE_WEBSOCKET_OPCODE_* constants.
      * @param int $flags Frame flags, as a bitmask of the SWOOLE_WEBSOCKET_FLAG_* constants.
-     * @return string The encoded frame.
+     * @return string The encoded frame. An empty string comes back when the frame can't be encoded (e.g., when the
+     *                opcode given is out of range), with a warning raised.
      * @alias Alias of method \Swoole\WebSocket\Server::pack().
      * @see \Swoole\WebSocket\Server::pack()
      */
@@ -96,11 +102,13 @@ class Frame implements \Stringable
      * This method is an alias of method \Swoole\WebSocket\Server::unpack(); please check that method for details.
      *
      * @param string $data The encoded frame to decode, as produced by method pack().
-     * @return Frame The decoded frame.
+     * @return Frame|false The decoded frame (a \Swoole\WebSocket\CloseFrame object when the data holds a close
+     *                     frame), or FALSE when the data isn't a complete, well-formed WebSocket frame.
      * @alias Alias of method \Swoole\WebSocket\Server::unpack().
      * @see \Swoole\WebSocket\Server::unpack()
+     * @see \Swoole\WebSocket\CloseFrame
      */
-    public static function unpack(string $data): Frame
+    public static function unpack(string $data): Frame|false
     {
     }
 }

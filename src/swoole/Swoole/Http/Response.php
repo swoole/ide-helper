@@ -246,9 +246,9 @@ class Response
     /**
      * Set HTTP status code.
      *
-     * @param int $http_code HTTP status code. For an HTTP/1.x response, a reason phrase must be given as well when the
-     *                       status code is not one of the codes known to Swoole; otherwise the status line falls back
-     *                       to "200 OK". For an HTTP/2 response, the status code is always sent as is.
+     * @param int $http_code HTTP status code. For an HTTP/1.x response, when no reason phrase is given, Swoole fills
+     *                       in the standard phrase for the status codes it knows, and uses "<code> Unknown Status" for
+     *                       any other code. For an HTTP/2 response, the status code is always sent as is.
      * @param string $reason The reason phrase to be used with the provided status code. Optional.
      * @return bool Return TRUE on success, or FALSE when failed (e.g., if the HTTP connection has been closed or detached).
      * @alias This method has an alias of \Swoole\Http\Response::setStatusCode().
@@ -261,9 +261,9 @@ class Response
     /**
      * Set HTTP status code.
      *
-     * @param int $http_code HTTP status code. For an HTTP/1.x response, a reason phrase must be given as well when the
-     *                       status code is not one of the codes known to Swoole; otherwise the status line falls back
-     *                       to "200 OK". For an HTTP/2 response, the status code is always sent as is.
+     * @param int $http_code HTTP status code. For an HTTP/1.x response, when no reason phrase is given, Swoole fills
+     *                       in the standard phrase for the status codes it knows, and uses "<code> Unknown Status" for
+     *                       any other code. For an HTTP/2 response, the status code is always sent as is.
      * @param string $reason The reason phrase to be used with the provided status code. Optional.
      * @return bool Return TRUE on success, or FALSE when failed (e.g., if the HTTP connection has been closed or detached).
      * @alias Alias of method \Swoole\Http\Response::status().
@@ -287,7 +287,9 @@ class Response
      *                            once for each value in the array.
      * @param bool $format Format (capitalize) the header name or leave it as is.
      *                     For example, HTTP header name "cOntent-tYpe" is converted to "Content-Type" by default.
-     * @return bool Return TRUE on success, or FALSE when failed.
+     * @return bool Return TRUE on success; return FALSE when failed, e.g., when the header name is longer than 127
+     *              bytes or holds a carriage return or line feed character, or when the response has been finished or
+     *              detached already.
      * @alias This method has an alias of \Swoole\Http\Response::setHeader().
      * @see \Swoole\Http\Response::setHeader()
      */
@@ -308,7 +310,9 @@ class Response
      *                            once for each value in the array.
      * @param bool $format Format (capitalize) the header name or leave it as is.
      *                     For example, HTTP header name "cOntent-tYpe" is converted to "Content-Type" by default.
-     * @return bool Return TRUE on success, or FALSE when failed.
+     * @return bool Return TRUE on success; return FALSE when failed, e.g., when the header name is longer than 127
+     *              bytes or holds a carriage return or line feed character, or when the response has been finished or
+     *              detached already.
      * @alias Alias of method \Swoole\Http\Response::header().
      * @see \Swoole\Http\Response::header()
      * @since 4.4.0
@@ -385,7 +389,8 @@ class Response
      * This method works only when the HTTP/2 protocol is used.
      *
      * @param int $error_code An HTTP2 error code that contains the reason for closing the connection. HTTP2 error codes are defined as SWOOLE_HTTP2_ERROR_* constants.
-     * @param string $debug_data Additional debug data to send to the remote peer.
+     * @param string $debug_data Additional debug data to send to the remote peer. Although Swoole declares this
+     *                           parameter as a non-nullable string, NULL is accepted at run time too.
      * @return bool TRUE on success or FALSE on failure.
      * @see \Swoole\Coroutine\Http2\Client::goaway()
      */
@@ -399,6 +404,9 @@ class Response
      * The first call sends the HTTP headers with header "Transfer-Encoding: chunked" included; each call (including
      * the first one) sends one chunk of the response body. Content compression is turned off as soon as this method
      * is used. Call method Response::end() afterwards to finish the response.
+     *
+     * On an HTTP/2 connection, each call sends one DATA frame instead, since the HTTP/2 protocol has no chunked
+     * transfer encoding.
      *
      * Unlike method Response::end(), which sends the whole response body in one single write, this method allows
      * sending a response body of any size; each chunk itself is still subject to server option "buffer_output_size"
@@ -522,7 +530,9 @@ class Response
      * @param int|array|object $server A \Swoole\Server object, a \Swoole\Coroutine\Socket object, one of the two
      *                                 paired with a \Swoole\Http\Request object as a two-element array, or the session
      *                                 ID of a connection of the current server. Passing an object of any other type
-     *                                 triggers a warning and makes the method call fail.
+     *                                 triggers a warning and makes the method call fail. Although Swoole declares this
+     *                                 parameter as optional (with -1 as the default value), it is actually required:
+     *                                 calling the method without it fails at run time.
      * @param int $fd Session ID of the connection. It is required when a \Swoole\Server object is given, and must
      *                reference an established connection of that server; it is ignored when a
      *                \Swoole\Coroutine\Socket object is given, since the file descriptor is read from the socket.
@@ -590,9 +600,15 @@ class Response
     }
 
     /**
-     * Close a WebSocket connection.
+     * Close the underlying connection immediately.
      *
-     * @return bool Returns true on success or false on failure.
+     * The connection is dropped right away, with no protocol-level goodbye of any kind. On a WebSocket connection,
+     * consider method \Swoole\Http\Response::disconnect() instead, which performs the closing handshake the WebSocket
+     * protocol asks for before closing the connection.
+     *
+     * @return bool Returns TRUE on success; returns FALSE when the connection has been closed already, or when closing
+     *              the underlying connection fails.
+     * @see \Swoole\Http\Response::disconnect()
      */
     public function close(): bool
     {

@@ -51,8 +51,12 @@ final class Queue implements \Countable
      * Pop a value from the queue.
      *
      * @param float $wait The maximum time, in seconds, to wait for a value to become available in the queue.
-     *                    A value of 0 means to wait indefinitely.
-     * @return mixed The value removed from the queue, or null if the wait time expires and no value is available.
+     *                    With the default value of 0, the method doesn't wait at all: it returns right away, with
+     *                    NULL returned when the queue is empty. A negative value makes it wait indefinitely, until a
+     *                    value is pushed into the queue.
+     * @return mixed The value removed from the queue, or NULL when the queue is empty and no value became available
+     *               in time. NULL can also come back right after a notification, when another thread grabbed the
+     *               value first.
      */
     public function pop(float $wait = 0): mixed
     {
@@ -68,8 +72,10 @@ final class Queue implements \Countable
     /**
      * Count the number of elements in the queue.
      *
-     * {@inheritDoc}
      * @return int The number of elements in the queue.
+     * @see \Countable::count()
+     * @see https://www.php.net/manual/en/countable.count.php
+     * {@inheritDoc}
      */
     public function count(): int
     {

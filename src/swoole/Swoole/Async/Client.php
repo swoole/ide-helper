@@ -16,6 +16,7 @@ namespace Swoole\Async;
  * Before Swoole 6.0.0, this class was provided by the separate ext-async extension; it has been part of Swoole
  * itself since 6.0.0.
  *
+ * @not-serializable Objects of this class cannot be serialized.
  * @since 6.0.0
  * @see \Swoole\Client
  * @see \Swoole\Coroutine\Client
@@ -102,6 +103,16 @@ class Client extends \Swoole\Client
     }
 
     /**
+     * The destructor.
+     *
+     * There is no need to call this method directly. If the connection is still open when the object is destroyed, it
+     * is closed automatically.
+     */
+    public function __destruct()
+    {
+    }
+
+    /**
      * Start connecting to a remote server.
      *
      * Unlike the synchronous parent method \Swoole\Client::connect(), this call does not block: it registers the
@@ -146,8 +157,10 @@ class Client extends \Swoole\Client
     }
 
     /**
-     * Alias of method \Swoole\Async\Client::sleep().
+     * Stop receiving data from the server, without closing the connection.
      *
+     * @return bool TRUE if succeeds; otherwise FALSE (e.g., when the client isn't connected, or receiving has been
+     *              stopped already).
      * @alias This method is an alias of method \Swoole\Async\Client::sleep().
      * @see \Swoole\Async\Client::sleep()
      */
@@ -156,8 +169,10 @@ class Client extends \Swoole\Client
     }
 
     /**
-     * Alias of method \Swoole\Async\Client::wakeup().
+     * Start receiving data from the server again, after it was stopped.
      *
+     * @return bool TRUE if succeeds; otherwise FALSE (e.g., when the client isn't connected, or receiving hasn't been
+     *              stopped).
      * @alias This method is an alias of method \Swoole\Async\Client::wakeup().
      * @see \Swoole\Async\Client::wakeup()
      */
@@ -175,7 +190,9 @@ class Client extends \Swoole\Client
      * {@inheritDoc}
      * @param callable|null $onSslReady Callback function to be executed when the SSL handshake is successful. Although
      *                                  the parameter is nullable for signature compatibility with the parent class, it
-     *                                  is required here: a \Swoole\Exception is thrown if it is omitted or NULL.
+     *                                  is effectively required here: a \Swoole\Exception is thrown if it's left out,
+     *                                  and passing NULL explicitly makes the method fail with a warning raised and
+     *                                  FALSE returned.
      * @return bool TRUE if the SSL handshake is started successfully; otherwise FALSE.
      */
     public function enableSSL(?callable $onSslReady = null): bool
@@ -222,7 +239,8 @@ class Client extends \Swoole\Client
      *                           - "bufferEmpty" Fired when the send buffer has been drained.
      *                           Any other name triggers a warning and makes the method return FALSE.
      * @param callable $callback The callback to run when the event fires.
-     * @return bool TRUE if the callback was registered; FALSE for an unknown event name.
+     * @return bool TRUE if the callback was registered; FALSE for an unknown event name. NULL comes back instead
+     *              (with a warning raised) when $callback isn't actually callable.
      */
     public function on(string $event_name, callable $callback): bool
     {

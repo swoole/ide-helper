@@ -7,9 +7,10 @@ namespace Swoole\Server;
 /**
  * A TaskResult object carries the result of a finished task back to the event worker process that dispatched the task.
  *
- * It is passed to the onFinish event callback (registered through method \Swoole\Server::on()) as the second argument
- * when option \Swoole\Constant::OPTION_EVENT_OBJECT is enabled on the server. Otherwise, the task ID and the result
- * data are passed to the callback as two separate arguments.
+ * It is passed as the second argument to the onFinish event callback (registered through method
+ * \Swoole\Server::on()), or to the result callback function given to method \Swoole\Server::task() (when one was
+ * given), if option \Swoole\Constant::OPTION_EVENT_OBJECT is enabled on the server. Otherwise, the task ID and the
+ * result data are passed to the callback as two separate arguments.
  *
  * @see \Swoole\Constant::OPTION_EVENT_OBJECT
  * @see \Swoole\Server::task()

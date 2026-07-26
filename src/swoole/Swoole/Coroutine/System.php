@@ -240,9 +240,12 @@ class System
      * Wait for given signal(s) with a timeout.
      *
      * @param int|array<int> $signals An integer or an array of integers representing the signal number(s).
-     *                                Before Swoole v6.0.0, only integer is supported.
+     *                                Before Swoole 6.0.0, only integer is supported.
      * @param float $timeout The timeout value in seconds. Minimum value is 0.001. -1 means no timeout.
-     * @return int|false Returns the signal number received on success, or false on failure.
+     * @return int|false Returns the signal number received on success. Returns FALSE on failure, e.g., when none of
+     *                   the given signals arrives within the given timeout; a warning is raised as well when a
+     *                   signal listener has already been registered elsewhere (e.g., through method
+     *                   \Swoole\Process::signal()), or when an invalid signal number is in the list.
      * @alias This method has an alias of \Swoole\Coroutine::waitSignal().
      * @see \Swoole\Coroutine::waitSignal()
      * @since 4.5.0

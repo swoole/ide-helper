@@ -18,8 +18,8 @@ namespace Swoole\Thread;
  * release; see method \Swoole\Thread\Lock::lock() for how to express what each of them used to do.
  *
  * @not-serializable Objects of this class cannot be serialized.
- * @see \Swoole\Lock For inter-process locking when ZTS is not enabled.
- * @see \Swoole\Coroutine\Lock To use locks accross coroutines when ZTS is not enabled.
+ * @see \Swoole\Lock To coordinate processes (instead of threads) using locks.
+ * @see \Swoole\Coroutine\Lock To coordinate coroutines (instead of threads) using locks.
  * @see https://www.php.net/manual/en/function.flock.php The built-in PHP function that method \Swoole\Thread\Lock::lock() is modeled after.
  * @since 6.0.0
  */
@@ -45,17 +45,24 @@ final class Lock
     public const SPINLOCK = SWOOLE_SPINLOCK;
 
     /**
-     * The error code of the last operation. It is set to 0 if the last operation was successful.
+     * The error code of the last failed lock() or unlock() call, as an error number reported by the operating
+     * system (e.g., EBUSY when a non-blocking attempt couldn't get the lock, or ETIMEDOUT when the given timeout
+     * expired). It starts as 0, and is updated only when a call fails; a later successful call does NOT reset it
+     * back to 0.
      */
     public int $errCode = 0;
 
     /**
      * Construct a thread lock object.
      *
-     * @param int $type Type of the lock. It must be one of the following constants:
+     * The constructor can only be called once per object; calling it a second time throws an \Error.
+     *
+     * @param int $type Type of the lock. It should be one of the following constants:
      *                  - \Swoole\Thread\Lock::MUTEX
      *                  - \Swoole\Thread\Lock::RWLOCK
      *                  - \Swoole\Thread\Lock::SPINLOCK
+     *                  Unlike \Swoole\Lock, this class doesn't reject an unrecognized value: any other value silently
+     *                  falls back to \Swoole\Thread\Lock::MUTEX.
      */
     public function __construct(int $type = self::MUTEX)
     {

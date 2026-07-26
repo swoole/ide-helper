@@ -194,9 +194,17 @@ class Server
     public ?AdminServer $admin_server = null;
 
     /**
+     * Path of the PHP script that each worker thread runs as its entry script when the server runs in the
+     * SWOOLE_THREAD mode.
+     *
+     * It defaults to the script currently being executed, and can be changed through option
+     * \Swoole\Constant::OPTION_BOOTSTRAP of method \Swoole\Server::set().
+     *
      * This property is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is
      * installed with the "--enable-swoole-thread" configuration option.
      *
+     * @see \Swoole\Constant::OPTION_BOOTSTRAP
+     * @see \Swoole\Server::set()
      * @since 6.0.0
      */
     public string $bootstrap = '';
@@ -346,6 +354,8 @@ class Server
      *                  SWOOLE_PROCESS to SWOOLE_BASE. For details, please check property \Swoole\Server::$mode.
      * @param int $sock_type Type of the socket. For details, please check property \Swoole\Server::$type.
      * @throws \Error When an invalid server mode is given, or when the constructor is called more than once on the same object.
+     * @throws Exception When called outside of PHP CLI mode, when a server is already running in the current
+     *                   process, or when the server fails to listen on the given host and port.
      * @see \Swoole\Server::$mode
      */
     public function __construct(string $host = '0.0.0.0', int $port = 0, int $mode = SWOOLE_BASE, int $sock_type = SWOOLE_SOCK_TCP)
@@ -417,7 +427,7 @@ class Server
      *
      * Event names are case-insensitive. This method can only be called before the server is started.
      *
-     * As of Swoole 6.0.2, there are
+     * As of Swoole 6.2.2, there are
      *   - 14 server events.
      *     - \Swoole\Constant::EVENT_START
      *     - \Swoole\Constant::EVENT_BEFORE_SHUTDOWN
@@ -442,7 +452,7 @@ class Server
      *     - \Swoole\Constant::EVENT_BUFFER_EMPTY
      *     - \Swoole\Constant::EVENT_REQUEST
      *     - \Swoole\Constant::EVENT_HANDSHAKE
-     *     - \Swoole\Constant::EVENT_BEFORE_HAND_SHAKE_RESPONSE
+     *     - \Swoole\Constant::EVENT_BEFORE_HANDSHAKE_RESPONSE
      *     - \Swoole\Constant::EVENT_OPEN
      *     - \Swoole\Constant::EVENT_MESSAGE
      *     - \Swoole\Constant::EVENT_DISCONNECT
@@ -625,7 +635,7 @@ class Server
     /**
      * Close a connection.
      *
-     * @param int $fd File descriptor of the connection.
+     * @param int $fd Session ID of the connection.
      * @param bool $reset Whether to reset the connection or not.
      *                    - FALSE: If there is data pending in the send buffer of the connection, the connection is closed only after the pending data has been sent out.
      *                    - TRUE: The send buffer is discarded and the connection is closed immediately. When Swoole is built with SO_LINGER support included, the socket is also closed with a linger timeout of 0, which resets the connection (sends a TCP RST packet) instead of closing it gracefully.
@@ -654,7 +664,7 @@ class Server
     /**
      * Pause receiving client-side data.
      *
-     * @param int $fd File descriptor of the connection.
+     * @param int $fd Session ID of the connection.
      * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server::resume()
      */
@@ -665,7 +675,7 @@ class Server
     /**
      * Resume receiving client-side data.
      *
-     * @param int $fd File descriptor of the connection.
+     * @param int $fd Session ID of the connection.
      * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server::pause()
      */
@@ -745,17 +755,20 @@ class Server
      * Dispatch tasks to task worker processes.
      *
      * This method can be used only when the server has task worker processes included/created. i.e., the server should
-     * have option \Swoole\Constant::OPTION_TASK_WORKER_NUM set to a value greater than 0.
+     * have option \Swoole\Constant::OPTION_TASK_WORKER_NUM set to a value greater than 0. It can only be called from
+     * event worker processes.
      *
-     * Before Swoole 4.8.12+ and 5.0.1+, this method doesn't support coroutine. If the server is running with option
-     * Swoole\Constant::OPTION_TASK_ENABLE_COROUTINE set to true, use method Server::taskCo() instead.
+     * What decides how this method waits is simply whether it's called inside a coroutine:
+     *   - Called inside a coroutine, it works exactly the same as method \Swoole\Server::taskCo(): only the calling
+     *     coroutine is suspended while waiting for the task results, and the other coroutines of the process keep
+     *     running.
+     *   - Called outside of a coroutine, the whole event worker process is blocked until the results arrive or the
+     *     timeout is exceeded.
      *
-     * Method \Swoole\Server::taskWaitMulti() works exactly the same as method \Swoole\Server::taskCo() when all the
-     * following conditions are met:
-     *   - used in Swoole 4.8.12+ or 5.0.1+.
-     *   - server option \Swoole\Constant::OPTION_TASK_ENABLE_COROUTINE is set to TRUE.
+     * (Before Swoole 4.8.12 and 5.0.1, this method didn't support coroutine at all; back then, method
+     * \Swoole\Server::taskCo() had to be used instead when coroutine support was needed.)
      *
-     * @param mixed[] $tasks List of tasks to be dispatched. Maximum number of tasks: 1024.
+     * @param mixed[] $tasks List of tasks to be dispatched. Maximum number of tasks: 1023.
      * @param float $timeout The maximum waiting time (in seconds) for the task results. If the timeout is exceeded, results of unfinished tasks will be discarded.
      * @return mixed[]|false Return an array of task results, or false on failure. For details, please check the pseudocode included in this method.
      * @see \Swoole\Server::taskCo()
@@ -763,16 +776,8 @@ class Server
      */
     public function taskWaitMulti(array $tasks, float $timeout = 0.5): array|false
     {
-        if (!empty($this->setting[Constant::OPTION_TASK_ENABLE_COROUTINE])) { // Task worker processes have coroutine enabled.
-            if (SWOOLE_MAJOR_VERSION < 5) {
-                if (version_compare(SWOOLE_VERSION, '4.8.12', '>=')) { // If Swoole version is 4.8.12 or later, but less than 5.0.0.
-                    return $this->taskCo($tasks, $timeout);
-                }
-            } else {
-                if (version_compare(SWOOLE_VERSION, '5.0.1', '>=')) { // If Swoole version is 5.0.1 or later.
-                    return $this->taskCo($tasks, $timeout);
-                }
-            }
+        if (Coroutine::getCid() !== -1) { // Called inside a coroutine (supported since Swoole 4.8.12 and 5.0.1).
+            return $this->taskCo($tasks, $timeout);
         }
 
         // Now, the server dispatches tasks to task worker processes and waits for the results.
@@ -799,24 +804,23 @@ class Server
     /**
      * To dispatch tasks to task worker processes, with the following constraints applied:
      *   - The server should have option \Swoole\Constant::OPTION_TASK_WORKER_NUM set to a value greater than 0.
-     *   - The server should have option \Swoole\Constant::OPTION_TASK_ENABLE_COROUTINE set to true.
+     *   - This method can only be called from event worker processes, and only inside a coroutine; calling it outside
+     *     of a coroutine makes Swoole throw a \Swoole\Error.
      *
      * Here is a piece of code to illustrate how to configure the server before using this method:
      *   $server = new \Swoole\Server('0.0.0.0', 9501);
      *   $server->set(
      *     [
-     *       \Swoole\Constant::OPTION_TASK_WORKER_NUM       => 3,    // Have three task worker processes included/created.
-     *       \Swoole\Constant::OPTION_TASK_ENABLE_COROUTINE => true, // Support coroutine in task worker processes.
+     *       \Swoole\Constant::OPTION_TASK_WORKER_NUM => 3, // Have three task worker processes included/created.
      *       // ...
      *     ]
      *   );
      *
-     * Method \Swoole\Server::taskCo() works exactly the same as method \Swoole\Server::taskWaitMulti() when all the
-     * following conditions are met:
-     *   - used in Swoole 4.8.12+ or 5.0.1+.
-     *   - server option \Swoole\Constant::OPTION_TASK_ENABLE_COROUTINE is set to TRUE.
+     * Only the calling coroutine is suspended while waiting for the task results; the other coroutines of the process
+     * keep running. Method \Swoole\Server::taskWaitMulti() works exactly the same as this method when it, too, is
+     * called inside a coroutine (supported since Swoole 4.8.12 and 5.0.1).
      *
-     * @param mixed[] $tasks List of tasks to be dispatched. Maximum number of tasks: 1024.
+     * @param mixed[] $tasks List of tasks to be dispatched. Maximum number of tasks: 1023.
      * @param float $timeout The maximum waiting time (in seconds) for the task results. If the timeout is exceeded, results of unfinished tasks will be discarded.
      * @return mixed[]|false Return an array of task results, or false on failure. For details, please check the pseudocode included in this method.
      * @see \Swoole\Server::taskWaitMulti()
@@ -1013,7 +1017,7 @@ class Server
      *   - ssl_client_cert: The client-side SSL certificate in PEM format. Optional; included only when the client sends
      *     one, and only in the process where the certificate was received.
      *
-     * @param int $fd File descriptor of the connection.
+     * @param int $fd Session ID of the connection.
      * @param int $reactor_id This parameter is accepted for backward compatibility only; it is not used at all.
      * @param bool $ignoreError Whether to return information of a closed connection or not. By default, false is
      *                          returned for a connection that is not active (established) anymore; set this parameter
@@ -1112,7 +1116,7 @@ class Server
     /**
      * Get information of a connection.
      *
-     * @param int $fd File descriptor of the connection.
+     * @param int $fd Session ID of the connection.
      * @param int $reactor_id This parameter is accepted for backward compatibility only; it is not used at all.
      * @param bool $ignoreError Whether to return information of a closed connection or not. By default, false is
      *                          returned for a connection that is not active (established) anymore; set this parameter
@@ -1287,7 +1291,7 @@ class Server
      * from connections is dispatched to event worker processes based on this ID (instead of the session ID), so that
      * data from connections sharing the same ID is always processed by the same worker process.
      *
-     * @param int $fd File descriptor of the connection.
+     * @param int $fd Session ID of the connection.
      * @param int $uid The ID to bind to the connection. It must fit in a 32-bit integer. A connection can have an ID bound to it once only.
      * @return bool Returns true on success. Returns false on failure, e.g., the connection does not exist, the connection already has an ID bound to it, or parameter $uid is out of range.
      * @see \Swoole\Server::getClientInfo()

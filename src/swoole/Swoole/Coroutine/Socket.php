@@ -147,7 +147,7 @@ class Socket
      * @param string $host The IP address or host name to connect to; for AF_UNIX sockets, the file path of the Unix socket.
      * @param int $port The port to connect to. It's required for AF_INET and AF_INET6 sockets, and must be between 1 and 65535.
      * @param float $timeout The maximum time to wait for the connection to be established (in seconds). If it's 0 (the
-     *                       default), the socket's own connect timeout applies (2 seconds unless changed); a negative
+     *                       default), the socket's own connect timeout applies (10 seconds unless changed); a negative
      *                       value means waiting indefinitely.
      * @return bool Returns TRUE on success; otherwise FALSE, with properties $errCode and $errMsg updated accordingly.
      */
@@ -622,7 +622,7 @@ class Socket
      *
      * The stream must wrap a socket (e.g., one created by function \stream_socket_client() or \stream_socket_server()).
      *
-     * @param mixed $stream A PHP stream resource that wraps a socket.
+     * @param resource $stream A PHP stream resource that wraps a socket.
      * @return Socket|false Returns a new \Swoole\Coroutine\Socket object on success, or FALSE if the given stream
      *                      doesn't wrap a socket or its details can't be retrieved.
      * @since 5.0.0
