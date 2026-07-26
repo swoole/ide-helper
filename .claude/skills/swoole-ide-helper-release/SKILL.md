@@ -9,6 +9,9 @@ description: >
   release as a pre-release, and never marks it as this project's "latest" release. This is for project maintainers
   only, not regular contributors — publishing a release is a maintainer decision, and doing so typically requires
   push/release permissions on the repository that regular contributors don't have anyway.
+argument-hint: [target-version]
+disable-model-invocation: true
+allowed-tools: Bash(git:*), Bash(curl:*), Bash(env -u GH_TOKEN gh:*), Bash(grep:*), Bash(head:*), Bash(sort:*), Bash(jq:*), Read
 ---
 
 You tag and publish a GitHub release of this project for one specific, already-prepared Swoole version. You do not
@@ -31,6 +34,20 @@ irreversible actions and each deserves its own go-ahead.
 leading "v" (check `git tag --list`, e.g. `6.0.2`, not `v6.0.2`). Do not confuse the two: when checking Swoole's own
 tags, look for the "v"-prefixed form; when creating or checking this project's own tag/release, use the
 un-prefixed form.
+
+# Input
+
+This skill takes a single argument, the target version — the Swoole version whose already-prepared stubs are being
+published as a release of this project:
+
+```
+/swoole-ide-helper-release 6.1.0
+```
+
+It must be written in this project's own release format: a plain `X.Y.Z`, with no leading "v" and no prerelease
+suffix (Step 0 validates this and stops on anything else). Throughout the steps below, this argument is what the
+shell variable `TARGET_VERSION` gets assigned to — every code block starts by re-assigning it with a `6.1.0`
+placeholder, and you substitute the version you were actually given.
 
 # Step 0: validate every prerequisite before touching anything
 
@@ -72,7 +89,7 @@ was blank, and don't reorder the checks so a fail-open one runs before check 1.
      TARGET_VERSION=6.1.0 # substitute the version you were given
      git ls-remote --tags origin | grep -F "refs/tags/${TARGET_VERSION}"
      git tag --list | grep -Fx "${TARGET_VERSION}"
-     gh release view "${TARGET_VERSION}" --repo swoole/ide-helper
+     env -u GH_TOKEN gh release view "${TARGET_VERSION}" --repo swoole/ide-helper
      ```
    These two deliberately use fixed-string `grep` instead of check 1's exact refspec, because here an exact match
    would fail in the *wrong* direction: `git ls-remote --tags origin "refs/tags/${TARGET_VERSION}"` with an empty
@@ -89,8 +106,11 @@ was blank, and don't reorder the checks so a fail-open one runs before check 1.
    most likely debris from a previous failed attempt at this same version — tell the user and confirm before
    deleting it with `git tag -d "${TARGET_VERSION}"`, rather than letting Step 1's `git tag -a` fail on an
    "already exists" error.
-   If `gh` isn't usable in this environment (it has previously failed here with "the 'swoole' organization forbids
-   access via a fine-grained personal access token" — an org policy issue, not a bug in your command), fall back to
+   Always run `gh` through `env -u GH_TOKEN`, as shown above: a fine-grained personal access token sitting in
+   `$GH_TOKEN` would otherwise override `gh`'s own stored login, and the swoole organization rejects such tokens
+   ("the 'swoole' organization forbids access via a fine-grained personal access token" — an org policy issue, not
+   a bug in your command; an env token is exactly how a prior run here hit it). Stripping the variable lets `gh`
+   fall back to the keyring credentials from `gh auth login`. If `gh` still isn't usable even then, fall back to
    the public REST API, which works fine unauthenticated for read access:
      ```bash
      TARGET_VERSION=6.1.0 # substitute the version you were given
@@ -158,7 +178,7 @@ annotated message from Step 1):
 
 ```bash
 TARGET_VERSION=6.1.0 # substitute the version you were given
-gh release create "${TARGET_VERSION}" --repo swoole/ide-helper --verify-tag --latest=false \
+env -u GH_TOKEN gh release create "${TARGET_VERSION}" --repo swoole/ide-helper --verify-tag --latest=false \
   --notes "PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION})."
 ```
 
