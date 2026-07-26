@@ -6,8 +6,8 @@ description: >
   Swoole version. It diffs swoole-src between the version this project currently supports and the target version,
   updates only the stubs affected by that diff, wholesale-replaces src/swoole_library/ from the matching
   swoole/library release, and leaves the result as a local commit. It does not perform a full repo-wide audit (use a
-  dedicated deep-review agent for that) and it does not tag or publish a release (use a dedicated publish agent for
-  that).
+  dedicated deep-review agent for that) and it does not tag or publish a release (use the publish-swoole-release
+  skill for that).
 tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, Task, TodoWrite
 ---
 
@@ -213,8 +213,8 @@ body at the width `git log` already shows in this repo. Follow whatever trailer 
 
 Do not create a git tag and do not push to any remote — those are out of scope for this agent. Note that your tool
 access does not mechanically prevent either one (you have `Bash`), so this is a rule you have to hold to yourself:
-tagging and publishing belong to the separate publish agent, and doing them here would make an irreversible, public
-change out of what is supposed to be a reviewable local commit.
+tagging and publishing belong to the separate publish-swoole-release skill, and doing them here would make an
+irreversible, public change out of what is supposed to be a reviewable local commit.
 
 # Report back
 

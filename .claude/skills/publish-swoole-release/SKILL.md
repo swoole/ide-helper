@@ -34,29 +34,54 @@ un-prefixed form.
 
 # Step 0: validate every prerequisite before touching anything
 
-If the user's invocation didn't include a target version, stop and ask for one.
+If the user's invocation didn't include a target version, stop and ask for one. Accept only a plain `X.Y.Z` — if the
+target carries a suffix like `-alpha`, `-beta`, or `-rcN`, stop and say so. Those tags really do exist upstream
+(`v6.0.0-rc1`, for instance), so check 1 below would find one and wave it through, and this workflow has no way to
+publish it correctly: it always publishes with `prerelease: false`.
 
-In every regex below, `${TARGET_VERSION}` contains literal dots (e.g. `6.1.0`) — escape them (`\.`) or use
-`grep -F` for the version portion of the pattern. An unescaped `.` matches *any* character, which can turn a real
-mismatch into a false-positive match on a prerequisite check that's supposed to fail closed.
+None of the checks below match the version with a regex, so nothing here needs the dots in `6.1.0` escaped. Keep it
+that way: an unescaped `.` in a regex matches *any* character, which is how a check meant to fail closed turns into
+a false-positive match instead.
+
+**Every Bash call runs in its own fresh shell — variables do not survive from one command to the next.** That's why
+each block below re-assigns `TARGET_VERSION`; substitute the real version for the `6.1.0` placeholder, and keep that
+line when you run the block. Every check is written so that a missing or empty version halts the run rather than
+sailing past: the refspec in check 1 matches no tag, `grep -F "refs/tags/"` matches every tag in check 2, and
+`git tag -a ""` is a fatal error in Step 1. Keep it that way — don't "simplify" a check into one that would report
+"nothing found, all clear" when the version it was handed was blank.
 
 1. **Hard prerequisite — the version must actually exist as a real Swoole release.** Check the real swoole-src repo
-   for a tag matching the target version, with the "v" prefix:
+   for a tag matching the target version, with the "v" prefix. Pass the ref as a pattern and let git do the exact
+   matching, rather than filtering the full tag list through `grep`:
      ```bash
-     ESCAPED_VERSION=$(printf '%s' "${TARGET_VERSION}" | sed 's/\./\\./g')
-     git ls-remote --tags https://github.com/swoole/swoole-src.git | grep -E "refs/tags/v${ESCAPED_VERSION}$"
+     TARGET_VERSION=6.1.0 # substitute the version you were given
+     git ls-remote --tags https://github.com/swoole/swoole-src.git "refs/tags/v${TARGET_VERSION}"
      ```
+   The pattern is glob-matched against the whole ref, so a dot is a literal dot and no escaping is involved.
    **If no such tag is found, stop immediately, explain clearly which version is missing, and do not create, push,
-   or publish anything.** This also implicitly rejects alpha/beta/rc targets, since those only exist as
-   `vX.Y.Z-alpha`/`-beta`/`-rcN` tags, which won't match this exact-match check.
+   or publish anything.** Because the match is exact, a plain `X.Y.Z` target can never be satisfied by a
+   `vX.Y.Z-alpha`/`-beta`/`-rcN` tag — but note that this cuts only one way: it stops a stable target from latching
+   onto a prerelease tag, and does nothing about a prerelease target, which is why that's rejected up front instead.
 
 2. **This project must not already have a release for that version.** Check the remote tag, any stale local tag
    left over from a prior aborted run, and the GitHub release, using this project's own un-prefixed naming:
      ```bash
-     git ls-remote --tags origin | grep -E "refs/tags/${ESCAPED_VERSION}$"
-     git tag --list | grep -E "^${ESCAPED_VERSION}$"
+     TARGET_VERSION=6.1.0 # substitute the version you were given
+     git ls-remote --tags origin | grep -F "refs/tags/${TARGET_VERSION}"
+     git tag --list | grep -Fx "${TARGET_VERSION}"
      gh release view "${TARGET_VERSION}" --repo swoole/ide-helper
      ```
+   These two deliberately use fixed-string `grep` instead of check 1's exact refspec, because here an exact match
+   would fail in the *wrong* direction: `git ls-remote --tags origin "refs/tags/${TARGET_VERSION}"` with an empty
+   version matches nothing and reports "not released yet" for a version that may well be released already. With
+   `grep -F`, an empty version collapses the pattern to `refs/tags/`, which matches every tag and stops the run —
+   the harmless direction to be wrong in. Being a substring match, the remote check also picks up the
+   `refs/tags/X.Y.Z^{}` line git prints for an annotated tag (same tag, no problem), and would flag a longer tag
+   starting with the same digits (`6.1.1` against a hypothetical `6.1.10`) — so read the output before concluding a
+   release exists, but err toward stopping.
+   For a version that genuinely hasn't been released yet, all three are supposed to come up empty-handed: both
+   `grep`s exit `1` printing nothing, and `gh release view` exits non-zero with "release not found". No output is
+   the pass condition here, not a sign the check failed to run.
    If a local tag exists but was never pushed (i.e. it's absent from `git ls-remote --tags origin` above), that's
    most likely debris from a previous failed attempt at this same version — tell the user and confirm before
    deleting it with `git tag -d "${TARGET_VERSION}"`, rather than letting Step 1's `git tag -a` fail on an
@@ -65,8 +90,11 @@ mismatch into a false-positive match on a prerequisite check that's supposed to 
    access via a fine-grained personal access token" — an org policy issue, not a bug in your command), fall back to
    the public REST API, which works fine unauthenticated for read access:
      ```bash
+     TARGET_VERSION=6.1.0 # substitute the version you were given
      curl -s "https://api.github.com/repos/swoole/ide-helper/releases/tags/${TARGET_VERSION}"
      ```
+   A `{"message": "Not Found", ...}` response is the *good* outcome — it means no release exists for that tag yet.
+   A JSON object carrying a real `tag_name`/`html_url` means the release already exists, so stop.
    If either the tag or the release already exists, stop — do not overwrite or double-publish, and never reach for
    `--force` on a push or a release update to work around an "already exists" failure. If a push is ever rejected,
    stop and report it rather than retrying with `--force` — that's exactly the kind of "fix" that can overwrite
@@ -97,12 +125,19 @@ This project's tags are annotated, with a consistent message format — confirm 
 `git tag -l -n99 <a recent version>` before you rely on it, but it has consistently been `tag release X.Y.Z`:
 
 ```bash
+TARGET_VERSION=6.1.0 # substitute the version you were given
 git tag -a "${TARGET_VERSION}" -m "tag release ${TARGET_VERSION}"
 git push origin "${TARGET_VERSION}"
 ```
 
 Once the tag is pushed, pause again and confirm with the user before Step 2 — publishing the release is a second,
 separately irreversible action.
+
+If Step 2 then fails for any reason, the pushed tag is left behind on the remote with no release attached. That
+state is harmless — a tag without a release breaks nothing, and it's exactly what Step 0's "stale tag" check is
+written to notice on a later run. Leave it in place, report it, and let the user decide; a retry should re-run
+Step 2 only. Do not delete the remote tag (`git push --delete`) to "clean up" without the user explicitly asking
+for that.
 
 # Step 2: publish the GitHub release
 
@@ -119,14 +154,14 @@ against the tag you already pushed in Step 1 (don't let the tool create its own 
 annotated message from Step 1):
 
 ```bash
-gh release create "${TARGET_VERSION}" --repo swoole/ide-helper --latest=false --notes "$(cat <<EOF
-PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION}).
-
-This release targets a specific Swoole release. It is not published as a pre-release, and it is not marked as the
-latest release of this project.
-EOF
-)"
+TARGET_VERSION=6.1.0 # substitute the version you were given
+gh release create "${TARGET_VERSION}" --repo swoole/ide-helper --verify-tag --latest=false \
+  --notes "PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION})."
 ```
+
+The body is exactly that one line, with nothing appended — that's what every published release to date contains
+verbatim. `--verify-tag` is what actually enforces "publish against the tag from Step 1": without it, `gh` silently
+creates its own lightweight tag if the one you expect isn't on the remote, and you'd lose the annotated message.
 
 **Never pass `-p`/`--prerelease` at all** — it's a plain boolean switch with no `=false` form documented, so simply
 omitting it is how you get `prerelease: false` (the default). **Never omit `--latest=false`** — `gh` marks a new
@@ -134,21 +169,17 @@ release as "latest" by default unless told otherwise, and this project deliberat
 more than one Swoole release line in parallel (e.g. it has shipped a patch for an older 5.1.x line after 6.0.x was
 already out), so GitHub's default date-based "latest" marker would frequently point at the wrong release if left on.
 
-If `gh` fails here the same way it did in Step 0 (org token-lifetime policy), fall back to the REST API directly.
-This requires a token with write access to this repo (`repo` or fine-grained `contents:write`+`administration:write`
-scope) supplied as an environment variable — check `$GITHUB_TOKEN`/`$GH_TOKEN` first (the same variables `gh` itself
+If `gh` fails here the same way it did in Step 0 (the org policy rejecting fine-grained personal access tokens),
+fall back to the REST API directly. This requires a token with write access to this repo, supplied as an environment
+variable — and since the very policy that broke `gh` is the one blocking fine-grained tokens, that effectively means
+a *classic* token with the `repo` scope. Check `$GITHUB_TOKEN`/`$GH_TOKEN` first (the same variables `gh` itself
 honors), and if neither is set, stop and ask the user to provide one rather than guessing where it might come from.
-Build the JSON body with `jq` rather than hand-written string interpolation, so the multi-line `--notes` text is
-escaped correctly:
+Build the JSON body with `jq` rather than hand-written string interpolation, so the Markdown body is escaped
+correctly:
 ```bash
+TARGET_VERSION=6.1.0 # substitute the version you were given
 TOKEN="${GITHUB_TOKEN:-$GH_TOKEN}"
-BODY=$(cat <<EOF
-PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION}).
-
-This release targets a specific Swoole release. It is not published as a pre-release, and it is not marked as the
-latest release of this project.
-EOF
-)
+BODY="PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION})."
 curl -X POST -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" \
   https://api.github.com/repos/swoole/ide-helper/releases \
   -d "$(jq -n --arg tag "${TARGET_VERSION}" --arg body "$BODY" \
