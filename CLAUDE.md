@@ -42,10 +42,15 @@ Auto-fix coding style:
 docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine php-cs-fixer fix
 ```
 
-Check PHP syntax across supported versions (CI runs this for 8.1, 8.2, 8.3, 8.4, and 8.5):
+Check PHP syntax (CI runs this for 8.1, 8.2, 8.3, 8.4, and 8.5 — see `.github/workflows/syntax_checks.yml`):
 ```bash
-docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine phplint src
+docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.1-alpine phplint src
 ```
+
+Locally, run the syntax check against `php8.1-alpine` specifically. PHP's parser is backward-permissive: a construct
+only PHP 8.2+ understands (a standalone `false` type, a DNF type) parses fine under 8.5 but fails under 8.1, so 8.1 is
+the only version whose parser actually enforces the "inline type declarations must be valid PHP 8.1 syntax"
+convention below. Swap the version segment of the image tag to check any other supported version.
 
 There is no test suite — correctness here means "the stub's signature/docblock matches upstream Swoole," not
 behavior, since no method body ever executes.
@@ -86,16 +91,19 @@ conventions consistently — they are what every existing file already follows a
   annotations-only, or untyped-but-present member exactly like a missing one: it still needs to be fixed, not
   skipped because "it's already there."
 - **Inline type declarations must be valid PHP 8.1 syntax.** This project supports PHP 8.1+ (see the syntax-check
-  command above, run against 8.1 through 8.5), so a native type declaration that only PHP 8.2+ understands — a
-  standalone `true`/`false`/`null` type, or a DNF (disjunctive normal form) type like `(A&B)|C` — would break on the
-  oldest supported version and must never be used inline. When swoole-src's real, fully-accurate type needs one of
-  those constructs, fall back to the closest PHP-8.1-compatible native type instead (e.g., `bool` in place of a
+  command above, which CI runs against 8.1 through 8.5), so a native type declaration that only PHP 8.2+ understands
+  — a standalone `true`/`false`/`null` type, or a DNF (disjunctive normal form) type like `(A&B)|C` — would break on
+  the oldest supported version and must never be used inline. When swoole-src's real, fully-accurate type needs one
+  of those constructs, fall back to the closest PHP-8.1-compatible native type instead (e.g., `bool` in place of a
   standalone `false`), or omit the native type declaration entirely if nothing 8.1-compatible fits, and document the
   precise type via a `@param`/`@return` tag instead — PHPDoc's type syntax isn't constrained by what a given PHP
   version can parse inline.
 - **New class/method/function/constant**: add an `@since X.Y.Z` tag (see existing usage in `functions.php` and
   `constants.php` for the exact placement — as a PHPDoc tag for methods/functions/classes, or as a trailing
-  `// @since X.Y.Z` line comment for `define()` constants).
+  `// @since X.Y.Z` line comment for `define()` constants). Write the version bare, with no `v` prefix
+  (`@since 6.2.0`, not `@since v6.2.0`) — that's what the overwhelming majority of the codebase and every
+  `@deprecated` tag already use; a handful of older entries still carry the `v` form, so correct those to the bare
+  form whenever you happen to touch the surrounding file.
 - **Deprecated but still-present class/method/function/constant**: when swoole-src still exports a symbol but flags
   it as deprecated (e.g., it triggers an `E_DEPRECATED` notice at runtime, or upstream's own docs/changelog call it
   deprecated), add a `@deprecated X.Y.Z <what to use instead>` tag — same placement rule as `@since` (a PHPDoc tag
@@ -166,4 +174,14 @@ conventions consistently — they are what every existing file already follows a
   release's tag and update both the version segment of the URL and the line number — the referenced code routinely
   moves to a different line even when it hasn't changed conceptually, so don't just bump the tag without checking
   the line still points at the right place.
+- **Prose that pins a claim to a specific Swoole version** (e.g. "As of Swoole 6.2.2, this class is registered but
+  not thrown anywhere by Swoole" in `Swoole\Client\Exception`, or the "as of Swoole 6.2.2, is never updated by"
+  notes on `Swoole\Coroutine\Http2\Client`'s properties): these are assertions about one particular release, so a
+  version bump makes every one of them stale until it's re-checked. When bringing the stubs up to date, grep for
+  the previously supported version number across `src/swoole/` and, for each hit, re-verify the claim against the
+  new release's source before re-anchoring it to the new version — if the claim no longer holds, rewrite it rather
+  than moving the version number onto a statement that has since become false. This is distinct from prose that
+  deliberately records history (e.g. "Before Swoole 6.2.1, such a path made the method fail with FALSE returned",
+  as used in `Swoole\Coroutine\System`), which stays pinned to the version where the behavior actually changed and
+  must *not* be bumped.
 - After editing, run the coding style and syntax check commands above before committing.

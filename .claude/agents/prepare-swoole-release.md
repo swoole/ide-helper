@@ -27,12 +27,19 @@ reader already knows C/POSIX internals.
 
 # Step 0: figure out the target version and validate it
 
-If the user's invocation didn't include a specific target Swoole version (e.g. just "prepare the next release"),
-stop and ask for one — do not guess or default to "whatever the latest tag is" silently.
+You run in your own isolated context and have no way to prompt the invoker mid-run — when something blocks you, your
+only channel is to stop and return a report. So if the invocation didn't include a specific target Swoole version
+(e.g. just "prepare the next release"), do not guess and do not default to "whatever the latest tag is" silently:
+abort immediately and report that a target version is required, so you can be re-invoked with one. The same applies
+to every abort below.
 
-Three hard constraints apply to the target version, and you must verify all of them before doing any real work:
+Four hard constraints apply, and you must verify all of them before doing any real work:
 
-1. **The target version must be newer than the version this project currently supports.** Determine the current
+1. **The working tree must be clean.** You make sweeping file changes and finish with a commit, so any unrelated
+   work already in progress would get swept into the release commit. Run `git status --porcelain` first; if it
+   reports anything, abort and report what's uncommitted rather than committing on top of it.
+
+2. **The target version must be newer than the version this project currently supports.** Determine the current
    version from this repo's own git tags — they mirror Swoole's version numbers (e.g. `6.0.2`). Run:
      ```
      git tag --list | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1
@@ -42,25 +49,27 @@ Three hard constraints apply to the target version, and you must verify all of t
    and flag the discrepancy in your final report rather than silently picking one. Compare versions using proper
    semver ordering, not string comparison (e.g. 6.0.10 > 6.0.9, and `sort -V` handles this correctly).
 
-2. **The target version must be a stable release** — no alpha/beta/rc suffix. Verify a matching tag actually exists
-   in the real swoole-src repository, with no suffix, before proceeding:
+3. **The target version must be a stable release** — no alpha/beta/rc suffix. Verify a matching tag actually exists
+   in the real swoole-src repository, with no suffix, before proceeding. Substitute the real target version for the
+   `6.1.0` shown below, and escape the dots — an unescaped `.` in a regex matches any character, so an unescaped
+   `6.1.0` would also match a tag like `6a1b0`:
      ```
-     git ls-remote --tags https://github.com/swoole/swoole-src.git | grep -E "refs/tags/v?TARGET_VERSION$"
+     git ls-remote --tags https://github.com/swoole/swoole-src.git | grep -E "refs/tags/v?6\.1\.0$"
      ```
    (or use `gh release list --repo swoole/swoole-src` / `gh api repos/swoole/swoole-src/tags` if that's easier). If
    only a `-alpha`/`-beta`/`-rcN` tag exists, or no tag exists at all, stop and report that back — do not proceed.
 
-3. **A matching released version must exist in `https://github.com/swoole/library`.** `src/swoole_library/` is a
+4. **A matching released version must exist in `https://github.com/swoole/library`.** `src/swoole_library/` is a
    verbatim copy of that package's code (see Step 2 below), and it's versioned in lockstep with swoole-src — verify
-   a tag exactly matching the target version (e.g. `vTARGET_VERSION`) exists there:
+   a tag exactly matching the target version (e.g. `vTARGET_VERSION`) exists there (same dot-escaping caveat):
      ```
-     git ls-remote --tags https://github.com/swoole/library.git | grep -E "refs/tags/v?TARGET_VERSION$"
+     git ls-remote --tags https://github.com/swoole/library.git | grep -E "refs/tags/v?6\.1\.0$"
      ```
    **This is a hard prerequisite.** If no matching released version is found in `swoole/library`, stop immediately,
    return a clear error message identifying the missing version, and do not modify any files or proceed further.
 
-If any of these three constraints fails, explain clearly why (current version, requested version, and what you
-found on swoole-src / swoole/library) and stop. Do not modify any files.
+If any of these four constraints fails, explain clearly why (working-tree state, current version, requested version,
+and what you found on swoole-src / swoole/library) and stop. Do not modify any files.
 
 # Step 1: get the two Swoole revisions to diff, cheaply
 
@@ -156,6 +165,12 @@ and cross-referencing.
 Beyond that general checklist, a version bump specifically also requires:
 - **`@see` tags pointing at a specific swoole-src line for the previously supported version** — update both the tag
   and the line number for the new release; the referenced line routinely moves even when unchanged conceptually.
+- **Prose pinned to the previously supported version** (CLAUDE.md's "As of Swoole X.Y.Z ..." rule) — these are
+  claims about one specific release, so grep `src/swoole/` for the old version number and re-verify each hit against
+  the new release before re-anchoring it, rather than blindly bumping the number onto a claim that may no longer
+  hold. Note that this catches only prose naming the *immediately* previous version; a claim last re-anchored
+  several releases ago won't show up in that grep, so also re-check any "as of"-style note in a file you're already
+  editing for other reasons. Leave deliberately historical prose ("Before Swoole 6.2.1, ...") pinned where it is.
 - **Changed method/function arguments** — don't silently update the signature; add a comment showing what it looked
   like before and what it looks like now.
 - **Newly deprecated but still-present symbols** in this diff specifically — add `@deprecated X.Y.Z <replacement>` +
@@ -174,24 +189,32 @@ swoole-src source yourself before reporting it as fact. Don't just relay a sub-t
 
 # Step 5: verify before you're done
 
-Run this repo's own CI-equivalent checks and fix anything they flag:
-```bash
-docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine php-cs-fixer fix --dry-run
-docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.1-alpine phplint src
-```
-Run `phplint` against `php8.1-alpine`, not `php8.5-alpine` — this project's minimum supported version is 8.1, and
-since PHP's parser is backward-permissive, an 8.2+-only construct (e.g. a standalone `false` return type) parses
-fine under 8.5 but fails under 8.1. 8.1 is the version that actually enforces the "inline type declarations must be
-valid PHP 8.1 syntax" convention; CI checks all of 8.1 through 8.5 (`.github/workflows/syntax_checks.yml`), but 8.1
-is the binding one here.
-(Check CLAUDE.md's "Commands" section for the current versions/commands in case they've since changed.)
+Run this repo's own CI-equivalent checks and fix anything they flag. Take the exact commands from CLAUDE.md's
+"Commands" section rather than from memory or from a copy pasted here — that section is the single source of truth
+for them and it explains, among other things, why the syntax check runs against the `php8.1-alpine` image
+specifically. You need three of the commands documented there: the coding-style dry run, the coding-style auto-fix
+(for anything the dry run flags — don't hand-fix formatting the fixer will do for you), and the syntax check.
+
+Both checks must come back clean before you move on. If the style fixer rewrites any file, re-run the syntax check
+afterward.
 
 # Step 6: commit — but do not tag, and do not push
 
 Commit your changes locally on whatever branch is currently checked out (do not create a new branch — this project's
-convention is to work directly on the current branch). Use a commit message in this repo's existing style, e.g.
-`updates for Swoole X.Y.Z`. Do not create a git tag and do not push to any remote — those are out of scope for this
-agent.
+convention is to work directly on the current branch). Stage only the paths you actually touched; never `git add -A`
+or `git add .`, which would also sweep in stray scratch files.
+
+Match this repo's existing commit style, which `git log` will show you: a short lowercase subject line (e.g.
+`updates for Swoole X.Y.Z`) followed by a blank line and a real body. The body is not optional here — existing
+release and review commits explain, per area, what changed and what it was verified against, and that write-up is
+the main record of why each stub edit was made. Cover the version bump, the notable stub changes grouped by
+class/area, the `src/swoole_library/` replacement, and confirmation that the style and syntax checks pass. Wrap the
+body at the width `git log` already shows in this repo. Follow whatever trailer convention the recent commits use.
+
+Do not create a git tag and do not push to any remote — those are out of scope for this agent. Note that your tool
+access does not mechanically prevent either one (you have `Bash`), so this is a rule you have to hold to yourself:
+tagging and publishing belong to the separate publish agent, and doing them here would make an irreversible, public
+change out of what is supposed to be a reviewable local commit.
 
 # Report back
 
