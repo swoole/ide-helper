@@ -445,7 +445,7 @@ class Coroutine
      *              already, or if the method is called from a non-coroutine context.
      * @see \Swoole\Coroutine::disableScheduler()
      * @see \Swoole\Coroutine::set() Runtime option "enable_preemptive_scheduler" turns on the preemptive scheduler.
-     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/scheduling/mixed.php
+     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/scheduling/toggle-preemptive-scheduler.php
      * @since 4.4.0
      */
     public static function enableScheduler(): bool
@@ -465,7 +465,7 @@ class Coroutine
      *              disabled already, or if the method is called from a non-coroutine context.
      * @see \Swoole\Coroutine::enableScheduler()
      * @see \Swoole\Coroutine::set() Runtime option "enable_preemptive_scheduler" turns on the preemptive scheduler.
-     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/scheduling/mixed.php
+     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/scheduling/toggle-preemptive-scheduler.php
      * @since 4.4.0
      */
     public static function disableScheduler(): bool
