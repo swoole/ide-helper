@@ -124,6 +124,120 @@ define('SWOOLE_STRERROR_GAI', 1);
 define('SWOOLE_STRERROR_DNS', 2);
 define('SWOOLE_STRERROR_SWOOLE', 9);
 
+/*
+ * Portable system error numbers reported by Swoole. Values vary by platform; the values shown here are for Linux.
+ * On native Windows these are C runtime values, not the Winsock values exposed by PHP's SOCKET_E* constants.
+ * Use this family when comparing errors from Swoole APIs. Winsock errors without a portable equivalent can be
+ * reported unchanged and have no SWOOLE_ERRNO_* name. Swoole's own error codes use the SWOOLE_ERROR_* names and
+ * start at 501.
+ *
+ * @see \Swoole\Coroutine\Socket::$errCode
+ * @see swoole_last_error()
+ * @see swoole_strerror()
+ */
+define('SWOOLE_ERRNO_EPERM', 1); // Operation not permitted.
+define('SWOOLE_ERRNO_ENOENT', 2); // No such file or directory.
+define('SWOOLE_ERRNO_EINTR', 4); // Interrupted system call.
+define('SWOOLE_ERRNO_EIO', 5); // I/O error.
+define('SWOOLE_ERRNO_ENXIO', 6); // No such device or address.
+define('SWOOLE_ERRNO_E2BIG', 7); // Argument list too long.
+define('SWOOLE_ERRNO_EBADF', 9); // Bad file descriptor.
+define('SWOOLE_ERRNO_EAGAIN', 11); // Try again: the operation would block.
+define('SWOOLE_ERRNO_ENOMEM', 12); // Out of memory.
+define('SWOOLE_ERRNO_EACCES', 13); // Permission denied.
+define('SWOOLE_ERRNO_EFAULT', 14); // Bad address.
+define('SWOOLE_ERRNO_ENOTBLK', 15); // Block device required.
+define('SWOOLE_ERRNO_EBUSY', 16); // Device or resource busy.
+define('SWOOLE_ERRNO_EEXIST', 17); // File exists.
+define('SWOOLE_ERRNO_EXDEV', 18); // Cross-device link.
+define('SWOOLE_ERRNO_ENODEV', 19); // No such device.
+define('SWOOLE_ERRNO_ENOTDIR', 20); // Not a directory.
+define('SWOOLE_ERRNO_EISDIR', 21); // Is a directory.
+define('SWOOLE_ERRNO_EINVAL', 22); // Invalid argument.
+define('SWOOLE_ERRNO_ENFILE', 23); // Too many open files in the system.
+define('SWOOLE_ERRNO_EMFILE', 24); // Too many open files in the process.
+define('SWOOLE_ERRNO_ENOTTY', 25); // Inappropriate I/O control operation.
+define('SWOOLE_ERRNO_ENOSPC', 28); // No space left on device.
+define('SWOOLE_ERRNO_ESPIPE', 29); // Illegal seek.
+define('SWOOLE_ERRNO_EROFS', 30); // Read-only file system.
+define('SWOOLE_ERRNO_EMLINK', 31); // Too many links.
+define('SWOOLE_ERRNO_EPIPE', 32); // Broken pipe.
+define('SWOOLE_ERRNO_ENAMETOOLONG', 36); // File name too long.
+define('SWOOLE_ERRNO_ENOLCK', 37); // No locks available.
+define('SWOOLE_ERRNO_ENOSYS', 38); // Function not implemented.
+define('SWOOLE_ERRNO_ENOTEMPTY', 39); // Directory not empty.
+define('SWOOLE_ERRNO_ELOOP', 40); // Too many levels of symbolic links.
+define('SWOOLE_ERRNO_EWOULDBLOCK', 11); // Operation would block; always the same value as SWOOLE_ERRNO_EAGAIN.
+define('SWOOLE_ERRNO_ENOMSG', 42); // No message of the desired type.
+define('SWOOLE_ERRNO_EIDRM', 43); // Identifier removed.
+define('SWOOLE_ERRNO_ECHRNG', 44); // Channel number out of range.
+define('SWOOLE_ERRNO_EL2NSYNC', 45); // Level 2 not synchronized.
+define('SWOOLE_ERRNO_EL3HLT', 46); // Level 3 halted.
+define('SWOOLE_ERRNO_EL3RST', 47); // Level 3 reset.
+define('SWOOLE_ERRNO_ELNRNG', 48); // Link number out of range.
+define('SWOOLE_ERRNO_EUNATCH', 49); // Protocol driver not attached.
+define('SWOOLE_ERRNO_ENOCSI', 50); // No CSI structure available.
+define('SWOOLE_ERRNO_EL2HLT', 51); // Level 2 halted.
+define('SWOOLE_ERRNO_EBADE', 52); // Invalid exchange.
+define('SWOOLE_ERRNO_EBADR', 53); // Invalid request descriptor.
+define('SWOOLE_ERRNO_EXFULL', 54); // Exchange full.
+define('SWOOLE_ERRNO_ENOANO', 55); // No anode.
+define('SWOOLE_ERRNO_EBADRQC', 56); // Invalid request code.
+define('SWOOLE_ERRNO_EBADSLT', 57); // Invalid slot.
+define('SWOOLE_ERRNO_ENOSTR', 60); // Device not a stream.
+define('SWOOLE_ERRNO_ENODATA', 61); // No data available.
+define('SWOOLE_ERRNO_ETIME', 62); // Timer expired.
+define('SWOOLE_ERRNO_ENOSR', 63); // Out of stream resources.
+define('SWOOLE_ERRNO_ENONET', 64); // Machine is not on the network.
+define('SWOOLE_ERRNO_EREMOTE', 66); // Object is remote.
+define('SWOOLE_ERRNO_ENOLINK', 67); // Link has been severed.
+define('SWOOLE_ERRNO_EADV', 68); // Advertise error.
+define('SWOOLE_ERRNO_ESRMNT', 69); // Srmount error.
+define('SWOOLE_ERRNO_ECOMM', 70); // Communication error on send.
+define('SWOOLE_ERRNO_EPROTO', 71); // Protocol error.
+define('SWOOLE_ERRNO_EMULTIHOP', 72); // Multihop attempted.
+define('SWOOLE_ERRNO_EBADMSG', 74); // Bad message.
+define('SWOOLE_ERRNO_ENOTUNIQ', 76); // Name not unique on network.
+define('SWOOLE_ERRNO_EBADFD', 77); // File descriptor in bad state.
+define('SWOOLE_ERRNO_EREMCHG', 78); // Remote address changed.
+define('SWOOLE_ERRNO_ERESTART', 85); // Interrupted system call should be restarted.
+define('SWOOLE_ERRNO_ESTRPIPE', 86); // Streams pipe error.
+define('SWOOLE_ERRNO_EUSERS', 87); // Too many users.
+define('SWOOLE_ERRNO_ENOTSOCK', 88); // The file descriptor is not a socket.
+define('SWOOLE_ERRNO_EDESTADDRREQ', 89); // Destination address required.
+define('SWOOLE_ERRNO_EMSGSIZE', 90); // Message too long.
+define('SWOOLE_ERRNO_EPROTOTYPE', 91); // Protocol wrong type for socket.
+define('SWOOLE_ERRNO_ENOPROTOOPT', 92); // Protocol option not available.
+define('SWOOLE_ERRNO_EPROTONOSUPPORT', 93); // Protocol not supported.
+define('SWOOLE_ERRNO_ESOCKTNOSUPPORT', 94); // Socket type not supported.
+define('SWOOLE_ERRNO_EOPNOTSUPP', 95); // Operation not supported on the socket.
+define('SWOOLE_ERRNO_EPFNOSUPPORT', 96); // Protocol family not supported.
+define('SWOOLE_ERRNO_EAFNOSUPPORT', 97); // Address family not supported by protocol.
+define('SWOOLE_ERRNO_EADDRINUSE', 98); // Address already in use.
+define('SWOOLE_ERRNO_EADDRNOTAVAIL', 99); // Cannot assign requested address.
+define('SWOOLE_ERRNO_ENETDOWN', 100); // Network is down.
+define('SWOOLE_ERRNO_ENETUNREACH', 101); // Network is unreachable.
+define('SWOOLE_ERRNO_ENETRESET', 102); // Network dropped connection because of reset.
+define('SWOOLE_ERRNO_ECONNABORTED', 103); // Software caused connection abort.
+define('SWOOLE_ERRNO_ECONNRESET', 104); // Connection reset by peer.
+define('SWOOLE_ERRNO_ENOBUFS', 105); // No buffer space available.
+define('SWOOLE_ERRNO_EISCONN', 106); // The socket is already connected.
+define('SWOOLE_ERRNO_ENOTCONN', 107); // The socket is not connected.
+define('SWOOLE_ERRNO_ESHUTDOWN', 108); // Cannot send after socket shutdown.
+define('SWOOLE_ERRNO_ETOOMANYREFS', 109); // Too many references: cannot splice.
+define('SWOOLE_ERRNO_ETIMEDOUT', 110); // Connection timed out.
+define('SWOOLE_ERRNO_ECONNREFUSED', 111); // Connection refused.
+define('SWOOLE_ERRNO_EHOSTDOWN', 112); // Host is down.
+define('SWOOLE_ERRNO_EHOSTUNREACH', 113); // No route to host.
+define('SWOOLE_ERRNO_EALREADY', 114); // Operation already in progress.
+define('SWOOLE_ERRNO_EINPROGRESS', 115); // Operation now in progress.
+define('SWOOLE_ERRNO_EISNAM', 120); // Is a named type file.
+define('SWOOLE_ERRNO_EREMOTEIO', 121); // Remote I/O error.
+define('SWOOLE_ERRNO_EDQUOT', 122); // Disk quota exceeded.
+define('SWOOLE_ERRNO_ENOMEDIUM', 123); // No medium found.
+define('SWOOLE_ERRNO_EMEDIUMTYPE', 124); // Wrong medium type.
+define('SWOOLE_ERRNO_ECANCELED', 125); // Operation canceled.
+
 // Error codes.
 define('SWOOLE_ERROR_MALLOC_FAIL', 501);
 define('SWOOLE_ERROR_SYSTEM_CALL_FAIL', 502);
@@ -593,15 +707,16 @@ define('IPV6_MULTICAST_LOOP', 19); // Whether IPv6 multicast packets sent are lo
 define('IPV6_V6ONLY', 26); // Restrict an AF_INET6 socket to IPv6 communication only.
 #endif
 /*
- * Socket error codes. They are operating system error numbers (as defined in errno(3)) prefixed with "SOCKET_", and
- * can be checked against the error code of a failed socket operation (e.g., against property
- * \Swoole\Coroutine\Socket::$errCode).
+ * Socket error codes exposed by PHP extension sockets. On native Windows these are Winsock values and do not match
+ * the portable system error values reported by Swoole APIs. Use the SWOOLE_ERRNO_E* family when checking a Swoole
+ * error code such as \Swoole\Coroutine\Socket::$errCode.
  *
  * Constant SOCKET_ECANCELED, defined near the end of this file, belongs to the same family but is defined by Swoole
  * even when PHP extension sockets is installed.
  *
  * @see https://man7.org/linux/man-pages/man3/errno.3.html errno(3)
  * @see \Swoole\Coroutine\Socket::$errCode
+ * @see SWOOLE_ERRNO_EPERM
  * @see SOCKET_ECANCELED
  */
 define('SOCKET_EPERM', 1); // Operation not permitted.
@@ -1075,9 +1190,10 @@ if (class_exists(Swoole\Coroutine\Curl\Exception::class)) { // When Swoole is in
  * Unlike the other SOCKET_E* constants defined earlier in this file, this constant is defined by Swoole even when PHP
  * extension sockets is installed, since that extension does not define it.
  *
- * A typical use case of this constant can be found in class Swoole\Coroutine\Server.
+ * Use SWOOLE_ERRNO_ECANCELED when comparing an error reported by a Swoole API. This legacy name remains available
+ * for existing code that already compares against it.
  *
- * @see Swoole\Coroutine\Server::start()
+ * @see SWOOLE_ERRNO_ECANCELED
  */
 define('SOCKET_ECANCELED', 125);
 
