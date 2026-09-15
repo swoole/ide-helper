@@ -918,11 +918,15 @@ class Server
      *
      * When stopping the current worker process from within itself, the exit happens right after the current event
      * callback returns. Any other worker (or, in the SWOOLE_THREAD mode, worker thread) is stopped by delivering a
-     * shutdown message to it through its pipe, not by sending it a signal.
+     * shutdown message to it through Swoole's internal communication channel (its pipe, or the message queue for a
+     * task worker when server option "task_ipc_mode" is set to use one), not by sending it a signal.
      *
-     * Calling this method with the default $workerId (-1) from a process that isn't itself a worker process (e.g.,
-     * the master or manager process, or a plain user process) fails: -1 only means "the current worker" when there
-     * is one, so a worker ID must be given explicitly in that case.
+     * Calling this method with the default $workerId (-1) from a process that isn't itself a worker process fails:
+     * -1 only means "the current worker" when there is one, so a worker ID must be given explicitly in that case.
+     * This includes the manager process, and the master process when running in the SWOOLE_PROCESS mode — but NOT a
+     * process added through method \Swoole\Server::addProcess() (or an explicitly started \Swoole\Process), which
+     * counts as a worker process too, nor the master process in the SWOOLE_BASE mode with a single worker, where the
+     * master process doubles as that worker.
      *
      * The signature of this method changed in Swoole 6.1.0:
      *   - before: public function stop(int $workerId = -1, bool $waitEvent = false): bool
