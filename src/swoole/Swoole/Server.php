@@ -925,8 +925,16 @@ class Server
      * replace the stopped one.
      *
      * When stopping the current worker process from within itself, the exit happens right after the current event
-     * callback returns. Any other worker process is stopped by sending signal SIGTERM to it. In the SWOOLE_THREAD
-     * mode, a shutdown message is delivered to the target worker thread instead.
+     * callback returns. Any other worker (or, in the SWOOLE_THREAD mode, worker thread) is stopped by delivering a
+     * shutdown message to it through Swoole's internal communication channel (its pipe, or the message queue for a
+     * task worker when server option "task_ipc_mode" is set to use one), not by sending it a signal.
+     *
+     * Calling this method with the default $workerId (-1) from a process that isn't itself a worker process fails:
+     * -1 only means "the current worker" when there is one, so a worker ID must be given explicitly in that case.
+     * This includes the manager process, and the master process when running in the SWOOLE_PROCESS mode — but NOT a
+     * process added through method \Swoole\Server::addProcess() (or an explicitly started \Swoole\Process), which
+     * counts as a worker process too, nor the master process in the SWOOLE_BASE mode with a single worker, where the
+     * master process doubles as that worker.
      *
      * The signature of this method changed in Swoole 6.1.0:
      *   - before: public function stop(int $workerId = -1, bool $waitEvent = false): bool
@@ -1019,9 +1027,8 @@ class Server
      *
      * @param int $fd Session ID of the connection.
      * @param int $reactor_id This parameter is accepted for backward compatibility only; it is not used at all.
-     * @param bool $ignoreError Whether to return information of a closed connection or not. By default, false is
-     *                          returned for a connection that is not active (established) anymore; set this parameter
-     *                          to TRUE to have the information of such a connection returned.
+     * @param bool $ignoreError Accepted but not read at all; it has no effect. A closed/inactive connection always
+     *                          makes this method return false, regardless of what is passed here.
      * @return array|false Return an array of connection information, or false on failure.
      * @alias This method has an alias of \Swoole\Server::connection_info().
      * @see \Swoole\Server::connection_info()
@@ -1118,9 +1125,8 @@ class Server
      *
      * @param int $fd Session ID of the connection.
      * @param int $reactor_id This parameter is accepted for backward compatibility only; it is not used at all.
-     * @param bool $ignoreError Whether to return information of a closed connection or not. By default, false is
-     *                          returned for a connection that is not active (established) anymore; set this parameter
-     *                          to TRUE to have the information of such a connection returned.
+     * @param bool $ignoreError Accepted but not read at all; it has no effect. A closed/inactive connection always
+     *                          makes this method return false, regardless of what is passed here.
      * @return array|false Return an array of connection information, or false on failure. For the list of keys included in the array, please check method \Swoole\Server::getClientInfo().
      * @alias Alias of method \Swoole\Server::getClientInfo().
      * @see \Swoole\Server::getClientInfo()

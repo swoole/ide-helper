@@ -575,9 +575,13 @@ class Socket
     /**
      * Close the socket.
      *
-     * @return bool Returns TRUE on success, or FALSE if the socket is owned by another object (e.g., when it's
-     *              retrieved through method \Swoole\Coroutine\Client::exportSocket() or method
-     *              \Swoole\Process::exportSocket()) and thus can't be closed directly.
+     * A socket obtained through method \Swoole\Coroutine\Client::exportSocket() is the client's own socket, so
+     * closing it really does close the client's connection too, not just the exported object. A socket obtained
+     * through method \Swoole\Process::exportSocket(), on the other hand, is a duplicate of the process's pipe file
+     * descriptor, so closing it does NOT close the pipe itself.
+     *
+     * @return bool Returns TRUE if the socket was closed; FALSE if it was already closed (with property $errCode set
+     *              to EBADF).
      * @see \Swoole\Coroutine\Client::exportSocket()
      * @see \Swoole\Process::exportSocket()
      */

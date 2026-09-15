@@ -154,9 +154,13 @@ class Client
      *                     resolved automatically.
      * @param int $port Server port. Not needed for Unix domain sockets.
      * @param float $timeout Timeout in seconds. It applies to the connection attempt itself, and is then used as
-     *                       the default read/write timeout of the connection. A value of 0 means using the default
-     *                       timeout (ini setting "swoole.socket_connect_timeout" / "swoole.socket_timeout"), and a
-     *                       negative value means no timeout.
+     *                       the default read/write timeout of the connection. A value of 0 means keeping the
+     *                       timeout already in effect: the one set through method set() (options "timeout",
+     *                       "connect_timeout", "read_timeout", "write_timeout") if any, otherwise the global default
+     *                       (10 seconds for the connection attempt, 60 seconds for reads/writes, unless changed
+     *                       through runtime options such as "socket_connect_timeout" / "socket_timeout", set via
+     *                       method \Swoole\Coroutine::set() or function swoole_async_set()). A negative value means
+     *                       no timeout.
      * @param int $sock_flag Extra connection flag. For UDP sockets, a value of 1 binds the socket to the remote
      *                       address so that only packets from that address are received.
      * @return bool TRUE if the connection is established; otherwise FALSE, with properties $errCode and $errMsg
@@ -189,8 +193,9 @@ class Client
      * is already available. A later recv() call still returns the same data.
      *
      * @param int $length Maximum number of bytes to peek at.
-     * @return string|false The data available in the socket buffer (possibly an empty string), or FALSE on error
-     *                      (with properties $errCode and $errMsg updated accordingly).
+     * @return string|false The data currently available (up to $length bytes; possibly an empty string when the
+     *                      peer has closed the connection) on success; otherwise FALSE, with properties $errCode
+     *                      and $errMsg updated accordingly (e.g., EAGAIN when nothing is available to peek at yet).
      * @see \Swoole\Coroutine\Client::recv()
      */
     public function peek(int $length = 65535): string|false
