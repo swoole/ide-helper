@@ -5,8 +5,10 @@ description: >
   Swoole release, e.g. "publish the 6.1.0 release" or "tag and release 6.0.3". Give it the target version in this
   project's own format (no "v" prefix, e.g. "6.1.0"). This performs real, public, irreversible actions — it creates
   and pushes a git tag, and publishes a live GitHub release — so only run it once the corresponding stub changes have
-  already been prepared (e.g. via the prepare-swoole-release agent) and are sitting on `master`. It never marks a
-  release as a pre-release, and never marks it as this project's "latest" release. This is for project maintainers
+  already been prepared (e.g. via the prepare-swoole-release agent) and are committed on the branch that owns that
+  release line (mainline releases from `master`, patch releases for an older line from that line's own branch, e.g.
+  `6.1.x`). It never marks a release as a pre-release, and never marks it as this project's "latest" release. This
+  is for project maintainers
   only, not regular contributors — publishing a release is a maintainer decision, and doing so typically requires
   push/release permissions on the repository that regular contributors don't have anyway.
 argument-hint: [target-version]
@@ -124,15 +126,18 @@ was blank, and don't reorder the checks so a fail-open one runs before check 1.
    history or a release someone else is relying on.
 
 3. **The repository must actually be in the state this version claims to be.** Confirm:
-   - You're on `master` and the working tree is clean (`git status --short` is empty).
-   - Local `master` matches `origin/master` exactly — neither behind nor ahead:
+   - The working tree is clean (`git status --short` is empty).
+   - The current branch matches its `origin` counterpart exactly — neither behind nor ahead. This project cuts
+     releases from whichever branch owns that release line — mainline releases from `master`, patch releases for an
+     older line from that line's own branch (e.g. `6.1.x`, `5.1.x`) — so check the branch you're actually on rather
+     than assuming it's `master`:
      ```bash
-     git fetch origin master
-     git rev-list --left-right --count origin/master...master
+     BRANCH=$(git rev-parse --abbrev-ref HEAD)
+     git fetch origin "${BRANCH}"
+     git rev-list --left-right --count "origin/${BRANCH}...${BRANCH}"
      ```
-     Both counts must be `0`. If local is ahead, the tag would point at commits `origin/master` doesn't have yet
-     (every prior release's `target_commitish` has been `master` on the remote) — stop and tell the user to push
-     first. If local is behind, stop and tell the user to pull first.
+     Both counts must be `0`. If local is ahead, the tag would point at commits `origin/${BRANCH}` doesn't have yet —
+     stop and tell the user to push first. If local is behind, stop and tell the user to pull first.
    - `src/swoole/constants.php`'s `SWOOLE_VERSION`, `SWOOLE_MAJOR_VERSION`, `SWOOLE_MINOR_VERSION`, and
      `SWOOLE_RELEASE_VERSION` at HEAD actually match the target version.
    If any check fails, stop and explain what's missing — most likely the stub changes for this version haven't
@@ -201,12 +206,13 @@ Build the JSON body with `jq` rather than hand-written string interpolation, so 
 correctly:
 ```bash
 TARGET_VERSION=6.1.0 # substitute the version you were given
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
 TOKEN="${GITHUB_TOKEN:-$GH_TOKEN}"
 BODY="PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION})."
 curl -X POST -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" \
   https://api.github.com/repos/swoole/ide-helper/releases \
-  -d "$(jq -n --arg tag "${TARGET_VERSION}" --arg body "$BODY" \
-    '{tag_name:$tag,target_commitish:"master",name:"",body:$body,draft:false,prerelease:false,make_latest:"false"}')"
+  -d "$(jq -n --arg tag "${TARGET_VERSION}" --arg branch "${BRANCH}" --arg body "$BODY" \
+    '{tag_name:$tag,target_commitish:$branch,name:"",body:$body,draft:false,prerelease:false,make_latest:"false"}')"
 ```
 If neither path works, stop and ask the user for a working token rather than silently giving up, or worse, falling
 back to defaults that would mark the release as a pre-release or as latest.
