@@ -19,7 +19,9 @@ use Swoole\Connection\Iterator;
  *
  * @see \Swoole\Server::$ports
  * @see \Swoole\Server::listen()
- * @not-serializable Objects of this class cannot be serialized.
+ * @not-serializable Objects of this class cannot be serialized, unless PHP is compiled with Zend Thread Safety (ZTS)
+ *                   enabled and Swoole is installed with the "--enable-swoole-thread" configuration option, in
+ *                   which case they are serializable so that they can be handed over to worker threads.
  */
 class Port
 {

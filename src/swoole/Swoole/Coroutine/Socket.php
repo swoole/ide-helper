@@ -569,9 +569,11 @@ class Socket
     /**
      * Close the socket.
      *
-     * @return bool Returns TRUE on success, or FALSE if the socket is owned by another object (e.g., when it's
-     *              retrieved through method \Swoole\Coroutine\Client::exportSocket() or method
-     *              \Swoole\Process::exportSocket()) and thus can't be closed directly.
+     * The result of the underlying close operation isn't checked, so this effectively always returns TRUE — even a
+     * socket obtained through method \Swoole\Coroutine\Client::exportSocket() or method \Swoole\Process::exportSocket()
+     * gets really closed (which also closes the client connection/process pipe it belongs to), not rejected.
+     *
+     * @return bool Always returns TRUE.
      * @see \Swoole\Coroutine\Client::exportSocket()
      * @see \Swoole\Process::exportSocket()
      */

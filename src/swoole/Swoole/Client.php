@@ -126,9 +126,11 @@ class Client
     /**
      * Optional name of the client, as passed to the constructor.
      *
-     * For persistent connections (socket type including the SWOOLE_KEEP flag), the name is part of the key used to
-     * look up pooled connections, so clients created with different names never share the same persistent
-     * connection. The property is NULL when no name was given.
+     * For persistent connections (socket type including the SWOOLE_KEEP flag), when a non-empty name was given it
+     * entirely REPLACES "host:port" as the key used to look up pooled connections (rather than being combined with
+     * it), so two persistent clients that use the same name can end up sharing a pooled connection even when they
+     * connect to different servers. The property is NULL when the constructor's $id parameter wasn't passed at
+     * all; it's an empty string, not NULL, when the constructor was explicitly given an empty string.
      */
     public ?string $id = null;
 
@@ -147,7 +149,7 @@ class Client
      *
      * @param int $type Socket type. Please check comments on property $type for more details.
      * @param bool $async Whether to enable asynchronous I/O or not. Since v4.4.8, this class supports synchronous I/O (in blocking mode) only; passing TRUE throws an \Error.
-     * @param string $id Optional name of the client, stored in property $id. For persistent connections (socket type including the SWOOLE_KEEP flag), the name is part of the key used to look up pooled connections.
+     * @param string $id Optional name of the client, stored in property $id. For persistent connections (socket type including the SWOOLE_KEEP flag), when non-empty, this replaces "host:port" as the whole key used to look up pooled connections (see property $id for the details/caveats).
      * @see \Swoole\Client::connect()
      * @see \Swoole\Client::$id
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
@@ -161,7 +163,9 @@ class Client
         // Here are some statements to validate the $type.
 
         $this->type = $type;
-        if (!empty($id)) {
+        // Note: it's whether $id was passed at all (not whether it's empty) that decides this — so an explicit ''
+        // sets $this->id to '', while not passing $id leaves $this->id at its default of NULL.
+        if (func_num_args() >= 3) {
             $this->id = $id;
         }
     }

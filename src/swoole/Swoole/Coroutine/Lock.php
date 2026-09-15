@@ -20,10 +20,12 @@ namespace Swoole\Coroutine;
 class Lock
 {
     /**
-     * The error code of the last failed lock() or unlock() call, as an error number reported by the operating
-     * system (e.g., EBUSY when a non-blocking attempt couldn't get the lock, or ETIMEDOUT when the given timeout
-     * expired). It starts as 0, and is updated only when a call fails; a later successful call does NOT reset it
-     * back to 0.
+     * The error code of the last failed lock() or unlock() call. This class has no timeout, so unlike \Swoole\Lock's
+     * errCode, this is not always an operating system error number: it's EBUSY when a non-blocking attempt couldn't
+     * get the lock, but it's one of the SWOOLE_ERROR_CO_* constants (e.g., SWOOLE_ERROR_CO_OUT_OF_COROUTINE when
+     * called outside of a coroutine, or SWOOLE_ERROR_CO_CANCELED when the waiting coroutine is cancelled) for
+     * Swoole-level failures. It starts as 0, and is updated only when a call fails; a later successful call does NOT
+     * reset it back to 0.
      */
     public int $errCode = 0;
 

@@ -79,9 +79,8 @@ function swoole_async_dns_lookup_coro(string $domain_name, float $timeout = 60, 
  *                        the number of CPU cores.
  *                        - \Swoole\Constant::OPTION_MAX_THREAD_NUM: maximum number of threads the asynchronous I/O
  *                        thread pool may grow to when under load.
- *                        - \Swoole\Constant::OPTION_SOCKET_DONTWAIT: when enabled, a write on an asynchronous client
- *                        socket fails right away once its output buffer is full, instead of waiting for the buffer
- *                        to drain. Disabled by default.
+ *                        - \Swoole\Constant::OPTION_SOCKET_DONTWAIT: kept for backward compatibility only; this
+ *                        function doesn't read the setting at all, so the value is ignored.
  *                        - \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM: when enabled, a DNS lookup returns a randomly
  *                        picked address out of all the addresses resolved, instead of the first one. Disabled by
  *                        default.
