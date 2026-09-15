@@ -95,8 +95,9 @@ class Pool
      *   - SWOOLE_IPC_UNIXSOCK (1): IPC over UNIX domain sockets. Messages are delivered to a specific worker process
      *     through method \Swoole\Process\Pool::sendMessage().
      *   - SWOOLE_IPC_MSGQUEUE (2): IPC over a System V message queue identified by parameter $msgqueue_key. Since
-     *     Swoole 6.1.3, this mode fails with a warning on systems where System V message queues are not available
-     *     (e.g., when Swoole was built on a platform without that feature).
+     *     Swoole 6.1.3, on systems where System V message queues are not available (e.g., when Swoole was built on a
+     *     platform without that feature), this mode makes the constructor throw a \Swoole\Exception, with a warning
+     *     logged.
      *   - SWOOLE_IPC_SOCKET (3): IPC over a network socket. Method \Swoole\Process\Pool::listen() is used to listen on
      *     a port, and method \Swoole\Process\Pool::write() to send data back to the client.
      *
@@ -357,12 +358,13 @@ class Pool
     /**
      * Shutdown the process pool.
      *
-     * All this method does is to send a SIGTERM signal to the master process of the pool. It will kill the master
-     * process and all worker processes.
+     * What the method does depends on where it's called from:
+     *   - In the master process, it simply marks the pool as no longer running, so that the master process stops
+     *     managing the pool and terminates the worker processes.
+     *   - In a worker process, it sends a SIGTERM signal to the master process, which has the same effect.
      *
      * @return bool TRUE on success, FALSE on failure.
-     * @throws \Swoole\Exception When the pool hasn't been started yet (i.e., when property
-     *                           \Swoole\Process\Pool::$master_pid is not a positive integer).
+     * @throws \Swoole\Exception When the pool hasn't been started in the current process.
      * @see \Swoole\Process\Pool::$master_pid
      * @since 4.3.2
      */

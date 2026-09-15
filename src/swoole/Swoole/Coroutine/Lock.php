@@ -13,21 +13,27 @@ namespace Swoole\Coroutine;
  * simplified \Swoole\Lock API. Method trylock() was removed in that release; call lock(LOCK_EX | LOCK_NB) instead.
  *
  * @not-serializable Objects of this class cannot be serialized.
- * @see \Swoole\Lock Use this instead when using locks accross processes.
+ * @see \Swoole\Lock Use this instead when using locks across processes.
  * @see https://www.php.net/manual/en/function.flock.php The built-in PHP function that method \Swoole\Coroutine\Lock::lock() is modeled after.
  * @since 6.0.1
  */
 class Lock
 {
     /**
-     * The error code of the last operation. It is set to 0 if the last operation was successful.
+     * The error code of the last failed lock() or unlock() call, as an error number reported by the operating
+     * system (e.g., EBUSY when a non-blocking attempt couldn't get the lock, or ETIMEDOUT when the given timeout
+     * expired). It starts as 0, and is updated only when a call fails; a later successful call does NOT reset it
+     * back to 0.
      */
     public int $errCode = 0;
 
     /**
      * Construct a coroutine lock object.
      *
-     * @param bool $shared Use preserved shared memory of Swoole to create the lock or not.
+     * @param bool $shared Whether to keep the state of the lock in a piece of shared memory reserved by Swoole, so
+     *                     that the lock keeps working between the current process and processes forked from it
+     *                     afterwards. When FALSE (the default), the lock lives in memory private to the current
+     *                     process only.
      */
     public function __construct(bool $shared = false)
     {
@@ -38,6 +44,9 @@ class Lock
      *
      * If the lock is already held by another coroutine, this method suspends the current coroutine until the lock is
      * released, unless LOCK_NB is passed.
+     *
+     * The lock is reentrant within a single coroutine: when the calling coroutine already holds the lock, the call
+     * returns TRUE right away without waiting.
      *
      * The signature of this method changed in Swoole 6.1.0:
      *   - before: public function lock(): bool
@@ -68,7 +77,8 @@ class Lock
      *
      * @param int $operation What kind of lock to acquire, as described above.
      * @return bool TRUE when the lock was acquired, FALSE otherwise (the lock was held by another coroutine and LOCK_NB
-     *              was used, or the method was called outside of a coroutine).
+     *              was used, the method was called outside of a coroutine, or the calling coroutine got cancelled
+     *              while waiting for the lock).
      * @see \Swoole\Coroutine\Lock::unlock()
      * @see https://www.php.net/manual/en/function.flock.php
      */

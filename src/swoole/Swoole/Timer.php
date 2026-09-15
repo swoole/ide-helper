@@ -105,7 +105,7 @@ class Timer
      *   - exec_msec (integer): Relative time of the next execution (in milliseconds).
      *   - exec_count (integer): The number of times the timer has been executed. Added in Swoole 4.8.0.
      *   - interval (integer): The interval of the timer (for timers added via method \Swoole\Timer::tick()).
-     *   - round (integer): The number of rounds the underling event loop has been executed when the timer was first added.
+     *   - round (integer): The number of rounds the underlying event loop has been executed when the timer was first added.
      *   - removed (boolean): Whether the timer has been removed.
      *
      * @param int $timer_id Timer ID returned by \Swoole\Timer::tick() or \Swoole\Timer::after().
@@ -128,7 +128,7 @@ class Timer
      * This method returns an array with three fields included:
      *   - initialized (boolean): Whether Swoole has been initialized to execute timers.
      *   - num (integer): Number of timers.
-     *   - round (integer): The number of rounds the underling event loop has been executed.
+     *   - round (integer): The number of rounds the underlying event loop has been executed.
      *
      * @return array Returns an array of timer statistics.
      * @alias This method has an alias function \swoole_timer_stats().

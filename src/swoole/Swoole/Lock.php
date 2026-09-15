@@ -55,19 +55,24 @@ class Lock
     /**
      * Read-write lock.
      *
-     * Supported only if read-write lock is included in the POSIX thread (pthread) libraries.
+     * This constant is defined only if read-write locks are included in the POSIX thread (pthread) libraries; on a
+     * system without them, the constant doesn't exist at all.
      */
     public const RWLOCK = SWOOLE_RWLOCK;
 
     /**
      * Spin lock.
      *
-     * Supported only if the Spin Locks option is provided in the POSIX thread (pthread) libraries.
+     * This constant is defined only if the Spin Locks option is provided in the POSIX thread (pthread) libraries; on a
+     * system without it, the constant doesn't exist at all.
      */
     public const SPINLOCK = SWOOLE_SPINLOCK;
 
     /**
-     * The error code of the last operation. It is set to 0 if the last operation was successful.
+     * The error code of the last failed lock() or unlock() call, as an error number reported by the operating
+     * system (e.g., EBUSY when a non-blocking attempt couldn't get the lock, or ETIMEDOUT when the given timeout
+     * expired). It starts as 0, and is updated only when a call fails; a later successful call does NOT reset it
+     * back to 0.
      */
     public int $errCode = 0;
 
@@ -77,10 +82,15 @@ class Lock
      * Before Swoole 4.5.3, the constructor accepts a second parameter $filename when the lock type is \Swoole\Lock::FILELOCK.
      * Parameter $filename specifies path to the file to be locked.
      *
+     * The constructor can only be called once per object; calling it a second time throws an \Error.
+     *
      * @param int $type Type of the lock. It must be one of the following constants:
      *                  - \Swoole\Lock::MUTEX
      *                  - \Swoole\Lock::RWLOCK
      *                  - \Swoole\Lock::SPINLOCK
+     * @throws Exception When the given lock type isn't supported, including \Swoole\Lock::RWLOCK and
+     *                   \Swoole\Lock::SPINLOCK on a system where the POSIX thread (pthread) libraries don't provide
+     *                   that kind of lock.
      */
     public function __construct(int $type = self::MUTEX)
     {

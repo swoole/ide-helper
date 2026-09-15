@@ -5,6 +5,14 @@ declare(strict_types=1);
 namespace Swoole\Coroutine;
 
 /**
+ * Coroutine-friendly versions of common system operations.
+ *
+ * This class provides static methods that perform system-level operations — e.g., DNS lookups (gethostbyname(),
+ * dnsLookup()), timers (sleep()), executing shell commands (exec()), reading/writing file descriptors, and waiting
+ * for child processes or signals (wait(), waitPid(), waitSignal(), waitEvent()) — in a coroutine-friendly way:
+ * instead of blocking the whole process like their plain PHP counterparts, they suspend only the current coroutine,
+ * letting other coroutines keep running in the meantime.
+ *
  * @alias This class has an alias of "\Co\System" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\System
  */
@@ -216,9 +224,12 @@ class System
      * Wait for given signal(s) with a timeout.
      *
      * @param int|array<int> $signals An integer or an array of integers representing the signal number(s).
-     *                                Before Swoole v6.0.0, only integer is supported.
+     *                                Before Swoole 6.0.0, only integer is supported.
      * @param float $timeout The timeout value in seconds. Minimum value is 0.001. -1 means no timeout.
-     * @return int|false Returns the signal number received on success, or false on failure.
+     * @return int|false Returns the signal number received on success. Returns FALSE on failure, e.g., when none of
+     *                   the given signals arrives within the given timeout; a warning is raised as well when a
+     *                   signal listener has already been registered elsewhere (e.g., through method
+     *                   \Swoole\Process::signal()), or when an invalid signal number is in the list.
      * @alias This method has an alias of \Swoole\Coroutine::waitSignal().
      * @see \Swoole\Coroutine::waitSignal()
      * @since 4.5.0

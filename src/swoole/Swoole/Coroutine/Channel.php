@@ -5,6 +5,15 @@ declare(strict_types=1);
 namespace Swoole\Coroutine;
 
 /**
+ * A channel for communication between coroutines, similar to channels in the Go programming language.
+ *
+ * A channel is a fixed-capacity, first-in-first-out queue that coroutines use to pass values to each other: one
+ * coroutine pushes values in, another pops them out. When the channel is full, push() suspends the current
+ * coroutine until room becomes available; when it's empty, pop() suspends the current coroutine until a value
+ * arrives. This makes channels the primary building block for producer-consumer patterns, connection pools, and
+ * other coordination between coroutines. Channels only work between coroutines within the same process; they cannot
+ * be used across processes.
+ *
  * @template TData
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has two aliases: \chan and \Co\Channel (when directive "swoole.use_shortname" is not explicitly turned off).
@@ -33,6 +42,11 @@ class Channel
     public int $errCode = SWOOLE_CHANNEL_OK;
 
     /**
+     * Create a new channel of the given capacity.
+     *
+     * The channel is stored in memory local to the current process, which is why channels only work between
+     * coroutines within the same process.
+     *
      * @param int $size Size of the channel. This indicates the maximum number of elements that can be stored in the channel. It has to be greater than 0.
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
@@ -71,14 +85,21 @@ class Channel
     }
 
     /**
+     * Check if the channel is empty, i.e., whether a pop() call would have to wait for an element to arrive.
+     *
      * @return bool Returns true if the channel is empty, false otherwise.
+     * @see \Swoole\Coroutine\Channel::pop()
      */
     public function isEmpty(): bool
     {
     }
 
     /**
+     * Check if the channel is full (the number of queued elements has reached the channel capacity), i.e., whether a
+     * push() call would have to wait for room to become available.
+     *
      * @return bool Returns true if the channel is full, false otherwise.
+     * @see \Swoole\Coroutine\Channel::push()
      */
     public function isFull(): bool
     {
@@ -120,6 +141,8 @@ class Channel
     }
 
     /**
+     * Get the number of elements currently queued in the channel.
+     *
      * @return int Number of elements in the channel.
      */
     public function length(): int

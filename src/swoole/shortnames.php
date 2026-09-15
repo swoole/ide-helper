@@ -32,6 +32,8 @@ class_alias(Swoole\Coroutine\System::class, Co\System::class);
  *
  * This function is available only when directive "swoole.use_shortname" is not explicitly turned off.
  *
+ * @param callable $func The function to be executed inside the new coroutine.
+ * @param mixed ...$params Arguments passed to the function when the coroutine starts running.
  * @return int|false Returns the coroutine ID on success, or false on failure. Note that this method won't return
  *                   the coroutine ID back until the new coroutine yields its execution.
  * @alias This function has an alias function swoole_coroutine_create() and an alias method \Swoole\Coroutine::create().
@@ -56,6 +58,7 @@ function go(callable $func, ...$params): int|false
  * });
  * ```
  *
+ * @param callable $callback The callback function to be executed when the surrounding function of the current coroutine returns.
  * @alias This function is an alias of function swoole_coroutine_defer().
  * @see swoole_coroutine_defer()
  */

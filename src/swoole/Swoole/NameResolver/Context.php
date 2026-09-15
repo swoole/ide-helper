@@ -13,6 +13,13 @@ namespace Swoole\NameResolver;
  */
 class Context
 {
+    /**
+     * Constructor.
+     *
+     * @param int $family Address family to resolve names to: AF_INET for IPv4, or AF_INET6 for IPv6.
+     * @param bool $withPort Whether a port is allowed to be part of the resolved result (e.g., when the name
+     *                       resolver returns an "IP:port" pair instead of just an IP address).
+     */
     public function __construct(int $family = AF_INET, bool $withPort = false)
     {
     }

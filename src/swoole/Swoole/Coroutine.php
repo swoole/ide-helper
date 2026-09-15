@@ -8,8 +8,18 @@ use Swoole\Coroutine\Context;
 use Swoole\Coroutine\Iterator;
 
 /**
+ * The core class for creating and managing coroutines.
+ *
+ * Coroutines are lightweight threads of execution managed by Swoole in user space: creating one is cheap, and huge
+ * numbers of them can run concurrently within a single process. Whenever a coroutine performs a blocking I/O
+ * operation (through Swoole's coroutine-aware APIs or hooked PHP functions), it's automatically suspended and other
+ * coroutines keep running; it resumes once the I/O result is ready. This class provides static methods to create
+ * coroutines (method create()), inspect and control them (e.g., methods getCid(), yield(), resume(), cancel()), and
+ * configure coroutine behavior (method set()).
+ *
  * @alias This class has an alias of "\co" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \co
+ * @see \Swoole\Runtime::enableCoroutine()
  */
 class Coroutine
 {
@@ -136,8 +146,10 @@ class Coroutine
      *                              this method returns FALSE if the coroutine happens to be in a state that can not be
      *                              cancelled.
      * @return bool Returns true on success, or false on failure. Use function \swoole_last_error() to get the error
-     *              code when failed, e.g., SWOOLE_ERROR_CO_NOT_EXISTS when the given coroutine doesn't exist, or
-     *              SWOOLE_ERROR_CO_CANCELED when the coroutine has already been cancelled this way.
+     *              code when failed, e.g., SWOOLE_ERROR_CO_NOT_EXISTS when the given coroutine doesn't exist,
+     *              SWOOLE_ERROR_CO_CANCELED when the coroutine has already been cancelled this way (only when
+     *              $throw_exception is TRUE), or SWOOLE_ERROR_CO_CANNOT_CANCEL when $throw_exception is FALSE and the
+     *              coroutine is in a state that can not be cancelled.
      * @see \Swoole\Coroutine\CanceledException
      * @since 4.7.0
      */
@@ -296,6 +308,9 @@ class Coroutine
      *
      * This method is similar to built-in function \debug_print_backtrace().
      *
+     * If the specified coroutine doesn't exist, nothing is printed, and function \swoole_last_error() returns error
+     * code SWOOLE_ERROR_CO_NOT_EXISTS.
+     *
      * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
      * @param int $options A bitmask for the following option(s): DEBUG_BACKTRACE_IGNORE_ARGS.
      * @param int $limit To limit the number of stack frames printed. By default (limit=0) it prints all stack frames.
@@ -321,10 +336,12 @@ class Coroutine
     }
 
     /**
-     * Get memory usage of a coroutine.
+     * Get how much memory the PHP call stack of a coroutine is using.
      *
      * @param int $cid Coroutine ID. If not specified or specified as 0, ID of current coroutine will be used.
-     * @return int|false Memory usage of the coroutine; FALSE if the specified coroutine doesn't exist.
+     * @return int|false Memory used by the PHP call stack of the coroutine, in bytes; FALSE if the specified coroutine
+     *                   doesn't exist, in which case function \swoole_last_error() returns error code
+     *                   SWOOLE_ERROR_CO_NOT_EXISTS.
      * @since 4.8.0
      */
     public static function getStackUsage(int $cid = 0): int|false
@@ -383,7 +400,7 @@ class Coroutine
      *              already, or if the method is called from a non-coroutine context.
      * @see \Swoole\Coroutine::disableScheduler()
      * @see \Swoole\Coroutine::set() Runtime option "enable_preemptive_scheduler" turns on the preemptive scheduler.
-     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/scheduling/mixed.php
+     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/scheduling/toggle-preemptive-scheduler.php
      * @since 4.4.0
      */
     public static function enableScheduler(): bool
@@ -403,7 +420,7 @@ class Coroutine
      *              disabled already, or if the method is called from a non-coroutine context.
      * @see \Swoole\Coroutine::enableScheduler()
      * @see \Swoole\Coroutine::set() Runtime option "enable_preemptive_scheduler" turns on the preemptive scheduler.
-     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/scheduling/mixed.php
+     * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/scheduling/toggle-preemptive-scheduler.php
      * @since 4.4.0
      */
     public static function disableScheduler(): bool
@@ -672,7 +689,7 @@ class Coroutine
      * Wait for given signal(s) with a timeout.
      *
      * @param int|array<int> $signals An integer or an array of integers representing the signal number(s).
-     *                                Before Swoole v6.0.0, only integer is supported.
+     *                                Before Swoole 6.0.0, only integer is supported.
      * @param float $timeout The timeout value in seconds. Minimum value is 0.001. -1 means no timeout.
      * @return int|false Returns the signal number received on success, or false on failure.
      * @alias Alias of method \Swoole\Coroutine\System::waitSignal().

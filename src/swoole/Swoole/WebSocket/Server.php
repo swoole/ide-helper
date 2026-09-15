@@ -12,7 +12,9 @@ namespace Swoole\WebSocket;
  * completed the handshake), "message" (a frame has arrived), and, optionally, "handshake" (to take over the handshake
  * yourself).
  *
- * @not-serializable Objects of this class cannot be serialized.
+ * @not-serializable Objects of this class cannot be serialized, unless PHP is compiled with Zend Thread Safety (ZTS)
+ *                   enabled and Swoole is installed with the "--enable-swoole-thread" configuration option, in
+ *                   which case they are serializable so that they can be handed over to worker threads.
  * @see \Swoole\WebSocket\Frame
  * @see \Swoole\Http\Server
  */
@@ -54,7 +56,9 @@ class Server extends \Swoole\Http\Server
      * @param int $fd Session ID of the client to disconnect.
      * @param int $code Close status code telling the client why the connection is being closed. Swoole defines the
      *                  status codes of the WebSocket protocol as SWOOLE_WEBSOCKET_CLOSE_* constants.
-     * @param string $reason A short, human-readable explanation of why the connection is being closed.
+     * @param string $reason A short, human-readable explanation of why the connection is being closed. It must not
+     *                       exceed 125 bytes; a longer reason makes the method fail with a warning raised and
+     *                       FALSE returned.
      * @return bool Return TRUE on success, or FALSE when failed (e.g., the session doesn't exist, or the server is not
      *              running).
      * @see \Swoole\WebSocket\Server::push()
@@ -110,7 +114,8 @@ class Server extends \Swoole\Http\Server
      * @param int $opcode Type of the frame, telling the receiver how to interpret the data. Swoole defines the opcodes
      *                    of the WebSocket protocol as SWOOLE_WEBSOCKET_OPCODE_* constants.
      * @param int $flags Frame flags, as a bitmask of the SWOOLE_WEBSOCKET_FLAG_* constants.
-     * @return string The encoded frame.
+     * @return string The encoded frame. An empty string comes back when the frame can't be encoded (e.g., when the
+     *                opcode given is out of range), with a warning raised.
      * @see \Swoole\WebSocket\Server::unpack()
      * @see \Swoole\WebSocket\Frame::pack()
      * @alias This method has an alias of \Swoole\WebSocket\Frame::pack().
@@ -123,12 +128,14 @@ class Server extends \Swoole\Http\Server
      * Decode a binary WebSocket frame back into a \Swoole\WebSocket\Frame object.
      *
      * @param string $data The encoded frame to decode, as produced by method \Swoole\WebSocket\Server::pack().
-     * @return Frame The decoded frame.
+     * @return Frame|false The decoded frame (a \Swoole\WebSocket\CloseFrame object when the data holds a close
+     *                     frame), or FALSE when the data isn't a complete, well-formed WebSocket frame.
      * @see \Swoole\WebSocket\Server::pack()
      * @see \Swoole\WebSocket\Frame::unpack()
+     * @see \Swoole\WebSocket\CloseFrame
      * @alias This method has an alias of \Swoole\WebSocket\Frame::unpack().
      */
-    public static function unpack(string $data): Frame
+    public static function unpack(string $data): Frame|false
     {
     }
 }

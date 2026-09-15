@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace Swoole;
 
 /**
- * The exception to thrown out when exit() is called unexpectedly in Swoole.
+ * The exception thrown when exit() is called somewhere Swoole doesn't allow it: inside a coroutine, or while a Swoole
+ * server is running.
  */
 class ExitException extends Exception
 {
@@ -39,6 +40,8 @@ class ExitException extends Exception
     /**
      * Get the exit flags.
      *
+     * @return int The exit flags: a bitwise OR of constants SWOOLE_EXIT_IN_COROUTINE and SWOOLE_EXIT_IN_SERVER. Please
+     *             check documentation of property \Swoole\ExitException::$flags for details.
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
     public function getFlags(): int

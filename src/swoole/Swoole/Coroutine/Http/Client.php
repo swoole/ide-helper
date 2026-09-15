@@ -8,6 +8,14 @@ use Swoole\Coroutine\Socket;
 use Swoole\WebSocket\Frame;
 
 /**
+ * Coroutine-friendly HTTP/1.x and WebSocket client.
+ *
+ * This class provides an HTTP client to be used inside coroutines: every request method suspends only the current
+ * coroutine while waiting for the response, letting other coroutines keep running. It supports HTTPS, chunked and
+ * compressed responses, file uploads and downloads, keeping the connection alive across requests, and upgrading the
+ * connection to the WebSocket protocol (methods upgrade()/push()/recv()). The response of the last request is
+ * exposed through properties like $statusCode, $headers, and $body.
+ *
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has an alias of "\Co\Http\Client" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Http\Client
@@ -71,7 +79,7 @@ class Client
     public ?array $setting = null;
 
     /**
-     * The HTTP method to use for the next request, e.g., "GET" or "POST".
+     * The HTTP method to use for subsequent requests, e.g., "GET" or "POST".
      *
      * It's NULL until set, either explicitly using method Client::setMethod(), or implicitly by methods like
      * Client::get(), Client::post(), and Client::upgrade(). When NULL, the request is sent using method "GET" (or
@@ -247,9 +255,11 @@ class Client
     }
 
     /**
-     * Set the HTTP method to use for the next request.
+     * Set the HTTP method to use for subsequent requests.
      *
-     * The method applies to the next request only; it's reset once the request is sent.
+     * The method stays in effect (in property $requestMethod) for every request sent afterwards, until something
+     * overwrites it — another call to this method, or a method that forces its own HTTP method, like Client::get(),
+     * Client::post(), and Client::upgrade().
      *
      * @param string $method An HTTP method, e.g., "GET", "POST", or "DELETE", in uppercase.
      * @return bool Return TRUE always.
@@ -358,6 +368,9 @@ class Client
      * The client connects to the server automatically if not connected yet. Unless defer mode is enabled, the call
      * waits for the response, which is then available through properties like $statusCode, $headers, and $body (and
      * their getter methods).
+     *
+     * When setting "max_retries" is set to a positive value, a response with status code 502 or 503 makes the client
+     * close the connection and retry the request transparently, at most that many extra times.
      *
      * @param string $path The path (plus optional query string) to request, e.g., "/index.php?a=b".
      * @return bool Return TRUE on success; return FALSE when the request fails — check properties $errCode, $errMsg,

@@ -12,6 +12,10 @@ namespace Swoole\Server;
  * the same information is passed to the callback as multiple separate arguments (the task ID, the ID of the worker
  * process that dispatched the task, and the task data).
  *
+ * Note that turning on option \Swoole\Constant::OPTION_EVENT_OBJECT turns on option
+ * \Swoole\Constant::OPTION_TASK_OBJECT as well, so it makes the onTask callback receive a Task object too.
+ *
+ * @see \Swoole\Constant::OPTION_EVENT_OBJECT
  * @see \Swoole\Constant::OPTION_TASK_OBJECT
  * @see \Swoole\Constant::OPTION_TASK_ENABLE_COROUTINE
  * @see \Swoole\Server::task()

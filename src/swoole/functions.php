@@ -235,8 +235,9 @@ function swoole_set_process_name(string $process_name): bool
  * Interfaces that are down, the loopback address 127.0.0.1, and IPv6 addresses are not included in the result.
  *
  * @return array Returns an array mapping each network interface name to its IPv4 address, e.g.,
- *               ["eth0" => "192.168.1.5"]. If the network interfaces cannot be read, a warning is raised and false is
- *               returned instead.
+ *               ["eth0" => "192.168.1.5"]. Despite the return type declared, FALSE is returned at run time (with a
+ *               warning raised) when the network interfaces can't be read. The type declared here matches the one the
+ *               extension itself declares, i.e., the mismatch is in Swoole, not in this stub.
  * @see swoole_get_local_mac()
  */
 function swoole_get_local_ip(): array
@@ -247,8 +248,10 @@ function swoole_get_local_ip(): array
  * Gets the MAC (hardware) addresses of the network interfaces on the machine.
  *
  * @return array Returns an array mapping each network interface name to its MAC address in the form
- *               "XX:XX:XX:XX:XX:XX", e.g., ["eth0" => "02:42:AC:11:00:02"]. On systems where the information cannot
- *               be read, a warning is raised and false is returned instead.
+ *               "XX:XX:XX:XX:XX:XX", e.g., ["eth0" => "02:42:AC:11:00:02"]. Despite the return type declared, FALSE is
+ *               returned at run time (with a warning raised) on systems where the information can't be read. The type
+ *               declared here matches the one the extension itself declares, i.e., the mismatch is in Swoole, not in
+ *               this stub.
  * @see swoole_get_local_ip()
  */
 function swoole_get_local_mac(): array
@@ -427,6 +430,10 @@ function swoole_mime_type_get(string $filename): string
 }
 
 /**
+ * Gets the MIME type registered for the suffix of the given file name.
+ *
+ * @param string $filename A file name, e.g., "/var/www/index.html". Only its suffix is taken into account.
+ * @return string Returns the MIME type registered, or "application/octet-stream" when the suffix is not on the list.
  * @alias This function is an alias of function swoole_mime_type_get().
  * @see swoole_mime_type_get()
  */
@@ -487,8 +494,11 @@ function swoole_substr_unserialize(string $str, int $offset, int $length = 0, ar
  * @param int $offset Position in $str to start reading from. A negative offset counts back from the end of the string.
  * @param int $length Number of bytes to read. When 0 (the default), or larger than what remains after $offset, the
  *                    rest of the string is used.
- * @param bool $associative When true, JSON objects are returned as associative arrays instead of objects. Mirrors the
- *                          same argument of PHP's json_decode().
+ * @param bool $associative When true, JSON objects are returned as associative arrays; when false, as objects. Note
+ *                          that the declared default of FALSE is not what leaving the parameter out actually does:
+ *                          when it's omitted, flag JSON_OBJECT_AS_ARRAY in $flags decides instead, exactly like PHP's
+ *                          own json_decode(). NULL is accepted at run time too (with the same "let the flag decide"
+ *                          effect), even though the type declared by Swoole isn't nullable.
  * @param int $depth Maximum nesting depth. Defaults to 512.
  * @param int $flags Bitmask of JSON decoding flags (the JSON_* constants), e.g. JSON_BIGINT_AS_STRING.
  * @return mixed Returns the decoded value, or null (with an E_WARNING) when $str is empty or $offset falls outside
@@ -630,12 +640,15 @@ function swoole_event_del(mixed $fd): bool
 /**
  * Updates the callbacks and/or the events watched of a file descriptor already added to the event loop.
  *
- * Only the arguments passed with a non-default value are updated; the rest keep their current settings.
+ * The two callbacks keep their current settings unless a new one is passed. The set of events watched, however, is
+ * always overwritten with $events, so leaving $events at its default of 0 stops the descriptor from being watched for
+ * either readability or writability (it stays registered in the event loop until removed with swoole_event_del()).
  *
  * @param mixed $fd The descriptor being watched. It can be any of the values accepted by function swoole_event_add().
  * @param callable|null $read_callback New callback for when $fd becomes readable.
  * @param callable|null $write_callback New callback for when $fd becomes writable.
- * @param int $events a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE).
+ * @param int $events The events to watch from now on: a SWOOLE_EVENT_READ or SWOOLE_EVENT_WRITE event, or both
+ *                    (SWOOLE_EVENT_READ | SWOOLE_EVENT_WRITE). Defaults to 0, which stops watching for both.
  * @return bool Returns true on success, or false on failure (e.g. the descriptor is not being watched, or a
  *              requested event has no matching callback set).
  * @alias This function is an alias of method \Swoole\Event::set().
@@ -794,7 +807,9 @@ function swoole_timer_after(int $ms, callable $callback, ...$params): int|false
  *     });
  *
  * @param int $ms The timer interval in milliseconds. It must be no less than SWOOLE_TIMER_MIN_MS (1 millisecond).
- * @param callable $callback The callback function to be executed when the timer interval has elapsed.
+ * @param callable $callback The callback function to be executed when the timer interval has elapsed. The timer ID is
+ *                           passed to the callback function as its first argument, followed by the parameters given
+ *                           in $params.
  * @param mixed ...$params The parameters to be passed to the callback function.
  * @return int|false Returns the timer ID on success, or false on failure.
  * @alias This function is an alias of method \Swoole\Timer::tick().
@@ -827,7 +842,7 @@ function swoole_timer_exists(int $timer_id): bool
  *   - exec_msec (integer): Relative time of the next execution (in milliseconds).
  *   - exec_count (integer): The number of times the timer has been executed. Added in Swoole 4.8.0.
  *   - interval (integer): The interval of the timer (for timers added via method \Swoole\Timer::tick()).
- *   - round (integer): The number of rounds the underling event loop has been executed when the timer was first added.
+ *   - round (integer): The number of rounds the underlying event loop has been executed when the timer was first added.
  *   - removed (boolean): Whether the timer has been removed.
  *
  * @param int $timer_id Timer ID returned by \Swoole\Timer::tick() or \Swoole\Timer::after().
@@ -845,7 +860,7 @@ function swoole_timer_info(int $timer_id): ?array
  * This method returns an array with three fields included:
  *   - initialized (boolean): Whether Swoole has been initialized to execute timers.
  *   - num (integer): Number of timers.
- *   - round (integer): The number of rounds the underling event loop has been executed.
+ *   - round (integer): The number of rounds the underlying event loop has been executed.
  *
  * @return array Returns an array of timer statistics.
  * @alias This function is an alias of method \Swoole\Timer::stats().
