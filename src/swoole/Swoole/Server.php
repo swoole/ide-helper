@@ -200,6 +200,11 @@ class Server
      * It defaults to the script currently being executed, and can be changed through option
      * \Swoole\Constant::OPTION_BOOTSTRAP of method \Swoole\Server::set().
      *
+     * Before Swoole 6.1.10, that default was only applied while method \Swoole\Server::set() ran; if set() was never
+     * called before \Swoole\Server::start(), this property stayed an empty string and worker threads were started
+     * with an empty bootstrap script path. Since Swoole 6.1.10, the default is applied at start() time instead,
+     * so it's in effect even when set() is never called.
+     *
      * This property is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is
      * installed with the "--enable-swoole-thread" configuration option.
      *
@@ -427,7 +432,7 @@ class Server
      *
      * Event names are case-insensitive. This method can only be called before the server is started.
      *
-     * As of Swoole 6.1.9, there are
+     * As of Swoole 6.1.10, there are
      *   - 14 server events.
      *     - \Swoole\Constant::EVENT_START
      *     - \Swoole\Constant::EVENT_BEFORE_SHUTDOWN
@@ -462,8 +467,8 @@ class Server
      * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server\Port::on()
      * @see \Swoole\Server::getCallback()
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.9/ext-src/swoole_server.cc#L50
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.9/ext-src/swoole_server_port.cc#L33
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.10/ext-src/swoole_server.cc#L50
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.10/ext-src/swoole_server_port.cc#L33
      */
     public function on(string $event_name, callable $callback): bool
     {
@@ -977,7 +982,7 @@ class Server
      * @see \Swoole\Server::protect()
      * @see \Swoole\Constant::OPTION_HEARTBEAT_IDLE_TIME
      * @see \Swoole\Constant::OPTION_HEARTBEAT_CHECK_INTERVAL
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.9/ext-src/swoole_server.cc#L3032 The actual default value of parameter $ifCloseConnection
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.10/ext-src/swoole_server.cc#L3033 The actual default value of parameter $ifCloseConnection
      */
     public function heartbeat(bool $ifCloseConnection = false): array|false
     {

@@ -27,7 +27,7 @@ class Response
 
     /**
      * HTTP/2 error code of the stream (one of the SWOOLE_HTTP2_ERROR_* constant values). The property is declared for
-     * backward compatibility but, as of Swoole 6.1.9, is never updated by Swoole; it always stays 0. When the server
+     * backward compatibility but, as of Swoole 6.1.10, is never updated by Swoole; it always stays 0. When the server
      * terminates a stream with an RST_STREAM frame, the stream is discarded quietly and no response is handed back at
      * all.
      */

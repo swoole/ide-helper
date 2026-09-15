@@ -120,12 +120,21 @@ final class Server
     /**
      * Start the server, accepting incoming connections in a loop.
      *
-     * The call blocks the current coroutine until the server is stopped with method Server::shutdown(), or until an
-     * unrecoverable error happens while accepting connections (check properties $errCode and $errMsg in that case).
-     * Each incoming connection is handled in a new coroutine.
+     * The call blocks the current coroutine until the server is stopped with method Server::shutdown(), an
+     * unrecoverable error happens while accepting connections, or the settings configured through method
+     * Server::set() turn out to be invalid (check properties $errCode and $errMsg in either of the latter two
+     * cases). Each incoming connection is handled in a new coroutine.
      *
-     * @return bool Return TRUE once the server stops.
+     * @return bool Returns TRUE once the server stops normally, via method Server::shutdown(). Returns FALSE if an
+     *              unrecoverable error happens while accepting connections, or if the settings configured through
+     *              method Server::set() are invalid (e.g., an unknown value given for setting "package_length_type");
+     *              check properties $errCode and $errMsg to find out what happened.
+     *              Before Swoole 6.1.10, this method always returned TRUE once the accept loop stopped, even when it
+     *              stopped because of an unrecoverable error; callers had to inspect $errCode/$errMsg themselves to
+     *              tell that case apart from a normal shutdown. Also before Swoole 6.1.10, invalid settings given to
+     *              Server::set() were silently ignored instead of preventing the server from starting.
      * @see \Swoole\Coroutine\Http\Server::shutdown()
+     * @see \Swoole\Coroutine\Http\Server::set()
      * @see \Swoole\Coroutine\Http\Server::$errCode
      * @see \Swoole\Coroutine\Http\Server::$errMsg
      */

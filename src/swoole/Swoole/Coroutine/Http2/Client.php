@@ -40,7 +40,7 @@ class Client
     public string $errMsg = '';
 
     /**
-     * Unused. The property is declared for backward compatibility but, as of Swoole 6.1.9, is never updated by
+     * Unused. The property is declared for backward compatibility but, as of Swoole 6.1.10, is never updated by
      * Swoole; it always stays -1. Use property $socket to access the underlying connection instead.
      *
      * @see \Swoole\Coroutine\Http2\Client::$socket
@@ -48,7 +48,7 @@ class Client
     public int $sock = -1;
 
     /**
-     * Unused. The property is declared for backward compatibility but, as of Swoole 6.1.9, is never updated by
+     * Unused. The property is declared for backward compatibility but, as of Swoole 6.1.10, is never updated by
      * Swoole; it always stays 0.
      */
     public int $type = 0;
