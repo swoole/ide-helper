@@ -197,14 +197,18 @@ class Server
      * Path of the PHP script that each worker thread runs as its entry script when the server runs in the
      * SWOOLE_THREAD mode.
      *
-     * It defaults to the script currently being executed, and can be changed through option
-     * \Swoole\Constant::OPTION_BOOTSTRAP of method \Swoole\Server::set().
+     * It can be set through option \Swoole\Constant::OPTION_BOOTSTRAP of method \Swoole\Server::set(). When left
+     * unset, it stays an empty string until method \Swoole\Server::start() is called, at which point it defaults to
+     * the script currently being executed. Before Swoole 6.2.3, method \Swoole\Server::set() filled in that default
+     * itself, which also meant that a later \Swoole\Server::set() call without the option silently reset a value set
+     * earlier.
      *
      * This property is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is
      * installed with the "--enable-swoole-thread" configuration option.
      *
      * @see \Swoole\Constant::OPTION_BOOTSTRAP
      * @see \Swoole\Server::set()
+     * @see \Swoole\Server::start()
      * @since 6.0.0
      */
     public string $bootstrap = '';
@@ -427,7 +431,7 @@ class Server
      *
      * Event names are case-insensitive. This method can only be called before the server is started.
      *
-     * As of Swoole 6.2.2, there are
+     * As of Swoole 6.2.3, there are
      *   - 14 server events.
      *     - \Swoole\Constant::EVENT_START
      *     - \Swoole\Constant::EVENT_BEFORE_SHUTDOWN
@@ -462,8 +466,8 @@ class Server
      * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server\Port::on()
      * @see \Swoole\Server::getCallback()
-     * @see https://github.com/swoole/swoole-src/blob/v6.2.2/ext-src/swoole_server.cc#L50
-     * @see https://github.com/swoole/swoole-src/blob/v6.2.2/ext-src/swoole_server_port.cc#L33
+     * @see https://github.com/swoole/swoole-src/blob/v6.2.3/ext-src/swoole_server.cc#L50
+     * @see https://github.com/swoole/swoole-src/blob/v6.2.3/ext-src/swoole_server_port.cc#L33
      */
     public function on(string $event_name, callable $callback): bool
     {
@@ -527,11 +531,21 @@ class Server
      * For a connection on a stream (TCP or UNIX-stream) port, the data may be queued in the send buffer of the
      * connection if it can't be written out at once.
      *
+     * When option \Swoole\Constant::OPTION_SEND_YIELD is enabled and the send buffer is full, the call suspends the
+     * current coroutine until there is room again, or until option \Swoole\Constant::OPTION_SEND_TIMEOUT expires
+     * (in which case it fails with FALSE returned and function swoole_last_error() reporting SWOOLE_ERROR_CO_TIMEDOUT).
+     * If the connection is closed while the call is suspended, it fails with FALSE returned as well; since Swoole
+     * 6.2.3, the suspended call is cancelled right away in that case, with function swoole_last_error() reporting
+     * SWOOLE_ERROR_CO_CANCELED.
+     *
      * @param int|string $fd Session ID of the connection. To send data back to a client on a UNIX domain datagram socket, pass the path of the peer socket as a string instead.
      * @param string $send_data The data to send. It must not be empty.
      * @param int $serverSocket This parameter is used only when sending data back to a client on a UNIX domain datagram socket, to specify the file descriptor of the listening socket to send the data from; by default (-1), the socket where the server received the last datagram is used. It's ignored otherwise.
      * @return bool Returns true on success. Returns false on failure, e.g., the server is not running yet, the data given is empty, or the connection specified does not exist or is already closed.
      * @see \Swoole\Server::sendwait()
+     * @see \Swoole\Constant::OPTION_SEND_YIELD
+     * @see \Swoole\Constant::OPTION_SEND_TIMEOUT
+     * @see swoole_last_error()
      */
     public function send(int|string $fd, string $send_data, int $serverSocket = -1): bool
     {
@@ -985,7 +999,7 @@ class Server
      * @see \Swoole\Server::protect()
      * @see \Swoole\Constant::OPTION_HEARTBEAT_IDLE_TIME
      * @see \Swoole\Constant::OPTION_HEARTBEAT_CHECK_INTERVAL
-     * @see https://github.com/swoole/swoole-src/blob/v6.2.2/ext-src/swoole_server.cc#L3054 The actual default value of parameter $ifCloseConnection
+     * @see https://github.com/swoole/swoole-src/blob/v6.2.3/ext-src/swoole_server.cc#L3055 The actual default value of parameter $ifCloseConnection
      */
     public function heartbeat(bool $ifCloseConnection = false): array|false
     {

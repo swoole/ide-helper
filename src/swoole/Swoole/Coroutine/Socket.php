@@ -519,7 +519,9 @@ class Socket
      *                         public properties are read instead): a TypeError is thrown otherwise, instead of it being
      *                         silently coerced as before. For SO_LINGER specifically, "l_onoff" and "l_linger" must each
      *                         be between 0 and 65535; a ValueError is thrown otherwise, instead of the value being
-     *                         silently truncated as before.
+     *                         silently truncated as before. Note that, before Swoole 6.2.3, passing an object for
+     *                         SO_RCVTIMEO or SO_SNDTIMEO didn't work (the object was mistakenly read as if it were an
+     *                         array), so pass an array on older versions.
      * @return bool Returns TRUE on success, or FALSE on failure.
      * @see https://www.php.net/socket_set_option The PHP function \socket_set_option(), which this method mirrors.
      * @see \Swoole\Coroutine\Socket::getOption()

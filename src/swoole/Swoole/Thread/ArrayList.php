@@ -16,7 +16,7 @@ namespace Swoole\Thread;
 final class ArrayList implements \ArrayAccess, \Countable
 {
     /**
-     * Although Swoole declares this property (as a read-only property), as of Swoole 6.2.2 it is never assigned
+     * Although Swoole declares this property (as a read-only property), as of Swoole 6.2.3 it is never assigned
      * anywhere in the Swoole source code, so it always holds its default value of 0.
      *
      * @readonly

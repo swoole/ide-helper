@@ -129,10 +129,14 @@ class Server extends \Swoole\Http\Server
      *
      * @param string $data The encoded frame to decode, as produced by method \Swoole\WebSocket\Server::pack().
      * @return Frame|false The decoded frame (a \Swoole\WebSocket\CloseFrame object when the data holds a close
-     *                     frame), or FALSE when the data isn't a complete, well-formed WebSocket frame.
+     *                     frame), or FALSE when the data isn't a complete, well-formed WebSocket frame. Since Swoole
+     *                     6.2.3, a control frame (close, ping, or pong) with the compression flag
+     *                     SWOOLE_WEBSOCKET_FLAG_RSV1 set counts as malformed too, since control frames must never be
+     *                     compressed.
      * @see \Swoole\WebSocket\Server::pack()
      * @see \Swoole\WebSocket\Frame::unpack()
      * @see \Swoole\WebSocket\CloseFrame
+     * @see https://datatracker.ietf.org/doc/html/rfc7692#section-6.1 The WebSocket compression extension, which forbids compressing control frames.
      * @alias This method has an alias of \Swoole\WebSocket\Frame::unpack().
      */
     public static function unpack(string $data): Frame|false

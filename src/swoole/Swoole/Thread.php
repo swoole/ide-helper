@@ -261,7 +261,7 @@ final class Thread
     /**
      * Set scheduling policy and priority of the current thread (the thread the call is made from).
      *
-     * Note that, as of Swoole 6.2.2, leaving parameter $policy out makes Swoole ask the operating system for an
+     * Note that, as of Swoole 6.2.3, leaving parameter $policy out makes Swoole ask the operating system for an
      * invalid scheduling policy, so the call always fails; pass both parameters explicitly.
      *
      * @param int $priority The new scheduling priority. What counts as a valid value depends on the scheduling policy.

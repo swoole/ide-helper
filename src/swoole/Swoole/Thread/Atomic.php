@@ -77,6 +77,11 @@ final class Atomic
      *
      * WARNING: This method blocks the whole thread, not just the current coroutine.
      *
+     * Before Swoole 6.2.3, the counter rules above were followed on Linux only; on other platforms (e.g., macOS), the
+     * method was implemented by repeatedly polling the counter and didn't behave reliably. Since Swoole 6.2.3, it
+     * behaves the same everywhere; on platforms other than Linux, the counter is checked about once every
+     * millisecond, so waking up may take slightly longer than on Linux.
+     *
      * @param float $timeout The timeout in seconds.
      *                       > 0: The thread will be woken up after the specified number of seconds (or by another thread).
      *                       <= 0: No timeout. The thread will resume execution only when woken up by another thread.
@@ -100,9 +105,13 @@ final class Atomic
      *
      * There is no guarantee about which threads are awoken.
      *
-     * @param int $count The number of threads to wake up.
+     * Before Swoole 6.2.3, on platforms other than Linux (e.g., macOS), the method added $count to the counter instead
+     * of setting it to 1, breaking the counter rules above; see method \Swoole\Thread\Atomic::wait() for details.
+     *
+     * @param int $count The number of threads to wake up. It should be at least 1.
      * @return bool Returns true in practice, whether or not any thread was actually woken up; it returns false only
-     *              when the underlying wake-up operation fails at the operating system level.
+     *              when the underlying wake-up operation fails at the operating system level, or (since Swoole 6.2.3,
+     *              on platforms other than Linux) when $count is smaller than 1.
      * @see \Swoole\Thread\Atomic::wait()
      */
     public function wakeup(int $count = 1): bool

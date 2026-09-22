@@ -239,7 +239,7 @@ class Port
     /**
      * Register a callback function for an event on the port.
      *
-     * Only port events can be registered here (as of Swoole 6.2.2 there are 12 of them; please check method
+     * Only port events can be registered here (as of Swoole 6.2.3 there are 12 of them; please check method
      * \Swoole\Server::on() for the complete list); server events must be registered on the server object itself. This
      * method can only be called before the server is started.
      *

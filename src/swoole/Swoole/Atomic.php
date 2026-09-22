@@ -83,6 +83,11 @@ class Atomic
      * WARNING: This method blocks the whole process, not just the current coroutine. Thus, it's not recommended to use
      *          this method in Swoole servers nor coroutines.
      *
+     * Before Swoole 6.2.3, the counter rules above were followed on Linux only; on other platforms (e.g., macOS), the
+     * method was implemented by repeatedly polling the counter and didn't behave reliably. Since Swoole 6.2.3, it
+     * behaves the same everywhere; on platforms other than Linux, the counter is checked about once every
+     * millisecond, so waking up may take slightly longer than on Linux.
+     *
      * @param float $timeout The timeout in seconds.
      *                       > 0: The process will be woken up after the specified number of seconds (or by another process).
      *                       <= 0: No timeout. The process will resume execution only when woken up by another process.
@@ -113,9 +118,13 @@ class Atomic
      * There is no guarantee about which processes are awoken. e.g., a process with a higher scheduling priority is not
      * guaranteed to be awoken in preference to a process with a lower priority.
      *
-     * @param int $count The number of processes to wake up.
+     * Before Swoole 6.2.3, on platforms other than Linux (e.g., macOS), the method added $count to the counter instead
+     * of setting it to 1, breaking the counter rules above; see method \Swoole\Atomic::wait() for details.
+     *
+     * @param int $count The number of processes to wake up. It should be at least 1.
      * @return bool Returns true in practice, whether or not any process was actually woken up; it returns false only
-     *              when the underlying wake-up operation fails at the operating system level.
+     *              when the underlying wake-up operation fails at the operating system level, or (since Swoole 6.2.3,
+     *              on platforms other than Linux) when $count is smaller than 1.
      *
      * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/io/block-processes-using-swoole-atomic.php
      *      An example showing how to block processes using class \Swoole\Atomic in a multiprocessing environment.
