@@ -84,7 +84,7 @@ class Server
     public function onRequest(Request $request, Response $response): void
     {
         $ctx = new Context($request, $response);
-        if ($this->apiKey and $this->apiKey !== $request->header['x-api-key']) {
+        if ($this->apiKey and $this->apiKey !== ($request->header['x-api-key'] ?? '')) {
             $response->status(403);
             $ctx->end(['code' => -3, 'msg' => 'invalid api key']);
             return;
@@ -131,7 +131,11 @@ class Server
     private function unmarshal($data): mixed
     {
         if (is_object($data) and $data instanceof RemoteObject) {
-            return $this->objects[$data->getObjectId()];
+            $object_id = $data->getObjectId();
+            if (!isset($this->objects[$object_id])) {
+                throw new Exception("object[#{$object_id}] not found");
+            }
+            return $this->objects[$object_id];
         }
         if (is_array($data)) {
             foreach ($data as $key => $value) {
@@ -233,6 +237,35 @@ class Server
         $ctx->end(['code' => 0]);
     }
 
+    /**
+     * @throws Exception
+     */
+    private function _isset_property(Context $ctx): void
+    {
+        $object_id = $ctx->getParam('object');
+        $property  = $ctx->getParam('property');
+        if (!isset($this->objects[$object_id])) {
+            throw new Exception("object[#{$object_id}] not found");
+        }
+        $obj = $this->objects[$object_id];
+        $ctx->end(['code' => 0, 'value' => isset($obj->{$property})]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function _unset_property(Context $ctx): void
+    {
+        $object_id = $ctx->getParam('object');
+        $property  = $ctx->getParam('property');
+        if (!isset($this->objects[$object_id])) {
+            throw new Exception("object[#{$object_id}] not found");
+        }
+        $obj = $this->objects[$object_id];
+        unset($obj->{$property});
+        $ctx->end(['code' => 0]);
+    }
+
     private function _ping(Context $ctx): void
     {
         $ctx->end(['code' => 0]);
@@ -261,6 +294,9 @@ class Server
         $ctx->end(['code' => 0, 'value' => (string) $obj]);
     }
 
+    // The four offset handlers go through the ArrayAccess implementation of the object. An object without one gets
+    // the property access these handlers used to do for every object, so that nothing relying on that breaks.
+
     private function _offset_get(Context $ctx): void
     {
         $object_id = $ctx->getParam('object');
@@ -269,7 +305,7 @@ class Server
             throw new Exception("object[#{$object_id}] not found");
         }
         $obj    = $this->objects[$object_id];
-        $result = $obj->{$offset};
+        $result = $obj instanceof \ArrayAccess ? $obj[$offset] : $obj->{$offset};
         $ctx->end(['code' => 0, 'value' => $this->marshal($ctx, $result)]);
     }
 
@@ -281,8 +317,12 @@ class Server
         if (!isset($this->objects[$object_id])) {
             throw new Exception("object[#{$object_id}] not found");
         }
-        $obj            = $this->objects[$object_id];
-        $obj->{$offset} = $this->unmarshal($value);
+        $obj = $this->objects[$object_id];
+        if ($obj instanceof \ArrayAccess) {
+            $obj[$offset] = $this->unmarshal($value);
+        } else {
+            $obj->{$offset} = $this->unmarshal($value);
+        }
         $ctx->end(['code' => 0]);
     }
 
@@ -294,7 +334,11 @@ class Server
             throw new Exception("object[#{$object_id}] not found");
         }
         $obj = $this->objects[$object_id];
-        unset($obj->{$offset});
+        if ($obj instanceof \ArrayAccess) {
+            unset($obj[$offset]);
+        } else {
+            unset($obj->{$offset});
+        }
         $ctx->end(['code' => 0]);
     }
 
@@ -306,7 +350,7 @@ class Server
             throw new Exception("object[#{$object_id}] not found");
         }
         $obj    = $this->objects[$object_id];
-        $result = isset($obj->{$offset});
+        $result = $obj instanceof \ArrayAccess ? isset($obj[$offset]) : isset($obj->{$offset});
         $ctx->end(['code' => 0, 'value' => $this->marshal($ctx, $result)]);
     }
 }

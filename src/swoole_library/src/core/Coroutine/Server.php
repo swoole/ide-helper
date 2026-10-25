@@ -107,11 +107,9 @@ class Server
             return false;
         }
 
-        while ($this->running) { // @phpstan-ignore while.alwaysTrue
-            $conn = null;
-            /** @var Socket $conn */
+        while ($this->running) {
             $conn = $socket->accept();
-            if ($conn) { // @phpstan-ignore if.alwaysTrue
+            if ($conn) {
                 $conn->setProtocol($this->setting);
                 if (!empty($this->setting[Constant::OPTION_OPEN_SSL])) {
                     $fn = static function ($fn, $connection) {
@@ -126,7 +124,7 @@ class Server
                     $fn        = $this->fn;
                     $arguments = [new Connection($conn)];
                 }
-                if (Coroutine::create($fn, ...$arguments) < 0) {
+                if (Coroutine::create($fn, ...$arguments) === false) {
                     goto _wait;
                 }
             } else {
@@ -141,11 +139,12 @@ class Server
                 if ($socket->errCode == SOCKET_ECANCELED) {
                     break;
                 }
+                $this->errCode = $socket->errCode;
                 trigger_error("accept failed, Error: {$socket->errMsg}[{$socket->errCode}]", E_USER_WARNING);
-                break;
+                return false;
             }
         }
 
-        return true; // @phpstan-ignore deadCode.unreachable
+        return true;
     }
 }

@@ -34,6 +34,10 @@ class ConnectionPool
 
     public function fill(): void
     {
+        if ($this->pool === null) {
+            // A closed pool has nowhere to keep the connections: they would be made, counted and dropped.
+            return;
+        }
         while ($this->size > $this->num) {
             $this->make();
         }
@@ -42,8 +46,9 @@ class ConnectionPool
     /**
      * Get a connection from the pool.
      *
-     * @param float $timeout > 0 means waiting for the specified number of seconds. other means no waiting.
-     * @return mixed|false Returns a connection object from the pool, or false if the pool is full and the timeout is reached.
+     * @param float $timeout the number of seconds to wait for a connection; 0 or less waits with no time limit
+     * @return mixed|false Returns a connection object from the pool, or false if no connection is available before the
+     *                     timeout is reached, the pool is closed while waiting, or the waiting coroutine is canceled.
      */
     public function get(float $timeout = -1)
     {
@@ -72,6 +77,9 @@ class ConnectionPool
 
     public function close(): void
     {
+        if ($this->pool === null) {
+            return;
+        }
         $this->pool->close();
         $this->pool = null;
         $this->num  = 0;

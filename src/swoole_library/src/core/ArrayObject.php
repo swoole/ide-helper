@@ -109,6 +109,8 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
      */
     public function get(mixed $key)
     {
+        // A null key is the empty string for PHP, which deprecates passing it as null as of PHP 8.5.
+        $key = $key ?? '';
         if (!$this->exists($key)) {
             throw new ArrayKeyNotExists($key);
         }
@@ -120,6 +122,7 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
      */
     public function getOr(mixed $key, mixed $default = null)
     {
+        $key = $key ?? '';
         if (!$this->exists($key)) {
             return $default;
         }
@@ -171,6 +174,8 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
      */
     public function set(mixed $key, mixed $value): self
     {
+        $key = $key ?? '';
+
         $this->array[$key] = $value;
         return $this;
     }
@@ -189,13 +194,17 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
      */
     public function remove(mixed $value, bool $strict = true, bool $loop = false): self
     {
-        do {
+        if (!$loop) {
             $key = $this->search($value, $strict);
-            if ($key === false) {
-                break;
+            if ($key !== false) {
+                unset($this->array[$key]);
             }
+            return $this;
+        }
+        // All the matching keys in one pass, instead of an array_search() from the start for every removal.
+        foreach (array_keys($this->array, $value, $strict) as $key) {
             unset($this->array[$key]);
-        } while ($loop);
+        }
 
         return $this;
     }
@@ -215,6 +224,7 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
     #[\ReturnTypeWillChange]
     public function offsetGet(mixed $key)
     {
+        $key = $key ?? '';
         if (!array_key_exists($key, $this->array)) {
             return null;
         }
@@ -223,6 +233,8 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
 
     public function offsetSet(mixed $key, mixed $value): void
     {
+        $key = $key ?? '';
+
         $this->array[$key] = $value;
     }
 
@@ -237,11 +249,13 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
     #[\ReturnTypeWillChange]
     public function offsetExists(mixed $key)
     {
+        $key = $key ?? '';
         return isset($this->array[$key]);
     }
 
     public function exists(mixed $key): bool
     {
+        $key = $key ?? '';
         return array_key_exists($key, $this->array);
     }
 
@@ -263,17 +277,10 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
      */
     public function lastIndexOf(mixed $value, bool $strict = true)
     {
-        $array = $this->array;
-        for (end($array); ($currentKey = key($array)) !== null; prev($array)) {
-            $currentValue = current($array);
-            if ($currentValue == $value) {
-                if ($strict && $currentValue !== $value) {
-                    continue;
-                }
-                break;
-            }
-        }
-        return $currentKey;
+        // array_keys() compares the way array_search() does (== or ===), without the copy of the array that
+        // walking it backwards with end()/prev() forced.
+        $keys = array_keys($this->array, $value, $strict);
+        return $keys ? $keys[array_key_last($keys)] : null;
     }
 
     /**
@@ -519,9 +526,8 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
      */
     public function natcasesort(): self
     {
-        if (natcasesort($this->array) !== true) { // @phpstan-ignore notIdentical.alwaysFalse
-            throw new \RuntimeException('natcasesort() failed');
-        }
+        natcasesort($this->array);
+
         return $this;
     }
 
@@ -530,9 +536,8 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
      */
     public function natsort(): self
     {
-        if (natsort($this->array) !== true) { // @phpstan-ignore notIdentical.alwaysFalse
-            throw new \RuntimeException('natsort() failed');
-        }
+        natsort($this->array);
+
         return $this;
     }
 
@@ -541,9 +546,8 @@ class ArrayObject implements \ArrayAccess, \Serializable, \Countable, \Iterator
      */
     public function rsort(int $sort_flags = SORT_REGULAR): self
     {
-        if (rsort($this->array, $sort_flags) !== true) { // @phpstan-ignore notIdentical.alwaysFalse
-            throw new \RuntimeException('rsort() failed');
-        }
+        rsort($this->array, $sort_flags);
+
         return $this;
     }
 

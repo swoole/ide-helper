@@ -36,7 +36,9 @@ class Server extends \Swoole\Http\Server
      *                   SWOOLE_WEBSOCKET_FLAG_FIN, marks the frame as the last one of a message; leave it out when
      *                   sending a message split into several frames.
      * @return bool Return TRUE on success, or FALSE when failed (e.g., the session doesn't exist, the connection is
-     *              not an established WebSocket connection, or the server is not running).
+     *              not an established WebSocket connection, the server is not running, or, since Swoole 6.2.4, a
+     *              control frame (close, ping, or pong) isn't marked final or carries more than 125 bytes of payload,
+     *              which the WebSocket protocol forbids).
      * @see \Swoole\WebSocket\Server::disconnect()
      * @see \Swoole\WebSocket\Server::ping()
      * @see SWOOLE_WEBSOCKET_OPCODE_TEXT
@@ -114,8 +116,11 @@ class Server extends \Swoole\Http\Server
      * @param int $opcode Type of the frame, telling the receiver how to interpret the data. Swoole defines the opcodes
      *                    of the WebSocket protocol as SWOOLE_WEBSOCKET_OPCODE_* constants.
      * @param int $flags Frame flags, as a bitmask of the SWOOLE_WEBSOCKET_FLAG_* constants.
-     * @return string The encoded frame. An empty string comes back when the frame can't be encoded (e.g., when the
-     *                opcode given is out of range), with a warning raised.
+     * @return string The encoded frame. An empty string comes back when the frame can't be encoded, with a warning
+     *                raised: e.g., when the opcode given is out of range, or (since Swoole 6.2.4) when a control frame
+     *                (close, ping, or pong) isn't marked final with SWOOLE_WEBSOCKET_FLAG_FIN or carries more than 125
+     *                bytes of payload, both of which the WebSocket protocol forbids; before 6.2.4, such a control frame
+     *                was encoded as is, although peers reject it.
      * @see \Swoole\WebSocket\Server::unpack()
      * @see \Swoole\WebSocket\Frame::pack()
      * @alias This method has an alias of \Swoole\WebSocket\Frame::pack().

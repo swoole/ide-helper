@@ -14,6 +14,11 @@ use Swoole\Coroutine\Socket;
  * io_uring, a Linux facility for asynchronous I/O that can reduce the number of system calls needed per request. This
  * changes nothing in how the server is used from PHP.
  *
+ * Since Swoole 6.2.4, when an HTTP/1.1 request carries header "Expect: 100-continue", the server answers with an
+ * interim "100 Continue" response as soon as the request headers are in, before waiting for the request body, as
+ * clients sending that header expect; before 6.2.4, such clients had to wait for their own timeout before sending
+ * the body.
+ *
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has an alias of "\Co\Http\Server" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Http\Server
@@ -74,6 +79,9 @@ final class Server
     /**
      * Create a coroutine HTTP server, bind it to the given host and port, and start listening.
      *
+     * Since Swoole 6.2.4, calling the constructor a second time on the same object throws an \Error, since that would
+     * replace the listening socket the object already manages.
+     *
      * @param string $host The host name or IP address to bind to. It must not be empty. To listen on a Unix socket,
      *                     use a path prefixed with "unix:" (e.g., "unix:///tmp/server.sock").
      * @param int $port The port to listen on. When 0 (the default) is given for a TCP server, a random port is picked
@@ -86,6 +94,7 @@ final class Server
      * @throws \Swoole\Exception When the host is empty, or when the server fails to bind to or listen on the given
      *                           host and port. Before Swoole 6.2.0, it was also thrown when SSL/TLS was requested but
      *                           Swoole was installed without OpenSSL support.
+     * @throws \Error When the constructor is called more than once on the same object (since Swoole 6.2.4).
      */
     public function __construct(string $host, int $port = 0, bool $ssl = false, bool $reuse_port = false)
     {

@@ -102,13 +102,13 @@ final class Handler implements \Stringable
     /** @var callable|null */
     private $readFunction;
 
-    /** @var callable|null */
-    private $writeFunction;
-
     private $noProgress = true;
 
-    /** @var callable */
+    /** @var callable|null */
     private $progressFunction;
+
+    /** @var callable|null */
+    private $prereqFunction;
 
     private $returnTransfer = false;
 
@@ -630,19 +630,16 @@ final class Handler implements \Stringable
                 $this->readFunction = $value;
                 break;
             case CURLOPT_WRITEFUNCTION:
-                if (SWOOLE_VERSION_ID >= 50100) {
-                    $this->clientOptions[Constant::OPTION_WRITE_FUNC] = function ($client, $data) use ($value) {
-                        return $value($this, $data);
-                    };
-                } else {
-                    $this->writeFunction = $value;
-                }
+                $this->clientOptions[Constant::OPTION_WRITE_FUNC] = fn ($client, $data) => $value($this, $data);
                 break;
             case CURLOPT_NOPROGRESS:
                 $this->noProgress = $value;
                 break;
             case CURLOPT_PROGRESSFUNCTION:
                 $this->progressFunction = $value;
+                break;
+            case CURLOPT_PREREQFUNCTION:
+                $this->prereqFunction = $value;
                 break;
             case CURLOPT_HTTPAUTH:
                 if (!($value & CURLAUTH_BASIC)) {
@@ -801,6 +798,13 @@ final class Handler implements \Stringable
             // As much as possible to ensure that Host is the first header.
             // See: http://tools.ietf.org/html/rfc7230#section-5.4
             $client->setHeaders($this->headers);
+            /*
+             * Pre-request Callback
+             */
+            if ($this->prereqFunction && !$this->invokePrereqFunction($proxy ?? null, $proxyPort ?? null)) {
+                $this->info['total_time'] = microtime(true) - $timeBegin;
+                return false;
+            }
             /**
              * Execute.
              */
@@ -928,16 +932,6 @@ final class Handler implements \Stringable
             }
         }
 
-        if ($this->writeFunction) {
-            if (!is_callable($this->writeFunction)) { // @phpstan-ignore booleanNot.alwaysFalse
-                trigger_error('curl_exec(): Could not call the CURLOPT_WRITEFUNCTION', E_USER_WARNING);
-                $this->setError(CURLE_WRITE_ERROR, 'Failure writing output to destination');
-                return false;
-            }
-            call_user_func($this->writeFunction, $this, $transfer);
-            return true;
-        }
-
         if ($this->returnTransfer) {
             return $this->transfer = $transfer;
         }
@@ -947,6 +941,69 @@ final class Handler implements \Stringable
         echo $transfer;
 
         return true;
+    }
+
+    /**
+     * Invokes the CURLOPT_PREREQFUNCTION callback right before the request is sent out.
+     *
+     * Native cURL fires this callback once the connection is fully established. The coroutine HTTP client
+     * connects and sends within a single call, so on a fresh connection the callback fires before the
+     * connection exists: the local address is reported as an empty string with port 0, and the primary
+     * address is the resolved address the client is about to connect to. When an established connection
+     * is reused, the real socket addresses are reported.
+     *
+     * @return bool false when the transfer must be aborted; the error has been recorded already
+     */
+    private function invokePrereqFunction(?string $proxyIp, ?int $proxyPort): bool
+    {
+        $primaryIp   = '';
+        $primaryPort = 0;
+        $localIp     = '';
+        $localPort   = 0;
+        if ($this->client->connected) {
+            $peer = $this->client->getpeername();
+            if (is_array($peer)) {
+                $primaryIp   = $peer['address'];
+                $primaryPort = $peer['port'];
+            }
+            $sock = $this->client->getsockname();
+            if (is_array($sock)) {
+                $localIp   = $sock['address'];
+                $localPort = $sock['port'];
+            }
+        } elseif ($this->unix_socket_path) {
+            $primaryIp   = $this->unix_socket_path;
+            $primaryPort = $this->urlInfo['port'];
+        } elseif ($proxyIp !== null) {
+            // The connection is made to the proxy; native cURL reports the proxy as the connection peer.
+            $primaryIp   = $proxyIp;
+            $primaryPort = (int) $proxyPort;
+        } else {
+            $host = $this->urlInfo['host'];
+            if (filter_var($host, FILTER_VALIDATE_IP)) {
+                $primaryIp = $host;
+            } else {
+                $ip = System::gethostbyname($host, AF_INET, $this->clientOptions[Constant::OPTION_CONNECT_TIMEOUT] ?? -1);
+                if (!$ip) {
+                    // Native cURL never invokes the callback when the connection cannot be established;
+                    // let Client::execute() fail with the canonical DNS error.
+                    return true;
+                }
+                $primaryIp = $ip;
+            }
+            $primaryPort = $this->urlInfo['port'];
+        }
+
+        $retval = ($this->prereqFunction)($this, $primaryIp, $localIp, $primaryPort, $localPort);
+        if ($retval === CURL_PREREQFUNC_OK) {
+            return true;
+        }
+        $this->setError(CURLE_ABORTED_BY_CALLBACK, 'operation aborted by pre-request callback');
+        if ($retval === CURL_PREREQFUNC_ABORT) {
+            return false;
+        }
+        $message = 'The CURLOPT_PREREQFUNCTION callback must return either CURL_PREREQFUNC_OK or CURL_PREREQFUNC_ABORT';
+        throw is_int($retval) ? new \ValueError($message) : new \TypeError($message);
     }
 
     /* ====== Redirect helper ====== */

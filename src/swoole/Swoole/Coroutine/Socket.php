@@ -285,6 +285,11 @@ class Socket
      *                       waiting indefinitely.
      * @return string|false Returns a complete packet on success (an empty string when the peer has closed the
      *                      connection); otherwise FALSE, with properties $errCode and $errMsg updated accordingly.
+     *                      Since Swoole 6.2.4, when the call times out while a length-prefixed packet has only partly
+     *                      arrived, FALSE is returned with $errCode set to SOCKET_ETIMEDOUT and the part received so
+     *                      far is kept, so the next call continues assembling the same packet; before 6.2.4, such a
+     *                      timeout was reported as an empty string (as if the peer had closed the connection) and the
+     *                      partial packet was thrown away.
      * @see \Swoole\Coroutine\Socket::setProtocol()
      * @since 4.4.0
      */
@@ -443,7 +448,9 @@ class Socket
      *
      * @param mixed $peername Variable passed by reference. On success, it's set to an array with two fields in it:
      *                        "address" (the sender's IP address or Unix socket path) and "port" (the sender's port; 0
-     *                        for Unix sockets).
+     *                        for Unix sockets). For a Unix datagram socket, "address" is an empty string when the
+     *                        sender didn't bind its socket to a path; before Swoole 6.2.4, the path of an earlier
+     *                        sender could be reported instead in that case.
      * @param float $timeout The maximum time to wait for a message (in seconds). If it's 0 (the default), the socket's
      *                       own receive timeout applies (60 seconds unless changed); a negative value means waiting
      *                       indefinitely.
@@ -496,7 +503,9 @@ class Socket
      *
      * @param array $settings An array of protocol options, e.g., "open_length_check", "package_length_type",
      *                        "package_length_offset", "package_body_offset", "package_max_length", "open_eof_check",
-     *                        "package_eof", and "open_ssl". It can't be an empty array.
+     *                        "package_eof", and "open_ssl". It can't be an empty array. Since Swoole 6.2.4, leaving
+     *                        "package_max_length" out keeps its current value; before 6.2.4, leaving it out reset it
+     *                        to the default of 2 MB on every call.
      * @return bool Returns TRUE if succeeds; otherwise FALSE.
      * @see \Swoole\Coroutine\Socket::recvPacket()
      * @since 4.4.0

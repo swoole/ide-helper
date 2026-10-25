@@ -73,7 +73,8 @@ class Nacos extends NameResolver
         }
         $cluster = new Cluster();
         foreach ($result->hosts as $node) {
-            $cluster->add($node->ip, $node->port, $node->weight);
+            // Nacos reports the weight as a float (100.0).
+            $cluster->add($node->ip, $node->port, (int) $node->weight);
         }
         return $cluster;
     }

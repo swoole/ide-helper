@@ -359,7 +359,11 @@ class Response
      *   - now:    public function ping(string $data = ''): bool
      *
      * @param string $data Payload to put in the PING frame, which the remote peer is expected to echo back in its PONG
-     *                     frame. It is used on WebSocket connections only, and is ignored on HTTP/2 connections.
+     *                     frame. It is used on WebSocket connections only, and is ignored on HTTP/2 connections. On a
+     *                     WebSocket connection it must not exceed 125 bytes, as the WebSocket protocol requires of
+     *                     control frames: since Swoole 6.2.4, a longer payload makes the method fail with FALSE
+     *                     returned and function \swoole_last_error() reporting SWOOLE_ERROR_WEBSOCKET_PACK_FAILED
+     *                     (before 6.2.4, an invalid frame was sent out instead).
      * @return bool Return TRUE on success; return FALSE when failed, or when the connection is neither an HTTP/2 nor a
      *              WebSocket connection.
      * @see \Swoole\Http\Response::disconnect()
@@ -456,7 +460,9 @@ class Response
      *
      * @param string|null $content The content to be sent to the client. If method Response::write() has been called
      *                             before, the content is sent as the last chunk of the response body.
-     * @return bool Return TRUE on success, or FALSE when failed.
+     * @return bool Return TRUE on success, or FALSE when failed (e.g., when the content is larger than the output buffer
+     *              as described above, or, since Swoole 6.2.4, when the trailer headers of a chunked response can't be
+     *              sent; before 6.2.4, that last failure went unreported and TRUE was returned).
      * @see \Swoole\Http\Response::sendfile()
      * @see \Swoole\Http\Response::write()
      * @see \Swoole\Constant::OPTION_BUFFER_OUTPUT_SIZE
@@ -582,7 +588,9 @@ class Response
      *                    SWOOLE_WEBSOCKET_OPCODE_TEXT, and can't be greater than SWOOLE_WEBSOCKET_OPCODE_PONG.
      * @param int $flags A bitmask of the SWOOLE_WEBSOCKET_FLAG_* constants. It defaults to SWOOLE_WEBSOCKET_FLAG_FIN,
      *                   marking the frame as the final fragment of a message.
-     * @return bool Return TRUE on success, or FALSE when failed.
+     * @return bool Return TRUE on success, or FALSE when failed (e.g., since Swoole 6.2.4, when a control frame
+     *              (close, ping, or pong) isn't marked final or carries more than 125 bytes of payload, which the
+     *              WebSocket protocol forbids).
      * @see \Swoole\Http\Response::upgrade()
      * @see \Swoole\WebSocket\Frame
      * @since 4.4.0

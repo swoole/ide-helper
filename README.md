@@ -45,7 +45,7 @@ Since the package is only there to assist your IDE, it doesn't belong in product
 ### Choosing a version
 
 <!-- BEGIN: version-examples -->
-Releases of this package mirror Swoole releases: version `6.2.3` of this package documents Swoole `v6.2.3`. Note that
+Releases of this package mirror Swoole releases: version `6.2.4` of this package documents Swoole `v6.2.4`. Note that
 this package's tags have no `v` prefix, while Swoole's do. For the most accurate results, use the release that matches
 the Swoole version you actually run. You can check your installed version with:
 
@@ -56,12 +56,12 @@ php --ri swoole | grep Version
 Then require the matching release, e.g.:
 
 ```bash
-composer require --dev swoole/ide-helper:~6.2.3
+composer require --dev swoole/ide-helper:~6.2.4
 ```
 
-The `~6.2.3` constraint installs the newest `6.2.x` release that is `6.2.3` or later, so you pick up documentation
+The `~6.2.4` constraint installs the newest `6.2.x` release that is `6.2.4` or later, so you pick up documentation
 fixes made in later patch releases while staying on the same minor line as your Swoole extension. To pin one exact
-release instead, drop the `~` (`swoole/ide-helper:6.2.3`).
+release instead, drop the `~` (`swoole/ide-helper:6.2.4`).
 
 The `master` branch tracks the latest Swoole minor line (currently `6.2.x`). Older minor lines are released from their
 own maintenance branches (e.g. `6.1.x`), so a constraint like `~6.1.10` keeps working for them. To use the latest
@@ -157,7 +157,7 @@ Besides the standard PHPDoc tags, the stubs use a few conventions you'll see in 
 ## PHP configuration settings
 
 <!-- BEGIN: ini-directives -->
-Swoole's behavior can be tuned with the following ini directives (as of Swoole 6.2.3):
+Swoole's behavior can be tuned with the following ini directives (as of Swoole 6.2.4):
 
 | Directive                            | Type    | Default           | Where it can be set |
 |--------------------------------------|---------|-------------------|---------------------|
@@ -204,7 +204,7 @@ Swoole's behavior can be tuned with the following ini directives (as of Swoole 6
 ## Contributing
 
 Bug reports and pull requests are welcome. If a stub doesn't match Swoole, please cite the relevant code in
-[swoole-src](https://github.com/swoole/swoole-src) at the matching release tag (e.g. `v6.2.3`). A few rules:
+[swoole-src](https://github.com/swoole/swoole-src) at the matching release tag (e.g. `v6.2.4`). A few rules:
 
 * Compare against swoole-src's actual C/C++ source. Don't use the `.stub.php` files shipped in swoole-src as a source;
   they aren't reliable for this work.

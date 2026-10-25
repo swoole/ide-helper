@@ -24,23 +24,17 @@ class RedisPool extends ConnectionPool
     {
         parent::__construct(function () {
             $redis = new \Redis();
-            /* Compatible with different versions of Redis extension as much as possible */
-            $arguments = [
+            // Every argument is passed, in the position phpredis defines for it: leaving one out shifts the ones
+            // after it into the wrong parameters (a read timeout became the connect timeout, a retry interval
+            // landed in the persistent id). The zero defaults mean "unset" to phpredis, as they do to the config.
+            $redis->connect(
                 $this->config->getHost(),
                 $this->config->getPort(),
-            ];
-            if ($this->config->getTimeout() !== 0.0) {
-                $arguments[] = $this->config->getTimeout();
-            }
-            if ($this->config->getRetryInterval() !== 0) {
-                /* reserved should always be NULL */
-                $arguments[] = null;
-                $arguments[] = $this->config->getRetryInterval();
-            }
-            if ($this->config->getReadTimeout() !== 0.0) {
-                $arguments[] = $this->config->getReadTimeout();
-            }
-            $redis->connect(...$arguments);
+                $this->config->getTimeout(),
+                null, // persistent_id: a pooled connection is never persistent
+                $this->config->getRetryInterval(),
+                $this->config->getReadTimeout()
+            );
             if ($this->config->getAuth()) {
                 $redis->auth($this->config->getAuth());
             }

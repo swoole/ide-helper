@@ -165,6 +165,8 @@ class Constant
 
     public const OPTION_HTTP2_MAX_HEADER_LIST_SIZE = 'http2_max_header_list_size';
 
+    public const OPTION_HTTP2_MAX_HEADERS = 'http2_max_headers';
+
     public const OPTION_AIO_CORE_WORKER_NUM = 'aio_core_worker_num';
 
     public const OPTION_AIO_WORKER_NUM = 'aio_worker_num';

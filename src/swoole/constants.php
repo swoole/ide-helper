@@ -9,13 +9,13 @@ declare(strict_types=1);
  * source code (it kept reporting 60103, the value from Swoole 6.1.3), and Swoole 6.1.5 corrected it straight to
  * 60105. Keep this in mind when comparing against SWOOLE_VERSION_ID to detect Swoole 6.1.4.
  *
- * @see https://github.com/swoole/swoole-src/blob/v6.2.3/include/swoole_version.h#L26
+ * @see https://github.com/swoole/swoole-src/blob/v6.2.4/include/swoole_version.h#L26
  */
-define('SWOOLE_VERSION', '6.2.3');
-define('SWOOLE_VERSION_ID', 60203);
+define('SWOOLE_VERSION', '6.2.4');
+define('SWOOLE_VERSION_ID', 60204);
 define('SWOOLE_MAJOR_VERSION', 6);
 define('SWOOLE_MINOR_VERSION', 2);
-define('SWOOLE_RELEASE_VERSION', 3);
+define('SWOOLE_RELEASE_VERSION', 4);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
@@ -793,6 +793,13 @@ define('SWOOLE_CHANNEL_CANCELED', -3);
 
 /*
  * Runtime hook flags.
+ *
+ * On the PHP streams hooked by the socket-related flags (SWOOLE_HOOK_TCP, SWOOLE_HOOK_UDP, SWOOLE_HOOK_UNIX,
+ * SWOOLE_HOOK_UDG, SWOOLE_HOOK_SSL, and SWOOLE_HOOK_TLS), the timeout set with function stream_set_timeout() applies
+ * to writes as well as reads since Swoole 6.2.4: a blocking fwrite() gives up once the timeout passes, returning
+ * FALSE (before 6.2.4, it kept waiting, and a timeout was reported as 0 bytes written together with a "Send of N
+ * bytes failed" notice). A read that times out fails as well, with fread() returning FALSE instead of an empty
+ * string as before 6.2.4. In neither case is the stream marked as having reached its end.
  */
 define('SWOOLE_HOOK_TCP', 2); // 2^1
 define('SWOOLE_HOOK_UDP', 4); // 2^2
@@ -1306,7 +1313,7 @@ define('SWOOLE_TIMER_MAX_SEC', (float) SWOOLE_TIMER_MAX_MS / 1000);
 define('SWOOLE_SSL', 512); // 2^9
 /*
  * SSL/TLS method constants. Each one names an OpenSSL connection method (a protocol version, optionally restricted to
- * the client or server side). As of Swoole 6.2.3, these constants are still defined but not read by any Swoole
+ * the client or server side). As of Swoole 6.2.4, these constants are still defined but not read by any Swoole
  * setting or method; to restrict which protocol versions are allowed, use the SWOOLE_SSL_* constants below with
  * setting "ssl_protocols" instead.
  *

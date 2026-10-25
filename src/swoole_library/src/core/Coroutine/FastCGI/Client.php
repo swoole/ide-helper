@@ -84,9 +84,17 @@ class Client
                 $this->ioException(SOCKET_EPROTO);
             }
 
-            do {
-                $records[] = $record = FrameParser::parseFrame($recvData);
-            } while (strlen($recvData) !== 0);
+            try {
+                do {
+                    $records[] = $record = FrameParser::parseFrame($recvData);
+                } while (strlen($recvData) !== 0);
+            } catch (\Throwable $e) {
+                // The rest of the response is still on the connection, and would be read as the response to the next
+                // request sent over it.
+                $this->socket->close();
+                $this->socket = null;
+                throw $e;
+            }
             if ($record instanceof EndRequest) {
                 if (!$request->getKeepConn()) {
                     $this->socket->close();

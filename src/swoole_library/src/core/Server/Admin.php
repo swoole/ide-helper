@@ -862,7 +862,7 @@ class Admin
             return self::json(['error' => 'Object destroyed!'], 4004);
         }
 
-        $object_hash = spl_object_hash($object); // @phpstan-ignore argument.type
+        $object_hash = spl_object_hash($object);
         if ($object_hash != $json['object_hash']) {
             return self::json(['error' => 'Object destroyed!'], 4004);
         }

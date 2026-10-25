@@ -17,6 +17,14 @@ use Swoole\Coroutine\Iterator;
  * coroutines (method create()), inspect and control them (e.g., methods getCid(), yield(), resume(), cancel()), and
  * configure coroutine behavior (method set()).
  *
+ * Once the first coroutine has been created, a few PHP functions that can't work safely alongside coroutines are
+ * disabled for the rest of the program: functions pcntl_fork(), pcntl_rfork(), pcntl_wait(), pcntl_waitpid(),
+ * pcntl_sigtimedwait(), and pcntl_sigwaitinfo() (calling any of them raises an E_WARNING level error saying it has
+ * been disabled for security reasons; use class \Swoole\Process to manage child processes instead), and, since
+ * Swoole 6.2.4 on PHP 8.4 and later, function http_get_last_response_headers() (an E_WARNING level error says it is
+ * not supported in Swoole coroutines; the headers it reports are shared by the whole process, so they can't be told
+ * apart per coroutine).
+ *
  * @alias This class has an alias of "\co" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \co
  * @see \Swoole\Runtime::enableCoroutine()
@@ -113,7 +121,11 @@ class Coroutine
     /**
      * Cancel the execution of a coroutine.
      *
-     * Please note that this method can not cancel the execution of current coroutine.
+     * Please note that, with parameter $throw_exception left as FALSE, this method can not cancel the execution of
+     * current coroutine: it fails with function \swoole_last_error() reporting SWOOLE_ERROR_CO_CANNOT_CANCEL. Since
+     * Swoole 6.2.4, passing TRUE for the current coroutine is supported: the \Swoole\Coroutine\CanceledException is
+     * thrown right away at the point of the call, as if by a throw statement there. Before 6.2.4, such a call
+     * reported success but never actually delivered the exception.
      *
      * A coroutine that is busy with a file operation can not be cancelled; trying to force it may crash the process.
      * As an exception, since Swoole 6.2.0, when Swoole is installed with the "--enable-iouring" (or
@@ -207,15 +219,19 @@ class Coroutine
      * });
      * ```
      *
-     * This method must be called inside a coroutine, and the limit applies to the calling coroutine only.
+     * This method must be called inside a coroutine, and the limit applies to the calling coroutine only. Since Swoole
+     * 6.2.4, calling the method again replaces the limit set earlier (only the latest call counts), and a pending
+     * limit is dropped when the coroutine finishes; before 6.2.4, every call added one more limit, and each of them
+     * fired on its own.
      *
-     * @param float $timeout The time limit in seconds. Although the parameter accepts a float, as of Swoole 6.2.3 the
-     *                       fractional part is dropped internally, so the limit is effectively whole seconds (e.g.,
-     *                       1.5 behaves like 1). When 0 is given, no limit is set and FALSE is returned. Any other
-     *                       value below 1 (e.g., 0.5, or a negative number) doesn't set a limit either: a warning is
-     *                       raised, yet TRUE is returned.
-     * @return bool Returns TRUE when the time limit is set (and, as described for parameter $timeout, also when a
-     *              value below 1 other than 0 is given, although no limit is set then), or FALSE when $timeout is 0.
+     * @param float $timeout The time limit in seconds. Fractions are honored since Swoole 6.2.4 (e.g., 0.5 means half a
+     *                       second; anything below 0.001 counts as 0.001). Before 6.2.4, the fractional part was
+     *                       dropped, so the limit was effectively whole seconds (1.5 behaved like 1), and a value
+     *                       below 1 set no limit at all, with a warning raised. When 0 or a negative number is given,
+     *                       no limit is set and FALSE is returned; before 6.2.4, a negative number raised a warning
+     *                       and returned TRUE without setting a limit.
+     * @return bool Returns TRUE when the time limit is set, or FALSE when $timeout is 0 or negative (before Swoole
+     *              6.2.4, FALSE was returned for 0 only).
      * @see \Swoole\Coroutine\TimeoutException
      * @see \Swoole\Coroutine::cancel()
      * @since 6.2.0

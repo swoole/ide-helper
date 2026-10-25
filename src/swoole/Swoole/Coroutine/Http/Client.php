@@ -193,6 +193,9 @@ class Client
      *
      * The client doesn't connect to the server until the first request is sent.
      *
+     * Since Swoole 6.2.4, calling the constructor a second time on the same object throws an \Error, since that would
+     * replace the connection the object already manages.
+     *
      * @param string $host The host name or IP address of the server. It must not be empty.
      * @param int $port The port of the server.
      * @param bool $ssl Whether to use SSL/TLS encryption. Before Swoole 6.2.0, this option was available only when
@@ -201,6 +204,7 @@ class Client
      * @throws \Swoole\Coroutine\Http\Client\Exception When the host is empty. Before Swoole 6.2.0, it was also
      *                                                 thrown when SSL/TLS was requested but Swoole was installed
      *                                                 without OpenSSL support.
+     * @throws \Error When the constructor is called more than once on the same object (since Swoole 6.2.4).
      */
     public function __construct(string $host, int $port = 0, bool $ssl = false)
     {
@@ -222,7 +226,12 @@ class Client
      * The settings given are merged into property $setting.
      *
      * @param array $settings Client settings, e.g., "timeout", "keep_alive", "websocket_mask", "websocket_compression",
-     *                        "http_compression", "body_decompression", "lowercase_header", and socket options.
+     *                        "http_compression", "body_decompression", "lowercase_header", "write_func" (a callback of
+     *                        the form function ($client, string $data) that receives the response body piece by
+     *                        piece as it arrives, instead of the body being collected into property $body), and
+     *                        socket options. Since Swoole 6.2.4, when "body_decompression" is on and the server
+     *                        compressed the response, the pieces handed to "write_func" are decompressed first;
+     *                        before 6.2.4, the callback received the raw compressed bytes.
      * @return bool Return TRUE on success; return FALSE when an empty array is given.
      * @see \Swoole\Coroutine\Http\Client::$setting
      */
@@ -544,6 +553,12 @@ class Client
      * Once upgraded, use methods Client::push() and Client::recv() to exchange WebSocket messages with the server.
      * Defer mode is turned off by this method.
      *
+     * Since Swoole 6.2.4, the server's answer is checked properly: it must be an HTTP 101 response carrying header
+     * "Upgrade: websocket", header "Connection: Upgrade", and a "Sec-WebSocket-Accept" header matching the key sent in
+     * the request. Any other answer makes the method fail, with property $errCode set to
+     * SWOOLE_ERROR_WEBSOCKET_HANDSHAKE_FAILED and the connection closed. Before 6.2.4, the method returned TRUE as
+     * long as the request itself went through, even when the server had declined the upgrade.
+     *
      * @param string $path The path to send the handshake request to, e.g., "/websocket".
      * @return bool Return TRUE on success; return FALSE when the handshake fails — check properties $errCode, $errMsg,
      *              and $statusCode for the reason.
@@ -568,7 +583,9 @@ class Client
      * @param int $flags A bitmask of the SWOOLE_WEBSOCKET_FLAG_* constants. It defaults to SWOOLE_WEBSOCKET_FLAG_FIN,
      *                   marking the frame as the final fragment of a message.
      * @return bool Return TRUE on success; return FALSE when failed, e.g., when the connection has not been upgraded
-     *              to the WebSocket protocol, or when sending fails.
+     *              to the WebSocket protocol, when sending fails, or (since Swoole 6.2.4) when a control frame (close,
+     *              ping, or pong) isn't marked final or carries more than 125 bytes of payload, which the WebSocket
+     *              protocol forbids.
      * @see \Swoole\Coroutine\Http\Client::upgrade()
      * @see \Swoole\WebSocket\Frame
      */
@@ -662,7 +679,9 @@ class Client
      * The client object stays usable after this call: sending another request reconnects automatically.
      *
      * @return bool Return TRUE on success; return FALSE when the connection has been closed already, or when closing
-     *              the underlying socket fails.
+     *              the underlying socket fails. Since Swoole 6.2.4, calling the method before the client has ever
+     *              connected is safe as well: FALSE is returned, with property $errCode set to
+     *              SWOOLE_ERROR_CLIENT_NO_CONNECTION. Before 6.2.4, doing so could crash the process.
      */
     public function close(): bool
     {

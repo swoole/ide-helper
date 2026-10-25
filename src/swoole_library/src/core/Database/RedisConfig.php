@@ -25,7 +25,8 @@ class RedisConfig
 
     protected float $read_timeout = 0.0;
 
-    protected string $auth = '';
+    /** @var string|string[] */
+    protected string|array $auth = '';
 
     protected int $dbIndex = 0;
 
@@ -100,12 +101,18 @@ class RedisConfig
         return $this;
     }
 
-    public function getAuth(): string
+    /**
+     * @return string|string[]
+     */
+    public function getAuth(): string|array
     {
         return $this->auth;
     }
 
-    public function withAuth(string $auth): self
+    /**
+     * @param string|string[] $auth string for password only, array for [username, password]
+     */
+    public function withAuth(string|array $auth): self
     {
         $this->auth = $auth;
         return $this;

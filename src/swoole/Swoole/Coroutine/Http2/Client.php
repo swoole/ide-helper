@@ -40,7 +40,7 @@ class Client
     public string $errMsg = '';
 
     /**
-     * Unused. The property is declared for backward compatibility but, as of Swoole 6.2.3, is never updated by
+     * Unused. The property is declared for backward compatibility but, as of Swoole 6.2.4, is never updated by
      * Swoole; it always stays -1. Use property $socket to access the underlying connection instead.
      *
      * @see \Swoole\Coroutine\Http2\Client::$socket
@@ -48,7 +48,7 @@ class Client
     public int $sock = -1;
 
     /**
-     * Unused. The property is declared for backward compatibility but, as of Swoole 6.2.3, is never updated by
+     * Unused. The property is declared for backward compatibility but, as of Swoole 6.2.4, is never updated by
      * Swoole; it always stays 0.
      */
     public int $type = 0;
@@ -109,7 +109,9 @@ class Client
      * The constructor only stores the connection details in properties $host, $port, and $ssl; the actual connection
      * is not established until method connect() is called.
      *
-     * A \Swoole\Coroutine\Http2\Client\Exception is thrown when $host is an empty string.
+     * A \Swoole\Coroutine\Http2\Client\Exception is thrown when $host is an empty string. Since Swoole 6.2.4, calling
+     * the constructor a second time on the same object throws an \Error, since that would replace the connection the
+     * object already manages.
      *
      * @param string $host The target host to connect to.
      * @param int $port The target port to connect to. Defaults to 80.
@@ -118,6 +120,7 @@ class Client
      *                       "--enable-openssl" included, and the constructor threw a
      *                       \Swoole\Coroutine\Http2\Client\Exception otherwise; since Swoole 6.2.0, OpenSSL support
      *                       is always built in, so this option is always supported.
+     * @throws \Error When the constructor is called more than once on the same object (since Swoole 6.2.4).
      */
     public function __construct(string $host, int $port = 80, bool $open_ssl = false)
     {

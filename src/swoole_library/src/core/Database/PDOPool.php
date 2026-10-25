@@ -34,7 +34,7 @@ class PDOPool extends ConnectionPool
     /**
      * Get a PDO connection from the pool. The PDO connection (a PDO object) is wrapped in a PDOProxy object returned.
      *
-     * @param float $timeout > 0 means waiting for the specified number of seconds. other means no waiting.
+     * @param float $timeout the number of seconds to wait for a connection; 0 or less waits with no time limit
      * @return PDOProxy|false Returns a PDOProxy object from the pool, or false if the pool is full and the timeout is reached.
      *                        {@inheritDoc}
      */

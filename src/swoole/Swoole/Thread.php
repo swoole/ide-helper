@@ -120,11 +120,15 @@ final class Thread
     /**
      * The constructor.
      *
+     * Since Swoole 6.2.4, calling the constructor a second time on the same object throws an \Error, since that would
+     * replace the thread the object already manages.
+     *
      * @param string $script_file Path to the PHP script file that will be executed in the thread.
      * @param mixed ...$args List of arguments to pass to the PHP script file.
      *                       Inside the thread created, these arguments can be accessed via method Thread::getArguments().
      * @throws Exception When $script_file is an empty string, or when the operating system fails to create the new
      *                   thread.
+     * @throws \Error When the constructor is called more than once on the same object (since Swoole 6.2.4).
      * @see Thread::getArguments()
      */
     public function __construct(string $script_file, mixed ...$args)
@@ -261,7 +265,10 @@ final class Thread
      * This method is available only on some operating systems that support CPU affinity. It's not available on Windows
      * or macOS.
      *
-     * @param array<int> $cpu_settings IDs of the CPU cores the thread is allowed to run on, starting from 0.
+     * @param array<int> $cpu_settings IDs of the CPU cores the thread is allowed to run on, starting from 0. An ID
+     *                                 beyond the last CPU core, or (since Swoole 6.2.4) a negative one, makes the
+     *                                 method fail with an E_WARNING level error raised; before 6.2.4, a negative ID
+     *                                 wasn't rejected, with unpredictable results.
      * @return bool TRUE on success, or FALSE on failure.
      * @see https://linux.die.net/man/3/pthread_setaffinity_np
      */
@@ -287,16 +294,18 @@ final class Thread
     /**
      * Set scheduling policy and priority of the current thread (the thread the call is made from).
      *
-     * Note that, as of Swoole 6.2.3, leaving parameter $policy out makes Swoole ask the operating system for an
-     * invalid scheduling policy, so the call always fails; pass both parameters explicitly.
+     * Since Swoole 6.2.4, leaving parameter $policy out (or passing -1) keeps the scheduling policy the thread already
+     * has and changes its priority only. Before 6.2.4, leaving it out made Swoole ask the operating system for an
+     * invalid scheduling policy, so the call always failed; pass both parameters explicitly on older versions.
      *
      * @param int $priority The new scheduling priority. What counts as a valid value depends on the scheduling policy.
-     * @param int $policy The scheduling policy to use. It should be one of the \Swoole\Thread::SCHED_* constants.
+     * @param int $policy The scheduling policy to use, one of the \Swoole\Thread::SCHED_* constants; -1 (the default)
+     *                    keeps the current policy, as described above.
      * @return bool Returns true on success or false on failure.
      * @see \Swoole\Thread::getPriority()
      * @see https://linux.die.net/man/3/pthread_setschedparam
      */
-    public static function setPriority(int $priority, int $policy = 0): bool
+    public static function setPriority(int $priority, int $policy = -1): bool
     {
     }
 

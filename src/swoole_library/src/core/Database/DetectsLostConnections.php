@@ -14,6 +14,9 @@ namespace Swoole\Database;
 class DetectsLostConnections
 {
     /**
+     * The list mirrors Laravel's `Illuminate\Database\LostConnectionDetector` (laravel/framework 12.x), in its order,
+     * so that a diff against it stays mechanical; the entries this library adds on its own are marked as such.
+     *
      * @var array<string>
      */
     private const ERROR_MESSAGES = [
@@ -34,7 +37,7 @@ class DetectsLostConnections
         'reset by peer',
         'Physical connection is not usable',
         'TCP Provider: Error code 0x68',
-        'ORA-03113',
+        'ORA-03113', // this library's own
         'ORA-03114',
         'Packets out of order. Expected',
         'Adaptive Server connection failed',
@@ -64,8 +67,9 @@ class DetectsLostConnections
         'Reason: Server is in script upgrade mode. Only administrator can connect at this time.',
         'Unknown $curl_error_code: 77',
         'SSL: Handshake timed out',
-        'SQLSTATE[08006] [7] SSL error: sslv3 alert unexpected message',
-        'SQLSTATE[08006] [7] unrecognized SSL error code:',
+        'SSL error: sslv3 alert unexpected message',
+        'SSL error: ssl/tls alert unexpected message',
+        'unrecognized SSL error code:',
         'SQLSTATE[HY000] [1045] Access denied for user',
         'SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it',
         'SQLSTATE[HY000] [2002] A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond',
@@ -83,12 +87,22 @@ class DetectsLostConnections
         'Connection lost',
         'Broken pipe',
         'SQLSTATE[25006]: Read only sql transaction: 7',
+        // PlanetScale MySQL / Vitess
         'vtgate connection error: no healthy endpoints',
         'primary is not serving, there may be a reparent operation in progress',
         'current keyspace is being resharded',
         'no healthy tablet available',
         'transaction pool connection limit exceeded',
         'SSL operation failed with code 5',
+        // PlanetScale PostgreSQL / pg_bouncer
+        'no primary available for branch',
+        'no replica available for branch',
+        'no running members available for branch',
+        'failed to connect to upstream',
+        'failed to send startup message',
+        'failed to read startup message',
+        'canceling statement due to conflict with recovery',
+        // This library's own, from here on:
         // PDO::prepare(): Send of 77 bytes failed with errno=110 Operation timed out
         // SSL: Handshake timed out
         // SSL: Operation timed out

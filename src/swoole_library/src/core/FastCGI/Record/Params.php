@@ -56,59 +56,20 @@ class Params extends Record
     protected static function unpackPayload(Record $self, string $binaryData): void
     {
         assert($self instanceof self); // @phpstan-ignore function.alreadyNarrowedType,instanceof.alwaysTrue
-        $currentOffset = 0;
-        do {
-            /** @phpstan-var false|array{nameLengthHigh: int} */
-            $payload = unpack('CnameLengthHigh', $binaryData);
-            if ($payload === false) {
+        // Record::unpack() has already checked that the buffer holds the whole content (and the padding), so every
+        // read below is bounded by the content length alone. Decoding by offset, instead of cutting the rest of the
+        // buffer off for every pair, keeps the cost linear in the payload size.
+        $contentLength = $self->getContentLength();
+        $offset        = 0;
+        while ($offset < $contentLength) {
+            $nameLength  = self::unpackLength($binaryData, $contentLength, $offset);
+            $valueLength = self::unpackLength($binaryData, $contentLength, $offset);
+            if ($offset + $nameLength + $valueLength > $contentLength) {
                 throw new \RuntimeException('Can not unpack data from the binary buffer');
             }
-            [$nameLengthHigh] = array_values($payload);
-            $isLongName       = ($nameLengthHigh >> 7 == 1);
-            $valueOffset      = $isLongName ? 4 : 1;
-
-            /** @phpstan-var false|array{valueLengthHigh: int} */
-            $payload = unpack('CvalueLengthHigh', substr($binaryData, $valueOffset));
-            if ($payload === false) {
-                throw new \RuntimeException('Can not unpack data from the binary buffer');
-            }
-            [$valueLengthHigh] = array_values($payload);
-            $isLongValue       = ($valueLengthHigh >> 7 == 1);
-            $dataOffset        = $valueOffset + ($isLongValue ? 4 : 1);
-
-            $formatParts = [
-                $isLongName ? 'NnameLength' : 'CnameLength',
-                $isLongValue ? 'NvalueLength' : 'CvalueLength',
-            ];
-            $format      = join('/', $formatParts);
-
-            /** @phpstan-var false|array{nameLength: int, valueLength: int} */
-            $payload = unpack($format, $binaryData);
-            if ($payload === false) {
-                throw new \RuntimeException('Can not unpack data from the binary buffer');
-            }
-            [$nameLength, $valueLength] = array_values($payload);
-
-            // Clear top bit for long record
-            $nameLength &= ($isLongName ? 0x7FFFFFFF : 0x7F);
-            $valueLength &= ($isLongValue ? 0x7FFFFFFF : 0x7F);
-
-            /** @phpstan-var false|array{nameData: string, valueData: string} */
-            $payload = unpack(
-                "a{$nameLength}nameData/a{$valueLength}valueData",
-                substr($binaryData, $dataOffset)
-            );
-            if ($payload === false) {
-                throw new \RuntimeException('Can not unpack data from the binary buffer');
-            }
-            [$nameData, $valueData] = array_values($payload);
-
-            $self->values[$nameData] = $valueData;
-
-            $keyValueLength = $dataOffset + $nameLength + $valueLength;
-            $binaryData     = substr($binaryData, $keyValueLength);
-            $currentOffset += $keyValueLength;
-        } while ($currentOffset < $self->getContentLength());
+            $self->values[substr($binaryData, $offset, $nameLength)] = substr($binaryData, $offset + $nameLength, $valueLength);
+            $offset += $nameLength + $valueLength;
+        }
     }
 
     /**
@@ -121,28 +82,43 @@ class Params extends Record
             if ($valueData === null) { // @phpstan-ignore identical.alwaysFalse
                 continue;
             }
+            $valueData   = (string) $valueData;
             $nameLength  = strlen($nameData);
-            $valueLength = strlen((string) $valueData);
-            $isLongName  = $nameLength > 127;
-            $isLongValue = $valueLength > 127;
-            $formatParts = [
-                $isLongName ? 'N' : 'C',
-                $isLongValue ? 'N' : 'C',
-                "a{$nameLength}",
-                "a{$valueLength}",
-            ];
-
-            $format = join('', $formatParts);
-
-            $payload .= pack(
-                $format,
-                $isLongName ? ($nameLength | 0x80000000) : $nameLength,
-                $isLongValue ? ($valueLength | 0x80000000) : $valueLength,
-                $nameData,
-                $valueData
-            );
+            $valueLength = strlen($valueData);
+            // Each length is one byte up to 127, and four bytes with the top bit set above that. The name and the
+            // value follow as they are, so they are appended directly rather than copied through pack("a{n}").
+            $payload .= ($nameLength > 127 ? pack('N', $nameLength | 0x80000000) : chr($nameLength))
+                . ($valueLength > 127 ? pack('N', $valueLength | 0x80000000) : chr($valueLength))
+                . $nameData
+                . $valueData;
         }
 
         return $payload;
+    }
+
+    /**
+     * Reads the length at $offset, one byte up to 127 or four bytes with the top bit set above that, and moves
+     * $offset past it.
+     */
+    private static function unpackLength(string $binaryData, int $contentLength, int &$offset): int
+    {
+        if ($offset >= $contentLength) {
+            throw new \RuntimeException('Can not unpack data from the binary buffer');
+        }
+        $length = ord($binaryData[$offset]);
+        if ($length >> 7 === 0) {
+            $offset++;
+            return $length;
+        }
+        if ($offset + 4 > $contentLength) {
+            throw new \RuntimeException('Can not unpack data from the binary buffer');
+        }
+        /** @phpstan-var false|array{1: int} */
+        $payload = unpack('N', $binaryData, $offset);
+        if ($payload === false) {
+            throw new \RuntimeException('Can not unpack data from the binary buffer');
+        }
+        $offset += 4;
+        return $payload[1] & 0x7FFFFFFF;
     }
 }

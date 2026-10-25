@@ -42,4 +42,25 @@ class MysqliPool extends ConnectionPool
             return $mysqli;
         }, $size, MysqliProxy::class);
     }
+
+    /**
+     * Get a mysqli connection from the pool, wrapped in a MysqliProxy. The proxy's transaction tracking is reset,
+     * as PDOPool does, so that a connection put back in the middle of a transaction does not keep the next
+     * borrower from reconnecting when the connection is lost.
+     *
+     * @param float $timeout the number of seconds to wait for a connection; 0 or less waits with no time limit
+     * @return MysqliProxy|false Returns a MysqliProxy object from the pool, or false if the pool is full and the timeout is reached.
+     */
+    public function get(float $timeout = -1)
+    {
+        /* @var MysqliProxy|false $mysqli */
+        $mysqli = parent::get($timeout);
+        if ($mysqli === false) {
+            return false;
+        }
+
+        $mysqli->reset();
+
+        return $mysqli;
+    }
 }

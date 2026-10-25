@@ -47,6 +47,9 @@ class HttpResponse extends Response
         parent::__construct($records);
         $body = $this->getBody();
         if (strlen($body) === 0) {
+            /* An empty FastCGI response carries no HTTP payload at all; report it the same way as a malformed one
+             * so that the accessors are always safe to call. */
+            $this->withStatusCode(Status::BAD_GATEWAY)->withReasonPhrase('Invalid FastCGI Response');
             return;
         }
         $array = explode("\r\n\r\n", $body, 2); // An array that contains the HTTP headers and the body.

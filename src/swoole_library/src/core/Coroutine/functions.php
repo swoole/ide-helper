@@ -91,7 +91,7 @@ function map(array $list, callable $fn, float $timeout = -1): array
 
 function deadlock_check()
 {
-    $all_coroutines = Coroutine::listCoroutines();
+    $all_coroutines = Coroutine::list();
     $count          = Coroutine::stats()['coroutine_num'];
 
     // coroutine deadlock detected, header
@@ -113,7 +113,7 @@ function deadlock_check()
         foreach ($all_coroutines as $cid) {
             echo "\n  [Coroutine-{$cid}]";
             echo "\n {$hr2}\n";
-            echo Coroutine::printBackTrace($cid, DEBUG_BACKTRACE_IGNORE_ARGS, $depth);
+            Coroutine::printBackTrace($cid, DEBUG_BACKTRACE_IGNORE_ARGS, $depth);
             $index++;
             // limit the number of maximum outputs
             if ($index >= $limit) {

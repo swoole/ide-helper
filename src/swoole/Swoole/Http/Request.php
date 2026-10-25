@@ -79,6 +79,11 @@ class Request
      * stop this property from being populated; it only controls whether files uploaded under array-style field names
      * (e.g., "files[]") get restructured into nested arrays the way the superglobal $_FILES does.
      *
+     * Since Swoole 6.2.4, when Swoole fails to create the temporary file for an uploaded file (e.g., because the
+     * upload temporary directory doesn't exist or isn't writable), field "error" of that file's entry is set to
+     * UPLOAD_ERR_NO_TMP_DIR (6); before 6.2.4, the entry looked like a successful upload (error 0) with no file
+     * behind it.
+     *
      * @see \Swoole\Http\Request::create()
      */
     public ?array $files = null;
@@ -167,7 +172,10 @@ class Request
      * Parse the raw HTTP request data.
      *
      * This method can be called multiple times to feed the request data in pieces; use method Request::isCompleted()
-     * to check if the whole request has been received.
+     * to check if the whole request has been received. Since Swoole 6.2.4, a piece may end anywhere, even in the
+     * middle of the request line or of a header. Before 6.2.4, a request path or header value cut across two pieces
+     * was parsed wrongly (each part was taken as a complete value), so pieces had to end on line boundaries to be
+     * parsed reliably.
      *
      * @param string $data The raw HTTP request data (or a piece of it) to parse.
      * @return int|false Return the number of bytes successfully parsed; when the data given is malformed, this can be

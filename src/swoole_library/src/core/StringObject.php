@@ -135,7 +135,7 @@ class StringObject implements \Stringable
 
     public function endsWith(string $needle): bool
     {
-        return strrpos($this->string, $needle) === (strlen($this->string) - strlen($needle));
+        return str_ends_with($this->string, $needle);
     }
 
     public function equals($str, bool $strict = false): bool
