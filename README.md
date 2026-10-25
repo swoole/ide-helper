@@ -122,8 +122,11 @@ instead, e.g. `composer require --dev swoole/ide-helper:~6.1.10`.
 
 Some Swoole features exist only when the extension is built with a particular configuration option. The stubs declare
 them unconditionally, so your IDE offers them even if your Swoole build doesn't include them; each one's docblock says
-what it needs. For example:
+what it needs. As of Swoole 6.2.4, the build options the stubs document are:
 
+* Interoperability with PHP's own sockets extension (`Swoole\Server::getSocket()`, `Swoole\Server\Port::getSocket()`,
+  `Swoole\Client::getSocket()`, passing a `\Socket` object to `Swoole\Event::add()`, and the `$__ext_sockets_*`
+  bookkeeping properties of `Swoole\Coroutine\Socket`): `--enable-sockets`.
 * `Swoole\Thread` and the rest of the `Swoole\Thread\` namespace: PHP compiled with Zend Thread Safety (ZTS) enabled,
   and Swoole installed with `--enable-swoole-thread`.
 * The `swoole_native_curl_*()` functions and the `SWOOLE_HOOK_NATIVE_CURL` hook flag: `--enable-swoole-curl`.
@@ -132,8 +135,21 @@ what it needs. For example:
   `--with-swoole-oracle`, `--enable-swoole-sqlite`, and `--with-swoole-firebird` respectively.
 * Running file operations through io_uring (a Linux facility for asynchronous I/O), and the `SWOOLE_IOURING_*`
   constants: `--enable-iouring` (or `--with-liburing-dir`).
+* Driving the sockets of `Swoole\Coroutine\Http\Server` through io_uring as well, which changes nothing in how the
+  server is used from PHP: `--enable-uring-socket`, on top of one of the two io_uring options above.
 * The experimental "stdext" module (calling methods directly on plain strings, arrays, and streams, plus functions
   such as `swoole_typed_array()`): `--enable-swoole-stdext`.
+* `Swoole\Coroutine::getExecuteTime()`, which reports how long the current coroutine has been running:
+  `--enable-swoole-coro-time`. The official `phpswoole/swoole` Docker images are built without it.
+* Resolving DNS through the c-ares library, which is what makes the `Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM` runtime
+  option take effect in `Swoole\Coroutine::gethostbyname()`: `--enable-cares`.
+* Debug logging, reported by the `SWOOLE_DEBUG` constant (`true` in such a build, `false` otherwise):
+  `--enable-debug-log`.
+
+SSL/TLS support is not on this list because it is no longer optional: since Swoole 6.2.0, OpenSSL is a required
+dependency and the former `--enable-openssl` option no longer exists (only `--with-openssl-dir=DIR` remains, purely to
+point the build at a specific OpenSSL installation). Releases of this package for Swoole 6.1 and earlier still
+document it.
 
 ## Reading the docblocks
 
