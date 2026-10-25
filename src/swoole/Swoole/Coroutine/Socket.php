@@ -280,6 +280,13 @@ class Socket
      * Packet boundaries are detected according to the protocol settings configured through method
      * \Swoole\Coroutine\Socket::setProtocol() (e.g., length-based or EOF-based packet framing).
      *
+     * Since Swoole 6.1.11, with EOF-based framing, a packet longer than setting "package_max_length" makes the method
+     * fail with property $errCode set to SWOOLE_ERROR_PACKAGE_LENGTH_TOO_LARGE and the buffered data discarded; before,
+     * the limit was enforced only while waiting for more data, so a complete packet that already fit in the receive
+     * buffer was returned even when longer than the limit. Also since Swoole 6.1.11, with length-based framing, the
+     * data of an incomplete packet received before a timeout is kept, so that a later call can continue assembling
+     * the packet; before, it was discarded.
+     *
      * @param float $timeout The maximum time to wait for a complete packet (in seconds). If it's 0 (the default), the
      *                       socket's own receive timeout applies (60 seconds unless changed); a negative value means
      *                       waiting indefinitely.
@@ -496,8 +503,9 @@ class Socket
      *
      * @param array $settings An array of protocol options, e.g., "open_length_check", "package_length_type",
      *                        "package_length_offset", "package_body_offset", "package_max_length", "open_eof_check",
-     *                        "package_eof", and "open_ssl". It can't be an empty array. Note that leaving
-     *                        "package_max_length" out resets it to the default of 2 MB on every call.
+     *                        "package_eof", and "open_ssl". It can't be an empty array. Before Swoole 6.1.11, leaving
+     *                        "package_max_length" out reset it to the default of 2 MB on every call; since Swoole
+     *                        6.1.11, the current limit is kept when the setting isn't given.
      * @return bool Returns TRUE if succeeds; otherwise FALSE.
      * @see \Swoole\Coroutine\Socket::recvPacket()
      * @since 4.4.0

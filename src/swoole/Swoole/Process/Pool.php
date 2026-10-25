@@ -83,6 +83,8 @@ class Pool
      *
      * A process pool can be created in PHP CLI mode only, and at most one process pool can be created in a process. It
      * can't be created when a \Swoole\Server object exists. An \Error is thrown out when any of these rules is broken.
+     * Since Swoole 6.1.11, the constructor can only be called once per object as well; calling it a second time throws
+     * an \Error.
      *
      * Coroutine support doesn't have to be enabled when creating the process pool. It can be enabled later by calling
      * method \Swoole\Process\Pool::set([\Swoole\Constant::OPTION_ENABLE_COROUTINE => true]).
@@ -106,7 +108,9 @@ class Pool
      * @param int $ipc_type One of the four IPC modes described above. When coroutine support is enabled, it must be
      *                      either SWOOLE_IPC_NONE or SWOOLE_IPC_UNIXSOCK; otherwise, an \Error is thrown out.
      * @param int $msgqueue_key Key of the System V message queue. It's used only when $ipc_type is
-     *                          SWOOLE_IPC_MSGQUEUE.
+     *                          SWOOLE_IPC_MSGQUEUE. Since Swoole 6.1.11, a key that doesn't fit in the key type of
+     *                          System V message queues (see method \Swoole\Process::useQueue() for the accepted
+     *                          range) makes the constructor throw a \Swoole\Exception in that mode.
      * @param bool $enable_coroutine Support coroutine or not in the worker processes. Default to false. When enabled,
      *                               a callback function has to be registered for event onWorkerStart, and event
      *                               onMessage is dispatched only when $ipc_type is SWOOLE_IPC_UNIXSOCK.
@@ -326,6 +330,10 @@ class Pool
      * \Swoole\Process\Pool::shutdown(), or by a SIGTERM signal sent to the master process); worker processes that
      * quit are replaced with new ones automatically in the meantime. The registered callback functions are executed
      * in the master process ("onStart"/"onShutdown") and in the worker processes (the rest) accordingly.
+     *
+     * A pool that has been shut down can be started again by calling this method once more. Since Swoole 6.1.11, this
+     * works even when option \Swoole\Constant::OPTION_ENABLE_MESSAGE_BUS is enabled; before, the second start failed
+     * with FALSE returned, because the message bus created by the first start couldn't be created again.
      *
      * @return false|null Returns null in the master process after the pool has been shut down. It returns false, with
      *                    an E_WARNING or E_ERROR level error thrown out, when the pool has been started already, when

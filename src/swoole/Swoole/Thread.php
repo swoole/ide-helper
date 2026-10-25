@@ -120,6 +120,9 @@ final class Thread
     /**
      * The constructor.
      *
+     * Since Swoole 6.1.11, the constructor can only be called once per object; calling it a second time throws an
+     * \Error.
+     *
      * @param string $script_file Path to the PHP script file that will be executed in the thread.
      * @param mixed ...$args List of arguments to pass to the PHP script file.
      *                       Inside the thread created, these arguments can be accessed via method Thread::getArguments().
@@ -263,7 +266,8 @@ final class Thread
      *
      * @param array<int> $cpu_settings IDs of the CPU cores the thread is allowed to run on, starting from 0. An ID
      *                                 beyond the last CPU core makes the method fail with an E_WARNING level error
-     *                                 raised; a negative ID isn't rejected, with unpredictable results.
+     *                                 raised. Since Swoole 6.1.11, a negative ID is rejected the same way; before, it
+     *                                 wasn't rejected, with unpredictable results.
      * @return bool TRUE on success, or FALSE on failure.
      * @see https://linux.die.net/man/3/pthread_setaffinity_np
      */
@@ -289,16 +293,25 @@ final class Thread
     /**
      * Set scheduling policy and priority of the current thread (the thread the call is made from).
      *
-     * Note that leaving parameter $policy out makes Swoole ask the operating system for an invalid scheduling
-     * policy, so the call always fails; pass both parameters explicitly.
+     * The signature of this method changed in Swoole 6.1.11:
+     *   - before: public static function setPriority(int $priority, int $policy = 0): bool
+     *   - now:    public static function setPriority(int $priority, int $policy = -1): bool
+     *
+     * The change only corrects the default value reported by reflection: the method already treated an omitted
+     * $policy as -1 internally (the declared default of 0 was never actually used). What did change is what -1 does:
+     * before Swoole 6.1.11, it was passed to the operating system as is, which is not a valid scheduling policy, so
+     * the call always failed unless both parameters were given. Since Swoole 6.1.11, -1 means "keep the current
+     * scheduling policy of the thread": the current policy is looked up first, and the priority is applied to it.
      *
      * @param int $priority The new scheduling priority. What counts as a valid value depends on the scheduling policy.
-     * @param int $policy The scheduling policy to use. It should be one of the \Swoole\Thread::SCHED_* constants.
+     * @param int $policy The scheduling policy to use. It should be one of the \Swoole\Thread::SCHED_* constants, or
+     *                    -1 (the default) to keep the current scheduling policy of the thread.
      * @return bool Returns true on success or false on failure.
      * @see \Swoole\Thread::getPriority()
      * @see https://linux.die.net/man/3/pthread_setschedparam
+     * @see https://linux.die.net/man/3/pthread_getschedparam
      */
-    public static function setPriority(int $priority, int $policy = 0): bool
+    public static function setPriority(int $priority, int $policy = -1): bool
     {
     }
 

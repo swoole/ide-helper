@@ -234,6 +234,13 @@ class Client
      * underlying implementation uses 65535 when the argument is omitted; the default value declared here reflects the
      * actual behavior. Also, unless flag Client::MSG_WAITALL is given, a $size greater than 65535 is lowered to 65535.
      *
+     * Since Swoole 6.1.11, with "open_eof_check" enabled, a packet longer than setting "package_max_length" makes the
+     * method fail with FALSE returned, an E_WARNING level error raised, and function swoole_last_error() reporting
+     * SWOOLE_ERROR_PACKAGE_LENGTH_TOO_LARGE (property $errCode isn't updated in this case); before, the limit was
+     * enforced only while waiting for more data, so a complete packet that already fit in the receive buffer was
+     * returned even when longer than the limit. The same error code is reported when the limit is reached without an
+     * EOF marker found; before Swoole 6.1.11, only a warning saying "no package eof" was raised in that case.
+     *
      * @param int $size Maximum number of bytes to receive.
      * @param int $flag Receive flags. It can be a bitwise OR of class constants like Client::MSG_WAITALL or
      *                  Client::MSG_PEEK; a value of 1 is treated as Client::MSG_WAITALL (block until exactly $size

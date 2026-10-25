@@ -140,7 +140,9 @@ class Client
      * Set options of the client, e.g., protocol-framing settings like "open_eof_check" or "open_length_check", or
      * SSL options like "ssl_cert_file".
      *
-     * The settings are merged into any settings passed to previous calls of this method.
+     * The settings are merged into any settings passed to previous calls of this method. Before Swoole 6.1.11, leaving
+     * "package_max_length" out of the settings reset it to the default of 2 MB on every call; since Swoole 6.1.11,
+     * the current limit is kept when the setting isn't given.
      *
      * @param array $settings Client settings.
      * @return bool TRUE if succeeds; otherwise FALSE (e.g., when an empty array is given, or when applying the
@@ -177,6 +179,11 @@ class Client
      *
      * When the "open_eof_check" or "open_length_check" setting is enabled, a complete protocol packet is returned;
      * otherwise, at most 64 KB of whatever data is available is returned.
+     *
+     * Since Swoole 6.1.11, with "open_eof_check" enabled, a packet longer than setting "package_max_length" makes the
+     * method fail with property $errCode set to SWOOLE_ERROR_PACKAGE_LENGTH_TOO_LARGE; before, the limit was enforced
+     * only while waiting for more data, so a complete packet that already fit in the receive buffer was returned even
+     * when longer than the limit.
      *
      * @param float $timeout Timeout in seconds. A value of 0 means using the timeout set when connecting (or the
      *                       default timeout), and a negative value means no timeout.

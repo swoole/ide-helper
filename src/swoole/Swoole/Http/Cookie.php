@@ -34,6 +34,9 @@ class Cookie
     /**
      * Create a new, empty cookie object, to be filled in afterwards using the fluent with*() methods.
      *
+     * Since Swoole 6.1.11, the constructor can only be called once per object; calling it a second time throws an
+     * \Error.
+     *
      * @param bool $encode Whether the cookie value should be urlencoded when the cookie is serialized. Passing FALSE
      *                     keeps the value verbatim, matching the behavior of \Swoole\Http\Response::rawcookie().
      */

@@ -193,6 +193,9 @@ class Client
      *
      * The client doesn't connect to the server until the first request is sent.
      *
+     * Since Swoole 6.1.11, the constructor can only be called once per object; calling it a second time throws an
+     * \Error.
+     *
      * @param string $host The host name or IP address of the server. It must not be empty.
      * @param int $port The port of the server.
      * @param bool $ssl Whether to use SSL/TLS encryption. This option is available only when OpenSSL support is
@@ -222,9 +225,10 @@ class Client
      * @param array $settings Client settings, e.g., "timeout", "keep_alive", "websocket_mask", "websocket_compression",
      *                        "http_compression", "body_decompression", "lowercase_header", "write_func" (a callback of
      *                        the form function ($client, string $data) that receives the response body piece by
-     *                        piece as it arrives, instead of the body being collected into property $body; note that
-     *                        the pieces are handed over as received, i.e., still compressed when the server compressed
-     *                        the response, regardless of setting "body_decompression"), and socket options.
+     *                        piece as it arrives, instead of the body being collected into property $body; since
+     *                        Swoole 6.1.11, when the server compressed the response and setting "body_decompression"
+     *                        is on (the default), each piece is decompressed before being handed over, while before,
+     *                        the pieces were handed over as received, i.e., still compressed), and socket options.
      * @return bool Return TRUE on success; return FALSE when an empty array is given.
      * @see \Swoole\Coroutine\Http\Client::$setting
      */
@@ -544,6 +548,12 @@ class Client
      * Once upgraded, use methods Client::push() and Client::recv() to exchange WebSocket messages with the server.
      * Defer mode is turned off by this method.
      *
+     * Since Swoole 6.1.11, the handshake response is checked strictly: the server must answer with status code 101 and
+     * valid "Upgrade: websocket", "Connection: Upgrade", and "Sec-WebSocket-Accept" headers (the last one is
+     * recomputed from the key sent in the request and compared); otherwise the method fails with FALSE returned,
+     * property $errCode set to SWOOLE_ERROR_WEBSOCKET_HANDSHAKE_FAILED, and the connection closed. Before Swoole
+     * 6.1.11, the response headers weren't verified.
+     *
      * @param string $path The path to send the handshake request to, e.g., "/websocket".
      * @return bool Return TRUE on success; return FALSE when the handshake fails — check properties $errCode, $errMsg,
      *              and $statusCode for the reason.
@@ -568,7 +578,10 @@ class Client
      * @param int $flags A bitmask of the SWOOLE_WEBSOCKET_FLAG_* constants. It defaults to SWOOLE_WEBSOCKET_FLAG_FIN,
      *                   marking the frame as the final fragment of a message.
      * @return bool Return TRUE on success; return FALSE when failed, e.g., when the connection has not been upgraded
-     *              to the WebSocket protocol, or when sending fails.
+     *              to the WebSocket protocol, or when sending fails. Since Swoole 6.1.11, a control frame (close, ping,
+     *              or pong) can't be sent with a payload longer than 125 bytes or without flag
+     *              SWOOLE_WEBSOCKET_FLAG_FIN, as the WebSocket protocol requires; such a frame makes the method fail
+     *              with property $errCode set to SWOOLE_ERROR_WEBSOCKET_PACK_FAILED.
      * @see \Swoole\Coroutine\Http\Client::upgrade()
      * @see \Swoole\WebSocket\Frame
      */
@@ -622,7 +635,9 @@ class Client
      * upgraded to the WebSocket protocol first.
      *
      * @param string $data Payload to put in the ping frame, which the server is expected to echo back in its pong
-     *                     frame. It must not exceed 125 bytes, as the WebSocket protocol requires of control frames.
+     *                     frame. It must not exceed 125 bytes, as the WebSocket protocol requires of control frames;
+     *                     since Swoole 6.1.11, a longer payload makes the method fail with FALSE returned and property
+     *                     $errCode set to SWOOLE_ERROR_WEBSOCKET_PACK_FAILED.
      * @return bool Return TRUE on success, or FALSE when failed (e.g., the connection is not an established WebSocket
      *              connection).
      * @see \Swoole\Coroutine\Http\Client::upgrade()
@@ -662,7 +677,9 @@ class Client
      * The client object stays usable after this call: sending another request reconnects automatically.
      *
      * @return bool Return TRUE on success; return FALSE when the connection has been closed already, or when closing
-     *              the underlying socket fails.
+     *              the underlying socket fails. Since Swoole 6.1.11, calling this method before the client has ever
+     *              connected is safe as well: it returns FALSE with property $errCode set to
+     *              SWOOLE_ERROR_CLIENT_NO_CONNECTION.
      */
     public function close(): bool
     {

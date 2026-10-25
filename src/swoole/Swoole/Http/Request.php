@@ -75,6 +75,10 @@ class Request
      * stop this property from being populated; it only controls whether files uploaded under array-style field names
      * (e.g., "files[]") get restructured into nested arrays the way the superglobal $_FILES does.
      *
+     * Since Swoole 6.1.11, when the temporary file for an uploaded file can't be created (e.g., because the upload
+     * directory doesn't exist), the entry of that file in this property reports UPLOAD_ERR_NO_TMP_DIR in its "error"
+     * field; before, no error was reported for it, as if the upload had succeeded.
+     *
      * @see \Swoole\Http\Request::create()
      */
     public ?array $files = null;
@@ -85,7 +89,8 @@ class Request
      * It's NULL when the request body contains no form data. Option 'parse_body' of method Request::create() applies
      * to urlencoded bodies (Content-Type "application/x-www-form-urlencoded") only: with the option set to FALSE, such
      * bodies aren't parsed into this property. Form fields submitted as "multipart/form-data" end up in this property
-     * either way.
+     * either way. Form data is parsed for POST, PUT, DELETE, and PATCH requests, and, since Swoole 6.1.11, for
+     * requests using the QUERY method as well.
      *
      * @see \Swoole\Http\Request::create()
      */
@@ -163,9 +168,10 @@ class Request
      * Parse the raw HTTP request data.
      *
      * This method can be called multiple times to feed the request data in pieces; use method Request::isCompleted()
-     * to check if the whole request has been received. Note that a request path or header value cut across two
-     * pieces is parsed wrongly (each part is taken as a complete value), so pieces should end on line boundaries to
-     * be parsed reliably.
+     * to check if the whole request has been received. Since Swoole 6.1.11, the pieces can be cut anywhere: a request
+     * path or header cut across two pieces is joined back together. Before Swoole 6.1.11, such a value was parsed
+     * wrongly (each part was taken as a complete value), so pieces had to end on line boundaries to be parsed
+     * reliably.
      *
      * @param string $data The raw HTTP request data (or a piece of it) to parse.
      * @return int|false Return the number of bytes successfully parsed; when the data given is malformed, this can be

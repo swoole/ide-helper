@@ -20,7 +20,10 @@ use Swoole\Coroutine\Iterator;
  * Once the first coroutine has been created, a few PHP functions that can't work safely alongside coroutines are
  * disabled for the rest of the program: functions pcntl_fork(), pcntl_rfork(), pcntl_wait(), pcntl_waitpid(),
  * pcntl_sigtimedwait(), and pcntl_sigwaitinfo(); calling any of them raises an E_WARNING level error saying it has
- * been disabled for security reasons. Use class \Swoole\Process to manage child processes instead.
+ * been disabled for security reasons. Use class \Swoole\Process to manage child processes instead. Since Swoole 6.1.11,
+ * on PHP 8.4 and later, function http_get_last_response_headers() is disabled the same way (its warning says the
+ * function is not supported in Swoole coroutines), because the headers it reports are kept once per request and can't
+ * be told apart per coroutine.
  *
  * @alias This class has an alias of "\co" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \co
@@ -118,10 +121,11 @@ class Coroutine
     /**
      * Cancel the execution of a coroutine.
      *
-     * Please note that this method can not cancel the execution of current coroutine: with parameter $throw_exception
-     * left as FALSE, the call fails with function \swoole_last_error() reporting SWOOLE_ERROR_CO_CANNOT_CANCEL, and
-     * passing TRUE for the current coroutine isn't supported either (the call returns TRUE, but the coroutine keeps
-     * running).
+     * Please note that, with parameter $throw_exception left as FALSE, this method can not cancel the execution of
+     * current coroutine: the call fails with function \swoole_last_error() reporting SWOOLE_ERROR_CO_CANNOT_CANCEL.
+     * With TRUE passed, a coroutine can cancel itself since Swoole 6.1.11: the \Swoole\Coroutine\CanceledException is
+     * thrown right away at the point of the call, as if by a throw statement. Before Swoole 6.1.11, passing TRUE for
+     * the current coroutine wasn't supported either (the call returned TRUE, but the coroutine kept running).
      *
      * A coroutine that is busy with a file operation can not be cancelled; trying to force it may crash the process.
      *
@@ -154,7 +158,8 @@ class Coroutine
      *                              this method returns FALSE if the coroutine happens to be in a state that can not be
      *                              cancelled.
      * @return bool Returns true on success, or false on failure. Use function \swoole_last_error() to get the error
-     *              code when failed, e.g., SWOOLE_ERROR_CO_NOT_EXISTS when the given coroutine doesn't exist,
+     *              code when failed, e.g., SWOOLE_ERROR_CO_NOT_EXISTS when the given coroutine doesn't exist (or, with
+     *              $throw_exception TRUE, when it isn't a coroutine created from PHP code),
      *              SWOOLE_ERROR_CO_CANCELED when the coroutine has already been cancelled this way (only when
      *              $throw_exception is TRUE), or SWOOLE_ERROR_CO_CANNOT_CANCEL when $throw_exception is FALSE and the
      *              coroutine is in a state that can not be cancelled.

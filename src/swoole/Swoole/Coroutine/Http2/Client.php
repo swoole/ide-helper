@@ -40,7 +40,7 @@ class Client
     public string $errMsg = '';
 
     /**
-     * Unused. The property is declared for backward compatibility but, as of Swoole 6.1.10, is never updated by
+     * Unused. The property is declared for backward compatibility but, as of Swoole 6.1.11, is never updated by
      * Swoole; it always stays -1. Use property $socket to access the underlying connection instead.
      *
      * @see \Swoole\Coroutine\Http2\Client::$socket
@@ -48,7 +48,7 @@ class Client
     public int $sock = -1;
 
     /**
-     * Unused. The property is declared for backward compatibility but, as of Swoole 6.1.10, is never updated by
+     * Unused. The property is declared for backward compatibility but, as of Swoole 6.1.11, is never updated by
      * Swoole; it always stays 0.
      */
     public int $type = 0;
@@ -109,7 +109,8 @@ class Client
      * The constructor only stores the connection details in properties $host, $port, and $ssl; the actual connection
      * is not established until method connect() is called.
      *
-     * A \Swoole\Coroutine\Http2\Client\Exception is thrown when $host is an empty string.
+     * A \Swoole\Coroutine\Http2\Client\Exception is thrown when $host is an empty string. Since Swoole 6.1.11, the
+     * constructor can only be called once per object; calling it a second time throws an \Error.
      *
      * @param string $host The target host to connect to.
      * @param int $port The target port to connect to. Defaults to 80.

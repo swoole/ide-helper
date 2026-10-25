@@ -69,6 +69,9 @@ final class Server
     /**
      * Create a coroutine HTTP server, bind it to the given host and port, and start listening.
      *
+     * Since Swoole 6.1.11, the constructor can only be called once per object; calling it a second time throws an
+     * \Error.
+     *
      * @param string $host The host name or IP address to bind to. It must not be empty. To listen on a Unix socket,
      *                     use a path prefixed with "unix:" (e.g., "unix:///tmp/server.sock").
      * @param int $port The port to listen on. When 0 (the default) is given for a TCP server, a random port is picked
@@ -127,6 +130,11 @@ final class Server
      * The settings in property $settings are applied first. The call then blocks the current coroutine until the
      * server is stopped with method Server::shutdown(), or until an unrecoverable error happens while accepting
      * connections. Each incoming connection is handled in a new coroutine.
+     *
+     * Since Swoole 6.1.11, when an HTTP/1.1 request carries header "Expect: 100-continue", a "100 Continue" interim
+     * response is sent back before the server waits for the request body (HTTP/1.0 clients don't understand interim
+     * responses, so none is sent to them), and a request whose chunked body grows beyond the "package_max_length"
+     * setting is answered with a "413 Request Entity Too Large" response.
      *
      * @return bool Returns TRUE once the server is stopped with method Server::shutdown(). Returns FALSE, with
      *              properties $errCode and $errMsg updated accordingly, in two cases:

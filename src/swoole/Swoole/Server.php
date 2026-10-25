@@ -432,7 +432,7 @@ class Server
      *
      * Event names are case-insensitive. This method can only be called before the server is started.
      *
-     * As of Swoole 6.1.10, there are
+     * As of Swoole 6.1.11, there are
      *   - 14 server events.
      *     - \Swoole\Constant::EVENT_START
      *     - \Swoole\Constant::EVENT_BEFORE_SHUTDOWN
@@ -467,8 +467,8 @@ class Server
      * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server\Port::on()
      * @see \Swoole\Server::getCallback()
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.10/ext-src/swoole_server.cc#L50
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.10/ext-src/swoole_server_port.cc#L33
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.11/ext-src/swoole_server.cc#L50
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.11/ext-src/swoole_server_port.cc#L33
      */
     public function on(string $event_name, callable $callback): bool
     {
@@ -497,6 +497,15 @@ class Server
      * This method can only be called before the server is started. The settings given are merged into property
      * \Swoole\Server::$setting, and are applied to the primary port ($this->ports[0]) as well; to change port-level
      * settings of another port, call method \Swoole\Server\Port::set() on that port instead.
+     *
+     * Since Swoole 6.1.11, two settings are checked more strictly here: setting "message_queue_key" must fit in the
+     * key type of System V message queues (see method \Swoole\Process::useQueue() for the accepted range), and
+     * setting "cpu_affinity_ignore" must be an array of CPU IDs that still leaves at least one CPU for the worker
+     * processes to run on; breaking either rule stops the script with an E_ERROR level (fatal) error. Also since
+     * Swoole 6.1.11, setting "open_cpu_affinity" actually takes effect: each worker process (or worker thread, in the
+     * SWOOLE_THREAD mode) is bound to one CPU, picked in turn from the CPUs the server is allowed to run on minus those
+     * listed in setting "cpu_affinity_ignore", right before its onWorkerStart callback runs. Before Swoole 6.1.11,
+     * both of these settings were accepted but never applied.
      *
      * @param array $settings Settings as key-value pairs. Keys are option names; class \Swoole\Constant contains most of them declared as constants with an "OPTION_" prefix.
      * @return bool Returns true on success. Returns false if the server has already been started, or (in the SWOOLE_THREAD mode) when called in a thread not related to the server.
@@ -1000,7 +1009,7 @@ class Server
      * @see \Swoole\Server::protect()
      * @see \Swoole\Constant::OPTION_HEARTBEAT_IDLE_TIME
      * @see \Swoole\Constant::OPTION_HEARTBEAT_CHECK_INTERVAL
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.10/ext-src/swoole_server.cc#L3033 The actual default value of parameter $ifCloseConnection
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.11/ext-src/swoole_server.cc#L3063 The actual default value of parameter $ifCloseConnection
      */
     public function heartbeat(bool $ifCloseConnection = false): array|false
     {

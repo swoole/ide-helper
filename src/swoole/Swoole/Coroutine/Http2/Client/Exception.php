@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Swoole\Coroutine\Http2\Client;
 
 /**
- * Thrown by \Swoole\Coroutine\Http2\Client. As of Swoole 6.1.10, there are three cases only: constructing the client
+ * Thrown by \Swoole\Coroutine\Http2\Client. As of Swoole 6.1.11, there are three cases only: constructing the client
  * with an empty host (error code SWOOLE_ERROR_INVALID_PARAMS), constructing it with SSL requested while Swoole was
  * compiled without OpenSSL support, and failing to send out buffered control frames while another coroutine is
  * writing to the same connection (error code SWOOLE_ERROR_HTTP2_SEND_CONTROL_FRAME_FAILED).
