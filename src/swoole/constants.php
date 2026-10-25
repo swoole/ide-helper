@@ -124,7 +124,40 @@ define('SWOOLE_STRERROR_GAI', 1);
 define('SWOOLE_STRERROR_DNS', 2);
 define('SWOOLE_STRERROR_SWOOLE', 9);
 
-// Error codes.
+/*
+ * Swoole error codes. They are the values Swoole uses to report its own failures: a failed operation stores one of
+ * them where it can be read back, e.g., through function swoole_last_error(), or through the $errCode property of
+ * the object involved (e.g., \Swoole\Client::$errCode or \Swoole\Coroutine\Socket::$errCode). All of them are 500 or
+ * above, so that they never clash with operating system error numbers (the SOCKET_E* constants later in this file),
+ * which the same places report as well. Function swoole_strerror() turns a code into a readable message when passed
+ * SWOOLE_STRERROR_SWOOLE as its second parameter.
+ *
+ * The codes are grouped by range, following the grouping of the underlying C enum:
+ *   - 501-511: common errors.
+ *   - 550: no payload.
+ *   - 600-601: undefined behavior and thread-safety errors.
+ *   - 700-703: file and directory errors.
+ *   - 710-714: DNS lookup errors.
+ *   - 720-724: bad addresses, ports, socket types, and signals.
+ *   - 800-803: event loop errors.
+ *   - 1001-1020: connection (session) and SSL errors.
+ *   - 1201-1204: packet (protocol) errors.
+ *   - 2001-2003: task errors.
+ *   - 3001-3006: HTTP/2 protocol errors.
+ *   - 4001-4003: asynchronous I/O errors.
+ *   - 5001: client errors.
+ *   - 6001-6003: socket errors.
+ *   - 7001-7006: SOCKS5 proxy errors; 7101-7107: HTTP proxy and HTTP errors.
+ *   - 8501-8507: WebSocket errors.
+ *   - 9001-9016: server errors; 9101-9103: worker process errors.
+ *   - 10001-10019: coroutine errors.
+ *
+ * @see swoole_last_error()
+ * @see swoole_strerror()
+ * @see SWOOLE_STRERROR_SWOOLE
+ * @see https://github.com/swoole/swoole-src/blob/v6.2.4/include/swoole_error.h#L23
+ */
+// Common errors.
 define('SWOOLE_ERROR_MALLOC_FAIL', 501);
 define('SWOOLE_ERROR_SYSTEM_CALL_FAIL', 502);
 define('SWOOLE_ERROR_PHP_FATAL_ERROR', 503);
@@ -136,27 +169,34 @@ define('SWOOLE_ERROR_PROTOCOL_ERROR', 508);
 define('SWOOLE_ERROR_WRONG_OPERATION', 509);
 define('SWOOLE_ERROR_PHP_RUNTIME_NOTICE', 510); // @since 5.1.0
 define('SWOOLE_ERROR_FOR_TEST', 511); // @since 6.0.0
+// No payload.
 define('SWOOLE_ERROR_NO_PAYLOAD', 550); // @since 6.0.0
+// Undefined behavior and thread-safety errors.
 define('SWOOLE_ERROR_UNDEFINED_BEHAVIOR', 600); // @since 6.0.0
 define('SWOOLE_ERROR_NOT_THREAD_SAFETY', 601); // @since 6.0.0
+// File and directory errors.
 define('SWOOLE_ERROR_FILE_NOT_EXIST', 700);
 define('SWOOLE_ERROR_FILE_TOO_LARGE', 701);
 define('SWOOLE_ERROR_FILE_EMPTY', 702);
 define('SWOOLE_ERROR_DIR_NOT_EXIST', 703); // @since 6.1.0
+// DNS lookup errors.
 define('SWOOLE_ERROR_DNSLOOKUP_DUPLICATE_REQUEST', 710);
 define('SWOOLE_ERROR_DNSLOOKUP_RESOLVE_FAILED', 711);
 define('SWOOLE_ERROR_DNSLOOKUP_RESOLVE_TIMEOUT', 712);
 define('SWOOLE_ERROR_DNSLOOKUP_UNSUPPORTED', 713);
 define('SWOOLE_ERROR_DNSLOOKUP_NO_SERVER', 714);
+// Bad addresses, ports, socket types, and signals.
 define('SWOOLE_ERROR_BAD_IPV6_ADDRESS', 720);
 define('SWOOLE_ERROR_UNREGISTERED_SIGNAL', 721);
 define('SWOOLE_ERROR_BAD_HOST_ADDR', 722); // @since 6.0.0
 define('SWOOLE_ERROR_BAD_PORT', 723); // @since 6.1.0
 define('SWOOLE_ERROR_BAD_SOCKET_TYPE', 724); // @since 6.1.0
+// Event loop errors.
 define('SWOOLE_ERROR_EVENT_REMOVE_FAILED', 800); // @since 6.1.0
 define('SWOOLE_ERROR_EVENT_ADD_FAILED', 801); // @since 6.1.0
 define('SWOOLE_ERROR_EVENT_UPDATE_FAILED', 802); // @since 6.1.0
 define('SWOOLE_ERROR_EVENT_UNKNOWN_DATA', 803); // @since 6.1.0
+// Connection (session) and SSL errors.
 define('SWOOLE_ERROR_SESSION_CLOSED_BY_SERVER', 1001);
 define('SWOOLE_ERROR_SESSION_CLOSED_BY_CLIENT', 1002);
 define('SWOOLE_ERROR_SESSION_CLOSING', 1003);
@@ -177,32 +217,40 @@ define('SWOOLE_ERROR_SSL_RESET', 1017);
 define('SWOOLE_ERROR_SSL_HANDSHAKE_FAILED', 1018);
 define('SWOOLE_ERROR_SSL_CREATE_CONTEXT_FAILED', 1019); // @since 6.1.0
 define('SWOOLE_ERROR_SSL_CREATE_SESSION_FAILED', 1020); // @since 6.1.0
+// Packet (protocol) errors.
 define('SWOOLE_ERROR_PACKAGE_LENGTH_TOO_LARGE', 1201);
 define('SWOOLE_ERROR_PACKAGE_LENGTH_NOT_FOUND', 1202);
 define('SWOOLE_ERROR_DATA_LENGTH_TOO_LARGE', 1203);
 define('SWOOLE_ERROR_PACKAGE_MALFORMED_DATA', 1204);
+// Task errors.
 define('SWOOLE_ERROR_TASK_PACKAGE_TOO_BIG', 2001);
 define('SWOOLE_ERROR_TASK_DISPATCH_FAIL', 2002);
 define('SWOOLE_ERROR_TASK_TIMEOUT', 2003);
+// HTTP/2 protocol errors.
 define('SWOOLE_ERROR_HTTP2_STREAM_ID_TOO_BIG', 3001);
 define('SWOOLE_ERROR_HTTP2_STREAM_NO_HEADER', 3002);
 define('SWOOLE_ERROR_HTTP2_STREAM_NOT_FOUND', 3003);
 define('SWOOLE_ERROR_HTTP2_STREAM_IGNORE', 3004);
 define('SWOOLE_ERROR_HTTP2_SEND_CONTROL_FRAME_FAILED', 3005);
 define('SWOOLE_ERROR_HTTP2_INTERNAL_ERROR', 3006); // @since 6.1.0
+// Asynchronous I/O errors.
 define('SWOOLE_ERROR_AIO_BAD_REQUEST', 4001);
 define('SWOOLE_ERROR_AIO_CANCELED', 4002);
 define('SWOOLE_ERROR_AIO_TIMEOUT', 4003);
+// Client errors.
 define('SWOOLE_ERROR_CLIENT_NO_CONNECTION', 5001);
+// Socket errors.
 define('SWOOLE_ERROR_SOCKET_CLOSED', 6001);
 define('SWOOLE_ERROR_SOCKET_POLL_TIMEOUT', 6002);
 define('SWOOLE_ERROR_SOCKET_NOT_EXISTS', 6003); // @since 6.1.0
+// SOCKS5 proxy errors.
 define('SWOOLE_ERROR_SOCKS5_UNSUPPORT_VERSION', 7001);
 define('SWOOLE_ERROR_SOCKS5_UNSUPPORT_METHOD', 7002);
 define('SWOOLE_ERROR_SOCKS5_AUTH_FAILED', 7003);
 define('SWOOLE_ERROR_SOCKS5_SERVER_ERROR', 7004);
 define('SWOOLE_ERROR_SOCKS5_HANDSHAKE_FAILED', 7005);
 define('SWOOLE_ERROR_SOCKS5_CONNECT_FAILED', 7006); // @since 6.1.0
+// HTTP proxy and HTTP errors.
 define('SWOOLE_ERROR_HTTP_PROXY_HANDSHAKE_ERROR', 7101);
 define('SWOOLE_ERROR_HTTP_INVALID_PROTOCOL', 7102);
 define('SWOOLE_ERROR_HTTP_PROXY_HANDSHAKE_FAILED', 7103);
@@ -210,6 +258,7 @@ define('SWOOLE_ERROR_HTTP_PROXY_BAD_RESPONSE', 7104);
 define('SWOOLE_ERROR_HTTP_CONFLICT_HEADER', 7105); // @since 5.0.3
 define('SWOOLE_ERROR_HTTP_CONTEXT_UNAVAILABLE', 7106); // @since 5.1.2
 define('SWOOLE_ERROR_HTTP_COOKIE_UNAVAILABLE', 7107); // @since 6.0.0
+// WebSocket errors.
 define('SWOOLE_ERROR_WEBSOCKET_BAD_CLIENT', 8501);
 define('SWOOLE_ERROR_WEBSOCKET_BAD_OPCODE', 8502);
 define('SWOOLE_ERROR_WEBSOCKET_UNCONNECTED', 8503);
@@ -217,6 +266,7 @@ define('SWOOLE_ERROR_WEBSOCKET_HANDSHAKE_FAILED', 8504);
 define('SWOOLE_ERROR_WEBSOCKET_PACK_FAILED', 8505);
 define('SWOOLE_ERROR_WEBSOCKET_UNPACK_FAILED', 8506);
 define('SWOOLE_ERROR_WEBSOCKET_INCOMPLETE_PACKET', 8507);
+// Server errors.
 define('SWOOLE_ERROR_SERVER_MUST_CREATED_BEFORE_CLIENT', 9001);
 define('SWOOLE_ERROR_SERVER_TOO_MANY_SOCKET', 9002);
 define('SWOOLE_ERROR_SERVER_WORKER_TERMINATED', 9003);
@@ -233,9 +283,11 @@ define('SWOOLE_ERROR_SERVER_IS_NOT_REGULAR_FILE', 9013);
 define('SWOOLE_ERROR_SERVER_SEND_TO_WOKER_TIMEOUT', 9014);
 define('SWOOLE_ERROR_SERVER_INVALID_CALLBACK', 9015); // @since 6.0.0
 define('SWOOLE_ERROR_SERVER_UNRELATED_THREAD', 9016); // @since 6.0.0
+// Worker process errors.
 define('SWOOLE_ERROR_SERVER_WORKER_EXIT_TIMEOUT', 9101);
 define('SWOOLE_ERROR_SERVER_WORKER_ABNORMAL_PIPE_DATA', 9102);
 define('SWOOLE_ERROR_SERVER_WORKER_UNPROCESSED_DATA', 9103);
+// Coroutine errors.
 define('SWOOLE_ERROR_CO_OUT_OF_COROUTINE', 10001);
 define('SWOOLE_ERROR_CO_HAS_BEEN_BOUND', 10002);
 define('SWOOLE_ERROR_CO_HAS_BEEN_DISCARDED', 10003);

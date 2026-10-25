@@ -106,6 +106,8 @@ class Response
      * $server->start();
      * ```
      *
+     * @return bool TRUE if the response can still be written to; FALSE once the response has been ended, the
+     *              connection has been detached, or the object is no longer bound to a live request.
      * @see \Swoole\Http\Response::end()
      * @see \Swoole\Http\Response::detach()
      * @since 4.6.0

@@ -119,8 +119,23 @@ class Client extends \Swoole\Client
      * connection attempt with the event loop and returns immediately. The result is delivered later through the
      * "connect" or "error" callbacks registered via Async\Client::on().
      *
+     * Before the attempt is even started, the method fails (with a warning, or a fatal error for the missing-callback
+     * cases) when the host is empty, when the port is out of range for a TCP client, when the client is already
+     * connected, when the "receive" callback is missing, or when a stream (TCP/Unix stream) client is missing any of
+     * the "connect", "error", or "close" callbacks. Those callbacks are optional for UDP clients.
+     *
      * {@inheritDoc}
+     * @param string $host Server host name or IP address (or socket path for Unix domain sockets). Host names are
+     *                     resolved asynchronously.
+     * @param int $port Server port. Not needed for Unix domain sockets.
+     * @param float $timeout Connection timeout in seconds. Default: 0.5 seconds.
+     * @param int $sock_flag Extra connection flag, passed through unchanged to the underlying client; see the parent
+     *                       method \Swoole\Client::connect() for its meaning.
+     * @return bool TRUE if the connection attempt was started (the outcome is reported later through the callbacks);
+     *              FALSE if it couldn't be started at all (see above), or if the underlying connect call failed
+     *              immediately (e.g., DNS resolution failed), in which case property $errCode is updated accordingly.
      * @see \Swoole\Async\Client::on()
+     * @see \Swoole\Client::$errCode
      */
     public function connect(string $host, int $port = 0, float $timeout = 0.5, int $sock_flag = 0): bool
     {

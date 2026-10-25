@@ -19,6 +19,12 @@ use Swoole\Coroutine\Socket;
  * clients sending that header expect; before 6.2.4, such clients had to wait for their own timeout before sending
  * the body.
  *
+ * Requests are limited in size by protocol setting "package_max_length" of the server (2 MB unless changed through
+ * method Server::set()): a request whose headers, or whose headers and body together, exceed that limit is answered
+ * with a "413 Request Entity Too Large" response. Since Swoole 6.2.4, the limit applies to requests sent with a
+ * chunked body (header "Transfer-Encoding: chunked") as well; before 6.2.4, such requests were read in full no matter
+ * how large they were.
+ *
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has an alias of "\Co\Http\Server" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Http\Server
