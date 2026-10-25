@@ -9,7 +9,7 @@ description: >
   reportable progress rather than promising to finish everything at once — it tracks progress on disk so repeat
   invocations resume rather than restart. It works solo by default; only fans out into a team of sub-agents if the
   user explicitly asks for that in the invocation.
-tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, Task, TodoWrite
+tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, Task, TodoWrite, SendMessage
 ---
 
 You do a full, symbol-by-symbol accuracy audit of this project's Swoole stubs — not a version bump, and not a
@@ -22,15 +22,19 @@ Read this repository's `CLAUDE.md` (at the repo root) in full before doing anyth
 (`@since`, `@deprecated`/`@see` pairing, `@readonly`, `@alias`/`@see` pairing, `@not-serializable`,
 `@pseudocode-included`, `{@inheritDoc}` for a re-listed inherited method, grouping same-type PHPDoc tags together,
 Markdown-fenced example code instead of `@example`, complete and accurately-typed properties/parameters/returns
-using only PHP-8.1-compatible native types, build-flag-gated symbols, cross-referencing, re-verifying the line
-numbers in `@see` links that deep-link into a tagged swoole-src release, recording the before/after of any changed
-signature, and — above everything else — writing for a PHP developer, not a C developer). It's a living checklist —
-re-read it each session rather than relying on memory of a prior run, since new conventions get added to it over
-time; the recap here is a reminder of what's in that section, never a substitute for reading it.
+using only native declarations valid for this branch's minimum PHP version, build-flag-gated symbols,
+cross-referencing, re-verifying the line numbers in `@see` links that deep-link into a tagged swoole-src release,
+recording the before/after of any changed signature, and — above everything else — writing for a PHP developer, not
+a C developer). It's a living checklist — re-read it each session rather than relying on memory of a prior run, since
+new conventions get added to it over time; the recap here is a reminder of what's in that section, never a
+substitute for reading it.
 
-**Scope: `src/swoole/` only** (`constants.php`, `functions.php`, `shortnames.php`, `Swoole/**`). Do not touch
-`src/swoole_library/` — that's a verbatim copy of real PHP source synced by wholesale replacement, not a stub, and
-is out of scope for this kind of symbol-by-symbol review.
+**Scope: `src/swoole/`** (`constants.php`, `functions.php`, `shortnames.php`, `Swoole/**`), **plus the derived
+parts of `README.md`** listed in CLAUDE.md's "README maintenance" section (version examples, the ini directive list,
+the inventory of included files and build-option-gated features) — check those against the same swoole-src tag and
+fix factual errors there, but never rewrite README's hand-written prose. Do not touch `src/swoole_library/` — that's
+a verbatim copy of real PHP source synced by wholesale replacement, not a stub, and is out of scope for this kind of
+symbol-by-symbol review.
 
 # Step 0: pin down the version to review against
 
@@ -92,6 +96,9 @@ because a later tier looks more interesting):
    (ZTS-gated), `Async/Client.php`, and the various `*/Exception.php` classes not already covered above
    (`Coroutine/Curl/Exception.php`, `Coroutine/Http/Client/Exception.php`, `Coroutine/Http2/Client/Exception.php`,
    `Client/Exception.php`, `Coroutine/Socket/Exception.php`).
+6. **`README.md`** (derived parts only, per CLAUDE.md's "README maintenance" section): the version examples, the
+   ini directive table and descriptions (against the `PHP_INI_BEGIN()` … `PHP_INI_END()` block in
+   `ext-src/php_swoole.cc`), and the "What's included" / "Features that depend on build options" inventory.
 
 Update the progress file as you go, not just at the end — if you get interrupted, the file on disk should always
 reflect real completed state.
@@ -129,12 +136,16 @@ against the stub line by line. Concretely:
   happy path) — this is what most often makes an existing docblock incomplete rather than wrong. Confirm every
   parameter has a matching `@param` tag (type + description) and every non-`void` return has an `@return` tag (type
   + description) — a typed signature alone isn't sufficient documentation.
-- **PHP 8.1 syntax constraint on every native type you write or touch**: this project's minimum supported version is
-  PHP 8.1, so never write a standalone `true`/`false`/`null` type or a DNF type like `(A&B)|C` inline — those need
-  PHP 8.2+. If the fully accurate type needs one of those constructs, use the closest 8.1-compatible native type (or
-  omit the native type) and put the precise type in the `@param`/`@return` tag instead. This is easy to get backwards
-  while chasing accuracy (a standalone `false` return type genuinely is more precise than `bool`), so double-check
-  every native type you add or change against this constraint specifically, not just against swoole-src accuracy.
+- **Minimum-PHP syntax constraint on every native declaration you write or touch**: never write anything inline
+  that this branch's minimum supported PHP version (CLAUDE.md's "Minimum supported PHP version on this branch") can't
+  parse — with an 8.1 minimum, that means no standalone `true`/`false`/`null` types and no DNF types like `(A&B)|C`
+  (both PHP 8.2), no typed class constants (PHP 8.3), and no property hooks or asymmetric visibility (PHP 8.4); nor
+  attributes PHP 8.1 doesn't know, such as `#[\SensitiveParameter]` (PHP 8.2, which Swoole 6.1 doesn't declare
+  anyway). If the fully accurate declaration needs something newer than the minimum, use the closest compatible
+  native declaration (or omit it) and put the precise type in the `@param`/`@return`/`@var` tag instead. This is
+  easy to get backwards while chasing accuracy (a standalone `false` return type genuinely is more precise than
+  `bool`), so double-check every native declaration you add or change against this constraint specifically, not
+  just against swoole-src accuracy.
 - **Constants**: find every `SW_REGISTER_LONG_CONSTANT`/`SW_REGISTER_STRING_CONSTANT`/`REGISTER_LONG_CONSTANT`/
   `zend_declare_class_constant_long` call relevant to the area you're on.
 - **Build-flag-gated symbols**: watch for `#ifdef`/`#if defined(...)` guards (e.g. `SW_USE_OPENSSL`, `HAVE_...`,
@@ -238,25 +249,19 @@ When you do run a team, the sub-agents all share this one working tree, so parti
 # Step 5: verify before you stop (whether or not you finished the whole list)
 
 Run this repo's own CI-equivalent checks and fix anything they flag before wrapping up a session, even a partial
-one:
-```bash
-docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine php-cs-fixer fix --dry-run
-docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.1-alpine phplint src
-```
-If `php-cs-fixer` reports anything, re-run it without `--dry-run` to apply the fixes, then re-run the dry run to
-confirm it comes back clean:
-```bash
-docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine php-cs-fixer fix
-```
-`phplint` has no auto-fix — anything it flags is a real syntax error you have to fix by hand (most often an
-8.2+-only type declaration that needs to go back to an 8.1-compatible one).
+one. Take the exact commands from CLAUDE.md's "Commands" section rather than from memory or from a copy here — that
+section is the single source of truth for them. You need three of them: the coding-style dry run, the coding-style
+auto-fix (for anything the dry run flags; re-run the dry run afterward to confirm it comes back clean), and the
+syntax check.
 
-Run `phplint` against `php8.1-alpine` specifically, not `php8.5-alpine` — this project's minimum supported version
-is 8.1, and PHP's parser is backward-permissive (an 8.2+-only construct like a standalone `false` type parses fine
-under 8.5 but fails under 8.1), so 8.1 is the only version whose parser actually enforces the "inline type
-declarations must be valid PHP 8.1 syntax" convention. CI runs this same check against 8.1 through 8.5 (see
+`phplint` has no auto-fix — anything it flags is a real syntax error you have to fix by hand (most often an
+8.2+-only declaration that needs to go back to an 8.1-compatible one).
+
+Run `phplint` against the image for this branch's minimum supported PHP version (`php8.1-alpine`) specifically, not
+`php8.4-alpine` — PHP's parser is backward-permissive (an 8.2+-only construct like a standalone `false` type parses
+fine under 8.4 but fails under 8.1), so the minimum version is the only one whose parser actually enforces the
+"inline declarations must be valid PHP 8.1 syntax" convention. CI runs this same check against 8.1 through 8.4 (see
 `.github/workflows/syntax_checks.yml`); 8.1 is the binding one for this purpose.
-(Check CLAUDE.md's "Commands" section in case the exact versions/commands have since changed.)
 
 Commit your changes locally on whatever branch is currently checked out. **Never create a branch and never switch
 branches** — not for a solo session, not for a team session, not "just to keep this separate." That has gone wrong
@@ -265,7 +270,8 @@ before; if you think the work belongs somewhere else, say so in your report and 
 Before committing, check `git status` and commit only what you actually changed:
 
 - Run `git status` at the *start* of a session too, and note anything already modified in the working tree that
-  isn't yours. Stage files explicitly (`git add src/swoole/...`) rather than `git commit -a` / `git add -A`, so
+  isn't yours. Stage files explicitly (`git add src/swoole/...`, plus `git add README.md` if you fixed it) rather
+  than `git commit -a` / `git add -A`, so
   pre-existing unrelated edits don't get swept into your commit.
 - `temp/` is gitignored, but double-check `temp/deep-review-progress.md` never appears in the commit.
 - Confirm nothing under `src/swoole_library/` is staged — it's out of scope, so a change there means something went

@@ -2,6 +2,7 @@
 
 [![Latest Stable Version](https://poser.pugx.org/swoole/ide-helper/v/stable.svg)](https://packagist.org/packages/swoole/ide-helper)
 [![License](https://poser.pugx.org/swoole/ide-helper/license)](LICENSE)
+[![Syntax Checks](https://github.com/swoole/ide-helper/actions/workflows/syntax_checks.yml/badge.svg?branch=6.1.x)](https://github.com/swoole/ide-helper/actions/workflows/syntax_checks.yml?query=branch%3A6.1.x)
 
 [Swoole](https://github.com/swoole/swoole-src) is a PHP extension written in C/C++, so its classes, functions, and
 constants don't exist as PHP source code anywhere in your project. Without help, your IDE can't see them: no
@@ -12,7 +13,23 @@ method, function, and constant, with accurate signatures, native type declaratio
 it's installed, IDEs like PhpStorm and VS Code (with a PHP language server such as Intelephense) pick up the stubs
 automatically and give you the same editing experience you'd get with a pure-PHP library.
 
-The stubs contain no executable logic — every method body is empty — so the package has zero runtime footprint.
+The stubs under `src/swoole/` contain no real logic: method bodies are empty, or hold a few lines of explanatory
+pseudocode (see [Reading the docblocks](#reading-the-docblocks)). Nothing is autoloaded, so the package has zero
+runtime footprint.
+
+## Table of contents
+
+* [Installation](#installation)
+  * [Choosing a version](#choosing-a-version)
+* [Requirements](#requirements)
+* [IDE and tool setup](#ide-and-tool-setup)
+* [Best practices](#best-practices)
+* [What's included](#whats-included)
+  * [Features that depend on build options](#features-that-depend-on-build-options)
+* [Reading the docblocks](#reading-the-docblocks)
+* [PHP configuration settings](#php-configuration-settings)
+* [Contributing](#contributing)
+* [License](#license)
 
 ## Installation
 
@@ -25,11 +42,12 @@ composer require --dev swoole/ide-helper
 Since the package is only there to assist your IDE, it doesn't belong in production; `--dev` keeps it out of
 `composer install --no-dev` deployments.
 
-### Match the version to your Swoole extension
+### Choosing a version
 
-Releases of this package mirror Swoole releases: version `6.0.2` of this package documents Swoole `v6.0.2`. For the
-most accurate results, pin the package to the Swoole version you actually run. You can check your installed version
-with:
+<!-- BEGIN: version-examples -->
+Releases of this package mirror Swoole releases: version `6.1.10` of this package documents Swoole `v6.1.10`. Note
+that this package's tags have no `v` prefix, while Swoole's do. For the most accurate results, use the release that
+matches the Swoole version you actually run. You can check your installed version with:
 
 ```bash
 php --ri swoole | grep Version
@@ -38,14 +56,45 @@ php --ri swoole | grep Version
 Then require the matching release, e.g.:
 
 ```bash
-composer require --dev swoole/ide-helper:~6.0.2
+composer require --dev swoole/ide-helper:~6.1.10
 ```
 
-To use the latest unreleased stubs from the `master` branch instead:
+The `~6.1.10` constraint installs the newest `6.1.x` release that is `6.1.10` or later, so you pick up documentation
+fixes made in later patch releases while staying on the same minor line as your Swoole extension. To pin one exact
+release instead, drop the `~` (`swoole/ide-helper:6.1.10`).
+
+Releases for the Swoole 6.1 line (currently `6.1.10`) are made from this package's `6.1.x` maintenance branch, while
+the `master` branch tracks the latest Swoole minor line. To use the latest unreleased 6.1 stubs from the `6.1.x`
+branch instead:
 
 ```bash
-composer require --dev swoole/ide-helper:@dev
+composer require --dev swoole/ide-helper:6.1.x-dev
 ```
+<!-- END: version-examples -->
+
+## Requirements
+
+<!-- BEGIN: php-requirements -->
+Swoole 6.1 supports PHP 8.1 through 8.4, and so do these stubs: they use PHP 8.1 syntax in their declarations and are
+checked against PHP 8.1 through 8.4 in CI. Set your IDE's or static analyzer's PHP language level to 8.1 or later so
+it can parse them.
+
+If you're on PHP 8.0 or older (and therefore on Swoole 5.1 or older), use the matching older release line of this
+package instead, e.g. `composer require --dev swoole/ide-helper:~5.1.8`. If you're on a newer Swoole version, use
+the release line matching it instead; the `master` branch's README describes the latest one.
+<!-- END: php-requirements -->
+
+## IDE and tool setup
+
+* **PhpStorm:** PhpStorm ships its own (less complete) Swoole stubs, which conflict with this package and cause
+  "multiple definitions exist" warnings. Go to **Settings → PHP**, open the **PHP Runtime** tab, expand **PECL**, and
+  uncheck `swoole`, so this package becomes the single source of truth.
+* **VS Code (Intelephense):** Intelephense indexes `vendor/` automatically, so no setup is needed. Its own Swoole stubs
+  are off by default; if you added `swoole` to the `intelephense.stubs` setting, remove it to avoid duplicate
+  definitions.
+* **PHPStan / Psalm:** when the Swoole extension isn't loaded in the PHP process that runs the analyzer, point the
+  analyzer at `vendor/swoole/ide-helper/src/swoole` (PHPStan's `scanDirectories` option, or Psalm's `<stubs>`
+  element), so it knows the Swoole symbols exist.
 
 ## Best practices
 
@@ -54,12 +103,9 @@ composer require --dev swoole/ide-helper:@dev
 * **Upgrade the helper when you upgrade Swoole.** Signatures and available symbols change between Swoole releases;
   a mismatched helper version means your IDE may suggest methods that don't exist in your runtime (or miss ones
   that do).
-* **PhpStorm users: disable the bundled Swoole stubs.** PhpStorm ships its own (less complete) Swoole stubs, which
-  conflict with this package and cause "multiple definitions exist" warnings. Go to **Settings → PHP → Stubs** and
-  deselect `swoole`, so this package becomes the single source of truth.
-* **Don't `require`/`include` the stub files.** If the Swoole extension is loaded, redefining its classes would
-  fail; if it isn't, empty method bodies would do nothing useful anyway. Just let Composer install the package and
-  let your IDE index it.
+* **Don't `require`/`include` the stub files**, and don't add them to an autoloader or a preload script. If the
+  Swoole extension is loaded, redefining its classes would fail; if it isn't, empty method bodies would do nothing
+  useful anyway. Just let Composer install the package and let your IDE index it.
 
 ## What's included
 
@@ -69,54 +115,101 @@ composer require --dev swoole/ide-helper:@dev
   * `SWOOLE_*` constants;
   * short class aliases like `Co\Channel` (active when the `swoole.use_shortname` ini directive is on).
 * `src/swoole_library/` — the PHP source of [Swoole Library](https://github.com/swoole/library), the userland
-  companion code that ships inside the extension (loaded when `swoole.enable_library` is on). Included so your IDE
-  can index these classes too.
+  companion code that ships inside the extension (loaded when `swoole.enable_library` is on). Unlike the stubs, this
+  is real, runnable code: a verbatim copy of the Swoole Library release bundled with the matching Swoole version,
+  included so your IDE can index these classes too.
+
+### Features that depend on build options
+
+Some Swoole features exist only when the extension is built with a particular configuration option. The stubs declare
+them unconditionally, so your IDE offers them even if your Swoole build doesn't include them; each one's docblock says
+what it needs. For example:
+
+* `Swoole\Thread` and the rest of the `Swoole\Thread\` namespace: PHP compiled with Zend Thread Safety (ZTS) enabled,
+  and Swoole installed with `--enable-swoole-thread`.
+* The `swoole_native_curl_*()` functions and the `SWOOLE_HOOK_NATIVE_CURL` hook flag: `--enable-swoole-curl`.
+* The coroutine-friendly PDO hook flags (`SWOOLE_HOOK_PDO_PGSQL`, `SWOOLE_HOOK_PDO_ODBC`, `SWOOLE_HOOK_PDO_ORACLE`,
+  `SWOOLE_HOOK_PDO_SQLITE`): `--enable-swoole-pgsql`, `--with-swoole-odbc`, `--with-swoole-oracle`, and
+  `--enable-swoole-sqlite` respectively.
+* Running file operations through io_uring (a Linux facility for asynchronous I/O), and the `SWOOLE_IOURING_*`
+  constants: `--enable-iouring`.
+* The experimental "stdext" module (calling methods directly on plain strings, arrays, and streams, plus functions
+  such as `swoole_typed_array()`): `--enable-swoole-stdext`.
+
+## Reading the docblocks
+
+Besides the standard PHPDoc tags, the stubs use a few conventions you'll see in your IDE's hover popups:
+
+* `@since X.Y.Z` — the Swoole version that added the symbol.
+* `@deprecated X.Y.Z <replacement>` — still available, but deprecated since that version; a `@see` tag points at what
+  to use instead.
+* `@alias` — the symbol is an alias of another one (or has one), e.g. `Swoole\Table::del()` and
+  `Swoole\Table::delete()`. Short class names such as `Co\Channel` are noted on the real class, and only exist when
+  the `swoole.use_shortname` ini directive is on.
+* `@readonly` — the property can be read but not written.
+* `@not-serializable` — objects of the class can't be serialized.
+* `@pseudocode-included` — the method body contains PHP code that explains what the built-in method does. It's for
+  reading only; the real implementation is in C/C++.
+* When a method's or function's signature changed between Swoole versions, its docblock shows the old and new
+  signatures.
+* Usage examples are written as fenced ` ```php ` code blocks inside the description, so IDEs render them with syntax
+  highlighting.
 
 ## PHP configuration settings
 
-Swoole's behavior can be tuned with the following ini directives:
+<!-- BEGIN: ini-directives -->
+Swoole's behavior can be tuned with the following ini directives (as of Swoole 6.1.10):
 
-* `swoole.display_errors`: Boolean. Default `On`. Display/hide error information from Swoole.
-* `swoole.enable_coroutine`: Boolean. Default `On`. Turn on/off coroutine support.
-* `swoole.enable_library`: Boolean. Default `On`. Load the source code from [Swoole Library](https://github.com/swoole/library) or not.
-* `swoole.enable_preemptive_scheduler`: Boolean. Default `Off`. Enable preemptive scheduler or not. To understand how it works, please check examples under section "CPU-intensive job scheduling" of repository [deminy/swoole-by-examples](https://github.com/deminy/swoole-by-examples).
-* `swoole.unixsock_buffer_size`: Integer (in bytes). By default, it's 256 KiB on Macintosh or FreeBSD, otherwise 8 MiB. The total buffer sizes for the socket connections between the master process and the worker processes in Swoole.
-* `swoole.use_shortname`: Boolean. Default `On`. Support short names or not. Short names are all the aliases listed in file [src/swoole/shortnames.php](src/swoole/shortnames.php).
+| Directive                            | Type    | Default           | Where it can be set |
+|--------------------------------------|---------|-------------------|---------------------|
+| `swoole.enable_library`              | Boolean | `On`              | Anywhere            |
+| `swoole.enable_fiber_mock`           | Boolean | `Off`             | Anywhere            |
+| `swoole.enable_preemptive_scheduler` | Boolean | `Off`             | Anywhere            |
+| `swoole.display_errors`              | Boolean | `On`              | Anywhere            |
+| `swoole.use_shortname`               | Boolean | `On`              | `php.ini` only      |
+| `swoole.unixsock_buffer_size`        | Integer | `8388608` (8 MiB) | Anywhere            |
 
-All the directives can be set anywhere except `swoole.use_shortname`, which can only be set in `php.ini` files.
+"`php.ini` only" directives can't be changed with `ini_set()` at runtime; set them in a `php.ini` file, or with
+`php -d` on the command line.
 
-## Contributing with Claude Code
+* `swoole.enable_library`: Load [Swoole Library](https://github.com/swoole/library) (the PHP code under
+  `src/swoole_library/`) or not.
+* `swoole.enable_fiber_mock`: Make each coroutine look like a PHP Fiber to tools that watch Fibers (e.g. debuggers and
+  profilers), so they can follow coroutine switches.
+* `swoole.enable_preemptive_scheduler`: Enable the preemptive scheduler or not, which stops a CPU-intensive coroutine
+  from running forever without letting others run. It can also be turned on at runtime through the
+  `enable_preemptive_scheduler` option of `Swoole\Coroutine::set()`. To understand how it works, please check examples
+  under section "CPU-intensive job scheduling" of repository
+  [deminy/swoole-by-examples](https://github.com/deminy/swoole-by-examples).
+* `swoole.display_errors`: Display/hide error information from Swoole.
+* `swoole.use_shortname`: Support short names or not. Short names are all the aliases listed in file
+  [src/swoole/shortnames.php](src/swoole/shortnames.php).
+* `swoole.unixsock_buffer_size`: Despite its name, the default buffer size (in bytes) of all the sockets Swoole
+  creates, including the ones between the master process and the worker processes of a Swoole server.
+<!-- END: ini-directives -->
 
-This repository includes three [Claude Code](https://claude.com/claude-code) agents under `.claude/agents/` to help
-maintain the stubs. They're repository-maintenance tooling only — end users installing this package via Composer
-never see them (`.claude/` and `CLAUDE.md` are excluded from the published package archive).
-`prepare-swoole-release` and `deep-review-swoole-stubs` are useful to any contributor; `publish-swoole-release` is
-for project maintainers only, since it publishes a live GitHub release.
+## Contributing
 
-* **`prepare-swoole-release`** — prepares this project's stub changes for a new, stable Swoole release. Give it the
-  target version; it diffs [swoole-src](https://github.com/swoole/swoole-src) between the version this project
-  currently supports and the target version, updates only the stubs affected by that diff, replaces
-  `src/swoole_library/` with the matching [swoole/library](https://github.com/swoole/library) release, and leaves
-  the result as a local commit (it never tags or pushes anything).
+Bug reports and pull requests are welcome. If a stub doesn't match Swoole, please cite the relevant code in
+[swoole-src](https://github.com/swoole/swoole-src) at the matching release tag (e.g. `v6.1.10`). A few rules:
 
-  > Prepare the stubs for Swoole 6.1.0.
+* Compare against swoole-src's actual C/C++ source. Don't use the `.stub.php` files shipped in swoole-src as a source;
+  they aren't reliable for this work.
+* Don't hand-edit `src/swoole_library/`; it's copied from the matching [swoole/library](https://github.com/swoole/library)
+  release.
+* Inline declarations must be valid PHP 8.1 syntax (the minimum PHP version Swoole 6.1 supports).
+* Before submitting, run the same checks as CI:
 
-* **`publish-swoole-release`** — tags and publishes a GitHub release for a version already prepared with the agent
-  above. It never marks a release as a pre-release, and never marks it as this project's "latest" release. This
-  agent pushes a tag and publishes a live release, so only invoke it once you're ready to make the release public.
-  **For project maintainers only** — regular contributors shouldn't need (or be able) to publish a release.
+  ```bash
+  # Coding style.
+  docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.5-alpine php-cs-fixer fix --dry-run
+  # Syntax, under the oldest supported PHP version (newer versions accept syntax that PHP 8.1 rejects).
+  docker run -q --rm -v "$(pwd):/project" -w /project -i jakzal/phpqa:php8.1-alpine phplint src
+  ```
 
-  > Publish the 6.1.0 release.
+The full set of stub-writing conventions is in
+[CLAUDE.md](https://github.com/swoole/ide-helper/blob/6.1.x/CLAUDE.md).
 
-* **`deep-review-swoole-stubs`** — a full, symbol-by-symbol accuracy audit of the stubs against the Swoole version
-  this project *currently* supports (not a version bump). It walks every constant, function, class, and method in
-  the matching swoole-src release, fixing anything missing, incomplete, incorrect, or hard to read, following the
-  conventions documented in `CLAUDE.md`. Given the scope (60+ class files), it tracks progress across multiple
-  invocations and works alone unless you explicitly ask it to use a team of agents.
+## License
 
-  > Do a deep review of the Swoole stubs.
-  >
-  > Do a deep review of the Swoole stubs, using a team of agents.
-
-Just describe the task in a prompt to Claude Code (as in the examples above) and it will pick the matching agent, or
-name one explicitly, e.g. `Use the prepare-swoole-release agent to prepare the stubs for Swoole 6.1.0.`
+This package is licensed under the [Apache License 2.0](LICENSE).

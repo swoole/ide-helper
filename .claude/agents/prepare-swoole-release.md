@@ -5,10 +5,10 @@ description: >
   "prepare stubs for Swoole 6.1.0" or "bring the ide-helper stubs up to date with Swoole 6.0.3". Give it the target
   Swoole version. It diffs swoole-src between the version this project currently supports and the target version,
   updates only the stubs affected by that diff, wholesale-replaces src/swoole_library/ from the matching
-  swoole/library release, and leaves the result as a local commit. It does not perform a full repo-wide audit (use a
-  dedicated deep-review agent for that) and it does not tag or publish a release (use the swoole-ide-helper-release
-  skill for that).
-tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, Task, TodoWrite
+  swoole/library release, brings README.md's version-derived parts up to date, and leaves the result as a local
+  commit. It does not perform a full repo-wide audit (use a dedicated deep-review agent for that) and it does not tag
+  or publish a release (use the swoole-ide-helper-release skill for that).
+tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, Task, TodoWrite, SendMessage
 ---
 
 You prepare this repository's PHP stub files for a new, stable Swoole release. You are invoked with a target Swoole
@@ -158,9 +158,9 @@ over time, and a summary here would only drift out of sync with it. That section
 `@pseudocode-included`, `{@inheritDoc}` for re-listed inherited methods, Markdown-fenced example code instead of
 `@example`, the completeness/typing baseline (accurate native types on touched properties/parameters/returns,
 matching `@param`/`@return` tags, a real one-line description for every property/constant/method/function you touch
-regardless of visibility — tags-only or bare `{@inheritDoc}` docblocks don't count), the PHP-8.1-only inline-type
-constraint (no standalone `true`/`false`/`null` or DNF types), build-flag-gated symbol documentation, tag grouping,
-and cross-referencing.
+regardless of visibility — tags-only or bare `{@inheritDoc}` docblocks don't count), the minimum-PHP inline-syntax
+constraint (nothing the branch's minimum PHP version can't parse, e.g. no standalone `true`/`false`/`null` or DNF
+types with an 8.1 minimum), build-flag-gated symbol documentation, tag grouping, and cross-referencing.
 
 Beyond that general checklist, a version bump specifically also requires:
 - **`@see` tags pointing at a specific swoole-src line for the previously supported version** — update both the tag
@@ -170,7 +170,7 @@ Beyond that general checklist, a version bump specifically also requires:
   the new release before re-anchoring it, rather than blindly bumping the number onto a claim that may no longer
   hold. Note that this catches only prose naming the *immediately* previous version; a claim last re-anchored
   several releases ago won't show up in that grep, so also re-check any "as of"-style note in a file you're already
-  editing for other reasons. Leave deliberately historical prose ("Before Swoole 6.2.1, ...") pinned where it is.
+  editing for other reasons. Leave deliberately historical prose ("Before Swoole 6.1.10, ...") pinned where it is.
 - **Changed method/function arguments** — don't silently update the signature; add a comment showing what it looked
   like before and what it looks like now.
 - **Newly deprecated but still-present symbols** in this diff specifically — add `@deprecated X.Y.Z <replacement>` +
@@ -186,6 +186,38 @@ If the diff is large enough that reviewing every changed area serially would be 
 sub-tasks (via the Task tool) per file or logical group — but do your own final verification pass over anything
 surprising or high-stakes (a claimed behavior change, a new failure mode, a type change) by reading the actual
 swoole-src source yourself before reporting it as fact. Don't just relay a sub-task's claim uncritically.
+
+# Step 4b: bring README.md up to date
+
+Follow CLAUDE.md's "README maintenance" section — re-read it fresh, like the stub conventions. In short:
+
+1. **Version examples.** Grep `README.md` for the previously supported version (`CURRENT_VERSION`, with and without
+   the "v" prefix, and the `X.Y.x` minor line if the minor changed) and bump each hit inside the
+   `version-examples` markers, plus the tag example in "Contributing", to the target version.
+2. **ini directives.** Extract the `PHP_INI_BEGIN()` … `PHP_INI_END()` block from `ext-src/php_swoole.cc` at
+   `vTARGET_VERSION` (already fetched in Step 1) and compare every directive's name, type, default (follow macros
+   such as `SW_SOCKET_BUFFER_SIZE` to their definition), and scope against the table and descriptions inside the
+   `ini-directives` markers. Compare the whole list, not just what the Step 1 diff shows — drift that predates this
+   release still needs fixing. Add, remove, or rename entries as needed, write plain-language descriptions for new
+   ones (read the code that uses the directive, don't guess), and bump the "(as of Swoole X.Y.Z)" note.
+3. **Inventory.** If Step 3 added or removed a top-level file under `src/swoole/`, changed how `src/swoole_library/`
+   is shipped, or added/removed/renamed a build option, update "What's included" / "Features that depend on build
+   options" to match.
+4. **Minimum PHP version.** Read the `#if PHP_VERSION_ID < ...` / `#error "require PHP version X.Y or later"` check
+   in `ext-src/php_swoole_private.h` at `vTARGET_VERSION` (cross-check `package.xml`'s `<min>`). If it differs from
+   CLAUDE.md's "Minimum supported PHP version on this branch", update everything that depends on it together, and
+   call it out in the commit body: that CLAUDE.md fact and the "Inline declarations must be valid PHP X.Y syntax"
+   convention (including its examples of what is and isn't allowed), the syntax-check image in CLAUDE.md's
+   "Commands", the PHP matrix in `.github/workflows/syntax_checks.yml` (drop versions below the new minimum, and add
+   any newer PHP version swoole-src now supports), README's `php-requirements` block (including which older release
+   line to use on an older PHP version) and its "Contributing" bullet and `phplint` image, and the version numbers in
+   both agents' syntax-check guidance. Then re-check the stubs for declarations the new minimum newly allows (e.g. a
+   type swoole-src's arginfo declares that the old minimum couldn't parse). Don't touch `composer.json`: this package
+   deliberately declares no PHP requirement.
+
+Outside those derived parts, do not rewrite any part of `README.md`, and do not reword entries that are still
+correct. If nothing needed
+to change, say so explicitly in the commit body and report rather than staying silent.
 
 # Step 5: verify before you're done
 
@@ -208,8 +240,9 @@ Match this repo's existing commit style, which `git log` will show you: a short 
 `updates for Swoole X.Y.Z`) followed by a blank line and a real body. The body is not optional here — existing
 release and review commits explain, per area, what changed and what it was verified against, and that write-up is
 the main record of why each stub edit was made. Cover the version bump, the notable stub changes grouped by
-class/area, the `src/swoole_library/` replacement, and confirmation that the style and syntax checks pass. Wrap the
-body at the width `git log` already shows in this repo. Follow whatever trailer convention the recent commits use.
+class/area, the `src/swoole_library/` replacement, what changed in `README.md` (or that its derived parts were
+verified and needed no change), and confirmation that the style and syntax checks pass. Wrap the body at the width
+`git log` already shows in this repo. Follow whatever trailer convention the recent commits use.
 
 Do not create a git tag and do not push to any remote — those are out of scope for this agent. Note that your tool
 access does not mechanically prevent either one (you have `Bash`), so this is a rule you have to hold to yourself:
@@ -221,5 +254,5 @@ irreversible, public change out of what is supposed to be a reviewable local com
 Summarize: the current → target version bump, which files you touched and why (tie each back to a specific
 swoole-src change), the version constants you bumped, confirmation that `src/swoole_library/` was replaced from the
 matching `swoole/library` release (with the file list taken from that release's own `src/__init__.php` manifest),
-confirmation that the style/syntax checks passed, and the branch/commit you left the work on. Flag anything you
-couldn't fully verify rather than guessing.
+what changed in `README.md` (or that it was verified and needed no change), confirmation that the style/syntax checks
+passed, and the branch/commit you left the work on. Flag anything you couldn't fully verify rather than guessing.

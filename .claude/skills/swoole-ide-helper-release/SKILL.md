@@ -5,7 +5,8 @@ description: >
   Swoole release, e.g. "publish the 6.1.0 release" or "tag and release 6.0.3". Give it the target version in this
   project's own format (no "v" prefix, e.g. "6.1.0"). This performs real, public, irreversible actions — it creates
   and pushes a git tag, and publishes a live GitHub release — so only run it once the corresponding stub changes have
-  already been prepared (e.g. via the prepare-swoole-release agent) and are committed on the branch that owns that
+  already been prepared (e.g. via the prepare-swoole-release agent, including README.md's version-derived parts per
+  CLAUDE.md's "README maintenance" section) and are committed on the branch that owns that
   release line (mainline releases from `master`, patch releases for an older line from that line's own branch, e.g.
   `6.1.x`). It never marks a release as a pre-release, and never marks it as this project's "latest" release. This
   is for project maintainers
@@ -140,6 +141,45 @@ was blank, and don't reorder the checks so a fail-open one runs before check 1.
      stop and tell the user to push first. If local is behind, stop and tell the user to pull first.
    - `src/swoole/constants.php`'s `SWOOLE_VERSION`, `SWOOLE_MAJOR_VERSION`, `SWOOLE_MINOR_VERSION`, and
      `SWOOLE_RELEASE_VERSION` at HEAD actually match the target version.
+   - `README.md` at HEAD names the target version in both of its version-derived spots (see CLAUDE.md's "README
+     maintenance" section): the version-examples sentence and the ini directive list's "as of" note.
+     ```bash
+     TARGET_VERSION=6.1.0 # substitute the version you were given
+     grep -nF "version \`${TARGET_VERSION}\` of this package documents Swoole \`v${TARGET_VERSION}\`" README.md
+     grep -nF "(as of Swoole ${TARGET_VERSION})" README.md
+     ```
+     Both must print a line. This is a hard stop, not a warning: the tag freezes `README.md` as it appears on GitHub
+     and Packagist for that release, and a stale version example can't be corrected without cutting another release,
+     whereas fixing it now is just a commit and a push. These checks fail closed on an empty version (the patterns
+     then no longer match the real text). Check only these version strings — validating the ini list itself against
+     swoole-src is `prepare-swoole-release`'s job, not this skill's. No special casing is needed on a maintenance
+     branch: its README should name its own line's version, which is exactly what `TARGET_VERSION` is there.
+   - `CLAUDE.md`'s "Minimum supported PHP version on this branch" matches the minimum PHP version swoole-src itself
+     enforces at the target tag (the `#error "require PHP version X.Y or later"` check in
+     `ext-src/php_swoole_private.h`):
+     ```bash
+     TARGET_VERSION=6.1.0 # substitute the version you were given
+     curl -fsSL "https://raw.githubusercontent.com/swoole/swoole-src/v${TARGET_VERSION}/ext-src/php_swoole_private.h" \
+       | grep -oE 'require PHP version [0-9]+\.[0-9]+ or later'
+     grep -oE 'Minimum supported PHP version on this branch: [0-9]+\.[0-9]+' CLAUDE.md
+     ```
+     Each command must print exactly one line, and the two `X.Y` versions must be equal. Anything else — no output
+     from either one (including the `curl` failing), more than one line, or different versions — is a hard stop:
+     the stubs, CI, and README on this branch were prepared for a different minimum PHP version than the release
+     they're about to be published for, and `prepare-swoole-release` (its README step) is what brings them in line.
+     This fails closed on an empty version (`curl -f` then fetches a nonexistent path and fails).
+   - Work out whether this release changes the minimum PHP version compared with this line's previous release, which
+     decides the release body in Step 2. Before Step 1 creates the new tag, `git describe` still resolves to the
+     previous release:
+     ```bash
+     PREVIOUS_VERSION=$(git describe --tags --abbrev=0 HEAD)
+     echo "${PREVIOUS_VERSION}"
+     git show "${PREVIOUS_VERSION}:CLAUDE.md" | grep -oE 'Minimum supported PHP version on this branch: [0-9]+\.[0-9]+'
+     ```
+     If the last command prints the same `X.Y` as the current `CLAUDE.md`, the minimum is unchanged. If it prints a
+     different version, or nothing at all (that release predates the line being added to `CLAUDE.md`), treat the
+     minimum as changed. Show `PREVIOUS_VERSION` and the outcome in your Step 0 summary, and if `PREVIOUS_VERSION`
+     doesn't look like the release just before the target version on this line, stop and ask rather than guessing.
    If any check fails, stop and explain what's missing — most likely the stub changes for this version haven't
    been prepared/merged yet (that's `prepare-swoole-release`'s job, run beforehand).
 
@@ -177,18 +217,31 @@ you rely on it, but it has consistently been:
 PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION}).
 ```
 
-Leave the release title/name empty — that's the convention the most recent releases (checked above) follow. Publish
+The one exception: when Step 0 found that this release changes the minimum PHP version compared with the previous
+release on this line, append one more paragraph telling users about it (`MIN_PHP` is the `X.Y` from `CLAUDE.md`):
+
+```
+PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION}).
+
+Requires PHP ${MIN_PHP} or later, the same as Swoole ${TARGET_VERSION} itself. If you're on an older PHP version, use an older release line of this package (see the README's "Requirements" section).
+```
+
+Show the user the exact body in the pre-Step-2 confirmation. Leave the release title/name empty — that's the convention the most recent releases (checked above) follow. Publish
 against the tag you already pushed in Step 1 (don't let the tool create its own tag, since that wouldn't get the
 annotated message from Step 1):
 
 ```bash
 TARGET_VERSION=6.1.0 # substitute the version you were given
+BODY="PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION})."
+# Only when Step 0 found that the minimum PHP version changed (substitute the real X.Y for 8.1):
+# MIN_PHP=8.1
+# BODY="${BODY}"$'\n\n'"Requires PHP ${MIN_PHP} or later, the same as Swoole ${TARGET_VERSION} itself. If you're on an older PHP version, use an older release line of this package (see the README's \"Requirements\" section)."
 env -u GH_TOKEN gh release create "${TARGET_VERSION}" --repo swoole/ide-helper --verify-tag --latest=false \
-  --notes "PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION})."
+  --notes "${BODY}"
 ```
 
-The body is exactly that one line, with nothing appended — that's what every published release to date contains
-verbatim. `--verify-tag` is what actually enforces "publish against the tag from Step 1": without it, `gh` silently
+Apart from that one exception, the body is exactly the one line, with nothing appended — that's what every
+published release to date contains verbatim. `--verify-tag` is what actually enforces "publish against the tag from Step 1": without it, `gh` silently
 creates its own lightweight tag if the one you expect isn't on the remote, and you'd lose the annotated message.
 
 **Never pass `-p`/`--prerelease` at all** — it's a plain boolean switch with no `=false` form documented, so simply
@@ -209,6 +262,7 @@ TARGET_VERSION=6.1.0 # substitute the version you were given
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
 TOKEN="${GITHUB_TOKEN:-$GH_TOKEN}"
 BODY="PHP stubs for [Swoole ${TARGET_VERSION}](https://github.com/swoole/swoole-src/releases/tag/v${TARGET_VERSION})."
+# Append the minimum-PHP paragraph here too, exactly as in the gh command above, if Step 0 called for it.
 curl -X POST -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" \
   https://api.github.com/repos/swoole/ide-helper/releases \
   -d "$(jq -n --arg tag "${TARGET_VERSION}" --arg branch "${BRANCH}" --arg body "$BODY" \
