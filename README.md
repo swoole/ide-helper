@@ -123,8 +123,16 @@ the release line matching it instead; the `master` branch's README describes the
 
 Some Swoole features exist only when the extension is built with a particular configuration option. The stubs declare
 them unconditionally, so your IDE offers them even if your Swoole build doesn't include them; each one's docblock says
-what it needs. For example:
+what it needs. As of Swoole 6.1.11, the build options the stubs document are:
 
+* SSL/TLS support (the `SWOOLE_SSL` socket flag, the `SWOOLE_SSL_*` and `SWOOLE_SSLv*`/`SWOOLE_TLSv*` constants, the
+  `ssl_*` settings, and methods such as `Swoole\Coroutine\Client::enableSSL()`): `--enable-openssl`, or
+  `--with-openssl-dir=DIR` to also point the build at a specific OpenSSL installation. This is the only option on
+  this list that later releases dropped: since Swoole 6.2.0, OpenSSL is a required dependency, these features are
+  always built in, and `--enable-openssl` no longer exists (`--with-openssl-dir` remains, purely to locate OpenSSL).
+* Interoperability with PHP's own sockets extension (`Swoole\Server::getSocket()`, `Swoole\Server\Port::getSocket()`,
+  `Swoole\Client::getSocket()`, passing a `\Socket` object to `Swoole\Event::add()`, and the `$__ext_sockets_*`
+  bookkeeping properties of `Swoole\Coroutine\Socket`): `--enable-sockets`.
 * `Swoole\Thread` and the rest of the `Swoole\Thread\` namespace: PHP compiled with Zend Thread Safety (ZTS) enabled,
   and Swoole installed with `--enable-swoole-thread`.
 * The `swoole_native_curl_*()` functions and the `SWOOLE_HOOK_NATIVE_CURL` hook flag: `--enable-swoole-curl`.
@@ -135,6 +143,12 @@ what it needs. For example:
   constants: `--enable-iouring`.
 * The experimental "stdext" module (calling methods directly on plain strings, arrays, and streams, plus functions
   such as `swoole_typed_array()`): `--enable-swoole-stdext`.
+* `Swoole\Coroutine::getExecuteTime()`, which reports how long the current coroutine has been running:
+  `--enable-swoole-coro-time`. The official `phpswoole/swoole` Docker images are built without it.
+* Resolving DNS through the c-ares library, which is what makes the `Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM` runtime
+  option take effect in `Swoole\Coroutine::gethostbyname()`: `--enable-cares`.
+* Debug logging, reported by the `SWOOLE_DEBUG` constant (`true` in such a build, `false` otherwise):
+  `--enable-debug-log`.
 
 ## Reading the docblocks
 
