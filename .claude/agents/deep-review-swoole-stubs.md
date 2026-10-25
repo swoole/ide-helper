@@ -3,9 +3,10 @@ name: deep-review-swoole-stubs
 description: >
   Use this agent for a full, from-scratch accuracy audit of this project's stubs against the Swoole version this
   project *currently* supports (not a version bump — that's prepare-swoole-release's job). It walks every constant,
-  function, class, and method in the matching swoole-src release, compares it against the corresponding stub here,
-  and fixes anything missing, incomplete, incorrect, or hard to read, per CLAUDE.md's "Stub-writing conventions".
-  Given the scope (60+ class files plus constants.php/functions.php), a single invocation should make real,
+  function, class, and method in the matching swoole-src release, compares it against the corresponding stub here, and
+  fixes anything missing, incomplete, incorrect, or hard to read, per CLAUDE.md's "Stub-writing conventions". It also
+  audits README.md's derived parts (PHP configuration settings, build options, version examples) against the same
+  release. Given the scope (60+ class files plus constants.php/functions.php), a single invocation should make real,
   reportable progress rather than promising to finish everything at once — it tracks progress on disk so repeat
   invocations resume rather than restart. It works solo by default; only fans out into a team of sub-agents if the
   user explicitly asks for that in the invocation.
@@ -30,9 +31,10 @@ new conventions get added to it over time; the recap here is a reminder of what'
 substitute for reading it.
 
 **Scope: `src/swoole/`** (`constants.php`, `functions.php`, `shortnames.php`, `Swoole/**`), **plus the derived
-parts of `README.md`** listed in CLAUDE.md's "README maintenance" section (version examples, the ini directive list,
-the inventory of included files and build-option-gated features) — check those against the same swoole-src tag and
-fix factual errors there, but never rewrite README's hand-written prose. Do not touch `src/swoole_library/` — that's
+parts of `README.md`** listed in CLAUDE.md's "README maintenance" section (version examples, the PHP configuration
+settings table, the build-option list, the minimum PHP version, and the inventory of included files) — check those
+against the same swoole-src tag following Step 2b below, and fix factual errors there, but never rewrite README's
+hand-written prose. Do not touch `src/swoole_library/` — that's
 a verbatim copy of real PHP source synced by wholesale replacement, not a stub, and is out of scope for this kind of
 symbol-by-symbol review.
 
@@ -96,9 +98,10 @@ because a later tier looks more interesting):
    (ZTS-gated), `Async/Client.php`, and the various `*/Exception.php` classes not already covered above
    (`Coroutine/Curl/Exception.php`, `Coroutine/Http/Client/Exception.php`, `Coroutine/Http2/Client/Exception.php`,
    `Client/Exception.php`, `Coroutine/Socket/Exception.php`).
-6. **`README.md`** (derived parts only, per CLAUDE.md's "README maintenance" section): the version examples, the
-   ini directive table and descriptions (against the `PHP_INI_BEGIN()` … `PHP_INI_END()` block in
-   `ext-src/php_swoole.cc`), and the "What's included" / "Features that depend on build options" inventory.
+6. **`README.md`** (derived parts only, per CLAUDE.md's "README maintenance" section), audited from source per
+   Step 2b: the PHP configuration settings table (against the `PHP_INI_BEGIN()` … `PHP_INI_END()` block in
+   `ext-src/php_swoole.cc`), the build-option list (against `config.m4` and the `#ifdef` guards in the extension
+   source), the version examples and minimum PHP version, and the "What's included" inventory.
 
 Update the progress file as you go, not just at the end — if you get interrupted, the file on disk should always
 reflect real completed state.
@@ -110,7 +113,8 @@ don't blindly re-run the same pass either. Instead:
    doesn't, the completed pass is stale — archive it (rename to `temp/deep-review-progress-<old-version>.md`) and
    seed a fresh checklist for the current version.
 2. If the version does still match, first re-run the Step 2 mechanical self-check greps across all of `src/swoole/`
-   to see whether anything regressed or was added since that pass. Anything they surface goes back to `[ ]`.
+   and the Step 2b source checks against `README.md`'s ini table and build-option list, to see whether anything
+   regressed or was added since that pass. Anything they surface goes back to `[ ]`.
 3. If that comes back clean too, start a new *deeper* pass: reset the checklist to `[ ]` in the same priority order,
    note in the file's header that this is pass N against the same version, and work through it again — a previous
    pass finding a file "clean" is evidence, not proof, and this agent exists precisely because skimming misses
@@ -151,7 +155,8 @@ against the stub line by line. Concretely:
   `SW_USE_CURL`) wrapping a class/method/constant/function. When you find one, check `config.m4`/`config.w32` for
   the actual `--enable-*`/`--with-*` option name and description rather than guessing the phrasing, and document the
   requirement following the existing pattern (see `\Swoole\Thread\Atomic` or the `SWOOLE_HOOK_PDO_*` constants in
-  CLAUDE.md for the exact phrasing convention).
+  CLAUDE.md for the exact phrasing convention). Every option you document this way must also be on README's
+  "Features that depend on build options" list — Step 2b covers that side.
 - **`@see` links that deep-link into swoole-src** (e.g.
   `@see https://github.com/swoole/swoole-src/blob/v6.0.2/ext-src/swoole_server.cc#L53`): every one of these in a file
   you're reviewing needs both halves re-verified against the checkout from Step 0 — the tag in the URL *and* the line
@@ -210,6 +215,53 @@ above:
   applies to every symbol type, not just classes. Read every docblock you touch or verify and ask "if I only had
   this text and no tags, would I still know what this does?" — if not, it's incomplete, even if `{@inheritDoc}` or a
   `@see` link is technically present and even if the file's per-symbol docblock *counts* line up.
+
+# Step 2b: audit README.md's derived parts from source, the same way
+
+Tier 6 of the checklist is `README.md`, and it gets the same from-source treatment as a stub file — not a skim.
+Four checks, all against the `/tmp/swoole-review` checkout from Step 0 (CLAUDE.md's "README maintenance" section
+says what each part must contain):
+
+1. **PHP configuration settings** (inside the `ini-directives` markers). Extract the ini block:
+   ```bash
+   sed -n '/PHP_INI_BEGIN()/,/PHP_INI_END()/p' /tmp/swoole-review/ext-src/php_swoole.cc
+   ```
+   For every `STD_PHP_INI_ENTRY`/`STD_PHP_INI_BOOLEAN` line, compare the directive's name, type, default (follow
+   macros such as `SW_SOCKET_BUFFER_SIZE` to their definition under `include/`), and mode (`PHP_INI_ALL` =
+   "Anywhere", `PHP_INI_SYSTEM` = "`php.ini` only") against the README table — none extra, none missing. Then read the
+   code that consumes each directive (grep for the `SWOOLE_G(...)` field the entry binds to) and confirm the README's
+   plain-language description still matches what it actually does. Confirm the "(as of Swoole X.Y.Z)" note names
+   the version from Step 0.
+
+2. **Build options** ("Features that depend on build options"). List every configure option at the tag:
+   ```bash
+   grep -nE 'PHP_ARG_(ENABLE|WITH)\(' /tmp/swoole-review/config.m4
+   ```
+   For each, find the macro it defines (`AC_DEFINE(SW_..., ...)` in the matching `config.m4` branch) and grep
+   `ext-src`, `include`, and `src` for `#ifdef`/`#if defined` of that macro to learn what PHP-visible symbol or
+   behavior it gates, if anything. Then list every option the stubs name:
+   ```bash
+   grep -rhoE -- '--(enable|with)-[a-z0-9-]+' src/swoole | sort | uniq -c
+   ```
+   Every option the stubs name must still exist in `config.m4` at the tag — if one doesn't, the stub prose is stale:
+   find out from the source whether what it gated is now always built in or gone entirely, rewrite the stub to record
+   the history ("since Swoole X.Y.Z, ..."), and fix the README accordingly (see the OpenSSL note there for the
+   pattern). Every option the stubs name must also appear on the README list with an accurate description of what it
+   gates. Conversely, every option that gates a PHP-visible symbol must be documented in that symbol's stub docblock
+   per CLAUDE.md's "Symbols gated behind a build option" and be on the README list. The list is complete, not
+   illustrative, and its "As of Swoole X.Y.Z" lead-in must name the version from Step 0. Pure compiler/debug flags
+   that gate nothing PHP-visible (e.g. `--enable-asan`, `--enable-swoole-coverage`) stay off the list — but check what
+   each one defines rather than assuming.
+
+3. **Version examples and minimum PHP version** (the `version-examples` and `php-requirements` markers, plus the
+   "Contributing" tag example, its "valid PHP X.Y syntax" bullet, and its `phplint` image): must name the current
+   `SWOOLE_VERSION` and CLAUDE.md's minimum PHP version, which in turn must match the `#error "require PHP version X.Y
+   or later"` check in `ext-src/php_swoole_private.h` at the tag.
+
+4. **"What's included"**: must still describe what's under `src/`.
+
+Record the README outcome in the progress file like any other entry, and fix factual errors in place — but never
+reword hand-written prose that's still correct.
 
 # Step 3: fix what you find
 
@@ -282,6 +334,6 @@ what the progress file is for. Don't tag or publish anything; that's out of scop
 # Report back
 
 Summarize what you reviewed this session, what you fixed (tie each fix back to a specific swoole-src symbol/line),
-what you added or removed and why, any build-flag-gated symbols you newly documented, confirmation the style/syntax
-checks passed, and exactly how much of the checklist remains — so a future invocation (or a human) knows precisely
-where to pick up.
+what you added or removed and why, any build-flag-gated symbols you newly documented, whether README's ini table and
+build-option list matched the tag (and what you fixed there if not), confirmation the style/syntax checks passed, and
+exactly how much of the checklist remains — so a future invocation (or a human) knows precisely where to pick up.

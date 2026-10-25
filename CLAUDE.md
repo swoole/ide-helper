@@ -218,13 +218,22 @@ largest are wrapped in HTML comment markers (`<!-- BEGIN: version-examples -->` 
   missing), with its real type, default, and where it can be set (`PHP_INI_ALL` = anywhere; `PHP_INI_SYSTEM` =
   `php.ini` only), and the "(as of Swoole X.Y.Z)" note naming the version it was verified against. Describe each
   directive in plain language for a PHP developer, like a stub docblock; don't state a default you can't trace to
-  source.
+  source. On a release, diff that block between the previous and new tags as well as comparing the whole list, so a
+  changed default or mode isn't missed.
 - **Minimum PHP version** (inside the `php-requirements` markers, plus the "valid PHP X.Y syntax" bullet and the
   `phplint` image in "Contributing"): must match "Minimum supported PHP version on this branch" in "Commands" above,
   including the pointer telling users on an older PHP version which release line of this package to use instead.
-- **"What's included" and "Features that depend on build options"**: must still describe what's under `src/` and the
-  build-option-gated features documented in the stubs. Update them only when a top-level file or directory is added,
-  removed, or changes role, or when a build option is added, removed, or renamed.
+- **Build options** ("Features that depend on build options"): a complete, version-anchored list ("As of Swoole
+  X.Y.Z, the build options the stubs document are: ...") of every `--enable-*`/`--with-*` configure option from
+  swoole-src's `config.m4` that the stubs name, each with what it gates in PHP terms. On a release, diff `config.m4`
+  between the previous and new tags and re-verify the whole list against the new tag: add an option that newly gates
+  something the stubs document, drop or rename one that swoole-src dropped or renamed (leaving a short note that the
+  feature is now always built in, or gone, since the version that changed it — see the OpenSSL note there), fix a
+  description that no longer matches what the option gates, and bump the "As of" version. Pure compiler/debug flags
+  that gate nothing PHP-visible stay off the list. A dropped or renamed option also means rewriting every stub
+  docblock that names it.
+- **"What's included"**: must still describe what's under `src/`. Update it only when a top-level file or directory
+  is added, removed, or changes role.
 
 Everything else in `README.md` (intro, installation, requirements, IDE setup, best practices, docblock conventions,
 contributing, badges) is hand-written: don't rewrite it as part of a stub update or review, and keep edits inside
