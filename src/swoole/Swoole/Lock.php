@@ -10,24 +10,25 @@ namespace Swoole;
  * In a multi-process environment, Lock objects should be created in the parent process so that child processes can
  * acquire the locks.
  *
- * It's not recommend to use locks in the event callback functions like onConnect(), onReceive() and so on. This could
+ * It's not recommended to use locks in the event callback functions like onConnect(), onReceive() and so on. This could
  * cause memory leaks since memory usage could keep increasing as new requests keep coming in. In general, it's not
  * recommended to keep creating/destroying locks since this could cause memory leaks.
  *
  * This Lock class is not coroutine-friendly. It should not be used across different coroutines, especially when there
  * are coroutine switching between method calls to \Swoole\Lock::lock() and \Swoole\Lock::unlock(). For example, the
- * following example will cause deadlock:
- *
- *   Swoole\Coroutine\run(function () {
- *       $lock = new Swoole\Lock();
- *       for ($i = 0; $i < 2; $i++) {
- *           Swoole\Coroutine::create(function () use ($lock) {
- *               $lock->lock();
- *               Swoole\Coroutine::sleep(1);
- *               $lock->unlock();
- *           });
- *       }
- *   });
+ * following example will cause deadlock, e.g.,
+ * ```php
+ * Swoole\Coroutine\run(function () {
+ *     $lock = new Swoole\Lock();
+ *     for ($i = 0; $i < 2; $i++) {
+ *         Swoole\Coroutine::create(function () use ($lock) {
+ *             $lock->lock();
+ *             Swoole\Coroutine::sleep(1);
+ *             $lock->unlock();
+ *         });
+ *     }
+ * });
+ * ```
  *
  * If you think you need to use locks with coroutines, there are two options:
  * 1. use channels instead (before Swoole 6.0.1).
@@ -40,7 +41,7 @@ namespace Swoole;
  * each of them used to do.
  *
  * @see \Swoole\Thread\Lock Use this instead when PHP is compiled with Zend Thread Safety (ZTS) enabled.
- * @see \Swoole\Coroutine\Lock Use this instead when using locks accross coroutines.
+ * @see \Swoole\Coroutine\Lock Use this instead when using locks across coroutines.
  * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/csp/deadlocks/swoole-lock.php
  * @see https://www.php.net/manual/en/function.flock.php The built-in PHP function that method \Swoole\Lock::lock() is modeled after.
  * @not-serializable Objects of this class cannot be serialized.

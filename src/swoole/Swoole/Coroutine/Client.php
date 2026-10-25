@@ -50,6 +50,8 @@ class Client
      * Note that, unlike in class \Swoole\Client, none of the methods of this class accepts a flags parameter; the
      * constant exists on this class only to mirror \Swoole\Client::MSG_DONTWAIT for API compatibility.
      *
+     * The value varies among different operating systems; the value shown here is for Linux.
+     *
      * @see \Swoole\Client::MSG_DONTWAIT
      */
     public const MSG_DONTWAIT = 64;
@@ -59,6 +61,8 @@ class Client
      *
      * Note that, unlike in class \Swoole\Client, none of the methods of this class accepts a flags parameter; the
      * constant exists on this class only to mirror \Swoole\Client::MSG_WAITALL for API compatibility.
+     *
+     * The value varies among different operating systems; the value shown here is for Linux.
      *
      * @see \Swoole\Client::MSG_WAITALL
      */
@@ -346,6 +350,9 @@ class Client
      * Export the underlying socket as a \Swoole\Coroutine\Socket object, for lower-level socket operations.
      *
      * The returned object refers to the same underlying connection as the client itself.
+     *
+     * Swoole itself declares the return type as \Swoole\Coroutine\Socket|false (that's what reflection reports), but
+     * the method never returns FALSE: it returns NULL when there is no socket, so the stub declares it as ?Socket.
      *
      * @return Socket|null The underlying socket object, or NULL if the client has no socket yet (before the first
      *                     connect() call, or after the connection has been closed).

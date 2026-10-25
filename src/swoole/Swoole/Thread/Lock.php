@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Swoole\Thread;
 
 /**
- * Class \Swoole\Thread\Lock.
+ * A lock for coordinating multiple threads, e.g., to make sure only one thread at a time runs a piece of code.
  *
  * This class is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is installed with
  * the "--enable-swoole-thread" configuration option.

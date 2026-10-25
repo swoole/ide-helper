@@ -27,21 +27,24 @@ class Timer
      *
      * Execution time of the callback function does not affect the next trigger time. In the following example, the
      * timer is set to trigger every 10 ms, and the callback function takes 5 ms to execute. The timer is triggered at
-     * 0.000 s for the first time, and finishes at 0.005 s. The next one will be triggered at 0.010 s, but not 0.015 s.
-     *
-     *     Swoole\Timer::tick(10, function() { // Triggered every 10 ms.
-     *         // Assuming the callback function takes 5 ms to execute.
-     *     });
+     * 0.000 s for the first time, and finishes at 0.005 s. The next one will be triggered at 0.010 s, but not 0.015 s,
+     * e.g.,
+     * ```php
+     * Swoole\Timer::tick(10, function () { // Triggered every 10 ms.
+     *     // Assuming the callback function takes 5 ms to execute.
+     * });
+     * ```
      *
      * The actual time between the timer being scheduled and the timer being executed may be longer than the specified
      * interval. A timer may be skipped if the callback function takes too long to execute; in this case, the timer will
      * be triggered again at the next interval. In the following example, the timer is set to trigger every 10 ms, and
      * the callback function takes 12 ms to execute. The timer is triggered at 0.000 s for the first time, and finishes
-     * at 0.012 s. The one scheduled at 0.010 s will be skipped, and the next one will be triggered at 0.020 s.
-     *
-     *     Swoole\Timer::tick(10, function() { // Triggered every 10 ms.
-     *         // Assuming the callback function takes 12 ms to execute.
-     *     });
+     * at 0.012 s. The one scheduled at 0.010 s will be skipped, and the next one will be triggered at 0.020 s, e.g.,
+     * ```php
+     * Swoole\Timer::tick(10, function () { // Triggered every 10 ms.
+     *     // Assuming the callback function takes 12 ms to execute.
+     * });
+     * ```
      *
      * @param int $ms The timer interval in milliseconds. It must be no less than SWOOLE_TIMER_MIN_MS (1 millisecond).
      * @param callable $callback The callback function to be executed when the timer interval has elapsed. The timer

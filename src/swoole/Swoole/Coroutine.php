@@ -17,6 +17,11 @@ use Swoole\Coroutine\Iterator;
  * coroutines (method create()), inspect and control them (e.g., methods getCid(), yield(), resume(), cancel()), and
  * configure coroutine behavior (method set()).
  *
+ * Once the first coroutine has been created, a few PHP functions that can't work safely alongside coroutines are
+ * disabled for the rest of the program: functions pcntl_fork(), pcntl_rfork(), pcntl_wait(), pcntl_waitpid(),
+ * pcntl_sigtimedwait(), and pcntl_sigwaitinfo(); calling any of them raises an E_WARNING level error saying it has
+ * been disabled for security reasons. Use class \Swoole\Process to manage child processes instead.
+ *
  * @alias This class has an alias of "\co" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \co
  * @see \Swoole\Runtime::enableCoroutine()
@@ -113,7 +118,10 @@ class Coroutine
     /**
      * Cancel the execution of a coroutine.
      *
-     * Please note that this method can not cancel the execution of current coroutine.
+     * Please note that this method can not cancel the execution of current coroutine: with parameter $throw_exception
+     * left as FALSE, the call fails with function \swoole_last_error() reporting SWOOLE_ERROR_CO_CANNOT_CANCEL, and
+     * passing TRUE for the current coroutine isn't supported either (the call returns TRUE, but the coroutine keeps
+     * running).
      *
      * A coroutine that is busy with a file operation can not be cancelled; trying to force it may crash the process.
      *
@@ -431,17 +439,17 @@ class Coroutine
      * Get execution time of current coroutine.
      *
      * The execution time of a coroutine is the time from the moment when the coroutine is created to the moment when
-     * this method is called, minus the time spent in the I/O wait state. Here we use the following code piece as an
-     * example:
+     * this method is called, minus the time spent in the I/O wait state, e.g.,
+     * ```php
+     * \Swoole\Coroutine::create(function () { // Create a new coroutine.
+     *     // Here is some mathematical calculation that takes 3 seconds to finish.
      *
-     *   \Swoole\Coroutine::create(function () { // Create a new coroutine.
-     *       // Here is some mathematical calculation that takes 3 seconds to finish.
+     *     \Swoole\Coroutine::sleep(5); // A sleep function call to sleep for 5 seconds.
      *
-     *       \Swoole\Coroutine::sleep(5); // A sleep function call to sleep for 5 seconds.
-     *
-     *       // Next call returns an integer that is close to 3_000_000 (microseconds) but not 8_000_000 (microseconds).
-     *       \Swoole\Coroutine::getExecuteTime();
-     *   });
+     *     // Next call returns an integer that is close to 3_000_000 (microseconds) but not 8_000_000 (microseconds).
+     *     \Swoole\Coroutine::getExecuteTime();
+     * });
+     * ```
      *
      * This method is available only when Swoole is installed with option "--enable-swoole-coro-time" included.
      *
@@ -467,16 +475,17 @@ class Coroutine
      *                       - Otherwise: 0.001 second. This is the minimum number of seconds that can be used for
      *                       time-related operations in Swoole, as denoted by constant SWOOLE_TIMER_MIN_SEC.
      * @return string|false Return the IPv4/IPv6 address on success, or FALSE on failure.
-     *                      Runtime option \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM determines which address to return
-     *                      when multiple IPv4/IPv6 addresses are returned during DNS query.
-     *                      - If TRUE (enabled), a random address is returned. This is the default behavior.
-     *                      - If FALSE (disabled), the first address is returned.
+     *                      When the DNS query returns multiple IPv4/IPv6 addresses and Swoole is installed with the
+     *                      "--enable-cares" configuration option (so that library c-ares is used), runtime option
+     *                      \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM determines which address to return:
+     *                      - If TRUE (enabled), a random address is returned.
+     *                      - If FALSE (disabled, the default), the first address is returned.
+     *                      Without c-ares, the first address reported by the operating system is always returned.
      *                      The result is cached in memory for 60 seconds by default. The expiration time can be
      *                      configured through runtime option \Swoole\Constant::OPTION_DNS_CACHE_EXPIRE.
      *
-     * @see \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM Runtime option to enable random DNS lookup (enabled by default).
+     * @see \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM Runtime option to enable random DNS lookup (disabled by default).
      * @see \Swoole\Constant::OPTION_DNS_CACHE_EXPIRE Runtime option to set expiration time of DNS cache (in seconds).
-     *
      * @see https://www.php.net/gethostbyname The built-in PHP function \gethostbyname()
      *      There are a few differences between this method and the built-in PHP function \gethostbyname():
      *      - PHP function \gethostbyname() only works for IPv4 addresses. This method works for both IPv4 and IPv6 addresses.
@@ -491,18 +500,16 @@ class Coroutine
      * @see \Swoole\Coroutine::dnsLookup() This method is very similar to method \Swoole\Coroutine::dnsLookup(), with a
      *      few differences.
      *      - When multiple IPv4/IPv6 addresses are returned during DNS query, both methods rely on runtime option
-     *        \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM to determine which address to return. By default, a random
-     *        address is returned.
+     *        \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM to determine which address to return (for this method, only
+     *        when c-ares is used). By default, the first address is returned.
      *      - When library c-ares is available, both methods use c-ares to resolve the host name and return the same result.
      *      - When library c-ares is not available, method dnsLookup() makes a DNS query through UDP socket, while method
      *        gethostbyname() relies on the C function gethostbyname() to resolve the host name.
      *      - They use different runtime options to configure the behavior of caching DNS query result.
      *      - Parameter $timeout doesn't always have the same meaning in both methods, although most times they are the same.
-     *
      * @see \Swoole\Coroutine::getaddrinfo()
-     *
-     * @alias This method has an alias method \Swoole\Coroutine\System::gethostbyname().
      * @see \Swoole\Coroutine\System::gethostbyname()
+     * @alias This method has an alias method \Swoole\Coroutine\System::gethostbyname().
      */
     public static function gethostbyname(string $domain_name, int $type = AF_INET, float $timeout = -1): string|false
     {
@@ -517,30 +524,30 @@ class Coroutine
      * @return string|false returns the resolved IP address on success, or false on failure.
      *                      Runtime option \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM determines which address to return
      *                      when multiple IPv4/IPv6 addresses are returned during DNS query.
-     *                      - If TRUE (enabled), a random address is returned. This is the default behavior.
-     *                      - If FALSE (disabled), the first address is returned.
+     *                      - If TRUE (enabled), a random address is returned.
+     *                      - If FALSE (disabled, the default), the first address is returned.
      *                      The result is cached in memory for 60 seconds by default. The expiration time can be
-     *                      configured through runtime option \Swoole\Constant::OPTION_DNS_CACHE_REFRESH_TIME.
+     *                      configured through runtime option \Swoole\Constant::OPTION_DNS_CACHE_REFRESH_TIME. Note that
+     *                      the cache is keyed by the domain name only: an address cached by an AF_INET lookup is also
+     *                      returned for an AF_INET6 lookup of the same domain name (and vice versa) until it expires.
      *                      When failed, function swoole_last_error() can be used to get the error code. Here are some
      *                      common errors:
      *                      - SWOOLE_ERROR_DNSLOOKUP_RESOLVE_FAILED: The domain name can not be resolved.
      *                      - SWOOLE_ERROR_DNSLOOKUP_RESOLVE_TIMEOUT: Can't resolve the domain name within the given timeout.
-     * @see \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM Runtime option to enable random DNS lookup (enabled by default).
+     * @see \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM Runtime option to enable random DNS lookup (disabled by default).
      * @see \Swoole\Constant::OPTION_DNS_CACHE_REFRESH_TIME Runtime option to set refresh time for DNS cache (in seconds).
-     *
      * @see \Swoole\Coroutine::gethostbyname() This method is very similar to method \Swoole\Coroutine::gethostbyname(),
      *      with a few differences.
      *      - When multiple IPv4/IPv6 addresses are returned during DNS query, both methods rely on runtime option
-     *        \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM to determine which address to return. By default, a random
-     *        address is returned.
+     *        \Swoole\Constant::OPTION_DNS_LOOKUP_RANDOM to determine which address to return (method gethostbyname()
+     *        only when c-ares is used). By default, the first address is returned.
      *      - When library c-ares is available, both methods use c-ares to resolve the host name and return the same result.
      *      - When library c-ares is not available, method dnsLookup() makes a DNS query through UDP socket, while method
      *        gethostbyname() relies on the C function gethostbyname() to resolve the host name.
      *      - They use different runtime options to configure the behavior of caching DNS query result.
      *      - Parameter $timeout doesn't always have the same meaning in both methods, although most times they are the same.
-     *
-     * @alias This method is an alias of function \swoole_async_dns_lookup_coro().
      * @see \swoole_async_dns_lookup_coro()
+     * @alias This method is an alias of function \swoole_async_dns_lookup_coro().
      */
     public static function dnsLookup(string $domain_name, float $timeout = 60, int $type = AF_INET): string|false
     {
@@ -597,9 +604,8 @@ class Coroutine
      *
      * @see \Swoole\Coroutine::gethostbyname()
      * @see https://man7.org/linux/man-pages/man3/getaddrinfo.3.html The C function getaddrinfo(3) wrapped by this method.
-     *
-     * @alias Alias of method \Swoole\Coroutine\System::getaddrinfo().
      * @see \Swoole\Coroutine\System::getaddrinfo()
+     * @alias Alias of method \Swoole\Coroutine\System::getaddrinfo().
      */
     public static function getaddrinfo(string $domain, int $family = AF_INET, int $socktype = SOCK_STREAM, int $protocol = STREAM_IPPROTO_TCP, ?string $service = null, float $timeout = -1): array|false
     {

@@ -15,14 +15,14 @@ namespace Swoole\Coroutine;
  * };
  * ```
  *
+ * The class extends PHP class \ArrayIterator without adding or changing anything, so it's safe to treat it as a plain
+ * \ArrayIterator.
+ *
  * @see \Swoole\Coroutine::list()
  * @see \Swoole\Coroutine::listCoroutines()
- *
- * @alias It's safe to assume that this class is an alias of PHP class \ArrayIterator.
  * @see https://www.php.net/ArrayIterator
- *
- * @alias This class has an alias of "\Co\Iterator" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Iterator
+ * @alias This class has an alias of "\Co\Iterator" when directive "swoole.use_shortname" is not explicitly turned off.
  */
 class Iterator extends \ArrayIterator
 {

@@ -740,7 +740,8 @@ class Process
      * @param array<int> $cpu_settings IDs of the CPU cores the process is allowed to run on, starting from 0. The
      *                                 array can't be empty, can't hold more elements than the number of CPU cores, and
      *                                 can't hold an ID beyond the last CPU core; otherwise FALSE is returned (with an
-     *                                 E_WARNING level error thrown out, except for an empty array).
+     *                                 E_WARNING level error thrown out, except for an empty array). A negative ID
+     *                                 isn't rejected, with unpredictable results.
      * @return bool TRUE on success, or FALSE on failure.
      * @see https://linux.die.net/man/2/sched_setaffinity
      */

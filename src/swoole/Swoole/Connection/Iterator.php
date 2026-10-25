@@ -79,6 +79,9 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
      * The session ID is the same value that Swoole passes to event callback functions as parameter $fd, and the one
      * accepted by methods like \Swoole\Server::send() and \Swoole\Server::getClientInfo().
      *
+     * Swoole itself declares the return type as mixed (that's what reflection reports), but the method always returns
+     * an integer, so the stub declares it as int.
+     *
      * @return int Session ID of the current connection.
      * @see \Iterator::current()
      * @see https://www.php.net/manual/en/iterator.current.php
@@ -94,6 +97,9 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
      * The sequence number is not the session ID, but a counter reset when the iteration starts and increased by one
      * for each connection found. Therefore, the first connection of an iteration has key 1, the second one has key 2,
      * and so on. To get the session ID, use method \Swoole\Connection\Iterator::current().
+     *
+     * Swoole itself declares the return type as mixed (that's what reflection reports), but the method always returns
+     * an integer, so the stub declares it as int.
      *
      * @return int Sequence number of the current connection, starting from 1.
      * @see \Swoole\Connection\Iterator::current()
@@ -145,6 +151,9 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
      * This method is implemented by calling method \Swoole\Server::exists(). Therefore, it always checks against the
      * whole server, even when the object is accessed through property \Swoole\Server\Port::$connections.
      *
+     * Note: this stub used to declare the signature without a native parameter type, as "offsetExists($fd): bool"; it
+     * now declares "offsetExists(mixed $fd): bool", matching what the Swoole extension itself declares.
+     *
      * @param mixed $fd Session ID of the connection to check for.
      * @return bool Returns true if the connection exists, or false if the connection does not exist or has been closed.
      * @see \Swoole\Server::exists()
@@ -152,7 +161,7 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
      * @see https://www.php.net/manual/en/arrayaccess.offsetexists.php
      * {@inheritDoc}
      */
-    public function offsetExists($fd): bool
+    public function offsetExists(mixed $fd): bool
     {
     }
 
@@ -162,19 +171,28 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
      * This method is implemented by calling method \Swoole\Server::getClientInfo(). Therefore, it always looks up the
      * whole server, even when the object is accessed through property \Swoole\Server\Port::$connections.
      *
+     * Note: this stub used to declare the signature without any native types, as "offsetGet($fd)"; it now declares
+     * "offsetGet(mixed $fd): mixed", matching what the Swoole extension itself declares (and what interface
+     * \ArrayAccess requires).
+     *
      * @param mixed $fd Session ID of the connection.
-     * @return array|false Returns an array of connection information, or false on failure.
+     * @return array|false Returns an array of connection information, or false on failure. For the list of keys
+     *                     included in the array, please check method \Swoole\Server::getClientInfo().
      * @see \Swoole\Server::getClientInfo()
      * @see \ArrayAccess::offsetGet()
      * @see https://www.php.net/manual/en/arrayaccess.offsetget.php
      * {@inheritDoc}
      */
-    public function offsetGet($fd)
+    public function offsetGet(mixed $fd): mixed
     {
     }
 
     /**
      * This method doesn't do anything. DON'T use it.
+     *
+     * Note: this stub used to declare the signature without native parameter types, as
+     * "offsetSet($fd, $value): void"; it now declares "offsetSet(mixed $fd, mixed $value): void", matching what the
+     * Swoole extension itself declares.
      *
      * @param mixed $fd Session ID of the connection. It is ignored by this method.
      * @param mixed $value The value to set. It is ignored by this method.
@@ -182,19 +200,22 @@ class Iterator implements \Iterator, \ArrayAccess, \Countable
      * @see https://www.php.net/manual/en/arrayaccess.offsetset.php
      * {@inheritDoc}
      */
-    public function offsetSet($fd, $value): void
+    public function offsetSet(mixed $fd, mixed $value): void
     {
     }
 
     /**
      * This method doesn't do anything. DON'T use it.
      *
+     * Note: this stub used to declare the signature without a native parameter type, as "offsetUnset($fd): void"; it
+     * now declares "offsetUnset(mixed $fd): void", matching what the Swoole extension itself declares.
+     *
      * @param mixed $fd Session ID of the connection. It is ignored by this method.
      * @see \ArrayAccess::offsetUnset()
      * @see https://www.php.net/manual/en/arrayaccess.offsetunset.php
      * {@inheritDoc}
      */
-    public function offsetUnset($fd): void
+    public function offsetUnset(mixed $fd): void
     {
     }
 }

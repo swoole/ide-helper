@@ -5,8 +5,19 @@ declare(strict_types=1);
 namespace Swoole\Http;
 
 /**
- * The HTTP Request class.
+ * An HTTP request received by a Swoole HTTP server.
  *
+ * Objects of this class are created by Swoole and passed to the "Request" event callback of a \Swoole\Http\Server
+ * (or \Swoole\WebSocket\Server), or to a handler registered through method \Swoole\Coroutine\Http\Server::handle(),
+ * together with a \Swoole\Http\Response object used to reply. The parsed request is exposed through public
+ * properties that play the roles of PHP's superglobals (e.g., property $get for $_GET, $post for $_POST, $files for
+ * $_FILES, and $server for $_SERVER); the raw request body is available through method getContent().
+ *
+ * A Request object can also be created on its own through method Request::create() and fed raw HTTP data through
+ * method Request::parse(), e.g., to parse HTTP requests received over a plain socket.
+ *
+ * @see \Swoole\Http\Response
+ * @see \Swoole\Http\Server
  * @not-serializable Objects of this class cannot be serialized.
  */
 class Request
@@ -138,7 +149,7 @@ class Request
      *                       - 'parse_files' (boolean; default is TRUE): To restructure files uploaded under array-style field names (e.g., "files[]") into nested arrays in property $files (the way the superglobal $_FILES does) or not. Uploaded files are processed and listed in property $files either way.
      *                       - 'upload_tmp_dir' (string; default is "/tmp"): The temporary directory to store the uploaded files.
      *                       - 'enable_compression' (boolean; default is TRUE if Swoole is installed with zlib/Brotli/zstd, otherwise FALSE): To enable HTTP compression or not.
-     *                       - 'compression_level' (integer): Compression level. 1-9 are supported. The higher the level, the better the compression, but the more CPU it will consume. The default is 1.
+     *                       - 'compression_level' (integer): Compression level. 1-9 are supported. The higher the level, the better the compression, but the more CPU it will consume. The default is 1. Like option 'enable_compression', this option is recognized only when Swoole is installed with zlib/Brotli/zstd.
      *                       - 'websocket_compression' (boolean; default is FALSE): To allow compressing data transferred over the WebSocket connection (once the request completes a WebSocket handshake) or not. This option exists only when Swoole is compiled with zlib support.
      * @return Request The HTTP request object created. Feed it raw request data using method Request::parse().
      * @see \Swoole\Http\Request::parse()
@@ -152,7 +163,9 @@ class Request
      * Parse the raw HTTP request data.
      *
      * This method can be called multiple times to feed the request data in pieces; use method Request::isCompleted()
-     * to check if the whole request has been received.
+     * to check if the whole request has been received. Note that a request path or header value cut across two
+     * pieces is parsed wrongly (each part is taken as a complete value), so pieces should end on line boundaries to
+     * be parsed reliably.
      *
      * @param string $data The raw HTTP request data (or a piece of it) to parse.
      * @return int|false Return the number of bytes successfully parsed; when the data given is malformed, this can be

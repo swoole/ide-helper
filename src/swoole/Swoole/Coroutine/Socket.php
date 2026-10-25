@@ -496,7 +496,8 @@ class Socket
      *
      * @param array $settings An array of protocol options, e.g., "open_length_check", "package_length_type",
      *                        "package_length_offset", "package_body_offset", "package_max_length", "open_eof_check",
-     *                        "package_eof", and "open_ssl". It can't be an empty array.
+     *                        "package_eof", and "open_ssl". It can't be an empty array. Note that leaving
+     *                        "package_max_length" out resets it to the default of 2 MB on every call.
      * @return bool Returns TRUE if succeeds; otherwise FALSE.
      * @see \Swoole\Coroutine\Socket::recvPacket()
      * @since 4.4.0

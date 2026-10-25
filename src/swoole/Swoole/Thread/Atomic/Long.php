@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Swoole\Thread\Atomic;
 
 /**
- * Class \Swoole\Thread\Atomic\Long.
+ * An atomic, lock-free signed 64-bit integer counter that can be shared by multiple threads.
  *
  * This class is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is installed with
  * the "--enable-swoole-thread" configuration option.

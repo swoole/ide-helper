@@ -24,7 +24,7 @@ use Swoole\Server\Port;
  * History Changes:
  * 1. Following alias methods have been removed from Swoole 5.0.0. Please use the original methods instead.
  *    * \Swoole\Server::after()      => \Swoole\Timer::after().
- *    * \Swoole\Server::clearTimer() => \Swoole\Timer::clearTimer().
+ *    * \Swoole\Server::clearTimer() => \Swoole\Timer::clear().
  *    * \Swoole\Server::tick()       => \Swoole\Timer::tick().
  *    * \Swoole\Server::defer()      => \Swoole\Event::defer().
  * 2. Starting from Swoole 5.0.0, default server mode has been changed from SWOOLE_PROCESS to SWOOLE_BASE.
@@ -197,19 +197,19 @@ class Server
      * Path of the PHP script that each worker thread runs as its entry script when the server runs in the
      * SWOOLE_THREAD mode.
      *
-     * It defaults to the script currently being executed, and can be changed through option
-     * \Swoole\Constant::OPTION_BOOTSTRAP of method \Swoole\Server::set().
-     *
-     * Before Swoole 6.1.10, that default was only applied while method \Swoole\Server::set() ran; if set() was never
-     * called before \Swoole\Server::start(), this property stayed an empty string and worker threads were started
-     * with an empty bootstrap script path. Since Swoole 6.1.10, the default is applied at start() time instead,
-     * so it's in effect even when set() is never called.
+     * It can be set through option \Swoole\Constant::OPTION_BOOTSTRAP of method \Swoole\Server::set(). When left
+     * unset, it stays an empty string until method \Swoole\Server::start() is called, at which point it defaults to
+     * the script currently being executed. Before Swoole 6.1.10, method \Swoole\Server::set() filled in that default
+     * itself, which meant that the property stayed an empty string (and worker threads were started with an empty
+     * bootstrap script path) when set() was never called, and that a later \Swoole\Server::set() call without the
+     * option silently reset a value set earlier.
      *
      * This property is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is
      * installed with the "--enable-swoole-thread" configuration option.
      *
      * @see \Swoole\Constant::OPTION_BOOTSTRAP
      * @see \Swoole\Server::set()
+     * @see \Swoole\Server::start()
      * @since 6.0.0
      */
     public string $bootstrap = '';
@@ -532,11 +532,21 @@ class Server
      * For a connection on a stream (TCP or UNIX-stream) port, the data may be queued in the send buffer of the
      * connection if it can't be written out at once.
      *
+     * When option \Swoole\Constant::OPTION_SEND_YIELD is enabled and the send buffer is full, the call suspends the
+     * current coroutine until there is room again, or until option \Swoole\Constant::OPTION_SEND_TIMEOUT expires
+     * (in which case it fails with FALSE returned and function swoole_last_error() reporting SWOOLE_ERROR_CO_TIMEDOUT).
+     * If the connection is closed while the call is suspended, it fails with FALSE returned as well; since Swoole
+     * 6.1.10, the suspended call is cancelled right away in that case, with function swoole_last_error() reporting
+     * SWOOLE_ERROR_CO_CANCELED.
+     *
      * @param int|string $fd Session ID of the connection. To send data back to a client on a UNIX domain datagram socket, pass the path of the peer socket as a string instead.
      * @param string $send_data The data to send. It must not be empty.
      * @param int $serverSocket This parameter is used only when sending data back to a client on a UNIX domain datagram socket, to specify the file descriptor of the listening socket to send the data from; by default (-1), the socket where the server received the last datagram is used. It's ignored otherwise.
      * @return bool Returns true on success. Returns false on failure, e.g., the server is not running yet, the data given is empty, or the connection specified does not exist or is already closed.
      * @see \Swoole\Server::sendwait()
+     * @see \Swoole\Constant::OPTION_SEND_YIELD
+     * @see \Swoole\Constant::OPTION_SEND_TIMEOUT
+     * @see swoole_last_error()
      */
     public function send(int|string $fd, string $send_data, int $serverSocket = -1): bool
     {
@@ -578,10 +588,11 @@ class Server
     /**
      * Check if a connection exists.
      *
-     * @param int $fd The connection file descriptor.
+     * @param int $fd Session ID of the connection.
      * @return bool Returns true if the connection exists, or false if the connection does not exist or has been
      *              closed. Since Swoole 6.1.2, false is also returned while the connection is still in the process of
-     *              being closed (previously, true was returned until the connection was fully closed).
+     *              being closed (previously, true was returned until the connection was fully closed). False is also
+     *              returned (with a warning) when the server is not running.
      * @alias This method has an alias of \Swoole\Server::exist().
      * @see \Swoole\Server::exist()
      */
@@ -592,10 +603,11 @@ class Server
     /**
      * Check if a connection exists.
      *
-     * @param int $fd The connection file descriptor.
+     * @param int $fd Session ID of the connection.
      * @return bool Returns true if the connection exists, or false if the connection does not exist or has been
      *              closed. Since Swoole 6.1.2, false is also returned while the connection is still in the process of
-     *              being closed (previously, true was returned until the connection was fully closed).
+     *              being closed (previously, true was returned until the connection was fully closed). False is also
+     *              returned (with a warning) when the server is not running.
      * @alias Alias of method \Swoole\Server::exists().
      * @see \Swoole\Server::exists()
      */
@@ -657,10 +669,10 @@ class Server
      *
      * @param int $fd Session ID of the connection.
      * @return bool Returns true on success, or false if the connection does not exist or the operation fails.
-     * @alias Although this method and method \Swoole\Server::resume() are used for different purposes, they are
-     *        implemented exactly the same in Swoole.
      * @see \Swoole\Server::resume()
      * @see https://github.com/deminy/swoole-by-examples/blob/master/examples/servers/ddos-protection.php Example of DDoS protection using this method
+     * @alias Alias of method \Swoole\Server::resume(). Although the two methods are used for different purposes, they
+     *        are implemented exactly the same in Swoole.
      */
     public function confirm(int $fd): bool
     {
@@ -683,6 +695,8 @@ class Server
      * @param int $fd Session ID of the connection.
      * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server::pause()
+     * @see \Swoole\Server::confirm()
+     * @alias This method has an alias of \Swoole\Server::confirm().
      */
     public function resume(int $fd): bool
     {
@@ -812,14 +826,16 @@ class Server
      *   - This method can only be called from event worker processes, and only inside a coroutine; calling it outside
      *     of a coroutine makes Swoole throw a \Swoole\Error.
      *
-     * Here is a piece of code to illustrate how to configure the server before using this method:
-     *   $server = new \Swoole\Server('0.0.0.0', 9501);
-     *   $server->set(
+     * The server needs to be configured before using this method, e.g.,
+     * ```php
+     * $server = new \Swoole\Server('0.0.0.0', 9501);
+     * $server->set(
      *     [
-     *       \Swoole\Constant::OPTION_TASK_WORKER_NUM => 3, // Have three task worker processes included/created.
-     *       // ...
+     *         \Swoole\Constant::OPTION_TASK_WORKER_NUM => 3, // Have three task worker processes included/created.
+     *         // ...
      *     ]
-     *   );
+     * );
+     * ```
      *
      * Only the calling coroutine is suspended while waiting for the task results; the other coroutines of the process
      * keep running. Method \Swoole\Server::taskWaitMulti() works exactly the same as this method when it, too, is
@@ -953,8 +969,10 @@ class Server
     /**
      * Get the error code of the latest failed operation.
      *
-     * To translate the error code to an error message, use the following statement:
-     *     \swoole_strerror($server->getLastError(), SWOOLE_STRERROR_SWOOLE);
+     * To translate the error code to an error message, pass it to function \swoole_strerror(), e.g.,
+     * ```php
+     * \swoole_strerror($server->getLastError(), SWOOLE_STRERROR_SWOOLE);
+     * ```
      *
      * @return int The error code of the latest failed operation. The error codes are defined in the SWOOLE_ERROR_* constants.
      * @alias This method is an alias of function \swoole_last_error().

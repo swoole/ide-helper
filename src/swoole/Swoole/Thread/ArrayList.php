@@ -5,7 +5,19 @@ declare(strict_types=1);
 namespace Swoole\Thread;
 
 /**
- * Class \Swoole\Thread\ArrayList.
+ * A list (a sequentially indexed array) that can be shared and modified by multiple threads safely.
+ *
+ * Pass an ArrayList object to a new \Swoole\Thread as one of its arguments to share it with the thread; all the
+ * threads holding it then see and modify the same list. It's accessed like a regular PHP array, e.g., $list[] = 1,
+ * $list[0], and count($list), with every access protected by an internal lock.
+ *
+ * Values are copied into memory shared by all the threads when they are stored, and copied back out when they are
+ * read: integers, floats, strings, booleans, and NULL are stored as they are; arrays are turned into
+ * \Swoole\Thread\ArrayList (for lists) or \Swoole\Thread\Map (for other arrays) objects; the other
+ * \Swoole\Thread\* objects (e.g., \Swoole\Thread\Lock) are shared as they are; stream and socket resources/objects
+ * are re-created in the reading thread from a duplicate of their file descriptor (a \Swoole\Thread\Error object is
+ * read back instead when that fails); any other object is serialized when stored and unserialized when read, so it
+ * must be serializable.
  *
  * This class is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is installed with
  * the "--enable-swoole-thread" configuration option.
@@ -16,8 +28,8 @@ namespace Swoole\Thread;
 final class ArrayList implements \ArrayAccess, \Countable
 {
     /**
-     * Although Swoole declares this property (as a read-only property), it is never assigned anywhere in the Swoole
-     * source code, so it always holds its default value of 0.
+     * Although Swoole declares this property (as a read-only property), as of Swoole 6.1.10 it is never assigned
+     * anywhere in the Swoole source code, so it always holds its default value of 0.
      *
      * @readonly
      */

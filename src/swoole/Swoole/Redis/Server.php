@@ -111,6 +111,11 @@ class Server extends \Swoole\Server
     /**
      * Get the handler (callback function) registered for a given Redis command through method setHandler().
      *
+     * The callback is returned exactly as it was registered (e.g., a Closure object, a function name, or an array in
+     * the format of [$object, 'method']). Swoole itself declares the return type as \Closure (that's what reflection
+     * reports), but the method returns whatever callable was registered, or NULL when there is none, so the stub
+     * declares it as ?callable.
+     *
      * @param string $command Name of the Redis command (e.g., "GET" or "SET"). Command names are matched
      *                        case-insensitively.
      * @return callable|null Returns the callback function if defined, otherwise NULL.

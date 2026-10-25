@@ -164,8 +164,11 @@ class Client
      * @param string $key An optional field name. When given, only the value of that field is returned. Supported
      *                    field names are "current_stream_id", "last_stream_id", "local_settings",
      *                    "remote_settings", and "active_stream_num".
-     * @return int|array The value of the requested field, or (when no field name is given) an array containing all
-     *                   the fields listed above.
+     * @return int|array The value of the requested field (an array for "local_settings" and "remote_settings", an
+     *                   integer for the rest), or (when no field name is given) an array containing all the fields
+     *                   listed above. Despite the return type declared, NULL is returned at run time when an
+     *                   unsupported field name is given. The type declared here matches the one the extension itself
+     *                   declares, i.e., the mismatch is in Swoole, not in this stub.
      */
     public function stats(string $key = ''): int|array
     {

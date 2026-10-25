@@ -5,7 +5,13 @@ declare(strict_types=1);
 namespace Swoole;
 
 /**
- * Class \Swoole\Thread.
+ * A native operating-system thread running PHP code.
+ *
+ * Creating an object of this class starts a new thread that runs a given PHP script file in a fresh, isolated PHP
+ * environment: the new thread doesn't share any global variables, classes, or functions with its creator. Data can be
+ * passed to the thread as constructor arguments (read back in the thread through method Thread::getArguments()), and
+ * shared between threads through the thread-safe containers \Swoole\Thread\Map, \Swoole\Thread\ArrayList, and
+ * \Swoole\Thread\Queue. Use method join() to wait for a thread to finish.
  *
  * This class is available only when PHP is compiled with Zend Thread Safety (ZTS) enabled and Swoole is installed with
  * the "--enable-swoole-thread" configuration option.
@@ -65,22 +71,42 @@ final class Thread
     public const SCHED_RR = 2;
 
     /**
+     * Scheduling policy for methods \Swoole\Thread::setPriority() and \Swoole\Thread::getPriority(): like
+     * Thread::SCHED_OTHER, but tuned for non-interactive, CPU-intensive batch work, which the scheduler treats as
+     * slightly less urgent.
+     *
      * This constant is defined only on systems whose scheduler provides the SCHED_BATCH policy (Linux).
+     *
+     * @see https://man7.org/linux/man-pages/man7/sched.7.html
      */
     public const SCHED_BATCH = 3;
 
     /**
+     * Scheduling policy for methods \Swoole\Thread::setPriority() and \Swoole\Thread::getPriority(): an
+     * "isochronous" policy meant for soft real-time work without needing root privileges. Linux reserves the name but
+     * doesn't implement it, so the constant usually doesn't exist.
+     *
      * This constant is defined only on systems whose scheduler provides the SCHED_ISO policy.
      */
     public const SCHED_ISO = 4;
 
     /**
+     * Scheduling policy for methods \Swoole\Thread::setPriority() and \Swoole\Thread::getPriority(): for very
+     * low-priority background work, which only gets to run when nothing else wants the CPU.
+     *
      * This constant is defined only on systems whose scheduler provides the SCHED_IDLE policy (Linux).
+     *
+     * @see https://man7.org/linux/man-pages/man7/sched.7.html
      */
     public const SCHED_IDLE = 5;
 
     /**
+     * Scheduling policy for methods \Swoole\Thread::setPriority() and \Swoole\Thread::getPriority(): a real-time
+     * policy that schedules work by deadline rather than by priority. Using it requires elevated (root) privileges.
+     *
      * This constant is defined only on systems whose scheduler provides the SCHED_DEADLINE policy (Linux).
+     *
+     * @see https://man7.org/linux/man-pages/man7/sched.7.html
      */
     public const SCHED_DEADLINE = 6;
 
@@ -235,7 +261,9 @@ final class Thread
      * This method is available only on some operating systems that support CPU affinity. It's not available on Windows
      * or macOS.
      *
-     * @param array<int> $cpu_settings IDs of the CPU cores the thread is allowed to run on, starting from 0.
+     * @param array<int> $cpu_settings IDs of the CPU cores the thread is allowed to run on, starting from 0. An ID
+     *                                 beyond the last CPU core makes the method fail with an E_WARNING level error
+     *                                 raised; a negative ID isn't rejected, with unpredictable results.
      * @return bool TRUE on success, or FALSE on failure.
      * @see https://linux.die.net/man/3/pthread_setaffinity_np
      */

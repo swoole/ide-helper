@@ -46,6 +46,12 @@ class Packet
 
     /**
      * The datagram payload received from the client.
+     *
+     * Unlike the other properties of this class, this property is not declared by Swoole: it is added to each Packet
+     * object as a dynamic property right before the object is passed to the onPacket callback. It is declared here so
+     * that IDEs know about it. As a consequence, the property does not exist on a Packet object created in any other
+     * way (e.g., through Reflection), and assigning it on such an object yourself triggers PHP's "Creation of dynamic
+     * property" deprecation notice.
      */
     public ?string $data = null;
 }

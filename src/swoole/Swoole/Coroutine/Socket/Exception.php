@@ -10,8 +10,8 @@ namespace Swoole\Coroutine\Socket;
  * readVector(), readVectorAll(), writeVector(), or writeVectorAll().
  *
  * @see \Swoole\Coroutine\Socket
- * @alias This class has an alias of "\Co\Socket\Exception" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Socket\Exception
+ * @alias This class has an alias of "\Co\Socket\Exception" when directive "swoole.use_shortname" is not explicitly turned off.
  */
 class Exception extends \Swoole\Exception
 {

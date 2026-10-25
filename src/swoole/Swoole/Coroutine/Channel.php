@@ -109,9 +109,15 @@ class Channel
      * Close the channel.
      *
      * After the channel is closed,
-     *   1. no more elements can be pushed into it, nor can elements be popped out of it.
-     *   2. coroutines that are waiting for elements to be pushed into the channel will be woken up; inside the coroutines, calls to method push() return FALSE.
-     *   3. coroutines that are waiting for elements to be popped out of the channel will be woken up; inside the coroutines, calls to method pop() return FALSE.
+     *   1. no more elements can be pushed into it: calls to method push() return FALSE right away.
+     *   2. elements already in the channel can still be popped out of it, until the channel is empty; after that,
+     *      calls to method pop() return FALSE right away.
+     *   3. coroutines that are waiting in method push() for room to become available are woken up; inside those
+     *      coroutines, the calls to method push() return FALSE.
+     *   4. coroutines that are waiting in method pop() for an element to arrive are woken up; inside those coroutines,
+     *      the calls to method pop() return FALSE (the channel is empty, since they were waiting).
+     *
+     * In all these cases, property $errCode is set to SWOOLE_CHANNEL_CLOSED.
      *
      * @return bool Returns TRUE on success, or FALSE if the channel is closed already.
      */
@@ -127,12 +133,14 @@ class Channel
      *   2. producer_num: Number of calls to method `push()` that are waiting for elements to be popped from the channel. This happens when the channel is full.
      *   3. queue_num: Number of elements in the channel. This is the same as the return value of statement `self::length()`.
      *
-     * For example:
-     *   [
+     * The returned array looks like this, e.g.,
+     * ```php
+     * [
      *     'consumer_num' => 0, // No calls to method `pop()` in waiting at the moment.
      *     'producer_num' => 1, // The channel is full, and there is one method call to method `push()` that is waiting for elements to be popped from the channel.
      *     'queue_num'    => 2, // There are two elements in the channel. In this case, the size of the channel is also two.
-     *   ]
+     * ]
+     * ```
      *
      * @return array Returns an array with three fields in it: "consumer_num", "producer_num", and "queue_num".
      */

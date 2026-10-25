@@ -49,7 +49,8 @@ class Lock
      * released, unless LOCK_NB is passed.
      *
      * The lock is reentrant within a single coroutine: when the calling coroutine already holds the lock, the call
-     * returns TRUE right away without waiting.
+     * returns TRUE right away without waiting. Such repeated calls are not counted, though: a single call to method
+     * unlock() releases the lock no matter how many times it was acquired.
      *
      * The signature of this method changed in Swoole 6.1.0:
      *   - before: public function lock(): bool
@@ -91,6 +92,9 @@ class Lock
 
     /**
      * Release the lock.
+     *
+     * The lock is released no matter which coroutine calls this method: there is no check that the calling coroutine
+     * is the one holding the lock. Calling it while the lock isn't held does nothing, and returns TRUE.
      *
      * @return bool TRUE on success, FALSE on failure (for example, when called outside of a coroutine).
      * @see \Swoole\Coroutine\Lock::lock()

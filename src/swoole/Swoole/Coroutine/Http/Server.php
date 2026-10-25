@@ -7,6 +7,8 @@ namespace Swoole\Coroutine\Http;
 use Swoole\Coroutine\Socket;
 
 /**
+ * A coroutine-style HTTP server.
+ *
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has an alias of "\Co\Http\Server" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Http\Server
@@ -50,7 +52,8 @@ final class Server
     public ?array $settings = null;
 
     /**
-     * Error code of the last error happening on the listening socket; 0 when there is no error.
+     * Error code of the last error happening on the listening socket; 0 when there is no error. Since Swoole 6.1.10,
+     * it is set to SOCKET_EINVAL as well when method Server::start() rejects the settings in property $settings.
      *
      * @see \Swoole\Coroutine\Http\Server::$errMsg
      */
@@ -85,7 +88,8 @@ final class Server
     /**
      * Update server settings.
      *
-     * The settings given are merged into property $settings; they take effect when method Server::start() is called.
+     * The settings given are merged into property $settings; they take effect (and, since Swoole 6.1.10, are validated)
+     * when method Server::start() is called: an invalid protocol setting makes that method fail with FALSE returned.
      *
      * @param array $settings Settings to update, e.g., "http_parse_cookie", "http_parse_post", "http_parse_files",
      *                        "http_compression", "upload_tmp_dir", and protocol options of the underlying socket.
@@ -120,19 +124,19 @@ final class Server
     /**
      * Start the server, accepting incoming connections in a loop.
      *
-     * The call blocks the current coroutine until the server is stopped with method Server::shutdown(), an
-     * unrecoverable error happens while accepting connections, or the settings configured through method
-     * Server::set() turn out to be invalid (check properties $errCode and $errMsg in either of the latter two
-     * cases). Each incoming connection is handled in a new coroutine.
+     * The settings in property $settings are applied first. The call then blocks the current coroutine until the
+     * server is stopped with method Server::shutdown(), or until an unrecoverable error happens while accepting
+     * connections. Each incoming connection is handled in a new coroutine.
      *
-     * @return bool Returns TRUE once the server stops normally, via method Server::shutdown(). Returns FALSE if an
-     *              unrecoverable error happens while accepting connections, or if the settings configured through
-     *              method Server::set() are invalid (e.g., an unknown value given for setting "package_length_type");
-     *              check properties $errCode and $errMsg to find out what happened.
-     *              Before Swoole 6.1.10, this method always returned TRUE once the accept loop stopped, even when it
-     *              stopped because of an unrecoverable error; callers had to inspect $errCode/$errMsg themselves to
-     *              tell that case apart from a normal shutdown. Also before Swoole 6.1.10, invalid settings given to
-     *              Server::set() were silently ignored instead of preventing the server from starting.
+     * @return bool Returns TRUE once the server is stopped with method Server::shutdown(). Returns FALSE, with
+     *              properties $errCode and $errMsg updated accordingly, in two cases:
+     *              - Property $settings holds an invalid protocol setting (e.g., an unknown "package_length_type");
+     *              $errCode is set to SOCKET_EINVAL then. Before Swoole 6.1.10, such a setting was reported with a
+     *              warning only, and the server started anyway.
+     *              - An unrecoverable error happens while accepting a connection (e.g., the SSL context of the
+     *              listening socket can't be created because of a bad certificate or key file, which sets $errCode
+     *              to SWOOLE_ERROR_SSL_CREATE_CONTEXT_FAILED); a warning is raised as well. Before Swoole 6.1.10, the
+     *              method returned TRUE in this case, as if the server had been shut down normally.
      * @see \Swoole\Coroutine\Http\Server::shutdown()
      * @see \Swoole\Coroutine\Http\Server::set()
      * @see \Swoole\Coroutine\Http\Server::$errCode

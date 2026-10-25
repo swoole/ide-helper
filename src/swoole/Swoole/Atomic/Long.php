@@ -47,7 +47,7 @@ class Long
     /**
      * Atomically subtracts a value from the counter.
      *
-     * @param int $sub_value The value to be subtracts from the counter. The default value is 1.
+     * @param int $sub_value The value to be subtracted from the counter. The default value is 1.
      * @return int The new value of the counter.
      */
     public function sub(int $sub_value = 1): int

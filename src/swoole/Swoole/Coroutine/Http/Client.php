@@ -220,7 +220,11 @@ class Client
      * The settings given are merged into property $setting.
      *
      * @param array $settings Client settings, e.g., "timeout", "keep_alive", "websocket_mask", "websocket_compression",
-     *                        "http_compression", "body_decompression", "lowercase_header", and socket options.
+     *                        "http_compression", "body_decompression", "lowercase_header", "write_func" (a callback of
+     *                        the form function ($client, string $data) that receives the response body piece by
+     *                        piece as it arrives, instead of the body being collected into property $body; note that
+     *                        the pieces are handed over as received, i.e., still compressed when the server compressed
+     *                        the response, regardless of setting "body_decompression"), and socket options.
      * @return bool Return TRUE on success; return FALSE when an empty array is given.
      * @see \Swoole\Coroutine\Http\Client::$setting
      */
@@ -370,7 +374,9 @@ class Client
      * their getter methods).
      *
      * When setting "max_retries" is set to a positive value, a response with status code 502 or 503 makes the client
-     * close the connection and retry the request transparently, at most that many extra times.
+     * close the connection and retry the request transparently, at most that many extra times; if the last attempt
+     * still gets a 502 or 503 response, the request is treated as failed and FALSE is returned. The same setting also
+     * makes the client retry a failed connection attempt up to that many extra times.
      *
      * @param string $path The path (plus optional query string) to request, e.g., "/index.php?a=b".
      * @return bool Return TRUE on success; return FALSE when the request fails — check properties $errCode, $errMsg,

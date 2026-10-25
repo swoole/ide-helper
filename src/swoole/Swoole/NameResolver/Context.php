@@ -7,6 +7,10 @@ namespace Swoole\NameResolver;
 /**
  * Instance of this class is only used as value of the second parameter of function \swoole_name_resolver_lookup().
  *
+ * It carries the options of one lookup: the address family to resolve the name to (which is also used when the lookup
+ * falls back to a regular DNS query), and whether the result may include a port. The options are set through the
+ * constructor only; the class has no public properties, and its objects can't be cloned.
+ *
  * @since 5.0.0
  * @not-serializable Objects of this class cannot be serialized.
  * @see \swoole_name_resolver_lookup()

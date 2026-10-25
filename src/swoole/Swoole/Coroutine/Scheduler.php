@@ -30,30 +30,44 @@ final class Scheduler
     /**
      * Add a task (implemented in the callback).
      *
+     * Swoole itself declares the return type as void (that's what reflection reports), but the method does return FALSE
+     * when the scheduler has already been started; since a native void return type can't express that, no native
+     * return type is declared here.
+     *
+     * Note: this stub used to name the variadic parameter $params, as "add(callable $func, ...$params)"; it is now named
+     * $param, as "add(callable $func, ...$param)", matching what the Swoole extension itself declares.
+     *
      * @param callable $func The callback function to run as a new coroutine once method start() is called.
-     * @param mixed ...$params Arguments passed to the callback function when it starts running.
+     * @param mixed ...$param Arguments passed to the callback function when it starts running.
      * @return false|void Returns FALSE if the scheduler has already been started; otherwise nothing returns.
      * @see \Swoole\Coroutine\Scheduler::start()
      * @see \Swoole\Coroutine\Scheduler::parallel()
      */
-    public function add(callable $func, ...$params)
+    public function add(callable $func, ...$param)
     {
     }
 
     /**
      * Add multiple tasks (implemented in the callback).
      *
+     * Like method add(), this method has no native return type declared, since it returns FALSE when the scheduler has
+     * already been started although Swoole itself declares the return type as void.
+     *
+     * Note: this stub used to name the variadic parameter $params, as "parallel(int $n, callable $func, ...$params)"; it
+     * is now named $param, as "parallel(int $n, callable $func, ...$param)", matching what the Swoole extension itself
+     * declares.
+     *
      * @param int $n Number of coroutines to create, each of them running the same callback function.
      * @param callable $func The callback function to run in each of the coroutines once method start() is called.
-     * @param mixed ...$params Arguments passed to the callback function when it starts running.
+     * @param mixed ...$param Arguments passed to the callback function when it starts running.
      * @return false|void Returns FALSE if the scheduler has already been started; otherwise nothing returns.
      * @see \Swoole\Coroutine\Scheduler::start()
      * @pseudocode-included This is a built-in method in Swoole. The PHP code included inside this method is for explanation purpose only.
      */
-    public function parallel(int $n, callable $func, ...$params)
+    public function parallel(int $n, callable $func, ...$param)
     {
         for ($i = 0; $i < $n; $i++) {
-            $this->add($func, ...$params);
+            $this->add($func, ...$param);
         }
     }
 

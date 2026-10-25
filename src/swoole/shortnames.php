@@ -36,7 +36,7 @@ class_alias(Swoole\Coroutine\System::class, Co\System::class);
  * @param mixed ...$params Arguments passed to the function when the coroutine starts running.
  * @return int|false Returns the coroutine ID on success, or false on failure. Note that this method won't return
  *                   the coroutine ID back until the new coroutine yields its execution.
- * @alias This function has an alias function swoole_coroutine_create() and an alias method \Swoole\Coroutine::create().
+ * @alias This function is an alias of function swoole_coroutine_create() and of method \Swoole\Coroutine::create().
  * @see swoole_coroutine_create()
  * @see \Swoole\Coroutine::create()
  */

@@ -13,13 +13,13 @@ namespace Swoole\Coroutine;
  *
  * The Context object will be automatically destroyed when the coroutine finishes execution and gets destroyed.
  *
- * @alias It's safe to assume that this class is an alias of PHP class \ArrayObject.
+ * The class extends PHP class \ArrayObject without adding or changing anything, so it's safe to treat it as a plain
+ * \ArrayObject.
+ *
  * @see https://www.php.net/ArrayObject
- *
- * @alias This class has an alias of "\Co\Context" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Context
- *
  * @see \Swoole\Coroutine::getContext()
+ * @alias This class has an alias of "\Co\Context" when directive "swoole.use_shortname" is not explicitly turned off.
  */
 class Context extends \ArrayObject
 {

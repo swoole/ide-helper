@@ -21,6 +21,10 @@ class Client
     /**
      * Flag for methods send() and recv(): process out-of-band (urgent) data.
      *
+     * Note that method recv() treats a $flag value of exactly 1 as Client::MSG_WAITALL, and this constant equals 1;
+     * therefore, passing this constant alone to method recv() makes it wait for all the requested data instead of
+     * reading out-of-band data. It only keeps its own meaning there when combined with other flags.
+     *
      * @see \Swoole\Client::send()
      * @see \Swoole\Client::recv()
      */
@@ -38,6 +42,8 @@ class Client
      * Flag for method recv(): make this single call non-blocking, returning immediately even if no data is
      * available yet.
      *
+     * The value varies among different operating systems; the value shown here is for Linux.
+     *
      * @see \Swoole\Client::recv()
      */
     public const MSG_DONTWAIT = 64;
@@ -45,6 +51,8 @@ class Client
     /**
      * Flag for method recv(): block until the full requested number of bytes has been received, instead of
      * returning whatever data happens to be available.
+     *
+     * The value varies among different operating systems; the value shown here is for Linux.
      *
      * @see \Swoole\Client::recv()
      */
@@ -222,6 +230,10 @@ class Client
      * When the "open_eof_check" or "open_length_check" setting is enabled, a complete protocol packet is returned
      * regardless of the $size parameter; otherwise, at most $size bytes of whatever data is available are returned.
      *
+     * NOTE: the method signature published by Swoole declares parameter $size with a default value of 65536, but the
+     * underlying implementation uses 65535 when the argument is omitted; the default value declared here reflects the
+     * actual behavior. Also, unless flag Client::MSG_WAITALL is given, a $size greater than 65535 is lowered to 65535.
+     *
      * @param int $size Maximum number of bytes to receive.
      * @param int $flag Receive flags. It can be a bitwise OR of class constants like Client::MSG_WAITALL or
      *                  Client::MSG_PEEK; a value of 1 is treated as Client::MSG_WAITALL (block until exactly $size
@@ -313,6 +325,9 @@ class Client
      *
      * This method is available only when OpenSSL support is enabled (i.e., when Swoole is installed with configuration
      * option "--enable-openssl" included).
+     *
+     * Swoole itself declares the return type as string|bool (that's what reflection reports), but the method never
+     * returns TRUE, so the stub declares it as string|false.
      *
      * @return string|false The peer certificate in PEM format, or FALSE if there is no established SSL connection or
      *                      the certificate cannot be retrieved.

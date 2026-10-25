@@ -66,8 +66,8 @@ class System
      *                     - code: The exit code of the command. 0 typically means the command finished successfully.
      *                     - signal: The signal number that terminated the command, or 0 if it exited normally.
      * @see https://www.php.net/shell_exec The built-in PHP function \shell_exec(), which serves a similar purpose but blocks the whole process.
-     * @alias This method has an alias of \Swoole\Coroutine::exec().
      * @see \Swoole\Coroutine::exec()
+     * @alias This method has an alias of \Swoole\Coroutine::exec().
      */
     public static function exec(string $command, bool $get_error_stream = false): array|false
     {
@@ -85,8 +85,8 @@ class System
      * @return bool TRUE once the time is up; FALSE if $seconds is less than 0.001, or if the coroutine is cancelled
      *              while sleeping.
      * @see https://www.php.net/sleep The built-in PHP function \sleep(), which blocks the whole process.
-     * @alias This method has an alias of \Swoole\Coroutine::sleep().
      * @see \Swoole\Coroutine::sleep()
+     * @alias This method has an alias of \Swoole\Coroutine::sleep().
      */
     public static function sleep(float $seconds): bool
     {
@@ -121,8 +121,8 @@ class System
      *               "bsize", "frsize", "blocks", "bfree", "bavail", "files", "ffree", "favail", "fsid", "flag", and "namemax".
      *               For example, multiplying "bavail" by "frsize" gives the disk space (in bytes) available to unprivileged users.
      * @see https://man7.org/linux/man-pages/man3/statvfs.3.html The C function statvfs(3) wrapped by this method.
-     * @alias This method has an alias of \Swoole\Coroutine::statvfs().
      * @see \Swoole\Coroutine::statvfs()
+     * @alias This method has an alias of \Swoole\Coroutine::statvfs().
      */
     public static function statvfs(string $path): array
     {
@@ -187,8 +187,8 @@ class System
      *                     - signal: The signal number that terminated the child process, or 0 if it exited normally.
      * @see https://www.php.net/pcntl_wait The built-in PHP function \pcntl_wait(), which serves a similar purpose but blocks the whole process.
      * @see \Swoole\Coroutine\System::waitPid()
-     * @alias This method has an alias of \Swoole\Coroutine::wait().
      * @see \Swoole\Coroutine::wait()
+     * @alias This method has an alias of \Swoole\Coroutine::wait().
      * @since 4.5.0
      */
     public static function wait(float $timeout = -1): array|false
@@ -212,8 +212,8 @@ class System
      *                     - signal: The signal number that terminated the child process, or 0 if it exited normally.
      * @see https://www.php.net/pcntl_waitpid The built-in PHP function \pcntl_waitpid(), which serves a similar purpose but blocks the whole process.
      * @see \Swoole\Coroutine\System::wait()
-     * @alias This method has an alias of \Swoole\Coroutine::waitPid().
      * @see \Swoole\Coroutine::waitPid()
+     * @alias This method has an alias of \Swoole\Coroutine::waitPid().
      * @since 4.5.0
      */
     public static function waitPid(int $pid, float $timeout = -1): array|false
