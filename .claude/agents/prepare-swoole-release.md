@@ -5,9 +5,10 @@ description: >
   "prepare stubs for Swoole 6.1.0" or "bring the ide-helper stubs up to date with Swoole 6.0.3". Give it the target
   Swoole version. It diffs swoole-src between the version this project currently supports and the target version,
   updates only the stubs affected by that diff, wholesale-replaces src/swoole_library/ from the matching
-  swoole/library release, brings README.md's version-derived parts up to date, and leaves the result as a local
-  commit. It does not perform a full repo-wide audit (use a dedicated deep-review agent for that) and it does not tag
-  or publish a release (use the swoole-ide-helper-release skill for that).
+  swoole/library release, brings README.md's derived parts (version examples, PHP configuration settings, build
+  options, minimum PHP version) up to date, and leaves the result as a local commit. It does not perform a full
+  repo-wide audit (use a dedicated deep-review agent for that) and it does not tag or publish a release (use the
+  swoole-ide-helper-release skill for that).
 tools: Bash, Read, Edit, Write, Grep, Glob, WebFetch, Task, TodoWrite, SendMessage
 ---
 
@@ -83,7 +84,7 @@ git init -q
 git remote add origin https://github.com/swoole/swoole-src.git
 git fetch --depth 1 origin tag vCURRENT_VERSION
 git fetch --depth 1 origin tag vTARGET_VERSION
-git diff vCURRENT_VERSION vTARGET_VERSION -- ext-src include src   # PHP-facing C/C++ code + core headers
+git diff vCURRENT_VERSION vTARGET_VERSION -- ext-src include src config.m4   # C/C++ code, headers, build options
 ```
 
 Never open or trust any `.stub.php` file anywhere in these clones (e.g. under `ext-src/stubs/`) — this project's
@@ -131,6 +132,11 @@ changed, or removed. Focus on:
 - Symbols newly flagged as deprecated in the target version — e.g. a new `php_error_docref(..., E_DEPRECATED, ...)`
   call added to an otherwise-unchanged method, or the target version's own release notes/changelog calling out a
   deprecation — where swoole-src still exports the symbol but now discourages its use.
+- Changes to the `PHP_INI_BEGIN()` … `PHP_INI_END()` block in `ext-src/php_swoole.cc` (an added, removed, or renamed
+  ini directive, or a changed default or mode) and to the `PHP_ARG_ENABLE`/`PHP_ARG_WITH` build options in
+  `config.m4`. These don't map to a stub symbol but to README sections — carry them to Step 4b — except that a
+  removed or renamed build option also affects every stub docblock that names it (grep `src/swoole/` for the
+  `--enable-*`/`--with-*` string), and those docblocks must be rewritten to record what happened (see Step 4b).
 
 For each one, find (or create) the corresponding stub under `src/swoole/` — `Swoole/**` mirrors the `Swoole\...`
 namespace, `constants.php` holds `SWOOLE_*` defines, `functions.php` holds global `swoole_*()` functions,
@@ -194,16 +200,40 @@ Follow CLAUDE.md's "README maintenance" section — re-read it fresh, like the s
 1. **Version examples.** Grep `README.md` for the previously supported version (`CURRENT_VERSION`, with and without
    the "v" prefix, and the `X.Y.x` minor line if the minor changed) and bump each hit inside the
    `version-examples` markers, plus the tag example in "Contributing", to the target version.
-2. **ini directives.** Extract the `PHP_INI_BEGIN()` … `PHP_INI_END()` block from `ext-src/php_swoole.cc` at
-   `vTARGET_VERSION` (already fetched in Step 1) and compare every directive's name, type, default (follow macros
-   such as `SW_SOCKET_BUFFER_SIZE` to their definition), and scope against the table and descriptions inside the
-   `ini-directives` markers. Compare the whole list, not just what the Step 1 diff shows — drift that predates this
-   release still needs fixing. Add, remove, or rename entries as needed, write plain-language descriptions for new
-   ones (read the code that uses the directive, don't guess), and bump the "(as of Swoole X.Y.Z)" note.
-3. **Inventory.** If Step 3 added or removed a top-level file under `src/swoole/`, changed how `src/swoole_library/`
-   is shipped, or added/removed/renamed a build option, update "What's included" / "Features that depend on build
-   options" to match.
-4. **Minimum PHP version.** Read the `#if PHP_VERSION_ID < ...` / `#error "require PHP version X.Y or later"` check
+2. **PHP configuration settings (ini directives).** Two passes over `ext-src/php_swoole.cc`, both from the Step 1
+   checkout:
+   - *Diff*: `git diff vCURRENT_VERSION vTARGET_VERSION -- ext-src/php_swoole.cc`, looking at every hunk inside the
+     `PHP_INI_BEGIN()` … `PHP_INI_END()` block (`STD_PHP_INI_ENTRY`/`STD_PHP_INI_BOOLEAN` lines): an added, removed,
+     or renamed directive, or a changed default or mode.
+   - *Full compare*: extract the whole block at `vTARGET_VERSION` and compare every directive's name, type, default
+     (follow macros such as `SW_SOCKET_BUFFER_SIZE` to their definition), and mode (`PHP_INI_ALL` = "Anywhere",
+     `PHP_INI_SYSTEM` = "`php.ini` only") against the table and descriptions inside the `ini-directives` markers.
+     Drift that predates this release still needs fixing, which is why the diff alone isn't enough.
+   Add, remove, or rename entries as needed; write a plain-language description for each new one by reading the code
+   that consumes the directive (grep for the `SWOOLE_G(...)` field the entry binds to, not just the directive name);
+   re-check an existing description whenever the consuming code changed; and bump the "(as of Swoole X.Y.Z)" note.
+3. **Build options.** The same two passes over `config.m4`:
+   - *Diff*: `git diff vCURRENT_VERSION vTARGET_VERSION -- config.m4`, looking for added, removed, or renamed
+     `PHP_ARG_ENABLE([...])`/`PHP_ARG_WITH([...])` declarations, and for changes in what an existing option defines
+     (`AC_DEFINE(SW_..., ...)`) or requires.
+   - *Full compare*: list every `PHP_ARG_ENABLE`/`PHP_ARG_WITH` at `vTARGET_VERSION`; for each, find the macro it
+     defines and grep `ext-src`, `include`, and `src` for `#ifdef`/`#if defined` of that macro to learn what
+     PHP-visible symbol or behavior it gates, if anything. Then grep `src/swoole/` for every `--enable-*`/`--with-*`
+     string the stubs name, and confirm each one still exists at the target tag and is on README's "Features that
+     depend on build options" list with an accurate description of what it gates. That list is complete, not
+     illustrative — every option the stubs document must be on it — and its "As of Swoole X.Y.Z" lead-in must be
+     bumped to the target version.
+   Then act on what you found. *Removed option*: read the source to tell whether what it gated is now always built
+   in or gone entirely, rewrite every stub docblock that named it to record the history ("since Swoole X.Y.Z, ..."),
+   drop it from the README list, and leave a short note in that section saying so (see the OpenSSL note there for
+   the pattern). *Renamed option*: update stubs and README to the new name, noting the old one. *New option that
+   gates a PHP-visible symbol or behavior*: document the requirement in that stub's docblock per CLAUDE.md's "Symbols
+   gated behind a build option" and add a README bullet. Pure compiler/debug flags that gate nothing PHP-visible
+   (e.g. `--enable-asan`, `--enable-swoole-coverage`) stay off the list — but check what each one defines rather than
+   assuming; an option that's internal in one release can start gating a PHP-visible constant in the next.
+4. **Inventory of included files.** If Step 3 added or removed a top-level file under `src/swoole/`, or changed how
+   `src/swoole_library/` is shipped, update "What's included" to match.
+5. **Minimum PHP version.** Read the `#if PHP_VERSION_ID < ...` / `#error "require PHP version X.Y or later"` check
    in `ext-src/php_swoole_private.h` at `vTARGET_VERSION` (cross-check `package.xml`'s `<min>`). If it differs from
    CLAUDE.md's "Minimum supported PHP version on this branch", update everything that depends on it together, and
    call it out in the commit body: that CLAUDE.md fact and the "Inline declarations must be valid PHP X.Y syntax"
@@ -251,8 +281,9 @@ irreversible, public change out of what is supposed to be a reviewable local com
 
 # Report back
 
-Summarize: the current → target version bump, which files you touched and why (tie each back to a specific
-swoole-src change), the version constants you bumped, confirmation that `src/swoole_library/` was replaced from the
-matching `swoole/library` release (with the file list taken from that release's own `src/__init__.php` manifest),
-what changed in `README.md` (or that it was verified and needed no change), confirmation that the style/syntax checks
-passed, and the branch/commit you left the work on. Flag anything you couldn't fully verify rather than guessing.
+Summarize: the current → target version bump, which files you touched and why (tie each back to a specific swoole-src
+change), the version constants you bumped, confirmation that `src/swoole_library/` was replaced from the matching
+`swoole/library` release (with the file list taken from that release's own `src/__init__.php` manifest), what changed
+in `README.md` — version examples, the ini directive table, the build-option list — or that each was verified against
+the target tag and needed no change, confirmation that the style/syntax checks passed, and the branch/commit you left
+the work on. Flag anything you couldn't fully verify rather than guessing.
