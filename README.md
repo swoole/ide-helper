@@ -145,6 +145,18 @@ what it needs. As of Swoole 6.2.4, the build options the stubs document are:
   option take effect in `Swoole\Coroutine::gethostbyname()`: `--enable-cares`.
 * Debug logging, reported by the `SWOOLE_DEBUG` constant (`true` in such a build, `false` otherwise):
   `--enable-debug-log`.
+* A coroutine-friendly copy of PHP 8.4's `ftp` extension compiled into Swoole in place of the original: the `ftp_*()`
+  functions, the `FTP\Connection` class, and the `FTP_*` constants, with `ftp_ssl_connect()` included when OpenSSL is
+  available: `--enable-swoole-ftp`.
+* A coroutine-friendly copy of the PECL `ssh2` extension compiled into Swoole in place of the original: the `ssh2_*()`
+  functions, the `SSH2_*` constants, and the `ssh2.*` stream wrappers, except that `ssh2_poll()` is not provided:
+  `--with-swoole-ssh2[=DIR]`.
+
+The last two replace the stock extensions outright: PHP refuses to load Swoole next to the `ftp` or `ssh2` extension
+in such a build. This package ships no stubs for them, on purpose. The functions keep their original names and
+signatures, so the stubs your IDE already has for the `ftp` and `ssh2` extensions describe them, and a second copy
+here would only produce duplicate-declaration warnings. The one Swoole symbol tied to them is the
+`SWOOLE_TRACE_CO_SSH2` trace-log flag.
 
 SSL/TLS support is not on this list because it is no longer optional: since Swoole 6.2.0, OpenSSL is a required
 dependency and the former `--enable-openssl` option no longer exists (only `--with-openssl-dir=DIR` remains, purely to

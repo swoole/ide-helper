@@ -357,7 +357,15 @@ define('SWOOLE_TRACE_CO_ODBC', 8589934592); // 2^33; @since 5.1.0
 define('SWOOLE_TRACE_CO_ORACLE', 17179869184); // 2^34; @since 5.1.0
 define('SWOOLE_TRACE_CO_SQLITE', 34359738368); // 2^35; @since 5.1.2
 define('SWOOLE_TRACE_CO_FIREBIRD', 68719476736); // 2^36; @since 6.2.0
-define('SWOOLE_TRACE_CO_SSH2', 137438953472); // 2^37; @since 6.2.0
+/*
+ * Trace log type for the coroutine-friendly copy of the ssh2 extension that Swoole compiles in when installed with
+ * the "--with-swoole-ssh2" configuration option. The constant itself is defined in every build. As of Swoole 6.2.4,
+ * however, no Swoole code emits trace logs of this type yet, not even in a build with that option, so enabling it
+ * through setting "trace_flags" has no visible effect.
+ *
+ * @since 6.2.0
+ */
+define('SWOOLE_TRACE_CO_SSH2', 137438953472); // 2^37
 /*
  * Trace log type for threads.
  *
