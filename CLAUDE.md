@@ -237,7 +237,10 @@ largest are wrapped in HTML comment markers (`<!-- BEGIN: version-examples -->` 
   feature is now always built in, or gone, since the version that changed it — see the OpenSSL note there), fix a
   description that no longer matches what the option gates, and bump the "As of" version. Pure compiler/debug flags
   that gate nothing PHP-visible stay off the list. A dropped or renamed option also means rewriting every stub
-  docblock that names it.
+  docblock that names it. An option that only compiles a copy of a standard PHP extension into Swoole under its
+  original names (`--enable-swoole-ftp`, `--with-swoole-ssh2`) gets a README bullet saying so and noting any
+  divergence from the original (such as a missing function), not stubs: the IDE's own stubs for that extension
+  already cover the API, and a copy here would only produce duplicate-declaration warnings.
 - **"What's included"**: must still describe what's under `src/`. Update it only when a top-level file or directory
   is added, removed, or changes role.
 

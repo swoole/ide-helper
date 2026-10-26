@@ -246,13 +246,18 @@ says what each part must contain):
    ```
    Every option the stubs name must still exist in `config.m4` at the tag — if one doesn't, the stub prose is stale:
    find out from the source whether what it gated is now always built in or gone entirely, rewrite the stub to record
-   the history ("since Swoole X.Y.Z, ..."), and fix the README accordingly (see the OpenSSL note there for the
-   pattern). Every option the stubs name must also appear on the README list with an accurate description of what it
-   gates. Conversely, every option that gates a PHP-visible symbol must be documented in that symbol's stub docblock
-   per CLAUDE.md's "Symbols gated behind a build option" and be on the README list. The list is complete, not
-   illustrative, and its "As of Swoole X.Y.Z" lead-in must name the version from Step 0. Pure compiler/debug flags
-   that gate nothing PHP-visible (e.g. `--enable-asan`, `--enable-swoole-coverage`) stay off the list — but check what
-   each one defines rather than assuming.
+   the history ("since Swoole X.Y.Z, ..."), and fix the README accordingly (see the OpenSSL note there for the pattern).
+   Every option the stubs name must also appear on the README list with an accurate description of what it gates.
+   Conversely, every option that gates a PHP-visible symbol must be documented in that symbol's stub docblock per
+   CLAUDE.md's "Symbols gated behind a build option" and be on the README list. The list is complete, not illustrative,
+   and its "As of Swoole X.Y.Z" lead-in must name the version from Step 0. Pure compiler/debug flags that gate nothing
+   PHP-visible (e.g. `--enable-asan`, `--enable-swoole-coverage`) stay off the list — but check what each one defines
+   rather than assuming. Exception: an option that only compiles a copy of a standard PHP extension into Swoole under
+   its original names (e.g. `--enable-swoole-ftp`, `--with-swoole-ssh2`) gets a README bullet saying so and noting any
+   divergence from the original (such as a missing function), not stubs — IDEs already ship stubs for that extension's
+   API, and a copy here would only produce duplicate-declaration warnings. Verify the parity claim rather than assuming
+   it: compare the function set and the arginfo of Swoole's copy against the original extension at the matching PHP
+   version.
 
 3. **Version examples and minimum PHP version** (the `version-examples` and `php-requirements` markers, plus the
    "Contributing" tag example, its "valid PHP X.Y syntax" bullet, and its `phplint` image): must name the current
