@@ -223,14 +223,19 @@ Follow CLAUDE.md's "README maintenance" section — re-read it fresh, like the s
      depend on build options" list with an accurate description of what it gates. That list is complete, not
      illustrative — every option the stubs document must be on it — and its "As of Swoole X.Y.Z" lead-in must be
      bumped to the target version.
-   Then act on what you found. *Removed option*: read the source to tell whether what it gated is now always built
-   in or gone entirely, rewrite every stub docblock that named it to record the history ("since Swoole X.Y.Z, ..."),
-   drop it from the README list, and leave a short note in that section saying so (see the OpenSSL note there for
-   the pattern). *Renamed option*: update stubs and README to the new name, noting the old one. *New option that
-   gates a PHP-visible symbol or behavior*: document the requirement in that stub's docblock per CLAUDE.md's "Symbols
-   gated behind a build option" and add a README bullet. Pure compiler/debug flags that gate nothing PHP-visible
-   (e.g. `--enable-asan`, `--enable-swoole-coverage`) stay off the list — but check what each one defines rather than
-   assuming; an option that's internal in one release can start gating a PHP-visible constant in the next.
+   Then act on what you found. *Removed option*: read the source to tell whether what it gated is now always built in or
+   gone entirely, rewrite every stub docblock that named it to record the history ("since Swoole X.Y.Z, ..."), drop it
+   from the README list, and leave a short note in that section saying so (see the OpenSSL note there for the pattern).
+   *Renamed option*: update stubs and README to the new name, noting the old one. *New option that gates a PHP-visible
+   symbol or behavior*: document the requirement in that stub's docblock per CLAUDE.md's "Symbols gated behind a build
+   option" and add a README bullet. Pure compiler/debug flags that gate nothing PHP-visible (e.g. `--enable-asan`,
+   `--enable-swoole-coverage`) stay off the list — but check what each one defines rather than assuming; an option
+   that's internal in one release can start gating a PHP-visible constant in the next. Exception: an option that only
+   compiles a copy of a standard PHP extension into Swoole under its original names (e.g. `--enable-swoole-ftp`,
+   `--with-swoole-ssh2`) gets a README bullet saying so and noting any divergence from the original (such as a missing
+   function), not stubs — IDEs already ship stubs for that extension's API, and a copy here would only produce
+   duplicate-declaration warnings. Verify the parity claim rather than assuming it: compare the function set and the
+   arginfo of Swoole's copy against the original extension at the matching PHP version.
 4. **Inventory of included files.** If Step 3 added or removed a top-level file under `src/swoole/`, or changed how
    `src/swoole_library/` is shipped, update "What's included" to match.
 5. **Minimum PHP version.** Read the `#if PHP_VERSION_ID < ...` / `#error "require PHP version X.Y or later"` check
