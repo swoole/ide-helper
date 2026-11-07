@@ -389,7 +389,10 @@ class Client
      *
      * For persistent connections (socket type including the SWOOLE_KEEP flag), the underlying connection is by
      * default returned to the in-process connection pool for later reuse instead of being closed; pass TRUE to
-     * force it to actually close.
+     * force it to actually close. Since Swoole 6.1.12, a persistent connection is returned to the pool only when it's
+     * still fully usable: one that has been shut down in either direction (see method Client::shutdown()) or that the
+     * remote end has already closed is closed for real instead. Before, the decision was based only on the last error
+     * recorded, so a half-closed or dead connection could be handed back to the pool and fail on its next use.
      *
      * @param bool $force Whether to force-close the connection even if it's a healthy persistent connection.
      * @return bool TRUE if succeeds; otherwise FALSE.

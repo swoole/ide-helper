@@ -45,7 +45,7 @@ Since the package is only there to assist your IDE, it doesn't belong in product
 ### Choosing a version
 
 <!-- BEGIN: version-examples -->
-Releases of this package mirror Swoole releases: version `6.1.11` of this package documents Swoole `v6.1.11`. Note
+Releases of this package mirror Swoole releases: version `6.1.12` of this package documents Swoole `v6.1.12`. Note
 that this package's tags have no `v` prefix, while Swoole's do. For the most accurate results, use the release that
 matches the Swoole version you actually run. You can check your installed version with:
 
@@ -56,14 +56,14 @@ php --ri swoole | grep Version
 Then require the matching release, e.g.:
 
 ```bash
-composer require --dev swoole/ide-helper:~6.1.11
+composer require --dev swoole/ide-helper:~6.1.12
 ```
 
-The `~6.1.11` constraint installs the newest `6.1.x` release that is `6.1.11` or later, so you pick up documentation
+The `~6.1.12` constraint installs the newest `6.1.x` release that is `6.1.12` or later, so you pick up documentation
 fixes made in later patch releases while staying on the same minor line as your Swoole extension. To pin one exact
-release instead, drop the `~` (`swoole/ide-helper:6.1.11`).
+release instead, drop the `~` (`swoole/ide-helper:6.1.12`).
 
-Releases for the Swoole 6.1 line (currently `6.1.11`) are made from this package's `6.1.x` maintenance branch, while
+Releases for the Swoole 6.1 line (currently `6.1.12`) are made from this package's `6.1.x` maintenance branch, while
 the `master` branch tracks the latest Swoole minor line. To use the latest unreleased 6.1 stubs from the `6.1.x`
 branch instead:
 
@@ -123,7 +123,7 @@ the release line matching it instead; the `master` branch's README describes the
 
 Some Swoole features exist only when the extension is built with a particular configuration option. The stubs declare
 them unconditionally, so your IDE offers them even if your Swoole build doesn't include them; each one's docblock says
-what it needs. As of Swoole 6.1.11, the build options the stubs document are:
+what it needs. As of Swoole 6.1.12, the build options the stubs document are:
 
 * SSL/TLS support (the `SWOOLE_SSL` socket flag, the `SWOOLE_SSL_*` and `SWOOLE_SSLv*`/`SWOOLE_TLSv*` constants, the
   `ssl_*` settings, and methods such as `Swoole\Coroutine\Client::enableSSL()`): `--enable-openssl`, or
@@ -172,7 +172,7 @@ Besides the standard PHPDoc tags, the stubs use a few conventions you'll see in 
 ## PHP configuration settings
 
 <!-- BEGIN: ini-directives -->
-Swoole's behavior can be tuned with the following ini directives (as of Swoole 6.1.11):
+Swoole's behavior can be tuned with the following ini directives (as of Swoole 6.1.12):
 
 | Directive                            | Type    | Default           | Where it can be set |
 |--------------------------------------|---------|-------------------|---------------------|
@@ -205,7 +205,7 @@ Swoole's behavior can be tuned with the following ini directives (as of Swoole 6
 ## Contributing
 
 Bug reports and pull requests are welcome. If a stub doesn't match Swoole, please cite the relevant code in
-[swoole-src](https://github.com/swoole/swoole-src) at the matching release tag (e.g. `v6.1.11`). A few rules:
+[swoole-src](https://github.com/swoole/swoole-src) at the matching release tag (e.g. `v6.1.12`). A few rules:
 
 * Compare against swoole-src's actual C/C++ source. Don't use the `.stub.php` files shipped in swoole-src as a source;
   they aren't reliable for this work.

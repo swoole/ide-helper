@@ -432,7 +432,7 @@ class Server
      *
      * Event names are case-insensitive. This method can only be called before the server is started.
      *
-     * As of Swoole 6.1.11, there are
+     * As of Swoole 6.1.12, there are
      *   - 14 server events.
      *     - \Swoole\Constant::EVENT_START
      *     - \Swoole\Constant::EVENT_BEFORE_SHUTDOWN
@@ -467,8 +467,8 @@ class Server
      * @return bool Returns true on success, or false on failure.
      * @see \Swoole\Server\Port::on()
      * @see \Swoole\Server::getCallback()
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.11/ext-src/swoole_server.cc#L50
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.11/ext-src/swoole_server_port.cc#L33
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.12/ext-src/swoole_server.cc#L50
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.12/ext-src/swoole_server_port.cc#L33
      */
     public function on(string $event_name, callable $callback): bool
     {
@@ -1009,7 +1009,7 @@ class Server
      * @see \Swoole\Server::protect()
      * @see \Swoole\Constant::OPTION_HEARTBEAT_IDLE_TIME
      * @see \Swoole\Constant::OPTION_HEARTBEAT_CHECK_INTERVAL
-     * @see https://github.com/swoole/swoole-src/blob/v6.1.11/ext-src/swoole_server.cc#L3063 The actual default value of parameter $ifCloseConnection
+     * @see https://github.com/swoole/swoole-src/blob/v6.1.12/ext-src/swoole_server.cc#L3063 The actual default value of parameter $ifCloseConnection
      */
     public function heartbeat(bool $ifCloseConnection = false): array|false
     {

@@ -35,7 +35,9 @@ class Request
     /**
      * The HTTP headers of the request, with all header names in lowercase (e.g., $request->header['user-agent']).
      *
-     * It's NULL until the request headers have been parsed.
+     * It's NULL until the request headers have been parsed. Since Swoole 6.1.12, trailer fields (header-like fields a
+     * client may send after a chunked request body) are discarded; before, they were merged into this property as if
+     * they were regular headers, so a trailer could override a header of the same name.
      */
     public ?array $header = null;
 
@@ -79,6 +81,11 @@ class Request
      * directory doesn't exist), the entry of that file in this property reports UPLOAD_ERR_NO_TMP_DIR in its "error"
      * field; before, no error was reported for it, as if the upload had succeeded.
      *
+     * Since Swoole 6.1.12, a client can no longer forge the internal "Swoole-Upload-File" marker header, which Swoole
+     * itself adds to a part of a multipart body once it has saved that upload to a temporary file (security fix). The
+     * marker is honored only for requests pre-processed by the server; a client-supplied one is treated as an ordinary
+     * part header, instead of making the content of the part be taken as the path of an already-saved upload.
+     *
      * @see \Swoole\Http\Request::create()
      */
     public ?array $files = null;
@@ -100,7 +107,8 @@ class Request
      * Paths of the temporary files that store the uploaded files of the request.
      *
      * The temporary files are deleted automatically once the request is destroyed. It's NULL when the request contains
-     * no uploaded file.
+     * no uploaded file. Since Swoole 6.1.12, the paths to delete are read fresh from this property at that moment, so
+     * an entry removed from it by user code (to keep that file) is respected.
      */
     public ?array $tmpfiles = null;
 

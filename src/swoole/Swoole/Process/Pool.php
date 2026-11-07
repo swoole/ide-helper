@@ -113,7 +113,12 @@ class Pool
      *                          range) makes the constructor throw a \Swoole\Exception in that mode.
      * @param bool $enable_coroutine Support coroutine or not in the worker processes. Default to false. When enabled,
      *                               a callback function has to be registered for event onWorkerStart, and event
-     *                               onMessage is dispatched only when $ipc_type is SWOOLE_IPC_UNIXSOCK.
+     *                               onMessage is dispatched only when $ipc_type is SWOOLE_IPC_UNIXSOCK. When disabled
+     *                               and event onMessage is used, each worker process waits for messages in a plain
+     *                               loop with no event loop running; since Swoole 6.1.12, timers created with class
+     *                               \Swoole\Timer in such a worker process still fire (due timers are run in between
+     *                               messages), while before Swoole 6.1.12 they were attached to an event loop the
+     *                               worker process never ran, so they never fired.
      * @see \Swoole\Process\Pool::set()
      * @see \Swoole\Process\Pool::on()
      */
@@ -146,7 +151,11 @@ class Pool
      *     otherwise, method \Swoole\Process\Pool::start() fails with a warning logged.
      *   - \Swoole\Constant::OPTION_MAX_PACKAGE_SIZE (int): Maximum size of a message a worker process can receive, in
      *     bytes. Default to 2097152 (2 MB). In IPC mode SWOOLE_IPC_SOCKET, a connection sending a larger package is
-     *     closed.
+     *     closed. Since Swoole 6.1.12, the value is kept within the range 1 to 4294967295 (a value outside it is
+     *     replaced with the nearest end of the range), and it's ignored in IPC mode SWOOLE_IPC_MSGQUEUE, where the
+     *     limit is fixed at 65536 bytes by the message queue itself; before, a value smaller than that limit could
+     *     make a worker process overflow its receive buffer in that mode, since messages of up to 65536 bytes were
+     *     still read from the queue.
      *   - \Swoole\Constant::OPTION_MAX_WAIT_TIME (int): Number of seconds the master process waits for a worker
      *     process to quit gracefully, when shutting down or reloading the pool. Default to 3. The master process sends
      *     a SIGTERM signal to the worker processes first, then force kills the ones still alive after the given number

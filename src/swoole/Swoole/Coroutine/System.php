@@ -223,6 +223,13 @@ class System
     /**
      * Wait for given signal(s) with a timeout.
      *
+     * While waiting, the given signals are handled by this method. Once the wait ends (a signal arrives or the timeout
+     * expires), the way those signals were handled before the call is put back since Swoole 6.1.12; before, the
+     * signals were simply left without a handler afterwards, so any handling Swoole had in place for them before the
+     * call was lost. Also since Swoole 6.1.12, all the signal numbers given are checked before any of them is taken
+     * over, so when the list contains an invalid number, the call fails without taking over any of the valid numbers
+     * listed before it (which it used to do).
+     *
      * @param int|array<int> $signals An integer or an array of integers representing the signal number(s).
      *                                Before Swoole 6.0.0, only integer is supported.
      * @param float $timeout The timeout value in seconds. Minimum value is 0.001. -1 means no timeout.

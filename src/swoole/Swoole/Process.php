@@ -429,6 +429,13 @@ class Process
      * finishes; the child process itself never returns from this method call. In the calling process, the method
      * returns the process ID of the child process.
      *
+     * Signal handlers registered through method \Swoole\Process::signal() in the calling process are not carried over
+     * into the child process; register them again in the child process if needed. Since Swoole 6.1.12, they are
+     * cleared completely there: before, the handlers already stopped being called in the child process, but Swoole
+     * still believed they were registered, which could confuse later calls of method Process::signal() in the child
+     * process (e.g., removing a handler that was no longer there succeeded, and the event loop of the child process
+     * could keep running while waiting for signals that no handler was registered for anymore).
+     *
      * @return bool|int Returns the process ID of the child process (a positive integer) on success. It returns
      *                  false, with an E_WARNING level error thrown out, when the process has been started already
      *                  (and is still alive). Before Swoole 6.1.8, the method could also return false when the
@@ -649,19 +656,36 @@ class Process
      * is created implicitly if it doesn't exist yet. This method can be used in PHP CLI mode only; a fatal error is
      * triggered otherwise.
      *
+     * The signature of this method changed in Swoole 6.1.12:
+     *   - before: public static function signal(int $signal_no, ?callable $callback = null): bool
+     *   - now:    public static function signal(int $signal_no, callable|int|null $callback = null): bool
+     *
+     * The change only corrects the parameter type reported by reflection: constant SIG_IGN (an integer) was already
+     * accepted in place of a callback before. What did change is what passing it does. Since Swoole 6.1.12, SIG_IGN
+     * makes the operating system ignore the signal outright (the same thing function pcntl_signal() does with
+     * SIG_IGN), and an ignored signal doesn't count as a registered handler, so it doesn't keep the event loop running
+     * on its own. Before Swoole 6.1.12, SIG_IGN installed a Swoole handler that simply did nothing when the signal
+     * arrived, which counted as a registered handler and kept the event loop alive. Also since Swoole 6.1.12, removing
+     * a handler (by passing null) consistently restores the way the signal was handled before Swoole first took it
+     * over (typically the default action of the signal); before, depending on how signals were being watched, the
+     * signal could instead stay in Swoole's hands with no callback attached and be silently dropped.
+     *
      * @param int $signal_no The signal number, e.g., SIGTERM, SIGUSR1, or SIGCHLD.
-     * @param callable|null $callback The callback function, called with the signal number as its only argument when
-     *                                the signal arrives. When null is passed, the handler registered before for the
-     *                                signal is removed instead. Constant SIG_IGN can also be passed in place of a
-     *                                callback to make the process ignore the signal.
+     * @param callable|int|null $callback The callback function, called with the signal number as its only argument
+     *                                    when the signal arrives. When null is passed, the handler registered before
+     *                                    for the signal is removed instead. Constant SIG_IGN can also be passed in
+     *                                    place of a callback to make the process ignore the signal; a handler can
+     *                                    still be registered for the signal afterwards, but passing null right after
+     *                                    SIG_IGN fails, since there is no callback to remove.
      * @return bool Returns true on success. It returns false, with an E_WARNING level error thrown out, when the
      *              signal number is invalid, when the signal is already handled internally by Swoole itself, or when
      *              null is passed but no handler has been registered for the signal.
      * @see \Swoole\Process::alarm()
      * @see \Swoole\Process::wait()
      * @see \Swoole\Process::kill()
+     * @see https://www.php.net/pcntl_signal
      */
-    public static function signal(int $signal_no, ?callable $callback = null): bool
+    public static function signal(int $signal_no, callable|int|null $callback = null): bool
     {
     }
 
