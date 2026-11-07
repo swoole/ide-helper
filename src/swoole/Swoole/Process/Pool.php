@@ -146,7 +146,10 @@ class Pool
      *     otherwise, method \Swoole\Process\Pool::start() fails with a warning logged.
      *   - \Swoole\Constant::OPTION_MAX_PACKAGE_SIZE (int): Maximum size of a message a worker process can receive, in
      *     bytes. Default to 2097152 (2 MB). In IPC mode SWOOLE_IPC_SOCKET, a connection sending a larger package is
-     *     closed.
+     *     closed. Since Swoole 6.2.5, a value below 1 is raised to 1 and a value above 4294967295 is lowered to
+     *     4294967295, and in IPC mode SWOOLE_IPC_MSGQUEUE the option is ignored altogether, since a message queue has
+     *     its own fixed limit of 65536 bytes per message; before 6.2.5, the value was stored unchecked, and for a
+     *     message queue pool it was accepted although the queue's own limit applied regardless.
      *   - \Swoole\Constant::OPTION_MAX_WAIT_TIME (int): Number of seconds the master process waits for a worker
      *     process to quit gracefully, when shutting down or reloading the pool. Default to 3. The master process sends
      *     a SIGTERM signal to the worker processes first, then force kills the ones still alive after the given number

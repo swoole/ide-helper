@@ -25,6 +25,12 @@ use Swoole\Coroutine\Socket;
  * chunked body (header "Transfer-Encoding: chunked") as well; before 6.2.4, such requests were read in full no matter
  * how large they were.
  *
+ * Since Swoole 6.2.5, trailer fields at the end of a chunked request body are skipped and no longer added to property
+ * \Swoole\Http\Request::$header; before 6.2.5, they were mixed in with the regular headers. Also since 6.2.5, a
+ * multipart request that tries to use the header name Swoole reserves internally for marking a file already saved to
+ * disk is rejected, so the paths in properties \Swoole\Http\Request::$files and \Swoole\Http\Request::$tmpfiles always
+ * point at files Swoole created itself.
+ *
  * @not-serializable Objects of this class cannot be serialized.
  * @alias This class has an alias of "\Co\Http\Server" when directive "swoole.use_shortname" is not explicitly turned off.
  * @see \Co\Http\Server

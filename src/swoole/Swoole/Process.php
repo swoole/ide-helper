@@ -644,19 +644,41 @@ class Process
      * is created implicitly if it doesn't exist yet. This method can be used in PHP CLI mode only; a fatal error is
      * triggered otherwise.
      *
+     * The signature of this method changed in Swoole 6.2.5:
+     *   - before: public static function signal(int $signal_no, ?callable $callback = null): bool
+     *   - now:    public static function signal(int $signal_no, callable|int|null $callback = null): bool
+     *
+     * The change only corrects the parameter type reported by reflection: constant SIG_IGN (an integer) was already
+     * accepted in place of a callback before. What did change is what passing it does; see parameter $callback below.
+     *
+     * Handlers belong to the process that registered them. Since Swoole 6.2.5, a child process created afterwards
+     * (e.g., through method \Swoole\Process::start()) starts with no handlers registered and has to register its own;
+     * before 6.2.5, the child still counted the parent's handlers as registered even though they were never called
+     * there, which could make method \Swoole\Coroutine\System::waitSignal() fail in the child.
+     *
      * @param int $signal_no The signal number, e.g., SIGTERM, SIGUSR1, or SIGCHLD.
-     * @param callable|null $callback The callback function, called with the signal number as its only argument when
-     *                                the signal arrives. When null is passed, the handler registered before for the
-     *                                signal is removed instead. Constant SIG_IGN can also be passed in place of a
-     *                                callback to make the process ignore the signal.
+     * @param callable|int|null $callback The callback function, called with the signal number as its only argument
+     *                                    when the signal arrives. When null is passed, the handler registered before
+     *                                    for the signal is removed instead; since Swoole 6.2.5, the signal then goes
+     *                                    back to behaving as it did before Swoole started handling it (normally its
+     *                                    default action, e.g., SIGTERM terminates the process again), while before
+     *                                    6.2.5 the outcome depended on the platform, and the signal could end up
+     *                                    silently swallowed. Constant SIG_IGN can also be passed in place of a callback
+     *                                    to make the process ignore the signal; since Swoole 6.2.5, the signal is then
+     *                                    discarded quietly, while before 6.2.5 Swoole still caught it and logged a
+     *                                    warning about an unhandled signal each time it arrived (or, when SIG_IGN
+     *                                    replaced a handler registered earlier, reverted the signal to its default
+     *                                    action instead).
      * @return bool Returns true on success. It returns false, with an E_WARNING level error thrown out, when the
      *              signal number is invalid, when the signal is already handled internally by Swoole itself, or when
-     *              null is passed but no handler has been registered for the signal.
+     *              null is passed but no handler has been registered for the signal. Since Swoole 6.2.5, a signal that
+     *              Swoole merely ignores (like SIGPIPE in the worker processes of a server) doesn't count as handled
+     *              by Swoole, so a handler can be registered for it; before 6.2.5, doing so failed as well.
      * @see \Swoole\Process::alarm()
      * @see \Swoole\Process::wait()
      * @see \Swoole\Process::kill()
      */
-    public static function signal(int $signal_no, ?callable $callback = null): bool
+    public static function signal(int $signal_no, callable|int|null $callback = null): bool
     {
     }
 

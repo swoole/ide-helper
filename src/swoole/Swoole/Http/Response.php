@@ -337,6 +337,11 @@ class Response
     /**
      * Add a trailer to the HTTP response.
      *
+     * Trailers are sent after the response body, when method Response::end() is called. Since Swoole 6.2.5, over HTTP/2
+     * they are also delivered for a response whose body was sent in pieces with method Response::write() and then
+     * finished with an end() call carrying no content; before 6.2.5, the stream was marked as finished before the
+     * trailers of such a response went out, so clients didn't see them.
+     *
      * @param string $key Name of the trailer field. It must be less than 128 bytes in length.
      * @param string|null $value Value of the trailer field. When NULL is given, the field is recorded without a value.
      *                           Although Swoole declares this parameter as a non-nullable string, NULL is accepted at
@@ -345,6 +350,8 @@ class Response
      *              - Name of the trailer field is too long.
      *              - The server has finished processing the request and sending the response.
      *              - The underlying HTTP connection has been detached.
+     * @see \Swoole\Http\Response::write()
+     * @see \Swoole\Http\Response::end()
      */
     public function trailer(string $key, ?string $value): bool
     {

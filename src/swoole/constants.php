@@ -9,13 +9,13 @@ declare(strict_types=1);
  * source code (it kept reporting 60103, the value from Swoole 6.1.3), and Swoole 6.1.5 corrected it straight to
  * 60105. Keep this in mind when comparing against SWOOLE_VERSION_ID to detect Swoole 6.1.4.
  *
- * @see https://github.com/swoole/swoole-src/blob/v6.2.4/include/swoole_version.h#L26
+ * @see https://github.com/swoole/swoole-src/blob/v6.2.5/include/swoole_version.h#L26
  */
-define('SWOOLE_VERSION', '6.2.4');
-define('SWOOLE_VERSION_ID', 60204);
+define('SWOOLE_VERSION', '6.2.5');
+define('SWOOLE_VERSION_ID', 60205);
 define('SWOOLE_MAJOR_VERSION', 6);
 define('SWOOLE_MINOR_VERSION', 2);
-define('SWOOLE_RELEASE_VERSION', 4);
+define('SWOOLE_RELEASE_VERSION', 5);
 define('SWOOLE_EXTRA_VERSION', '');
 
 /*
@@ -155,7 +155,7 @@ define('SWOOLE_STRERROR_SWOOLE', 9);
  * @see swoole_last_error()
  * @see swoole_strerror()
  * @see SWOOLE_STRERROR_SWOOLE
- * @see https://github.com/swoole/swoole-src/blob/v6.2.4/include/swoole_error.h#L23
+ * @see https://github.com/swoole/swoole-src/blob/v6.2.5/include/swoole_error.h#L23
  */
 // Common errors.
 define('SWOOLE_ERROR_MALLOC_FAIL', 501);
@@ -359,7 +359,7 @@ define('SWOOLE_TRACE_CO_SQLITE', 34359738368); // 2^35; @since 5.1.2
 define('SWOOLE_TRACE_CO_FIREBIRD', 68719476736); // 2^36; @since 6.2.0
 /*
  * Trace log type for the coroutine-friendly copy of the ssh2 extension that Swoole compiles in when installed with
- * the "--with-swoole-ssh2" configuration option. The constant itself is defined in every build. As of Swoole 6.2.4,
+ * the "--with-swoole-ssh2" configuration option. The constant itself is defined in every build. As of Swoole 6.2.5,
  * however, no Swoole code emits trace logs of this type yet, not even in a build with that option, so enabling it
  * through setting "trace_flags" has no visible effect.
  *
@@ -1042,6 +1042,18 @@ define('SWOOLE_HOOK_STDIO', 32768); // 2^15
  * Runtime hook flag SWOOLE_HOOK_PDO_PGSQL makes the PDO_PGSQL driver coroutine-friendly. This flag is available only
  * when Swoole is installed with option "--enable-swoole-pgsql" included.
  *
+ * Since Swoole 6.2.5, with this hook enabled:
+ *   - DSN option "connect_timeout" is honored when connecting from inside a coroutine; before 6.2.5, it was ignored
+ *     there, so connecting to an unreachable server waited for the operating system's own connection timeout instead.
+ *   - When the network connection breaks while PDO is talking to the server, the failure is reported as a PDO
+ *     connection error (SQLSTATE 08006) whose message names the network error, and a persistent connection in that
+ *     state is removed from PDO's pool right away, so later code never gets the broken connection back; before 6.2.5,
+ *     the error carried whatever message the PostgreSQL client library had, and a broken persistent connection stayed
+ *     in the pool until it was found dead on reuse.
+ *   - Checking a persistent connection on reuse, and reconnecting it when it is found dead, no longer blocks the
+ *     process; before 6.2.5, the reconnect was a blocking call.
+ *
+ * @see https://www.php.net/manual/en/ref.pdo-pgsql.connection.php The PDO_PGSQL DSN options, e.g., "connect_timeout".
  * @since 5.1.0
  */
 define('SWOOLE_HOOK_PDO_PGSQL', 65536); // 2^16
@@ -1373,7 +1385,7 @@ define('SWOOLE_TIMER_MAX_SEC', (float) SWOOLE_TIMER_MAX_MS / 1000);
 define('SWOOLE_SSL', 512); // 2^9
 /*
  * SSL/TLS method constants. Each one names an OpenSSL connection method (a protocol version, optionally restricted to
- * the client or server side). As of Swoole 6.2.4, these constants are still defined but not read by any Swoole
+ * the client or server side). As of Swoole 6.2.5, these constants are still defined but not read by any Swoole
  * setting or method; to restrict which protocol versions are allowed, use the SWOOLE_SSL_* constants below with
  * setting "ssl_protocols" instead.
  *

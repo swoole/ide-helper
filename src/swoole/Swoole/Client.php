@@ -387,8 +387,15 @@ class Client
      * default returned to the in-process connection pool for later reuse instead of being closed; pass TRUE to
      * force it to actually close.
      *
+     * Since Swoole 6.2.5, only a connection that is still alive, and on which method \Swoole\Client::shutdown() hasn't
+     * been called in either direction, is returned to the pool; any other connection is closed for real even without
+     * $force. Before 6.2.5, the decision was based on the last error recorded on the client only, so a half-shut-down
+     * connection, or one the server had already closed without an error being recorded, could be put back into the
+     * pool and handed out again later.
+     *
      * @param bool $force Whether to force-close the connection even if it's a healthy persistent connection.
      * @return bool TRUE if succeeds; otherwise FALSE.
+     * @see \Swoole\Client::shutdown()
      */
     public function close(bool $force = false): bool
     {

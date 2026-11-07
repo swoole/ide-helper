@@ -681,7 +681,11 @@ class Client
      * @return bool Return TRUE on success; return FALSE when the connection has been closed already, or when closing
      *              the underlying socket fails. Since Swoole 6.2.4, calling the method before the client has ever
      *              connected is safe as well: FALSE is returned, with property $errCode set to
-     *              SWOOLE_ERROR_CLIENT_NO_CONNECTION. Before 6.2.4, doing so could crash the process.
+     *              SWOOLE_ERROR_CLIENT_NO_CONNECTION. Before 6.2.4, doing so could crash the process. Since Swoole
+     *              6.2.5, that error code is set only when property $errCode is still 0: when the method is called
+     *              right after a failed request (whose failure already closed the connection), properties $errCode
+     *              and $errMsg keep describing that failure; before 6.2.5, they were overwritten with
+     *              SWOOLE_ERROR_CLIENT_NO_CONNECTION.
      */
     public function close(): bool
     {

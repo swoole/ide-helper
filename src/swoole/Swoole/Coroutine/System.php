@@ -239,8 +239,16 @@ class System
     /**
      * Wait for given signal(s) with a timeout.
      *
+     * While the method is waiting, Swoole handles the given signals itself. Since Swoole 6.2.5, once the method returns,
+     * each signal gets back the handler it had before the call (e.g., the one Swoole installs for SIGTERM in the worker
+     * processes of a server); before 6.2.5, the signals were left with no handler at all once the method returned, even
+     * one Swoole had been handling internally before the call.
+     *
      * @param int|array<int> $signals An integer or an array of integers representing the signal number(s).
-     *                                Before Swoole 6.0.0, only integer is supported.
+     *                                Before Swoole 6.0.0, only integer is supported. Since Swoole 6.2.5, the whole list
+     *                                is checked before any signal is listened to, so an invalid entry makes the method
+     *                                fail without touching the valid ones; before 6.2.5, the valid signals listed ahead
+     *                                of the invalid one were left half registered.
      * @param float $timeout The timeout value in seconds. Minimum value is 0.001. -1 means no timeout.
      * @return int|false Returns the signal number received on success. Returns FALSE on failure, e.g., when none of
      *                   the given signals arrives within the given timeout; a warning is raised as well when a

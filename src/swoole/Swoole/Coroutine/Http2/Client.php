@@ -40,7 +40,7 @@ class Client
     public string $errMsg = '';
 
     /**
-     * Unused. The property is declared for backward compatibility but, as of Swoole 6.2.4, is never updated by
+     * Unused. The property is declared for backward compatibility but, as of Swoole 6.2.5, is never updated by
      * Swoole; it always stays -1. Use property $socket to access the underlying connection instead.
      *
      * @see \Swoole\Coroutine\Http2\Client::$socket
@@ -48,7 +48,7 @@ class Client
     public int $sock = -1;
 
     /**
-     * Unused. The property is declared for backward compatibility but, as of Swoole 6.2.4, is never updated by
+     * Unused. The property is declared for backward compatibility but, as of Swoole 6.2.5, is never updated by
      * Swoole; it always stays 0.
      */
     public int $type = 0;
@@ -213,6 +213,10 @@ class Client
      *
      * The stream must have been created by sending a request with property $pipeline set to TRUE, and must not have
      * been ended yet.
+     *
+     * Since Swoole 6.2.5, a piece of data larger than the biggest frame the server accepts (16384 bytes, unless the
+     * server advertises a larger limit in its SETTINGS frame) is split into several DATA frames; before 6.2.5, it was
+     * sent as one oversized frame, which a server may reject as a protocol error.
      *
      * @param int $stream_id ID of the stream to write to, as returned by method send().
      * @param mixed $data The data to write: either a string (sent as is) or an array of form fields (sent
